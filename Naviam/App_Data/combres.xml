@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  This file contains basic settings needed for most web apps.
+  For full Combres settings (with explanation), refer to the sample definition file: combres_full_with_annotation.xml
+  Also, refer to Combres' documentation: http://combres.codeplex.com/documentation	
+-->
+<combres xmlns='urn:combres'>
+  <filters>
+    <filter type="Combres.Filters.FixUrlsInCssFilter, Combres" />
+  </filters>
+  <cssMinifiers>
+    <minifier name="yui" type="Combres.Minifiers.YuiCssMinifier, Combres">
+      <param name="CssCompressionType" type="string" value="StockYuiCompressor" />
+      <param name="ColumnWidth" type="int" value="-1" />
+    </minifier>
+  </cssMinifiers>
+  <resourceSets url="~/combres.axd"
+                defaultDuration="30"
+                defaultVersion="auto"
+                defaultDebugEnabled="false" 
+                defaultIgnorePipelineWhenDebug="true"
+                localChangeMonitorInterval="30"
+                remoteChangeMonitorInterval="60"
+                defaultCssMinifierRef="yui" 
+                defaultJSMinifierRef="off"
+               >
+    <resourceSet name="siteCss" type="css">
+      <resource path="~/Content/Site.css" />
+    </resourceSet>
+    <!--JS-->
+    <resourceSet name="jquery" type="js">
+      <resource path="~/Scripts/jquery-1.6.2.min.js" />
+      <resource path="~/Scripts/common.min.js" />
+    </resourceSet>
+    <resourceSet name="spine" type="js">
+      <resource path="~/Scripts/spine.min.js" />
+    </resourceSet>
+    <resourceSet name="blackbone" type="js">
+      <resource path="~/Scripts/underscore-min.js" />
+      <resource path="~/Scripts/backbone-min.js" />
+    </resourceSet>
+  </resourceSets>
+</combres>

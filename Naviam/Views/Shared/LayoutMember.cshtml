@@ -1,0 +1,24 @@
+﻿@using Combres.Mvc;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    @Html.CombresLink("siteCss")
+    @Html.CombresLink("jquery")
+    
+    @*intellisense support*@
+    @if (false)
+    { 
+        <script type="text/javascript" src="~/Scripts/jquery-1.6.2.js"></script> 
+    }
+</head>
+
+<body>
+    <div class="page">
+
+        <div id="main">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+</html>
