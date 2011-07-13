@@ -9,6 +9,8 @@ using System.Web.Routing;
 using System.Web.Security;
 using Naviam.Models;
 
+using Naviam.DAL;
+
 namespace Naviam.Controllers
 {
     public class AccountController : Controller
@@ -21,6 +23,7 @@ namespace Naviam.Controllers
 
         public ActionResult LogOn()
         {
+            TestDataAdapter.Test();
             return View();
         }
 
