@@ -20,6 +20,8 @@
             @RenderBody()
         </div>
     </div>
+@if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
+{
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -34,5 +36,6 @@
   })();
 
 </script>
+}
 </body>
 </html>
