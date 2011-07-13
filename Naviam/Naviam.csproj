@@ -93,13 +93,16 @@
     <Content Include="Scripts\backbone-min.js" />
     <Content Include="Scripts\backbone.js" />
     <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\common.min.js" />
     <Content Include="Scripts\jquery-1.6.2.js" />
     <Content Include="Scripts\jquery-1.6.2.min.js" />
     <Content Include="Scripts\spine.js" />
     <Content Include="Scripts\spine.min.js" />
     <Content Include="Scripts\underscore-min.js" />
     <Content Include="Scripts\underscore.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
