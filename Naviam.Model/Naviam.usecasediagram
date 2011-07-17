@@ -1,0 +1,772 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="95ae7153-6752-4acf-a233-227ae6fb06b7" name="Naviam" linkedPackageId="e003b6d4-042d-44b6-a598-562a61523a71" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <ownedCommentsInternal>
+    <comment Id="b191a3ba-e93f-4240-94b4-5bc6f228bee6">
+      <elementDefinition Id="569b11e6-ebcf-49f6-b85e-ab88d060c301" />
+      <body>Register Business (?)
+- Sole Proprietor
+- SME
+Register Naviam account
+- Home Accounting
+- Sole Prorietor Accounting
+- SME Accounting
+Read news (accounting, business)</body>
+      <annotatedElements>
+        <actorMoniker Id="100eb8f8-7e35-4ebd-bb51-0654c664f3dc" LastKnownName="Guest" />
+      </annotatedElements>
+    </comment>
+    <comment Id="6d36250a-9d51-49eb-8d9e-dd4bf5acb867">
+      <elementDefinition Id="0a0a1af4-a3e0-4691-9b0c-9b08f23e5764" />
+      <body>Send Invitations
+Create Events in Calendar
+Send Notifications to prepare and submit tax reports
+Charge users monthly for the service based on their account</body>
+      <annotatedElements>
+        <actorMoniker Id="43f7d20b-303c-446e-8954-88c56d475a77" LastKnownName="Time" />
+      </annotatedElements>
+    </comment>
+    <comment Id="7d498c49-fb28-4fd8-9fa9-759ddd304046">
+      <elementDefinition Id="25267564-0875-4db0-bd48-055c07d4f4bc" />
+      <body>Process Bank transactions
+Process Credit Card payment
+Accept Virtual Money</body>
+      <annotatedElements>
+        <actorMoniker Id="05887969-aa72-41e0-9c3b-4a5892543aab" LastKnownName="Process Payments" />
+      </annotatedElements>
+    </comment>
+    <comment Id="e95479c4-8b06-4d19-86ce-f67aac69ba62">
+      <elementDefinition Id="a21087c4-6a46-401f-93e9-ead66628d5d1" />
+      <body>Change Account Settings
+- Payment Information
+- Company Details
+- Contact Details
+Browse transactions
+- Add transaction
+- Update transaction
+- Remove transaction
+Manage Bank Accounts
+- Add account
+- Remove account
+Browse Reports
+- Generate Tax Reports
+- Generate Statistics
+- Send Reports </body>
+    </comment>
+    <comment Id="565b2e2c-da43-4f48-b4fc-497e1b89f6db">
+      <elementDefinition Id="d518fbd6-0d69-4f77-88e2-ef89c5c9cd52" />
+      <body>Browse Clients
+- View clients
+- Edit client details
+Browse Documents
+- Agreements
+- Invoices
+- Acts
+View calendar events
+- add own events
+- disable notification</body>
+    </comment>
+    <comment Id="b26cc247-1bf2-4741-bf83-548013736569">
+      <elementDefinition Id="c3c6813c-d67b-452c-8e74-2bedd05af399" />
+      <body>Manage Employees
+- add employee
+- remove employee
+- update employee info
+- set salary
+- set schedule of payments
+- view payments history
+- generate reports</body>
+    </comment>
+    <comment Id="160c38f1-db99-4edc-abc7-e9b400539121">
+      <elementDefinition Id="f98a4fae-91b2-4bb3-96ab-4dc4b6c294d3" />
+      <body>Под вопросом. С 1 сентября будет электронная регистрация в Беларуси. Просто дадим ссылку.</body>
+      <annotatedElements>
+        <useCaseMoniker Id="e7c55240-8caa-4a3e-83e2-d2d5848a018f" LastKnownName="Register SME" />
+        <useCaseMoniker Id="aff3a10f-fa5f-4788-a9e7-eabcc59403fe" LastKnownName="Register Sole Proprieror" />
+      </annotatedElements>
+    </comment>
+  </ownedCommentsInternal>
+  <profileInstances>
+    <packageHasProfileInstances Id="448e802f-61e8-4ab1-a57a-8f7fcd7eee50">
+      <profileInstance Id="bdee6ffb-d8e9-4f17-a979-0525807e51b5" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="d3ef11b4-6895-489e-8139-64f5a6f936d2">
+      <profileInstance Id="cfa77c09-387f-4882-a3eb-ec2fdbe63512" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="1f2e45ad-2de5-4e6b-9e93-6b5e8127a4f0" name="Home User" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="81ac9433-4e9e-43b1-bb2c-18d0d748f809" />
+        <generalsInternal>
+          <generalization Id="96a13dd7-76f1-489d-8444-afd970a87c4f" isSubstitutable="false">
+            <actorMoniker Id="100eb8f8-7e35-4ebd-bb51-0654c664f3dc" LastKnownName="Guest" />
+            <elementDefinition Id="8af4ae6f-ca23-4e88-b42c-b9310d0c3747" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association Id="5f3f1c83-830f-4575-8e71-2188e18bf974" isDerived="false" sourceEndRoleName="Home User" targetEndRoleName="Browse Transactions" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="c5325990-e075-45e7-95ca-6b086e001834" LastKnownName="Browse Transactions" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="b0d360ba-c62b-4a0b-95bb-62589d356da8" name="Home User" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="646d3134-1634-4d7e-aea9-a17bc6665a8c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="0bf1c63e-f675-4d1e-8378-7ec2c5cf9ef1" name="Browse Transactions" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="18d09977-7ba3-4bb2-8ef5-40c545d56a29" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="85d9f77e-cad3-4cdc-9bf4-7a21fd954591" />
+          </association>
+          <association Id="eaf47023-db65-47f0-b3c4-1f46b8bd358e" isDerived="false" sourceEndRoleName="Home User" targetEndRoleName="Change personal account settings" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="e8a159fa-162f-421c-9550-9cfc2b823632" LastKnownName="Change Account Settings" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="bec4b412-1b94-4e13-b054-166f2e04f3f9" name="Home User" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="b703384e-bac8-47cb-b93b-808172064f08" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="f2e5ba0e-ce8a-492b-8e69-9d9115b220a5" name="Change personal account settings" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="cb587476-0b04-4281-96ed-f4fd305d1275" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="c4e8d2d6-9744-4011-b8b5-d9590225d33d" />
+          </association>
+          <association Id="4b66bb3c-d757-4802-af05-bcaf770ad583" isDerived="false" sourceEndRoleName="Home User" targetEndRoleName="Investments" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="5660435f-4a51-42d9-8cd7-95e56a2bdb54" LastKnownName="Investments" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="12d2e3d4-468a-48db-a1ce-d71cc2eea10c" name="Home User" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="9ba556a5-405c-41e0-b67c-e482cbfb43f6" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="13aeb55f-2bd2-4494-b606-45dcbfb649b5" name="Investments" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="87c10159-897b-4905-bf12-b9b3fc3e9b3d" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="5e48e5d6-58af-4416-ba98-fe20f1dc1e10" />
+          </association>
+          <association Id="90129a50-f2b5-4991-8e93-fef70acac7be" isDerived="false" sourceEndRoleName="Home User" targetEndRoleName="Budget" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="85640f01-abde-4c01-85da-654a09f17d90" LastKnownName="Budget" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="05aaf3b1-cbd5-4c1d-b696-2534d5ecb98c" name="Home User" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="90fcda07-0514-400f-91d1-a9abe45f503b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="bb0efff9-a65e-42cf-a3fb-5833489dfa48" name="Budget" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="ff8f0eaf-32aa-4915-8d24-e1c1ae8d0f4d" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="848f3983-34a3-491c-aff3-7eceea9fbb29" />
+          </association>
+          <association Id="8bf2dc7c-af4f-4107-826c-63cb98559de7" isDerived="false" sourceEndRoleName="Home User" targetEndRoleName="Goals" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="41283c37-d0a8-4fd4-b0ee-55f0d6adec84" LastKnownName="Goals" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="cb1b7504-b3ed-42ba-befd-ef35277e3b41" name="Home User" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="688dc2e6-de6e-477a-ad1a-a7e6de8246c1" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="746c6b1b-105a-4d40-bc1d-2e4dcda88ff6" name="Goals" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="aac2c675-c30f-433d-b038-fc6cf52d789f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="89c1fa49-76dd-4694-9d3f-1743f229a4a6" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="10ceaae0-7669-4f9e-b64c-503e2409dcdb" name="Sole Proprietor" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="5a98b55c-5a25-4572-86e0-701290476c57" />
+        <generalsInternal>
+          <generalization Id="25e07bdb-6ef6-4c65-95a6-7698777e13f7" isSubstitutable="false">
+            <actorMoniker Id="1f2e45ad-2de5-4e6b-9e93-6b5e8127a4f0" LastKnownName="Home User" />
+            <elementDefinition Id="e228e21d-5a38-4e69-925e-cb08e0c4d526" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association Id="f50cd24e-de11-4629-9b99-0342ea8f4440" isDerived="false" sourceEndRoleName="Sole Proprietor" targetEndRoleName="Browse Documents" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="9e0d4f64-73fb-404a-b3fc-b2fb0cbba31f" LastKnownName="Browse Documents" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="897f7b11-e59f-4c42-92a5-cd84e83bcab2" name="Sole Proprietor" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="c9dd7789-8222-437c-b1c8-36ffc1d3a290" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="05d74498-55d4-4b9e-af8c-a8450fff5566" name="Browse Documents" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="c816dc78-c25a-4664-946f-9e4715ccb217" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="2d2acd87-9f1d-435a-8933-10bf7940aac4" />
+          </association>
+          <association Id="f6d6c0fc-f8f4-487d-a3f5-5151ee167160" isDerived="false" sourceEndRoleName="Sole Proprietor" targetEndRoleName="View event calendar" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="b17feeab-751d-4bdf-928f-62a7037386e2" LastKnownName="View event calendar" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8829f2cd-702b-464f-bd49-7fac1c627d0e" name="Sole Proprietor" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="73e69308-feef-447a-9e00-66bf26731ff7" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="d1a0e7f5-7d4e-4a02-b67c-2edf2c75f2f8" name="View event calendar" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="7acf6c33-5c8e-4e29-946e-393632839b17" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="349455a1-05cf-43a2-b455-ddeff8e758c0" />
+          </association>
+          <association Id="7e0955b5-8e77-45bb-b5ab-bd323d243671" isDerived="false" sourceEndRoleName="Sole Proprietor" targetEndRoleName="Browse Clients" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="46ac32a8-01e9-4241-8619-83f56fb2e0b8" LastKnownName="Browse Clients" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="7e8bc31e-26d1-4e36-985c-1b037114d8df" name="Sole Proprietor" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="84a4ecc2-352c-4bfc-bcc9-18b2b55e714c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8bcf3ba0-755d-489a-bf0f-f7edc725e90d" name="Browse Clients" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="cb3ef94b-1375-4a12-a1e4-01c3d3fda0ed" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="f6ed6713-30e5-4eda-bd65-8c85e2b9282d" />
+          </association>
+          <association Id="cae1c97c-4e3e-4025-b031-5bd1416e0dd9" isDerived="false" sourceEndRoleName="Sole Proprietor" targetEndRoleName="Browse Reports" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="7c3d5f48-1102-4b95-83f8-d8752967cf09" LastKnownName="Browse Reports" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="9602f22c-dc86-4985-a4b7-86419737bbb2" name="Sole Proprietor" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="9424cfb6-5e96-471d-a57b-ab763fa17023" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="1d177f66-e94e-4348-acc9-12f3ef8f6bc0" name="Browse Reports" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="1ab3f52b-8275-4181-93d3-b479b49d6197" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="4f87985f-2130-449f-b40e-61c036a4ae8b" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="fbfd8b0f-c9e9-46f0-b835-b0091f6a2487" name="Small and Medium Enterprise" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="eb8a58d4-c264-42bd-991e-c3e61a4f84be" />
+        <generalsInternal>
+          <generalization Id="60bc4cc5-f8b4-4a59-bc0d-7959ed8cfb57" isSubstitutable="false">
+            <actorMoniker Id="10ceaae0-7669-4f9e-b64c-503e2409dcdb" LastKnownName="Sole Proprietor" />
+            <elementDefinition Id="a9970a7e-4d54-4309-8b12-9970b3ceeee6" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association Id="428fbcec-5233-4a29-be8d-72fe4aa480e7" isDerived="false" sourceEndRoleName="SME" targetEndRoleName="Employees Payroll system" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="965c713b-e0a5-44b4-8dc8-b8ce5a19e30a" LastKnownName="Manage Employees" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="735c2112-96f0-450c-9ad1-103d8c127ab2" name="SME" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="37729f09-a207-43c6-bad1-85d6b0e1d9c1" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="93bdc69e-c9cd-4adc-80ab-b19015fe0444" name="Employees Payroll system" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="17eb1eb4-42ee-41b2-85eb-4c929434b8fd" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="cbc602c6-0544-4aa2-9bea-630028f5fd57" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="43f7d20b-303c-446e-8954-88c56d475a77" name="Time" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="cbc6cfc5-d253-4557-8ba8-4e7d571a90dd" />
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <subsystem Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" name="Naviam - Online Home and Business Accounting System" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <ownedCommentsInternal>
+          <comment Id="fefd7511-a33f-402d-ab26-b886ab926e8d">
+            <elementDefinition Id="32bc42b4-3712-4db0-9808-0f9ecd33f81a" />
+            <body>Advertisment and reasons to pay and use this service. Success stories of happy customers</body>
+            <annotatedElements>
+              <useCaseMoniker Id="2d08f25a-6660-48a2-8f45-f84833c76c8a" LastKnownName="Review Service Info" />
+            </annotatedElements>
+          </comment>
+        </ownedCommentsInternal>
+        <elementDefinition Id="6e1d6632-5d18-40ec-8396-258c9260dcdf" />
+      </subsystem>
+    </useCaseModelRootHasTypes>
+    <packageHasNamedElement>
+      <useCase Id="c5325990-e075-45e7-95ca-6b086e001834" name="Browse Transactions" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="cba5b1ae-997f-42d6-8f40-1ef86adea18e" />
+        <additions>
+          <include Id="95775869-57e6-4308-836d-d55b37683905">
+            <useCaseMoniker Id="faa4e49a-e43f-4fc8-bf1e-8bad447cd9c8" LastKnownName="Manage Bank Accounts" />
+            <elementDefinition Id="d35a6eaa-7e07-4339-b1ac-1776c379166e" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="7c3d5f48-1102-4b95-83f8-d8752967cf09" name="Browse Reports" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="8c93dffa-2d4a-47a8-b769-88f541069e6e" />
+        <additions>
+          <include Id="cba99644-66dd-4fc6-8ea2-6121a86b449d">
+            <useCaseMoniker Id="0e5a4beb-b1e4-4bf2-8003-01fb98f7e27e" LastKnownName="Send Reports" />
+            <elementDefinition Id="9b7cb7d3-a980-484b-b398-9eb32deddded" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="9e0d4f64-73fb-404a-b3fc-b2fb0cbba31f" name="Browse Documents" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="ca4e7f3b-4b9c-47af-9fdb-54de7a0aa79f" />
+        <additions>
+          <include Id="ed035a5e-aaf1-4cc2-8be8-f8ea5f284d30">
+            <useCaseMoniker Id="be82939a-09f2-4456-871e-ea89cbc9d676" LastKnownName="Manage Agreements" />
+            <elementDefinition Id="6dfe23fc-2467-4629-b445-52f52a8122d0" />
+          </include>
+          <include Id="f44da425-9343-4661-9cb2-96b2f52a4611">
+            <useCaseMoniker Id="0ea9642e-62f0-42d1-87b7-6ca50a6283af" LastKnownName="Manage Acts" />
+            <elementDefinition Id="a89608ae-0429-4f5b-949c-33a6cf5044cd" />
+          </include>
+          <include Id="5ce66f7e-66c6-43c4-b74c-bed41f17bda2">
+            <useCaseMoniker Id="9aabdcf2-fdf7-4a5a-bdc6-b63bc4f3b15b" LastKnownName="Manage Invoices" />
+            <elementDefinition Id="639b19c2-10e8-4e8a-a91c-25020618fd3e" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="e8a159fa-162f-421c-9550-9cfc2b823632" name="Change Account Settings" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="0b978198-9dcc-40ab-894c-83f973733494" />
+        <additions>
+          <include Id="a507a822-a207-46e5-bcd5-93652433c504">
+            <useCaseMoniker Id="dd7efee4-14f7-4068-b1e1-37322fef308b" LastKnownName="Payment Service" />
+            <elementDefinition Id="a8a4d65b-c50a-423f-8248-309a8cadd579" />
+          </include>
+          <include Id="29192b72-3212-47d6-b697-f244720cb1e9">
+            <useCaseMoniker Id="5297a222-3078-45ea-8e5b-ecb4a852055a" LastKnownName="Collect Payment Information" />
+            <elementDefinition Id="ac6ef24a-0b88-4847-b6e6-546c990ce7fc" />
+          </include>
+          <include Id="59dde53a-e8ba-4df2-9501-3af9de52e002">
+            <useCaseMoniker Id="7f618318-e5a4-4251-acef-25d538c45aff" LastKnownName="Collect User/Company Details" />
+            <elementDefinition Id="70b99ff0-1560-4684-9b89-a78cbf1246da" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="965c713b-e0a5-44b4-8dc8-b8ce5a19e30a" name="Manage Employees" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="1f43521f-041b-41a4-9a3a-2356e4c36cef" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="b17feeab-751d-4bdf-928f-62a7037386e2" name="View event calendar" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="9ebf8529-eaf6-465e-b3b7-08af31dd9b87" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="aff3a10f-fa5f-4788-a9e7-eabcc59403fe" name="Register Sole Proprieror" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c4290759-2060-4664-b145-f2c4944d88d3" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="2d08f25a-6660-48a2-8f45-f84833c76c8a" name="Review Service Info" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="96ee72e4-5a11-408a-9662-7e0d102e5a79" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <useCaseModelRootHasTypes>
+      <actor Id="100eb8f8-7e35-4ebd-bb51-0654c664f3dc" name="Guest" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c0a1db7a-680c-4321-bb45-6523674a6271" />
+        <targetEnds>
+          <association Id="4e30faea-9d56-4bd8-8097-81a66ad39515" isDerived="false" sourceEndRoleName="Guest" targetEndRoleName="Register SME" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="e7c55240-8caa-4a3e-83e2-d2d5848a018f" LastKnownName="Register SME" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="44d52b8e-1adc-4edf-9069-d6ebf5e99085" name="Guest" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="b0f87bce-72f7-411f-9835-d5df685c1aba" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="6ad3bfa8-9be2-42fe-8e10-8665ec653058" name="Register SME" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="64043d25-c506-4c5a-802c-db7f05dbbee9" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="50d21d58-c44a-4015-aea6-9f2109f5b49e" />
+          </association>
+          <association Id="4c3a96ef-cd14-4711-b230-a6e2d2c20a8d" isDerived="false" sourceEndRoleName="Guest" targetEndRoleName="Register Sole Proprieror" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="aff3a10f-fa5f-4788-a9e7-eabcc59403fe" LastKnownName="Register Sole Proprieror" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="208e8d45-4724-4db0-a6ce-4df8155310f1" name="Guest" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="a94d21a3-4934-40f4-bea9-8cd9a76c9e84" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="723e0f44-aec4-4105-9d21-edc02e8c4ea6" name="Register Sole Proprieror" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="85ca1dd5-aca4-4023-b606-fdaf029a5f68" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="76b6d835-a2d6-4fa6-a104-2f78ea8cb641" />
+          </association>
+          <association Id="1dc85585-fe4c-4a91-97ab-6e3f0acf5c51" isDerived="false" sourceEndRoleName="Guest" targetEndRoleName="Register Naviam account" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="c772300c-e41e-4ce1-8e33-eb86949613b6" LastKnownName="Register Naviam account" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="1d7147ea-e8f2-4ae5-a2b5-090631bc522a" name="Guest" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="504e7c78-e598-4362-a357-49f7351a25f1" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="38dcda81-fa7e-4a1b-aa7b-e746d3e638bc" name="Register Naviam account" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="e33c2d5b-4e80-4874-bf5d-5f900630714b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="162dca58-b043-4241-a44e-7e4ba1265440" />
+          </association>
+          <association Id="5aa676ce-fe0f-46ea-8b88-57cd9931a6cb" isDerived="false" sourceEndRoleName="Guest" targetEndRoleName="Read News" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="2d08f25a-6660-48a2-8f45-f84833c76c8a" LastKnownName="Review Service Info" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="590a82c8-2410-46d8-85c7-42a8b0bdeaba" name="Guest" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="a38ff6f5-4888-47de-aea4-37d29f684e16" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="e3f72c07-9b21-411e-8c77-a3740841ecc5" name="Read News" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="733b2c98-943d-4512-b046-7003434da971" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="725073a8-15f7-4b1e-88fe-ddeb1ab6ab60" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <packageHasNamedElement>
+      <useCase Id="e7c55240-8caa-4a3e-83e2-d2d5848a018f" name="Register SME" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="27311af9-6bcf-4381-a14a-e7e83c1222b4" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="c772300c-e41e-4ce1-8e33-eb86949613b6" name="Register Naviam account" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="e40cb81e-1fcf-4ec2-8ccd-285703e7f770" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="faa4e49a-e43f-4fc8-bf1e-8bad447cd9c8" name="Manage Bank Accounts" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="1289f2ee-0515-4db2-b0a3-ce5a8357fc7d" />
+        <targetEnds>
+          <association Id="ecbe543e-3c5a-4629-8e16-77943eb29978" isDerived="false" sourceEndRoleName="Manage Bank Accounts" targetEndRoleName="Bank" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="09aac64f-5937-40de-8bdf-038545370364" LastKnownName="Bank" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="bf7393a3-ac2d-4a9f-8d22-f847f5be39dd" name="Manage Bank Accounts" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="1878855a-d90a-43ff-9bb0-b4ee58d9078f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="03d7b700-9979-4169-9322-2b6b6ff364ec" name="Bank" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="8dd89362-5aa5-4e02-aff7-b501d301b708" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="5e48e0e1-64a3-43e9-8310-046d7b741278" />
+          </association>
+        </targetEnds>
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="be82939a-09f2-4456-871e-ea89cbc9d676" name="Manage Agreements" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="3a0421cc-0cfd-478d-b52e-f9bdcf6f0903" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="9aabdcf2-fdf7-4a5a-bdc6-b63bc4f3b15b" name="Manage Invoices" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="e0a766d6-034b-46ca-ae6d-bca9d65ed2aa" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="0ea9642e-62f0-42d1-87b7-6ca50a6283af" name="Manage Acts" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="f0934438-4589-4a40-a50c-66779c0b0cfd" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="5297a222-3078-45ea-8e5b-ecb4a852055a" name="Collect Payment Information" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="74cf8d34-eb5b-4a0a-8919-78fae710c471" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <useCaseModelRootHasTypes>
+      <actor Id="05887969-aa72-41e0-9c3b-4a5892543aab" name="Process Payments" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="fb3b04c1-9ae1-4ba2-9343-c094cd700c1a" />
+      </actor>
+    </useCaseModelRootHasTypes>
+    <packageHasNamedElement>
+      <useCase Id="dd7efee4-14f7-4068-b1e1-37322fef308b" name="Payment Service" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="fdcfccd5-030a-4aea-a5cf-2099a713e0e1" />
+        <targetEnds>
+          <association Id="7c1e5101-4d2f-44c9-b8e1-7a7ae5623178" isDerived="false" sourceEndRoleName="Payment Service" targetEndRoleName="Time" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="43f7d20b-303c-446e-8954-88c56d475a77" LastKnownName="Time" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="c5c1a0f3-f60a-4a2f-a033-ac60a923bb0e" name="Payment Service" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="4d36ebed-0d8e-4d6b-a195-ef9f46c81446" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="4ac57f48-0533-43ea-8f7f-4dd16dd1e0f8" name="Time" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="c09ed916-95b6-4950-93ed-bb46c42d9745" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="6ac0cc7f-e743-4bd7-9600-56a9f5eb31a0" />
+          </association>
+          <association Id="9502a423-bc66-428c-a7f9-27ce6ba914fb" isDerived="false" sourceEndRoleName="Payment Service" targetEndRoleName="Process Payments" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="05887969-aa72-41e0-9c3b-4a5892543aab" LastKnownName="Process Payments" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="18c5428b-b73c-4d40-a9e3-c24ada2c5cd8" name="Payment Service" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="d501df15-583a-49fe-bb63-66d8f67e5589" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="96c0efec-6389-4127-a0fe-4930c3ecc53d" name="Process Payments" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="d21938e6-9b54-47ba-8c42-be7b52b48332" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="89452399-5a8b-4914-b9dd-5b08737b5a8d" />
+          </association>
+        </targetEnds>
+        <additions>
+          <include Id="d1f6a356-0b6b-4a1d-8bc1-b8c9e3f27e46">
+            <useCaseMoniker Id="5297a222-3078-45ea-8e5b-ecb4a852055a" LastKnownName="Collect Payment Information" />
+            <elementDefinition Id="0c55d848-bbff-4b6f-b713-6e8548487de0" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="7f618318-e5a4-4251-acef-25d538c45aff" name="Collect User/Company Details" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="fab610bf-11a8-425b-a6ed-ae9f89fbf780" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="0e5a4beb-b1e4-4bf2-8003-01fb98f7e27e" name="Send Reports" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="d826391c-eeb8-4404-88a1-099988a631d5" />
+        <targetEnds>
+          <association Id="6d2d13d3-18c1-40ec-9280-2dc18cd73918" isDerived="false" sourceEndRoleName="Send Reports" targetEndRoleName="Ministry of Taxation" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="056b4abe-5d4d-4c8d-ac04-42c7ed1462e9" LastKnownName="Ministry of Taxation" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="fcd871c1-50c4-421a-a67f-a99f99725e34" name="Send Reports" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="4c00e89c-8376-4d1e-95cc-51a62fe6504c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="f83fc9f6-9cf0-4a55-bced-f2d52acbb423" name="Ministry of Taxation" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="119fa5b8-585e-4d29-8d3d-9a3a3e265c1d" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="2cc53721-00c3-4c81-a320-9f5a52316ad6" />
+          </association>
+          <association Id="938e14c4-593a-402f-a289-624b0ecd7e03" isDerived="false" sourceEndRoleName="Send Reports" targetEndRoleName="Social Protection Fund" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="81cf7583-e861-403e-b6b1-a711ee894bb9" LastKnownName="Social Protection Fund" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="233cc269-6c30-4a3a-9250-284bf900b9c0" name="Send Reports" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="a480dd61-0b81-46c3-86c1-4614fcd8ae44" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="0187c335-921b-4fae-971c-eb3e3e3025e6" name="Social Protection Fund" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="c93da19d-3d2a-4f5e-a198-bb078818cf70" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="e59b58ea-7ac3-4ce9-8097-19d7f907f011" />
+          </association>
+          <association Id="47d62155-d550-4bf0-acfa-f3a25ad3ad1c" isDerived="false" sourceEndRoleName="Send Reports" targetEndRoleName="Time" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="43f7d20b-303c-446e-8954-88c56d475a77" LastKnownName="Time" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="35514d0b-2f7f-4cea-ab81-93a24793a649" name="Send Reports" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="8f849ac5-a140-439d-ba60-2caab6a392de" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="5c8268aa-be17-4c81-bea4-6a1be6407dbe" name="Time" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="019400d1-c799-47e7-95d4-36e1e70ad7d9" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="ef4b352a-4ef5-488d-99c8-6c2f68ec00b9" />
+          </association>
+        </targetEnds>
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <useCaseModelRootHasTypes>
+      <actor Id="056b4abe-5d4d-4c8d-ac04-42c7ed1462e9" name="Ministry of Taxation" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="e39f78eb-b850-4cc5-b1dc-89963cc86149" />
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <actor Id="81cf7583-e861-403e-b6b1-a711ee894bb9" name="Social Protection Fund" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="0b76c062-d7f7-417f-a754-f6e73d97f07b" />
+      </actor>
+    </useCaseModelRootHasTypes>
+    <packageHasNamedElement>
+      <useCase Id="47d39065-3e06-4970-939e-7851b0e9c70f" name="Import Bank Transactions" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="3aca7c88-bce4-4927-be02-b72d13e80943" />
+        <targetEnds>
+          <association Id="65b4afef-4aa8-416e-92c6-2168ebb9418a" isDerived="false" sourceEndRoleName="Import Bank Transactions" targetEndRoleName="Bank" isLeaf="false" isAbstract="false">
+            <actorMoniker Id="09aac64f-5937-40de-8bdf-038545370364" LastKnownName="Bank" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="2612e271-5d38-409b-8c1a-e57f929a2e86" name="Import Bank Transactions" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="de5a4c08-542f-4d63-89c7-df11e2ae9100" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="ee45e37d-376d-46fc-9e81-86c6d46fffa6" name="Bank" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="a7288534-c0d2-4f67-ba5a-8ca827223540" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="5b87ffb8-bd32-4f41-b6f5-762a4f8e2733" />
+          </association>
+        </targetEnds>
+        <extendedCases>
+          <extend Id="df9fe1a5-48cd-4d0c-ad38-743320be86dd">
+            <useCaseMoniker Id="c5325990-e075-45e7-95ca-6b086e001834" LastKnownName="Browse Transactions" />
+            <elementDefinition Id="30072ae8-6c5f-4a19-8cfc-cd01c2f3eab4" />
+          </extend>
+        </extendedCases>
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <useCaseModelRootHasTypes>
+      <actor Id="09aac64f-5937-40de-8bdf-038545370364" name="Bank" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="1844ba52-a959-447b-aef6-74ed3512a00f" />
+      </actor>
+    </useCaseModelRootHasTypes>
+    <packageHasNamedElement>
+      <useCase Id="46ac32a8-01e9-4241-8619-83f56fb2e0b8" name="Browse Clients" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="701c29ed-dc01-4f77-bd36-19c94663820e" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="5660435f-4a51-42d9-8cd7-95e56a2bdb54" name="Investments" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="9b5ba4b5-a9f8-4026-b463-b1518b552e6c" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="85640f01-abde-4c01-85da-654a09f17d90" name="Budget" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="7fba9a6d-8015-432a-a3e7-ec4e5b6c69f1" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="41283c37-d0a8-4fd4-b0ee-55f0d6adec84" name="Goals" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="07acab24-f90d-4faa-a5ec-7734e77f0f4f" />
+        <subjects>
+          <subsystemMoniker Id="5fee056a-4f62-4d1e-b9da-2bfad7d1e61f" LastKnownName="Naviam - Online Home and Business Accounting System" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+  </packagedElements>
+  <package Id="e003b6d4-042d-44b6-a598-562a61523a71" name="Naviam.Model">
+    <elementDefinition Id="ce4c7712-a2ee-45ea-afd5-1a9dd766f082" />
+  </package>
+</useCaseModelRoot>

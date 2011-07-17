@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naviam", "Naviam\Naviam.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naviam.DAL", "Naviam.DAL\Naviam.DAL.csproj", "{76C27277-26E3-442E-B136-A4526A57A0AB}"
 EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "Naviam.Model", "Naviam.Model\Naviam.Model.modelproj", "{441BC66F-E29C-43C0-A238-187A2237D2B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{76C27277-26E3-442E-B136-A4526A57A0AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76C27277-26E3-442E-B136-A4526A57A0AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76C27277-26E3-442E-B136-A4526A57A0AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{441BC66F-E29C-43C0-A238-187A2237D2B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{441BC66F-E29C-43C0-A238-187A2237D2B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{441BC66F-E29C-43C0-A238-187A2237D2B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{441BC66F-E29C-43C0-A238-187A2237D2B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
