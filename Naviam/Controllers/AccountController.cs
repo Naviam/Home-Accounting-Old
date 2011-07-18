@@ -30,6 +30,11 @@ namespace Naviam.Controllers
         [HttpPost]
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
+            if (true)
+            {
+                return RedirectToAction("Accounts", "BankAccounts");
+            
+            }
             // If we got this far, something failed, redisplay form
             return View(model);
         }
