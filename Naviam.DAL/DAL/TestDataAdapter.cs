@@ -13,7 +13,7 @@ namespace Naviam.DAL
         {
             using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
-                NpgsqlCommand command = new NpgsqlCommand("select * from tst", holder.Connection);
+                NpgsqlCommand command = new NpgsqlCommand("select * from naviUsers", holder.Connection);
             }
 
         }
