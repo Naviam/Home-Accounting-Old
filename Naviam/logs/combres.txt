@@ -1,4 +1,0 @@
-2011-07-19 01:26:01,332 [10] DEBUG Combres.ChangeMonitor - Static resources change count: 1
-2011-07-19 01:26:01,337 [10] DEBUG Combres.Configuration - Change posted. Change Type: Resource - Affected resource list: 
- - ~/Scripts/common.min.js
-
