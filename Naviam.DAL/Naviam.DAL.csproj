@@ -46,11 +46,11 @@
   <ItemGroup>
     <Compile Include="DAL\SqlConnectionHelper.cs" />
     <Compile Include="DAL\TestDataAdapter.cs" />
+    <Compile Include="DAL\UserDataAdapter.cs" />
+    <Compile Include="Entities\User\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

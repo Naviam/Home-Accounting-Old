@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
+using Naviam.Resources;
+
 namespace Naviam.Models
 {
 
@@ -15,13 +17,13 @@ namespace Naviam.Models
 
     public class LogOnModel
     {
-        [Required]
-        [Display(Name = "User name")]
+        [Required(ErrorMessageResourceName="UserNameRequired", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [Display(Name = "UserName", ResourceType = typeof(DisplayNames))]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceName="Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Password", ResourceType = typeof(DisplayNames))]
         public string Password { get; set; }
 
         [Display(Name = "Remember me?")]
