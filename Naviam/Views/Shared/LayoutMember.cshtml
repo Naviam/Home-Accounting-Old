@@ -4,7 +4,9 @@
 <head>
     <title>@ViewBag.Title</title>
     @Html.CombresLink("siteCss")
-    @Html.CombresLink("jquery")
+    @Html.CombresLink("jquery validate")
+
+    <script type="text/javascript" src="@Url.Content(String.Format("~/Scripts/locale/Naviam.JavaScript.{0}.js", System.Threading.Thread.CurrentThread.CurrentUICulture.Name))"></script> 
     
     @*intellisense support*@
     @if (false)
@@ -23,7 +25,6 @@
 @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
 {
 <script type="text/javascript">
-
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-24526292-1']);
   _gaq.push(['_setDomainName', '.naviam.com']);
