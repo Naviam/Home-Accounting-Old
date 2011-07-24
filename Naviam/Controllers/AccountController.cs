@@ -40,7 +40,7 @@ namespace Naviam.Controllers
                 {
                     SessionHelper.UserProfile = prof;
                     //TODO: setup locale into Session["Culture"]
-                    return RedirectToAction("Accounts", "AccountsData");
+                    return RedirectToAction("Accounts", "BankAccountsData");
 
                 }
                 ModelState.AddModelError("", "The user name or password provided is incorrect.");

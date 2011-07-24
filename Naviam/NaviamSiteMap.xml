@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <tree xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="root">
-  <node url="~/AccountsData/Accounts" title="Счета" enableLocalization="false" style="equipment" controller="AccountsData" action="Accounts">
+  <node url="~/BankAccountsData/Accounts" title="Счета" enableLocalization="false" style="equipment" controller="BankAccountsData" action="Accounts">
   </node>
   <node url="~/Locations/Services" title="Отчеты" enableLocalization="false" style="equipment" controller="Locations" action="Services">
   </node>
