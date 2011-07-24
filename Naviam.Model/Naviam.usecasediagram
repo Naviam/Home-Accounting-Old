@@ -85,20 +85,6 @@ View calendar events
       </annotatedElements>
     </comment>
   </ownedCommentsInternal>
-  <profileInstances>
-    <packageHasProfileInstances Id="448e802f-61e8-4ab1-a57a-8f7fcd7eee50">
-      <profileInstance Id="bdee6ffb-d8e9-4f17-a979-0525807e51b5" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="d3ef11b4-6895-489e-8139-64f5a6f936d2">
-      <profileInstance Id="cfa77c09-387f-4882-a3eb-ec2fdbe63512" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <useCaseModelRootHasTypes>
       <actor Id="1f2e45ad-2de5-4e6b-9e93-6b5e8127a4f0" name="Home User" isAbstract="false" isLeaf="false">
@@ -768,5 +754,19 @@ View calendar events
   </packagedElements>
   <package Id="e003b6d4-042d-44b6-a598-562a61523a71" name="Naviam.Model">
     <elementDefinition Id="ce4c7712-a2ee-45ea-afd5-1a9dd766f082" />
+    <profileInstances>
+      <packageHasProfileInstances Id="448e802f-61e8-4ab1-a57a-8f7fcd7eee50">
+        <profileInstance Id="bdee6ffb-d8e9-4f17-a979-0525807e51b5" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="d3ef11b4-6895-489e-8139-64f5a6f936d2">
+        <profileInstance Id="cfa77c09-387f-4882-a3eb-ec2fdbe63512" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </useCaseModelRoot>
