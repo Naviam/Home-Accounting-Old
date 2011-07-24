@@ -47,7 +47,7 @@ namespace Naviam.Code.Parsers
         {
             bool res = false;
             string content = GetContent(fileName);
-            Match def = Regex.Match(content, HEADER_PATTERN, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
+            Match def = Regex.Match(content, HEADER_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Multiline);
             if (def.Success && content.Contains("ЗАО \"БелСвиссБанк\""))
                 res = true;
             return res;
@@ -59,7 +59,7 @@ namespace Naviam.Code.Parsers
             string content = GetContent(fileName);
             content = content.Replace("&nbsp;", "");
             CultureInfo ruCulture = new CultureInfo("ru", false);
-            Match header = Regex.Match(content, HEADER_PATTERN, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
+            Match header = Regex.Match(content, HEADER_PATTERN, RegexOptions.IgnoreCase  | RegexOptions.Multiline);
             if (header.Success)
             {
                 Match table = Regex.Match(content, TABLE_PATTERN, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline);
@@ -157,7 +157,7 @@ namespace Naviam.Code.Parsers
         public string GetContent(string fileName)
         {
             string content = null;
-            using (TextReader sr = new StreamReader(fileName))
+            using (TextReader sr = new StreamReader(fileName, System.Text.Encoding.GetEncoding(1251)))
             {
                 content = sr.ReadToEnd();
             }
