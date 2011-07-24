@@ -34,12 +34,13 @@ namespace Naviam.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserProfile prof = UserDataAdapter.GetUserProfile(model.UserName, model.Password);
+                //UserProfile prof = UserDataAdapter.GetUserProfile(model.UserName, model.Password);
+                UserProfile prof = new UserProfile();
                 if (prof != null)
                 {
                     SessionHelper.UserProfile = prof;
                     //TODO: setup locale into Session["Culture"]
-                    return RedirectToAction("Accounts", "BankAccounts");
+                    return RedirectToAction("Accounts", "AccountsData");
 
                 }
                 ModelState.AddModelError("", "The user name or password provided is incorrect.");
