@@ -76,6 +76,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\Parsers\BelSwissParser.cs" />
     <Compile Include="Code\SessionHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BankAccountsController.cs" />
@@ -147,6 +148,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-1.2.1.js" />
     <Content Include="Scripts\knockout-1.2.1.min.js" />
+    <Content Include="Scripts\knockout.mapping.js" />
+    <Content Include="Scripts\knockout.mapping.min.js" />
     <Content Include="Scripts\spine.js" />
     <Content Include="Scripts\spine.min.js" />
     <Content Include="Scripts\underscore-min.js" />
