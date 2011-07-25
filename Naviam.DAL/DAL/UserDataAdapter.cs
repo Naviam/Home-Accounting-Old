@@ -89,11 +89,11 @@ namespace Naviam.DAL
 
         private static string HashPassword(string userName, string password)
         {
-            byte[] plainTextBytes = Encoding.UTF8.GetBytes(userName);
-            byte[] saltBytes = new byte[plainTextBytes.Length];
-            for (int i = 0; i < plainTextBytes.Length; i++)
-                saltBytes[i] = plainTextBytes[i];
-            return SimpleHash.ComputeHash(password, "SHA512", saltBytes);
+            //byte[] plainTextBytes = Encoding.UTF8.GetBytes(userName);
+            //byte[] saltBytes = new byte[plainTextBytes.Length];
+            //for (int i = 0; i < plainTextBytes.Length; i++)
+            //    saltBytes[i] = plainTextBytes[i];
+            return SimpleHash.ComputeHash(userName + password + "SCEX", "SHA512", null);
         }
 
         public static UserProfile GetUserProfile(string userName, string password)
@@ -110,7 +110,7 @@ namespace Naviam.DAL
                     if (reader.Read())
                     {
                         res = new UserProfile(reader);
-                        if (!SimpleHash.VerifyHash(password, "SHA512", res.Password))
+                        if (!SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", res.Password))
                             res = null;
                     }
                 }
