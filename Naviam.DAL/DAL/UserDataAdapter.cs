@@ -8,6 +8,8 @@ using System.IO;
 
 using Naviam.Data;
 
+using Npgsql;
+
 namespace Naviam.DAL
 {
     public class UserDataAdapter
@@ -85,15 +87,35 @@ namespace Naviam.DAL
         }
         #endregion Encryption/Dec
 
-        private static string HashPassword(string password)
+        private static string HashPassword(string userName, string password)
         {
-            string res = "";
-            return res;
+            byte[] plainTextBytes = Encoding.UTF8.GetBytes(userName);
+            byte[] saltBytes = new byte[plainTextBytes.Length];
+            for (int i = 0; i < plainTextBytes.Length; i++)
+                saltBytes[i] = plainTextBytes[i];
+            return SimpleHash.ComputeHash(password, "SHA512", saltBytes);
         }
 
         public static UserProfile GetUserProfile(string userName, string password)
         {
-            return new UserProfile();
+            //string tst = HashPassword("s@s.s", "1");
+            UserProfile res = null;
+            using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+            {
+                NpgsqlCommand command = new NpgsqlCommand("\"GetUser\"", holder.Connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.Add("userName", NpgsqlTypes.NpgsqlDbType.Name, 64).Value = userName;
+                using (NpgsqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        res = new UserProfile(reader);
+                        if (!SimpleHash.VerifyHash(password, "SHA512", res.Password))
+                            res = null;
+                    }
+                }
+                return res;
+            }
         }
     }
 }
