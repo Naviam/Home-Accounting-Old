@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Naviam.Controllers
 {
-    public class BankAccountsDataController : Controller
+    public class BankAccountsDataController : BaseController
     {
         public ActionResult Accounts()
         {
