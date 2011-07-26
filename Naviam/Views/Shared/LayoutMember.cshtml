@@ -3,8 +3,9 @@
 <html>
 <head>
     <title>@ViewBag.Title</title>
-    @Html.CombresLink("siteCss")
-    @Html.CombresLink("jquery validate")
+    @Html.CombresLink("naviamCss")
+    <!--[if lt IE 8]><link rel="stylesheet" href="@Url.Content("~/Content/blueprint/ie.css")" type="text/css" media="screen, projection"><![endif]-->
+    @Html.CombresLink("jquery tools validate")
 
     <script type="text/javascript" src="@Url.Content(String.Format("~/Scripts/locale/Naviam.JavaScript.{0}.js", System.Threading.Thread.CurrentThread.CurrentUICulture.Name))"></script> 
     
@@ -16,12 +17,31 @@
 </head>
 
 <body>
-    <div class="page">
-
-        <div id="main">
-            @RenderBody()
-        </div>
+<div class="container">
+    <nav>
+        <ul class="left">
+            <li><a href="#">Домашний учет</a></li>
+            <li><a href="#">ИП "Гатальский В.."</a></li>
+            <li><a href="#">ООО "Илайфлэб"</a></li>
+        </ul>
+        <ul class="right">
+            <li><a href="Error.cshtml">Виталий Гатальский</a></li>
+            <li><a href="Error.cshtml">0</a></li>
+            <li><a href="Error.cshtml">?</a></li>
+            <li><a href="Error.cshtml">Выйти</a></li>
+        </ul>
+    </nav>
+    <hr/>
+    <header>
+        Logo
+    </header>
+    <hr/>
+    <div id="main">
+        @RenderBody()
     </div>
+    <hr/>
+    <footer>© 2011 Naviam Inc.</footer>
+</div>
 @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
 {
 <script type="text/javascript">
