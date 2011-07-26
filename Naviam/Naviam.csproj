@@ -165,8 +165,6 @@
     </Content>
     <Content Include="Global.asax" />
     <Content Include="MSBuild\MSBuildCompressJS.xml" />
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="NaviamSiteMap.xml">
       <SubType>Designer</SubType>
     </Content>
