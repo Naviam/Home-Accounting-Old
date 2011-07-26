@@ -289,6 +289,6 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>$(MSBuildBinPath)\msbuild "$(ProjectDir)MSBuild\MSBuildCompressJS.xml"
-$(SolutionDir)\JavascriptResxGenerator\bin\JavascriptResxGenerator $(ProjectDir)\Resources\JavaScript.resx $(ProjectDir)\Scripts\locale $(ProjectDir)\Scripts\locale\vsdoc Naviam</PostBuildEvent>
+$(ProjectDir)\..\JavascriptResxGenerator\bin\JavascriptResxGenerator $(ProjectDir)\Resources\JavaScript.resx $(ProjectDir)\Scripts\locale $(ProjectDir)\Scripts\locale\vsdoc Naviam</PostBuildEvent>
   </PropertyGroup>
 </Project>
