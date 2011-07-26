@@ -25,7 +25,7 @@ namespace Naviam.Controllers
 
         public ActionResult LogOn()
         {
-            TestDataAdapter.Test();
+            //TestDataAdapter.Test();
             return View();
         }
 
