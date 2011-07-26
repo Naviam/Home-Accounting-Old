@@ -6,12 +6,11 @@ using System.Web.Mvc;
 
 namespace Naviam.Controllers
 {
-    public class BankAccountsController : Controller
+    public class BankAccountsDataController : BaseController
     {
         public ActionResult Accounts()
         {
             return View();
         }
-
     }
 }

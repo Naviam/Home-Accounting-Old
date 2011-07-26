@@ -25,6 +25,8 @@ namespace Naviam.Controllers
 
         public ActionResult LogOn()
         {
+            FormsAuthentication.SignOut();
+            Session.Abandon();
             //TestDataAdapter.Test();
             return View();
         }
@@ -35,11 +37,22 @@ namespace Naviam.Controllers
             if (ModelState.IsValid)
             {
                 UserProfile prof = UserDataAdapter.GetUserProfile(model.UserName, model.Password);
+                //UserProfile prof = new UserProfile();
                 if (prof != null)
                 {
                     SessionHelper.UserProfile = prof;
+                    //setup forms ticket
+                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(model.UserName, false, (int)FormsAuthentication.Timeout.TotalMinutes);
+                    Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket)));
+
                     //TODO: setup locale into Session["Culture"]
-                    return RedirectToAction("Accounts", "BankAccounts");
+
+                    if (!String.IsNullOrEmpty(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                        return RedirectToAction("Accounts", "BankAccountsData");
 
                 }
                 ModelState.AddModelError("", "The user name or password provided is incorrect.");
