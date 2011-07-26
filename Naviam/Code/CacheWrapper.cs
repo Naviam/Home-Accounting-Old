@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.SessionState;
 using System.Configuration;
 using ServiceStack.Redis;
 using System.Web.WebPages;
@@ -58,11 +59,23 @@ namespace Naviam.Code
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    if (id != null)
-                        key = id + "_" + key;
                     res = typedRedis[key];
-                    using (redisClient.AcquireLock(key))
-                        typedRedis[key] = val;
+                    HttpSessionState sess = null;
+                    if (id != null)
+                    {
+                        key = id + "_" + key;
+                        sess = HttpContext.Current.Session;
+                    }
+                    if (sess != null)
+                    {
+                        //session style
+                        TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
+                        using (redisClient.AcquireLock(key))
+                            typedRedis.SetEntry(key, val, exp);
+                    }
+                    else
+                        using (redisClient.AcquireLock(key))
+                            typedRedis[key] = val;
                 }
             }
             else
@@ -92,10 +105,22 @@ namespace Naviam.Code
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
+                    HttpSessionState sess = null;
                     if (id != null)
+                    {
                         key = id + "_" + key;
-                    using (redisClient.AcquireLock(key))
-                        typedRedis[key] = val;
+                        sess = HttpContext.Current.Session;
+                    }
+                    if (sess != null)
+                    {
+                        //session style
+                        TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
+                        using (redisClient.AcquireLock(key))
+                            typedRedis.SetEntry(key, val, exp);
+                    }
+                    else
+                        using (redisClient.AcquireLock(key))
+                            typedRedis[key] = val;
                 }
             }
             else
