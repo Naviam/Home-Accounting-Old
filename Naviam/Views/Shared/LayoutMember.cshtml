@@ -5,7 +5,7 @@
     <title>@ViewBag.Title</title>
     @Html.CombresLink("naviamCss")
     <!--[if lt IE 8]><link rel="stylesheet" href="@Url.Content("~/Content/blueprint/ie.css")" type="text/css" media="screen, projection"><![endif]-->
-    @Html.CombresLink("jquery tools validate")
+    @Html.CombresLink("jquery validate")
 
     <script type="text/javascript" src="@Url.Content(String.Format("~/Scripts/locale/Naviam.JavaScript.{0}.js", System.Threading.Thread.CurrentThread.CurrentUICulture.Name))"></script> 
     
@@ -28,7 +28,7 @@
             <li><a href="Error.cshtml">Виталий Гатальский</a></li>
             <li><a href="Error.cshtml">0</a></li>
             <li><a href="Error.cshtml">?</a></li>
-            <li><a href="Error.cshtml">Выйти</a></li>
+            <li><a href="@Url.Action("LogOn", "Account")">Выйти</a></li>
         </ul>
     </nav>
     <hr/>

@@ -2,10 +2,10 @@
 
 @{
     ViewBag.Title = "Naviam";
-    Layout = null;
+    Layout = "~/Views/Shared/LayoutPublic.cshtml";
 }
 
-@section LeftColumn {
+@*@section LeftColumn {
     <div id="accordion"> 
  
 	<h2 class="current">Наличные</h2> 
@@ -35,11 +35,11 @@
                 $("#accordion").tabs("#accordion div.pane", { tabs: 'h2', effect: 'slide', initialIndex: null });
             });
 </script>  
-}
+}*@
 
-@section RightColumn {
+@*@section RightColumn {
  test
-}
+}*@
 
 @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
 
@@ -63,10 +63,10 @@
                 @Html.PasswordFor(m => m.Password)
                 @Html.ValidationMessageFor(m => m.Password)
             </div>
-            <div>
+@*            <div>
                 @Html.CheckBoxFor(m => m.RememberMe)
                 @Html.LabelFor(m => m.RememberMe)
-            </div>
+            </div>*@
 
             <p>
                 <input type="submit" value="Log On" />
