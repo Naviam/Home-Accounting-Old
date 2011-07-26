@@ -1,4 +1,5 @@
 ﻿$base-color: Gray;
+$error-color: #ff0000;
 
 @mixin rounded ($radius: 5px) {
   border-radius: $radius;
@@ -61,4 +62,20 @@ nav {
 		}
 	}
 
+}
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error
+{
+    color: $error-color !important;
+}
+.input-validation-error
+{
+    border: 1px solid $error-color !important;
+    background-color: #ffeeee !important;
+}
+.validation-summary-errors
+{
+    font-weight: bold;
+    color: $error-color;
 }

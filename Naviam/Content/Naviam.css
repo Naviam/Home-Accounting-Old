@@ -56,3 +56,16 @@ nav {
       margin: 0 0 -5px 0;
       font-size: 16px;
       color: #999; }
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+  color: red !important; }
+
+.input-validation-error {
+  border: 1px solid red !important;
+  background-color: #ffeeee !important; }
+
+.validation-summary-errors {
+  font-weight: bold;
+  color: red; }
