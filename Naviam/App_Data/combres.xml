@@ -24,8 +24,9 @@
                 defaultCssMinifierRef="yui" 
                 defaultJSMinifierRef="off"
                >
-    <resourceSet name="siteCss" type="css">
-      <resource path="~/Content/Site.css" />
+    <resourceSet name="naviamCss" type="css">
+        <resource path="~/Content/Blueprint/screen.css" />
+        <resource path="~/Content/Naviam.css" />
     </resourceSet>
     <!--JS-->
     <resourceSet name="jquery" type="js">
@@ -37,6 +38,13 @@
       <resource path="~/Scripts/jquery.validate.min.js" />
       <resource path="~/Scripts/jquery.validate.unobtrusive.min.js" />
       <resource path="~/Scripts/common.min.js" />
+    </resourceSet>
+    <resourceSet name="jquery tools validate" type="js">
+        <resource path="~/Scripts/jquery-1.6.2.min.js" />
+        <resource path="~/Scripts/jquery.validate.min.js" />
+        <resource path="~/Scripts/jquery.validate.unobtrusive.min.js" />
+        <resource path="~/Scripts/jquery.tools.min.js" />
+        <resource path="~/Scripts/common.min.js" />
     </resourceSet>
     <resourceSet name="knockout map validate" type="js">
       <resource path="~/Scripts/jquery-1.6.2.min.js" />
