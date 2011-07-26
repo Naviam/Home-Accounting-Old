@@ -11,6 +11,11 @@ namespace Naviam.Code
     public class CacheWrapper
     {
 
+        //Tests:
+        //Load of 300000    Save of 300000
+        //simple-4900ms     simple-3200ms
+        //list-4600ms       list-15300ms
+
         #region Single obj
 
         public static T Get<T>(string key) { return Get<T>(key, null); }
@@ -56,7 +61,8 @@ namespace Naviam.Code
                     if (id != null)
                         key = id + "_" + key;
                     res = typedRedis[key];
-                    typedRedis[key] = val;
+                    using (redisClient.AcquireLock(key))
+                        typedRedis[key] = val;
                 }
             }
             else
@@ -88,7 +94,8 @@ namespace Naviam.Code
                     var typedRedis = redisClient.GetTypedClient<T>();
                     if (id != null)
                         key = id + "_" + key;
-                    typedRedis[key] = val;
+                    using (redisClient.AcquireLock(key))
+                        typedRedis[key] = val;
                 }
             }
             else
