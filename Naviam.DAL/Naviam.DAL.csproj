@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="DAL\SqlConnectionHelper.cs" />
     <Compile Include="DAL\TestDataAdapter.cs" />
-    <Compile Include="DAL\UserDataAdapter.cs" />
     <Compile Include="Entities\User\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

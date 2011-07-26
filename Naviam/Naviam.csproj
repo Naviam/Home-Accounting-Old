@@ -131,6 +131,14 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\combres_full_with_annotation.xml" />
+    <Content Include="Content\blueprint\ie.css" />
+    <Content Include="Content\blueprint\print.css" />
+    <Content Include="Content\blueprint\screen.css" />
+    <Content Include="Content\Naviam.css">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Naviam.scss</DependentUpon>
+    </Content>
     <Content Include="Global.asax" />
     <Content Include="MSBuild\MSBuildCompressJS.xml" />
     <Content Include="Scripts\backbone-min.js" />
@@ -139,8 +147,10 @@
     <Content Include="Scripts\common.min.js" />
     <Content Include="Scripts\jquery-1.6.2.js" />
     <Content Include="Scripts\jquery-1.6.2.min.js" />
+    <Content Include="Scripts\jquery.jeditable.min.js" />
     <Content Include="Scripts\jquery.tmpl.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
+    <Content Include="Scripts\jquery.tools.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -177,7 +187,13 @@
   <ItemGroup>
     <Content Include="Views\BankAccounts\Accounts.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Content\Naviam.scss">
+      <Generator>ScssGenerator</Generator>
+      <LastGenOutput>Naviam.css</LastGenOutput>
+    </None>
+    <Content Include="Views\Shared\_LayoutWithSidebars.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\DisplayNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
