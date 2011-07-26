@@ -95,7 +95,7 @@
     <Compile Include="Code\Parsers\BelSwissParser.cs" />
     <Compile Include="Code\SessionHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\BankAccountsController.cs" />
+    <Compile Include="Controllers\BankAccountsDataController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\MenuAppController.cs" />
     <Compile Include="Global.asax.cs">
