@@ -16,30 +16,40 @@
     var transModel = {
         paging: { Page: 1 }
         };
-    $(document).ready(function () {
-        $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
-            transModel = ko.mapping.fromJS(res);
-            transModel.paging.Page.subscribe(function (newValue) {
-                transModel.ReloadPage();
-            });
-            transModel.ReloadPage = function(){
-                $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
-                    ko.mapping.updateFromJS(transModel, res);
+        $(document).ready(function () {
+            $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
+                transModel = ko.mapping.fromJS(res);
+                transModel.paging.Page.subscribe(function (newValue) {
+                    transModel.ReloadPage();
                 });
-            }
-            ko.applyBindings(transModel, $("#transGrid")[0]);
+                transModel.selectedRow = ko.observable(-1);
+                transModel.ReloadPage = function () {
+                    $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
+                        ko.mapping.updateFromJS(transModel, res);
+                        transModel.selectedRow(-1);
+                    });
+                }
+                transModel.ShowEdit = function (item) {
+                    //alert(item.Id());
+                    //item.IsEditing(true);
+                    transModel.selectedRow(item.Id());
+                }
+                ko.applyBindings(transModel, $("#transGrid")[0]);
+            });
         });
-    });
 </script>
 
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 
 <script type="text/html" id="transRowTemplate">
-    <tr>
-        <td><span data-bind="text: Description"></span></td>
-        <td><span data-bind="text: Category"></span></td>
-        <td><span data-bind="text: Amount"></span></td>
+    <tr data-bind="click: function() { transModel.ShowEdit($data); }, css: {selected: transModel.selectedRow() == Id()}">
+        <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
+        <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Category" /></td>
+        <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Amount"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Amount" /></td>
     </tr>
+    <div data-bind="visible: transModel.selectedRow() == Id()">
+        <a href="#">Edit</a>
+    </div>
 </script>
 <script type="text/html" id="transPagingTemplate">
     <span>Page:</span>
@@ -51,7 +61,7 @@
 </script>
 
 <div id="transGrid">
-    <table>
+    <table class='trans_grid'>
         <thead>
             <tr>
                 <th>Description</th>

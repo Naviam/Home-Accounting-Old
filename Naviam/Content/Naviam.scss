@@ -83,3 +83,12 @@ nav {
 	a { padding: 0.5em; }
 	a.selected { background-color: Black; color: White; }
 }
+.trans_grid {
+	border-collapse:collapse;
+	tr.selected {
+		border:1px solid #000;margin-bottom:4px;
+	}
+	tr:hover {
+		td{background-color:#c0d2ad;cursor:pointer}
+	}
+}
