@@ -29,10 +29,16 @@
                         transModel.selectedRow(-1);
                     });
                 }
-                transModel.ShowEdit = function (item) {
-                    //alert(item.Id());
-                    //item.IsEditing(true);
+                transModel.GoToEdit = function (item) {
                     transModel.selectedRow(item.Id());
+//                    item.Description.subscribe(function (newValue) {
+//                        alert(newValue);
+//                    });
+                }
+                transModel.ShowEditArea = function (btn) {
+                    var editArea = $(btn).parent().find('.edit_area');
+                    //load data into form
+                    editArea.slideDown();
                 }
                 ko.applyBindings(transModel, $("#transGrid")[0]);
             });
@@ -42,13 +48,16 @@
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 
 <script type="text/html" id="transRowTemplate">
-    <tr data-bind="click: function() { transModel.ShowEdit($data); }, css: {selected: transModel.selectedRow() == Id()}">
+    <tr data-bind="click: function() { transModel.GoToEdit($data); }, css: {selected: transModel.selectedRow() == Id()}">
         <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
         <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Category" /></td>
         <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Amount"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Amount" /></td>
     </tr>
     <div data-bind="visible: transModel.selectedRow() == Id()">
-        <a href="#">Edit</a>
+        <a href="#" onclick='return transModel.ShowEditArea(this);'>Edit</a>
+        <div class='edit_area hidden' data-bind="visible: transModel.selectedRow() == Id()">
+            tstst
+        </div>
     </div>
 </script>
 <script type="text/html" id="transPagingTemplate">

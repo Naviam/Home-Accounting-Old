@@ -22,6 +22,7 @@ namespace Naviam.Controllers
             public int RowsOnPage { get; set; }
             public int RowsCount { get; set; }
             public string Filter { get; set; }
+            public string Sort { get; set; }
 
             public IEnumerable<T> ApplyPaging<T>(IEnumerable<T> input)
             {
