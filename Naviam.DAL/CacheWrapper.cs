@@ -187,6 +187,7 @@ namespace Naviam.Code
                     using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
+                        list.Clear();
                         val.ForEach(x => list.Add(x));
                     }
                     if (sess != null)

@@ -13,15 +13,26 @@ namespace Naviam.Controllers
     public class TransactionsController : BaseController
     {
 
-        private const int PageSize = 3;
 
         public class Paging
         {
+            public int PageSize = 3;
             public int Page { get; set; }
             public int PagesCount { get; set; }
             public int RowsOnPage { get; set; }
             public int RowsCount { get; set; }
             public string Filter { get; set; }
+
+            public IEnumerable<T> ApplyPaging<T>(IEnumerable<T> input)
+            {
+                PagesCount = (int)Math.Ceiling((double)input.Count() / PageSize);
+                RowsCount = input.Count();
+                if (Page < 1) Page = 1;
+                if (Page > PagesCount) Page = PagesCount;
+                input = input.Skip((Page - 1) * PageSize).Take(PageSize).ToList();
+                RowsOnPage = input.Count();
+                return input;
+            }
         }
 
 
@@ -35,13 +46,8 @@ namespace Naviam.Controllers
         {
             UserProfile user = SessionHelper.UserProfile;
             IEnumerable<Transaction> trans = TransactionsDataAdapter.GetTransactions(user.Id);
-            
-            paging.PagesCount = (int)Math.Ceiling((double)trans.Count() / PageSize);
-            paging.RowsCount = trans.Count();
-            if (paging.Page < 1) paging.Page = 1;
-            if (paging.Page > paging.PagesCount) paging.Page = paging.PagesCount;
-            trans = trans.Skip((paging.Page - 1) * PageSize).Take(PageSize).ToList();
-            paging.RowsOnPage = trans.Count();
+
+            trans = paging.ApplyPaging<Transaction>(trans);
 
             return Json(new { items = trans, paging = paging });
         }
