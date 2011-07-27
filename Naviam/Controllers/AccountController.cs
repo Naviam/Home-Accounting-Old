@@ -37,7 +37,7 @@ namespace Naviam.Controllers
             if (ModelState.IsValid)
             {
                 UserProfile prof = UserDataAdapter.GetUserProfile(model.UserName, model.Password);
-                //UserProfile prof = new UserProfile();
+                //UserProfile prof = new UserProfile() { Id = 10};
                 if (prof != null)
                 {
                     SessionHelper.UserProfile = prof;
