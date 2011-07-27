@@ -18,20 +18,22 @@ namespace Naviam.DAL
         public static IEnumerable<Transaction> GetTransactions(int? userId) { return GetTransactions(userId, false); }
         public static IEnumerable<Transaction> GetTransactions(int? userId, bool forceSqlLoad)
         {
+            //CacheWrapper.UpdateList<Transaction>(CacheKey, new Transaction() { Description = "Test3", Category = "Dinner3", Amount = 140, Id = 1 }, userId);
             List<Transaction> res = CacheWrapper.GetList<Transaction>(CacheKey, userId);
             if (res == null || forceSqlLoad)
             {
                 //load from DB
                 res = new List<Transaction>();
-                res.Add(new Transaction() { Description = "Test", Category = "Dinner", Amount = 100 });
-                res.Add(new Transaction() { Description = "Test", Category = "Dinner", Amount = 100 });
-                res.Add(new Transaction() { Description = "Test", Category = "Dinner", Amount = 100 });
-                res.Add(new Transaction() { Description = "Test", Category = "Dinner", Amount = 100 });
-                res.Add(new Transaction() { Description = "Test2", Category = "Dinner2", Amount = 120 });
-                res.Add(new Transaction() { Description = "Test2", Category = "Dinner2", Amount = 120 });
-                res.Add(new Transaction() { Description = "Test2", Category = "Dinner2", Amount = 120 });
+                res.Add(new Transaction() { Description = "Test", Category = "Dinner", Amount = 100, Id=1 });
+                res.Add(new Transaction() { Description = "Test", Category = "Dinner", Amount = 100, Id = 2 });
+                res.Add(new Transaction() { Description = "Test", Category = "Dinner", Amount = 100, Id = 3 });
+                res.Add(new Transaction() { Description = "Test", Category = "Dinner", Amount = 100, Id = 4 });
+                res.Add(new Transaction() { Description = "Test2", Category = "Dinner2", Amount = 120, Id = 5 });
+                res.Add(new Transaction() { Description = "Test2", Category = "Dinner2", Amount = 120, Id = 6 });
+                res.Add(new Transaction() { Description = "Test2", Category = "Dinner2", Amount = 120, Id = 7 });
                 //save to cache
                 CacheWrapper.SetList<Transaction>(CacheKey, res, userId);
+                //CacheWrapper.UpdateList<Transaction>(CacheKey, new Transaction() { Description = "Test3", Category = "Dinner3", Amount = 140, Id = 1 }, userId);
                 //CacheWrapper.Set<List<Transaction>>(CacheKey, res, userId);
             }
             return res;

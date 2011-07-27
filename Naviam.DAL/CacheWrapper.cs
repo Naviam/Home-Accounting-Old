@@ -70,11 +70,11 @@ namespace Naviam.Code
                     {
                         //session style
                         TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
-                        using (redisClient.AcquireLock(key))
+                        using (redisClient.AcquireLock(key + "lock"))
                             typedRedis.SetEntry(key, val, exp);
                     }
                     else
-                        using (redisClient.AcquireLock(key))
+                        using (redisClient.AcquireLock(key + "lock"))
                             typedRedis[key] = val;
                 }
             }
@@ -115,11 +115,11 @@ namespace Naviam.Code
                     {
                         //session style
                         TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
-                        using (redisClient.AcquireLock(key))
+                        using (redisClient.AcquireLock(key + "lock"))
                             typedRedis.SetEntry(key, val, exp);
                     }
                     else
-                        using (redisClient.AcquireLock(key))
+                        using (redisClient.AcquireLock(key + "lock"))
                             typedRedis[key] = val;
                 }
             }
@@ -148,7 +148,7 @@ namespace Naviam.Code
                     if (id != null)
                         key = id + "_" + key;
                     var list = typedRedis.Lists[key];
-                    res = list.ToList();
+                    res = list.GetAll();
                     if (res.Count == 0)
                         res = null;
                 }
@@ -184,7 +184,7 @@ namespace Naviam.Code
                         key = id + "_" + key;
                         sess = HttpContext.Current.Session;
                     }
-                    //using (redisClient.AcquireLock(key))
+                    using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
                         val.ForEach(x => list.Add(x));
@@ -220,7 +220,7 @@ namespace Naviam.Code
                         key = id + "_" + key;
                         sess = HttpContext.Current.Session;
                     }
-                    //using (redisClient.AcquireLock(key))
+                    using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
                         list.Add(val);
@@ -247,48 +247,57 @@ namespace Naviam.Code
             }
         }
 
-        //TODO: update 
-        //public static void UpdateList<T>(string key, T val) { UpdateList<T>(key, val, null); }
-        //public static void UpdateList<T>(string key, T val, int? id)
-        //{
-        //    if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
-        //    {
-        //        using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
-        //        {
-        //            var typedRedis = redisClient.GetTypedClient<T>();
-        //            HttpSessionState sess = null;
-        //            if (id != null)
-        //            {
-        //                key = id + "_" + key;
-        //                sess = HttpContext.Current.Session;
-        //            }
-        //            //using (redisClient.AcquireLock(key))
-        //            {
-        //                var list = typedRedis.Lists[key];
-        //                list.Add(val);
-        //            }
-        //            if (sess != null)
-        //            {
-        //                //session style
-        //                TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
-        //                typedRedis.ExpireEntryIn(key, exp);
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        object obj = null;
-        //        if (id != null)
-        //            obj = HttpContext.Current.Session[key];
-        //        else
-        //            obj = HttpContext.Current.Cache[key];
-        //        if (obj != null)
-        //        {
-        //            //TODO: update in session
-        //            //((List<T>)obj).u(val);
-        //        }
-        //    }
-        //}
+        public static void UpdateList<T>(string key, T val) { UpdateList<T>(key, val, null); }
+        public static void UpdateList<T>(string key, T val, int? id)
+        {
+            if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
+            {
+                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                {
+                    var typedRedis = redisClient.GetTypedClient<T>();
+                    HttpSessionState sess = null;
+                    if (id != null)
+                    {
+                        key = id + "_" + key;
+                        sess = HttpContext.Current.Session;
+                    }
+                    using (redisClient.AcquireLock(key + "lock"))
+                    {
+                        var list = typedRedis.Lists[key];
+                        int index = list.IndexOf(val);
+                        if (index != -1)
+                            list[index] = val;
+                    }
+                    if (sess != null)
+                    {
+                        //session style
+                        TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
+                        typedRedis.ExpireEntryIn(key, exp);
+                    }
+                }
+            }
+            else
+            {
+                object obj = null;
+                if (id != null)
+                    obj = HttpContext.Current.Session[key];
+                else
+                    obj = HttpContext.Current.Cache[key];
+                if (obj != null)
+                {
+                    List<T> lst = (List<T>)obj;
+                    for (int i = 0; i < lst.Count; i++)
+                    {
+                        var existingItem = lst[i];
+                        if (existingItem.Equals(val))
+                        {
+                            lst[i] = val;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
         #endregion
     }

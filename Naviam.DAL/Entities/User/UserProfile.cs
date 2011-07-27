@@ -11,9 +11,8 @@ namespace Naviam.Data
     /// User Profile object
     /// </summary>
     [Serializable]
-    public class UserProfile
+    public class UserProfile : DbEntity
     {
-        public int? Id { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         

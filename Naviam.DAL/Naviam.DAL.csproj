@@ -57,6 +57,7 @@
     <Compile Include="DAL\SqlConnectionHelper.cs" />
     <Compile Include="DAL\TestDataAdapter.cs" />
     <Compile Include="DAL\UserDataAdapter.cs" />
+    <Compile Include="Entities\DbEntity.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Entities\Transaction.cs" />
     <Compile Include="Entities\User\UserProfile.cs" />

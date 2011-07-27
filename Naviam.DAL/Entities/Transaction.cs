@@ -8,7 +8,7 @@ namespace Naviam.Data
 {
 
     [Serializable]
-    public class Transaction
+    public class Transaction : DbEntity
     {
         public string Description { get; set; }
         public string Category { get; set; }
