@@ -6,15 +6,18 @@ jQuery.postErr = function (url, data, callback, type) {
         callback = data;
         data = null;
     }
+    var contentType = type == 'json' ? "application/json; charset=utf-8" : "application/x-www-form-urlencoded";
     $.ajax({
         type: "POST",
         url: url,
         data: data,
         complete: function () {
-//            $("#saving").hide();
-//            $("#loading").hide();
+            //            $("#saving").hide();
+            //            $("#loading").hide();
         },
         success: callback,
+        contentType: contentType,
+
         dataType: type,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             if (XMLHttpRequest.status == 500) {

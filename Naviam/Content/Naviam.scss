@@ -63,8 +63,7 @@ nav {
 	}
 
 }
-/* Styles for validation helpers
------------------------------------------------------------*/
+/* Styles for validation helpers-----------------------------------------------------------*/
 .field-validation-error
 {
     color: $error-color !important;
@@ -78,4 +77,9 @@ nav {
 {
     font-weight: bold;
     color: $error-color;
+}
+/*Paging----------*/
+.paging {
+	a { padding: 0.5em; }
+	a.selected { background-color: Black; color: White; }
 }

@@ -57,8 +57,7 @@ nav {
       font-size: 16px;
       color: #999; }
 
-/* Styles for validation helpers
------------------------------------------------------------*/
+/* Styles for validation helpers-----------------------------------------------------------*/
 .field-validation-error {
   color: red !important; }
 
@@ -69,3 +68,10 @@ nav {
 .validation-summary-errors {
   font-weight: bold;
   color: red; }
+
+/*Paging----------*/
+.paging a {
+  padding: 0.5em; }
+.paging a.selected {
+  background-color: Black;
+  color: White; }

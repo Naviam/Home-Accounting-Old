@@ -52,7 +52,7 @@ namespace Naviam.Controllers
                         return Redirect(returnUrl);
                     }
                     else
-                        return RedirectToAction("Accounts", "BankAccountsData");
+                        return RedirectToAction("Index", "Transactions");
 
                 }
                 ModelState.AddModelError("", "The user name or password provided is incorrect.");

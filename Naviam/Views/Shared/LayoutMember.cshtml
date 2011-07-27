@@ -1,11 +1,12 @@
 ﻿@using Combres.Mvc;
+@using System.Reflection;
 <!DOCTYPE html>
 <html>
 <head>
     <title>@ViewBag.Title</title>
     @Html.CombresLink("naviamCss")
     <!--[if lt IE 8]><link rel="stylesheet" href="@Url.Content("~/Content/blueprint/ie.css")" type="text/css" media="screen, projection"><![endif]-->
-    @Html.CombresLink("jquery validate")
+    @Html.CombresLink("knockout map")
 
     <script type="text/javascript" src="@Url.Content(String.Format("~/Scripts/locale/Naviam.JavaScript.{0}.js", System.Threading.Thread.CurrentThread.CurrentUICulture.Name))"></script> 
     
@@ -40,7 +41,8 @@
         @RenderBody()
     </div>
     <hr/>
-    <footer>© 2011 Naviam Inc.</footer>
+    @{Assembly assembly = typeof(Naviam.Code.CacheWrapper).Assembly;}
+    <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
 </div>
 @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
 {
