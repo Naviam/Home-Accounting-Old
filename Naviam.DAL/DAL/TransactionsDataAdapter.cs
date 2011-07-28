@@ -39,6 +39,24 @@ namespace Naviam.DAL
             return res;
         }
 
+        public static Transaction GetTransaction(int? id, int? userId) { return GetTransaction(id, userId, false); }
+        public static Transaction GetTransaction(int? id, int? userId, bool forceSqlLoad)
+        {
+            Transaction res = CacheWrapper.GetFromList<Transaction>(CacheKey, new Transaction() { Id = id }, userId);
+            if (res == null || forceSqlLoad)
+            {
+                //load from DB
+                //TODO: on db side - check that trans belongs to user
+                res = new Transaction() { Description = "Test", Category = "Dinner", Amount = 100.20M, Id = 1, Date = DateTime.Now };
+                //save to cache
+                if (res == null) // not found in cache->add
+                    CacheWrapper.AddToList<Transaction>(CacheKey, res, userId);
+                else
+                    CacheWrapper.UpdateList<Transaction>(CacheKey, res, userId);
+            }
+            return res;
+        }
+
         public static int Insert()
         {
             int res = -1;
@@ -51,14 +69,14 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static int Update()
+        public static int Update(Transaction trans, int? userId)
         {
             int res = -1;
             //update db
-            if (res == 0)
+            //if (res == 0)
             {
                 //if ok - update cache
-                //CacheWrapper.UpdateList<Transaction>(CacheKey, res, userId);
+                CacheWrapper.UpdateList<Transaction>(CacheKey, trans, userId);
             }
             return res;
         }

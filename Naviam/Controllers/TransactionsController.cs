@@ -57,6 +57,9 @@ namespace Naviam.Controllers
         public string UpdateTransaction(Transaction trans)
         {
             UserProfile user = SessionHelper.UserProfile;
+            //Transaction updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, user.Id);
+            //TryUpdateModel(updateTrans);
+            TransactionsDataAdapter.Update(trans, user.Id);
             return "ok";
         }
 
