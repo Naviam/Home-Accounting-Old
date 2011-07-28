@@ -8,6 +8,8 @@ using Combres;
 using System.Globalization;
 using System.Threading;
 
+using Naviam.Code;
+
 namespace Naviam
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
@@ -41,6 +43,9 @@ namespace Naviam
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            ModelBinders.Binders.Add(typeof(decimal?), new CustomDecimalModelBinder());
+            ModelBinders.Binders.Add(typeof(DateTime?), new CustomDateTimeModelBinder());
         }
 
         protected void Application_AcquireRequestState(object sender, EventArgs e)

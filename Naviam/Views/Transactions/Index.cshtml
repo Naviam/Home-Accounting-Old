@@ -55,8 +55,13 @@
                     transModel.Save();
                 });
             }
+            //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
+            //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
             transModel.Save = function () {
                 if (this.currentItem != null) {
+                    //transModel.currentItem.Date = transModel.currentItem.Date().replace('/Date(', '\\/Date(').replace(')/', ')\\/');
+//                    $.postErr('@Url.Action("UpdateTransaction", "Transactions")', ko.toJSON(transModel.currentItem), function (res) {
+//                    }, 'json');
                     $.postErr('@Url.Action("UpdateTransaction", "Transactions")', transModel.currentItem, function (res) {
                     });
                     //console.log(transModel.currentItem.Id());
