@@ -86,7 +86,7 @@ nav {
 .trans_grid {
 	border-collapse:collapse;
 	tr.selected {
-		border:1px solid #000;margin-bottom:1px;
+		border:1px solid #000;
 	}
 	tr:hover {
 		td{background-color:#c0d2ad;cursor:pointer}
@@ -97,4 +97,7 @@ nav {
 }
 .edit_area{
 	border:1px solid #000;
+}
+.width100{
+	width:100%;
 }

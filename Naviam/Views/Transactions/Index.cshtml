@@ -67,6 +67,8 @@
                 //load data into form
                 editArea.slideDown();
             }
+            transModel.ShowCategorise = function (btn) {
+            }
             ko.applyBindings(transModel, $("#transGrid")[0]);
         });
     });
@@ -74,18 +76,26 @@
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
-        <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
-        <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Category" /></td>
-        <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Amount"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Amount" /></td>
-        <td><a href="#" onclick='return transModel.ShowEditArea(this);' data-bind="visible: transModel.selectedRow() == Id()">Edit</a></td>
+        <td style="width:15%"><span data-bind="text: FormattedDate"></span></td>
+        <td style="width:35%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
+        <td style="width:35%">
+            <span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span>
+            <div data-bind="visible: transModel.selectedRow() == Id()"><input class="width100" data-bind="value: Category" /><a href="#" onclick='return transModel.ShowCategorise(this);'>Cat</a></div>
+        </td>
+        <td style="width:10%">
+            <span data-bind="text: Amount"></span>
+            @*<input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Amount" />*@
+        </td>
+        <td style="width:5%"><a href="#" onclick='return transModel.ShowEditArea(this);' data-bind="visible: transModel.selectedRow() == Id()">Edit</a></td>
     </tr>
-</script>
 @*    <div data-bind="visible: transModel.selectedRow() == Id()">
         <a href="#" onclick='return transModel.ShowEditArea(this);'>Edit</a>
         <div class='edit_area hidden' data-bind="visible: transModel.selectedRow() == Id()">
             tstst
         </div>
     </div>*@
+</script>
+
 <script type="text/html" id="transPagingTemplate">
     <span>Page:</span>
     {{each(i) ko.utils.range(1, paging.PagesCount)}}
@@ -98,15 +108,10 @@
     <table class='trans_grid'>
         <thead>
             <tr>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Category
-                </th>
-                <th colspan='2'>
-                    Amount
-                </th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th colspan='2'>Amount</th>
             </tr>
         </thead>
         <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'>

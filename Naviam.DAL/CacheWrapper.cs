@@ -300,6 +300,83 @@ namespace Naviam.Code
             }
         }
 
+        public static void RemoveFromList<T>(string key, T val) { RemoveFromList<T>(key, val, null); }
+        public static void RemoveFromList<T>(string key, T val, int? id)
+        {
+            if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
+            {
+                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                {
+                    var typedRedis = redisClient.GetTypedClient<T>();
+                    if (id != null)
+                    {
+                        key = id + "_" + key;
+                    }
+                    using (redisClient.AcquireLock(key + "lock"))
+                    {
+                        var list = typedRedis.Lists[key];
+                        list.Remove(val);
+                    }
+                }
+            }
+            else
+            {
+                object obj = null;
+                if (id != null)
+                    obj = HttpContext.Current.Session[key];
+                else
+                    obj = HttpContext.Current.Cache[key];
+                if (obj != null)
+                {
+                    List<T> lst = (List<T>)obj;
+                    lst.Remove(val);
+                }
+            }
+        }
+
+        public static T GetFromList<T>(string key, T val) { return GetFromList<T>(key, val, null); }
+        public static T GetFromList<T>(string key, T val, int? id)
+        {
+            T res = default(T);
+            if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
+            {
+                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                {
+                    var typedRedis = redisClient.GetTypedClient<T>();
+                    if (id != null)
+                    {
+                        key = id + "_" + key;
+                    }
+                    var list = typedRedis.Lists[key];
+                    int index = list.IndexOf(val);
+                    if (index != -1)
+                        res = list[index];
+                }
+            }
+            else
+            {
+                object obj = null;
+                if (id != null)
+                    obj = HttpContext.Current.Session[key];
+                else
+                    obj = HttpContext.Current.Cache[key];
+                if (obj != null)
+                {
+                    List<T> lst = (List<T>)obj;
+                    for (int i = 0; i < lst.Count; i++)
+                    {
+                        var existingItem = lst[i];
+                        if (existingItem.Equals(val))
+                        {
+                            res = lst[i];
+                            break;
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+
         #endregion
     }
 }
