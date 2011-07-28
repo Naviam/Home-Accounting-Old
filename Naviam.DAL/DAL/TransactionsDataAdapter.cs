@@ -57,14 +57,15 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static int Insert()
+        public static int Insert(Transaction trans, int? userId)
         {
             int res = -1;
             //insert to db
+            res = 0;
             if (res == 0)
             {
                 //if ok - save to cache
-                //CacheWrapper.AddToList<Transaction>(CacheKey, res, userId);
+                CacheWrapper.AddToList<Transaction>(CacheKey, trans, userId);
             }
             return res;
         }
@@ -73,10 +74,25 @@ namespace Naviam.DAL
         {
             int res = -1;
             //update db
-            //if (res == 0)
+            res = 0;
+            if (res == 0)
             {
                 //if ok - update cache
                 CacheWrapper.UpdateList<Transaction>(CacheKey, trans, userId);
+            }
+            return res;
+        }
+        
+        //we need to provide full object (not only id) to delete (restrict of redis)
+        public static int Delete(Transaction trans, int? userId)
+        {
+            int res = -1;
+            //delete from db
+            res = 0;
+            if (res == 0)
+            {
+                //if ok - remove from cache
+                CacheWrapper.RemoveFromList<Transaction>(CacheKey, trans, userId);
             }
             return res;
         }
