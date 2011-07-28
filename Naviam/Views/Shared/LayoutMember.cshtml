@@ -41,7 +41,7 @@
         @RenderBody()
     </div>
     <hr/>
-    @{Assembly assembly = typeof(Naviam.Code.CacheWrapper).Assembly;}
+    @{Assembly assembly = typeof(Naviam.Controllers.TransactionsController).Assembly;}
     <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
 </div>
 @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())

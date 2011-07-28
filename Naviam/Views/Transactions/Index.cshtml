@@ -53,12 +53,12 @@
         <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Category" /></td>
         <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Amount"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Amount" /></td>
     </tr>
-    <div data-bind="visible: transModel.selectedRow() == Id()">
-        <a href="#" onclick='return transModel.ShowEditArea(this);'>Edit</a>
-        <div class='edit_area hidden' data-bind="visible: transModel.selectedRow() == Id()">
-            tstst
-        </div>
-    </div>
+//    <div data-bind="visible: transModel.selectedRow() == Id()">
+//        <a href="#" onclick='return transModel.ShowEditArea(this);'>Edit</a>
+//        <div class='edit_area hidden' data-bind="visible: transModel.selectedRow() == Id()">
+//            tstst
+//        </div>
+//    </div>
 </script>
 <script type="text/html" id="transPagingTemplate">
     <span>Page:</span>
