@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "Transactions";
+﻿@using Naviam.Resources;
+@{
+    ViewBag.Title = SharedStrings.TransactionsTitle;
     Layout = "~/Views/Shared/LayoutMember.cshtml";
 }
 @*intellisense support*@
@@ -9,57 +10,82 @@
     <script type="text/javascript" src="~/Scripts/knockout-1.2.1.js"></script> 
     <script type="text/javascript" src="~/Scripts/knockout.mapping.js"></script> 
 }
-
 <script type='text/javascript'>
 
     //JSON.stringify
     var transModel = {
         paging: { Page: 1 }
-        };
-        $(document).ready(function () {
-            $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
-                transModel = ko.mapping.fromJS(res);
-                transModel.paging.Page.subscribe(function (newValue) {
-                    transModel.ReloadPage();
-                });
-                transModel.selectedRow = ko.observable(-1);
-                transModel.ReloadPage = function () {
-                    $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
-                        ko.mapping.updateFromJS(transModel, res);
-                        transModel.selectedRow(-1);
-                    });
-                }
-                transModel.GoToEdit = function (item) {
-                    transModel.selectedRow(item.Id());
-//                    item.Description.subscribe(function (newValue) {
-//                        alert(newValue);
-//                    });
-                }
-                transModel.ShowEditArea = function (btn) {
-                    var editArea = $(btn).parent().find('.edit_area');
-                    //load data into form
-                    editArea.slideDown();
-                }
-                ko.applyBindings(transModel, $("#transGrid")[0]);
+    };
+    $(document).ready(function () {
+        $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
+            transModel = ko.mapping.fromJS(res);
+            transModel.paging.Page.subscribe(function (newValue) {
+                transModel.ReloadPage();
             });
+            transModel.selectedRow = ko.observable(-1);
+            transModel.currentItem = null;
+            transModel.ReloadPage = function () {
+                $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
+                    ko.mapping.updateFromJS(transModel, res);
+                    transModel.selectedRow(-1);
+                    transModel.currentItem = null;
+                    $('#edit_row').hide();
+                });
+            }
+            transModel.DescrSub = null;
+            transModel.GoToEdit = function (event, item) {
+                //manual edit row
+                //                    var row = $(event.currentTarget)
+                //                    var rowEdit = $('#edit_row');
+                //                    rowEdit.css({ top: row.offset().top, width: row.width(), height: row.height() });
+                //                    rowEdit.find('.edit_area').slideUp();
+                //                    rowEdit.find('[name="Description"]').val(item.Description());
+                //                    rowEdit.show();
+                //**********
+
+                //console.log(event);
+                item.FullRow = ko.dependentObservable(function () {
+                    return this.Id() + "_" + this.Description() + "_" + this.Category();
+                }, item);
+                this.selectedRow(item.Id());
+                this.currentItem = item;
+                if (this.DescrSub != null)
+                    this.DescrSub.dispose();
+                this.DescrSub = item.FullRow.subscribe(function (newValue) {
+                    transModel.Save();
+                });
+            }
+            transModel.Save = function () {
+                if (this.currentItem != null) {
+                    $.postErr('@Url.Action("UpdateTransaction", "Transactions")', transModel.currentItem, function (res) {
+                    });
+                    //console.log(transModel.currentItem.Id());
+                }
+            }
+            transModel.ShowEditArea = function (btn) {
+                var editArea = $(btn).parent().find('.edit_area');
+                //load data into form
+                editArea.slideDown();
+            }
+            ko.applyBindings(transModel, $("#transGrid")[0]);
         });
+    });
 </script>
-
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
-
 <script type="text/html" id="transRowTemplate">
-    <tr data-bind="click: function() { transModel.GoToEdit($data); }, css: {selected: transModel.selectedRow() == Id()}">
+    <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
         <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
         <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Category" /></td>
         <td><span data-bind="visible: transModel.selectedRow() != Id(), text: Amount"></span><input data-bind="visible: transModel.selectedRow() == Id(), value: Amount" /></td>
+        <td><a href="#" onclick='return transModel.ShowEditArea(this);' data-bind="visible: transModel.selectedRow() == Id()">Edit</a></td>
     </tr>
-//    <div data-bind="visible: transModel.selectedRow() == Id()">
-//        <a href="#" onclick='return transModel.ShowEditArea(this);'>Edit</a>
-//        <div class='edit_area hidden' data-bind="visible: transModel.selectedRow() == Id()">
-//            tstst
-//        </div>
-//    </div>
 </script>
+@*    <div data-bind="visible: transModel.selectedRow() == Id()">
+        <a href="#" onclick='return transModel.ShowEditArea(this);'>Edit</a>
+        <div class='edit_area hidden' data-bind="visible: transModel.selectedRow() == Id()">
+            tstst
+        </div>
+    </div>*@
 <script type="text/html" id="transPagingTemplate">
     <span>Page:</span>
     {{each(i) ko.utils.range(1, paging.PagesCount)}}
@@ -68,21 +94,35 @@
         </a>
     {{/each}}
 </script>
-
 <div id="transGrid">
     <table class='trans_grid'>
         <thead>
             <tr>
-                <th>Description</th>
-                <th>Category</th>
-                <th>Amount</th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Category
+                </th>
+                <th colspan='2'>
+                    Amount
+                </th>
             </tr>
         </thead>
-        <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'></tbody>
+        <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'>
+        </tbody>
     </table>
-    <div data-bind='template: "transPagingTemplate"' class='paging'></div>
-</div> 
-
-
-
-
+    @*    <div class='hidden' id='edit_row' style='position:fixed;border:1px solid #000;'>
+        <table width="100%">
+        <tr>
+        <td><input name="Description" /></td>
+        </tr>
+        </table>
+        <a href="#" onclick='return transModel.ShowEditArea(this);'>Edit</a>
+        <div class='edit_area hidden'">
+            tstst
+        </div>
+    </div>*@
+    <div data-bind='template: "transPagingTemplate"' class='paging'>
+    </div>
+</div>

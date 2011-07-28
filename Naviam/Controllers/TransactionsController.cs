@@ -53,5 +53,12 @@ namespace Naviam.Controllers
             return Json(new { items = trans, paging = paging });
         }
 
+        [HttpPost]
+        public string UpdateTransaction(Transaction trans)
+        {
+            UserProfile user = SessionHelper.UserProfile;
+            return "ok";
+        }
+
     }
 }

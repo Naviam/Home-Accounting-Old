@@ -59,5 +59,23 @@ namespace Naviam.Resources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Information.
+        /// </summary>
+        public static string LogonHeader {
+            get {
+                return ResourceManager.GetString("LogonHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transactions.
+        /// </summary>
+        public static string TransactionsTitle {
+            get {
+                return ResourceManager.GetString("TransactionsTitle", resourceCulture);
+            }
+        }
     }
 }

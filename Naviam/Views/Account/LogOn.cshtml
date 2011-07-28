@@ -1,4 +1,5 @@
 ﻿@model Naviam.Models.LogOnModel
+@using Naviam.Resources;
 
 @{
     ViewBag.Title = "Naviam";
@@ -46,7 +47,7 @@
 @using (Html.BeginForm()) {
     <div>
         <fieldset>
-            <legend>Account Information</legend>
+            <legend>@SharedStrings.LogonHeader</legend>
 
             <div>
                 @Html.LabelFor(m => m.UserName)
