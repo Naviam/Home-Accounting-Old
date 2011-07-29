@@ -20,9 +20,9 @@ namespace Naviam.Data
 
         public UserProfile(IDataRecord record)
         {
-            Id = record["userId"] as int?;
-            Name = record["userName"] as string;
-            Password = record["userPassword"] as string;
+            Id = record["id"] as int?;
+            Name = record["email"] as string;
+            Password = record["password"] as string;
         }
     }
 }

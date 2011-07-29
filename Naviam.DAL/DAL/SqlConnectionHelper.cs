@@ -1,3 +1,5 @@
+#define _USE_MS_SQL
+
 using System;
 using System.Data.SqlClient;
 using System.Configuration;
