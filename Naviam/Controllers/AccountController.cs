@@ -25,6 +25,8 @@ namespace Naviam.Controllers
 
         public ActionResult LogOn()
         {
+            //remove from redis
+            SessionHelper.UserProfile = null;
             FormsAuthentication.SignOut();
             Session.Abandon();
             //TestDataAdapter.Test();
@@ -40,10 +42,16 @@ namespace Naviam.Controllers
                 //UserProfile prof = new UserProfile() { Id = 10};
                 if (prof != null)
                 {
-                    SessionHelper.UserProfile = prof;
+                    string cId = Guid.NewGuid().ToString();
+                    SessionHelper.SetNewUserProfile(cId, prof);
                     //setup forms ticket
-                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(model.UserName, false, (int)FormsAuthentication.Timeout.TotalMinutes);
-                    Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket)));
+                    //TODO: sliding expiration (need to add into redis logic too)
+                    DateTime exp = DateTime.Now.Add(FormsAuthentication.Timeout);
+                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, model.UserName, DateTime.Now, exp, model.RememberMe, cId);
+                    HttpCookie fCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
+                    if (model.RememberMe)
+                        fCookie.Expires = ticket.Expiration;
+                    Response.Cookies.Add(fCookie);
 
                     //TODO: setup locale into Session["Culture"]
 

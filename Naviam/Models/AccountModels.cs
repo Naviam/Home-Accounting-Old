@@ -26,7 +26,7 @@ namespace Naviam.Models
         [Display(Name = "Password", ResourceType = typeof(DisplayNames))]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "RememberMe", ResourceType = typeof(DisplayNames))]
         public bool RememberMe { get; set; }
     }
 

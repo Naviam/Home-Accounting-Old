@@ -6,6 +6,7 @@ using System.Web.SessionState;
 using System.Configuration;
 using ServiceStack.Redis;
 using System.Web.WebPages;
+using System.Web.Security;
 
 namespace Naviam.Code
 {
@@ -60,22 +61,30 @@ namespace Naviam.Code
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     res = typedRedis[key];
-                    HttpSessionState sess = null;
                     if (id != null)
                     {
                         key = id + "_" + key;
-                        sess = HttpContext.Current.Session;
                     }
-                    if (sess != null)
+                    if (id != null)
                     {
                         //session style
-                        TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
+                        TimeSpan exp = new TimeSpan(0, (int)FormsAuthentication.Timeout.TotalMinutes, 0);
                         using (redisClient.AcquireLock(key + "lock"))
-                            typedRedis.SetEntry(key, val, exp);
+                        {
+                            if (val == null)
+                                typedRedis.RemoveEntry(key);
+                            else
+                                typedRedis.SetEntry(key, val, exp);
+                        }
                     }
                     else
                         using (redisClient.AcquireLock(key + "lock"))
-                            typedRedis[key] = val;
+                        {
+                            if (val == null)
+                                typedRedis.RemoveEntry(key);
+                            else
+                                typedRedis[key] = val;
+                        }
                 }
             }
             else
@@ -97,38 +106,56 @@ namespace Naviam.Code
             return res;
         }
 
-        public static void Set<T>(string key, T val) { Set<T>(key, val, null); }
-        public static void Set<T>(string key, T val, int? id)
+        public static void Set<T>(string key, T val) { Set<T>(key, val, null, false); }
+        public static void Set<T>(string key, T val, int? id, bool forceExpire)
         {
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    HttpSessionState sess = null;
                     if (id != null)
                     {
                         key = id + "_" + key;
-                        sess = HttpContext.Current.Session;
                     }
-                    if (sess != null)
+                    if (id != null || forceExpire)
                     {
                         //session style
-                        TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
+                        TimeSpan exp = new TimeSpan(0, (int)FormsAuthentication.Timeout.TotalMinutes, 0);
                         using (redisClient.AcquireLock(key + "lock"))
-                            typedRedis.SetEntry(key, val, exp);
+                        {
+                            if (val == null)
+                                typedRedis.RemoveEntry(key);
+                            else
+                                typedRedis.SetEntry(key, val, exp);
+                        }
                     }
                     else
                         using (redisClient.AcquireLock(key + "lock"))
-                            typedRedis[key] = val;
+                        {
+                            if (val == null)
+                                typedRedis.RemoveEntry(key);
+                            else
+                                typedRedis[key] = val;
+                        }
                 }
             }
             else
             {
-                if (id != null)
-                    HttpContext.Current.Session[key] = val;
+                if (val != null)
+                {
+                    if (id != null)
+                        HttpContext.Current.Session[key] = val;
+                    else
+                        HttpContext.Current.Cache[key] = val;
+                }
                 else
-                    HttpContext.Current.Cache[key] = val;
+                {
+                    if (id != null)
+                        HttpContext.Current.Session.Remove(key);
+                    else
+                        HttpContext.Current.Cache.Remove(key);
+                }
             }
         }
 
@@ -178,11 +205,9 @@ namespace Naviam.Code
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    HttpSessionState sess = null;
                     if (id != null)
                     {
                         key = id + "_" + key;
-                        sess = HttpContext.Current.Session;
                     }
                     using (redisClient.AcquireLock(key + "lock"))
                     {
@@ -190,10 +215,10 @@ namespace Naviam.Code
                         list.Clear();
                         val.ForEach(x => list.Add(x));
                     }
-                    if (sess != null)
+                    if (id != null)
                     {
                         //session style
-                        TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
+                        TimeSpan exp = new TimeSpan(0, (int)FormsAuthentication.Timeout.TotalMinutes, 0);
                         typedRedis.ExpireEntryIn(key, exp);
                     }
                 }
@@ -215,21 +240,19 @@ namespace Naviam.Code
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    HttpSessionState sess = null;
                     if (id != null)
                     {
                         key = id + "_" + key;
-                        sess = HttpContext.Current.Session;
                     }
                     using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
                         list.Add(val);
                     }
-                    if (sess != null)
+                    if (id != null)
                     {
                         //session style
-                        TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
+                        TimeSpan exp = new TimeSpan(0, (int)FormsAuthentication.Timeout.TotalMinutes, 0);
                         typedRedis.ExpireEntryIn(key, exp);
                     }
                 }
@@ -256,11 +279,9 @@ namespace Naviam.Code
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    HttpSessionState sess = null;
                     if (id != null)
                     {
                         key = id + "_" + key;
-                        sess = HttpContext.Current.Session;
                     }
                     using (redisClient.AcquireLock(key + "lock"))
                     {
@@ -269,10 +290,10 @@ namespace Naviam.Code
                         if (index != -1)
                             list[index] = val;
                     }
-                    if (sess != null)
+                    if (id != null)
                     {
                         //session style
-                        TimeSpan exp = new TimeSpan(0, sess.Timeout, 0);
+                        TimeSpan exp = new TimeSpan(0, (int)FormsAuthentication.Timeout.TotalMinutes, 0);
                         typedRedis.ExpireEntryIn(key, exp);
                     }
                 }
