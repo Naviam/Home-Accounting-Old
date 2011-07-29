@@ -11,7 +11,6 @@
     <script type="text/javascript" src="~/Scripts/knockout.mapping.js"></script> 
 }
 <script type='text/javascript'>
-
     //JSON.stringify
     var transModel = {
         paging: { Page: 1, SortField: 'Date', SortDirection: 1 }
@@ -116,7 +115,7 @@
 </script>
 
 <script type="text/html" id="transPagingTemplate">
-    <span>Page:</span>
+    <span>@DisplayNames.Page:</span>
     {{each(i) ko.utils.range(1, paging.PagesCount)}}
         <a href="#" data-bind="click: function() { paging.Page(i+1) }, css: { selected: i+1 == paging.Page() }">
             ${ i + 1 }

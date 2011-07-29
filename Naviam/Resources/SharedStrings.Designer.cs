@@ -61,6 +61,15 @@ namespace Naviam.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log On.
+        /// </summary>
+        public static string LogOn {
+            get {
+                return ResourceManager.GetString("LogOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Information.
         /// </summary>
         public static string LogonHeader {
