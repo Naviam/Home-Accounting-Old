@@ -11,11 +11,26 @@ namespace Naviam.Controllers
 {
     public class BaseController : Controller
     {
+        private UserProfile _currentUser;
+        /// <summary>
+        /// Get current user from session or redis
+        /// </summary>
+        protected UserProfile CurrentUser {
+            get
+            {
+                return _currentUser;
+            }
+            set
+            {
+                _currentUser = value;
+            }
+        }
+
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {
             base.OnAuthorization(filterContext);
-            UserProfile user = SessionHelper.UserProfile;
-            if (user == null)
+            CurrentUser = SessionHelper.UserProfile;
+            if (_currentUser == null)
                 filterContext.Result = new HttpUnauthorizedResult();
         }
 
@@ -25,8 +40,7 @@ namespace Naviam.Controllers
             if (filterContext == null) return;
             if (!filterContext.HttpContext.Request.IsAjaxRequest()) return;
             Exception ex = filterContext.Exception;
-            // If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method),
-            // ignore it.
+            // If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method), ignore it.
             if (new HttpException(null, ex).GetHttpCode() != (int)System.Net.HttpStatusCode.InternalServerError)
             {
                 return;

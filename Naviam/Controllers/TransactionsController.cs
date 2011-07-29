@@ -72,7 +72,7 @@ namespace Naviam.Controllers
         [HttpPost]
         public ActionResult GetTransactions(Paging paging)
         {
-            UserProfile user = SessionHelper.UserProfile;
+            UserProfile user = CurrentUser;
             IEnumerable<Transaction> trans = TransactionsDataAdapter.GetTransactions(user.Id);
 
             trans = paging.ApplyPaging<Transaction>(trans);
@@ -89,7 +89,7 @@ namespace Naviam.Controllers
         [HttpPost]
         public string UpdateTransaction(Transaction trans)
         {
-            UserProfile user = SessionHelper.UserProfile;
+            UserProfile user = CurrentUser;
             //Transaction updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, user.Id);
             //TryUpdateModel(updateTrans);
             TransactionsDataAdapter.Update(trans, user.Id);
