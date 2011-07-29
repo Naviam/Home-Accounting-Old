@@ -14,7 +14,7 @@
 
     //JSON.stringify
     var transModel = {
-        paging: { Page: 1 }
+        paging: { Page: 1, SortField: 'Date', SortDirection: 1 }
     };
     $(document).ready(function () {
         $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
@@ -60,8 +60,8 @@
             transModel.Save = function () {
                 if (this.currentItem != null) {
                     //transModel.currentItem.Date = transModel.currentItem.Date().replace('/Date(', '\\/Date(').replace(')/', ')\\/');
-//                    $.postErr('@Url.Action("UpdateTransaction", "Transactions")', ko.toJSON(transModel.currentItem), function (res) {
-//                    }, 'json');
+                    //                    $.postErr('@Url.Action("UpdateTransaction", "Transactions")', ko.toJSON(transModel.currentItem), function (res) {
+                    //                    }, 'json');
                     $.postErr('@Url.Action("UpdateTransaction", "Transactions")', transModel.currentItem, function (res) {
                     });
                     //console.log(transModel.currentItem.Id());
@@ -73,6 +73,20 @@
                 editArea.slideDown();
             }
             transModel.ShowCategorise = function (btn) {
+            }
+            transModel.Sort = function (val) {
+                var currSort = this.paging.SortField();
+                if (currSort != null)
+                    if (val == currSort) {
+                        if (this.paging.SortDirection() == 0)
+                            this.paging.SortDirection(1);
+                        else
+                            this.paging.SortDirection(0);
+                    }
+                    else
+                        this.paging.SortDirection(0);
+                this.paging.SortField(val)
+                this.ReloadPage();
             }
             ko.applyBindings(transModel, $("#transGrid")[0]);
         });
@@ -109,15 +123,16 @@
         </a>
     {{/each}}
 </script>
+<script type="text/html" id="transHeadTemplate">
+    <tr>
+    {{each(i, head) headItems()}}
+        <th data-bind="attr: {colspan: Columns}, text: Text()+(paging.SortField()==head.Field() ? (paging.SortDirection() == 0 ? ' ▲' : ' ▼') : ''), click: function() { Sort(head.Field()) }"></th>
+    {{/each}}
+    </tr>
+</script>
 <div id="transGrid">
     <table class='trans_grid'>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th colspan='2'>Amount</th>
-            </tr>
+        <thead data-bind='template: "transHeadTemplate"' >
         </thead>
         <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'>
         </tbody>

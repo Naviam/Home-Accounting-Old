@@ -78,6 +78,12 @@ nav {
 
 .trans_grid {
   border-collapse: collapse; }
+  .trans_grid th {
+    cursor: pointer;
+    border: 1px solid #000; }
+  .trans_grid th:hover {
+    background-color: #ffe79c;
+    border-color: #c98400; }
   .trans_grid tr.selected {
     border: 1px solid #000; }
   .trans_grid tr:hover td {

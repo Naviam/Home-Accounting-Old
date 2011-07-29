@@ -33,53 +33,41 @@
       <resource path="~/Scripts/jquery-1.6.2.min.js" />
       <resource path="~/Scripts/common.min.js" />
     </resourceSet>
+    <resourceSet name="validate" type="js">
+      <resource path="~/Scripts/jquery.validate.min.js" />
+      <resource path="~/Scripts/jquery.validate.unobtrusive.min.js" />
+    </resourceSet>
     <resourceSet name="jquery validate" type="js">
-      <resource path="~/Scripts/jquery-1.6.2.min.js" />
-      <resource path="~/Scripts/jquery.validate.min.js" />
-      <resource path="~/Scripts/jquery.validate.unobtrusive.min.js" />
-      <resource path="~/Scripts/common.min.js" />
+      <resource reference="jquery" />
+      <resource reference="validate" />
     </resourceSet>
-    <resourceSet name="jquery tools validate" type="js">
-        <resource path="~/Scripts/jquery-1.6.2.min.js" />
-        <resource path="~/Scripts/jquery.validate.min.js" />
-        <resource path="~/Scripts/jquery.validate.unobtrusive.min.js" />
-        <resource path="~/Scripts/jquery.tools.min.js" />
-        <resource path="~/Scripts/common.min.js" />
-    </resourceSet>
-    <resourceSet name="knockout map validate" type="js">
-      <resource path="~/Scripts/jquery-1.6.2.min.js" />
-      <resource path="~/Scripts/jquery.validate.min.js" />
-      <resource path="~/Scripts/jquery.validate.unobtrusive.min.js" />
-      <resource path="~/Scripts/common.min.js" />
-      <resource path="~/Scripts/jquery.tmpl.min.js" />
-      <resource path="~/Scripts/knockout-1.2.1.min.js" />
-      <resource path="~/Scripts/knockout.mapping.min.js" />
-    </resourceSet>
-    <resourceSet name="knockout validate" type="js">
-      <resource path="~/Scripts/jquery-1.6.2.min.js" />
-      <resource path="~/Scripts/jquery.validate.min.js" />
-      <resource path="~/Scripts/jquery.validate.unobtrusive.min.js" />
-      <resource path="~/Scripts/common.min.js" />
-      <resource path="~/Scripts/jquery.tmpl.min.js" />
-      <resource path="~/Scripts/knockout-1.2.1.min.js" />
-    </resourceSet>
-    <resourceSet name="knockout map" type="js">
-      <resource path="~/Scripts/jquery-1.6.2.min.js" />
-      <resource path="~/Scripts/common.min.js" />
-      <resource path="~/Scripts/jquery.tmpl.min.js" />
-      <resource path="~/Scripts/knockout-1.2.1.min.js" />
-      <resource path="~/Scripts/knockout.mapping.min.js" />
+    <resourceSet name="jquery validate tools" type="js">
+      <resource reference="jquery" />
+      <resource reference="validate" />
+      <resource path="~/Scripts/jquery.tools.min.js" />
     </resourceSet>
     <resourceSet name="knockout" type="js">
-      <resource path="~/Scripts/jquery-1.6.2.min.js" />
-      <resource path="~/Scripts/common.min.js" />
+      <resource reference="jquery" />
       <resource path="~/Scripts/jquery.tmpl.min.js" />
       <resource path="~/Scripts/knockout-1.2.1.min.js" />
+    </resourceSet>
+    <resourceSet name="knockout validate" type="js">
+      <resource reference="knockout" />
+      <resource reference="validate" />
+    </resourceSet>
+    <resourceSet name="knockout map" type="js">
+      <resource reference="knockout" />
+      <resource path="~/Scripts/knockout.mapping.min.js" />
+    </resourceSet>
+    <resourceSet name="knockout map validate" type="js">
+      <resource reference="knockout" />
+      <resource reference="validate" />
+      <resource path="~/Scripts/knockout.mapping.min.js" />
     </resourceSet>
     <resourceSet name="spine" type="js">
       <resource path="~/Scripts/spine.min.js" />
     </resourceSet>
-    <resourceSet name="blackbone" type="js">
+    <resourceSet name="backbone" type="js">
       <resource path="~/Scripts/underscore-min.js" />
       <resource path="~/Scripts/backbone-min.js" />
     </resourceSet>
