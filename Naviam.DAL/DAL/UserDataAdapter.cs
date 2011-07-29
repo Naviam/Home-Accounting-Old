@@ -7,8 +7,8 @@ using System.Security.Cryptography;
 using System.IO;
 
 using Naviam.Data;
-
-using Npgsql;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace Naviam.DAL
 {
@@ -99,23 +99,38 @@ namespace Naviam.DAL
         public static UserProfile GetUserProfile(string userName, string password)
         {
             //string tst = HashPassword("s@s.s", "1");
-            UserProfile res = null;
+            //5QP1nZZ9syOu+Hr0zNTbMEgplM9gKxH5wpTpQyXH4lggYme3gbWtlLoqAeM5xdkAwVpdaXDVG5VIAyD3UR66CbcHA1Sp
+            UserProfile result = null;
+            
             using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
-                NpgsqlCommand command = new NpgsqlCommand("\"GetUser\"", holder.Connection);
-                command.CommandType = System.Data.CommandType.StoredProcedure;
-                command.Parameters.Add("userName", NpgsqlTypes.NpgsqlDbType.Name, 64).Value = userName;
-                using (NpgsqlDataReader reader = command.ExecuteReader())
+                using (SqlCommand cmd = holder.Connection.CreateCommand())
                 {
-                    if (reader.Read())
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 120;
+                    cmd.CommandText = "get_user";
+
+                    cmd.Parameters.AddWithValue("@email", userName);
+                    try
                     {
-                        res = new UserProfile(reader);
-                        if (!SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", res.Password))
-                            res = null;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                result = new UserProfile(reader);
+                                if (!SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", result.Password))
+                                    result = null;
+                            }
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        result = null;
+                        throw e;
                     }
                 }
-                return res;
             }
+            return result;
         }
     }
 }

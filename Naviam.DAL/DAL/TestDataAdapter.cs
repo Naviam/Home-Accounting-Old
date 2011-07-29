@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using Npgsql;
+using System.Data.SqlClient;
 
 namespace Naviam.DAL
 {
@@ -13,9 +13,8 @@ namespace Naviam.DAL
         {
             using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
-                NpgsqlCommand command = new NpgsqlCommand("select * from naviUsers", holder.Connection);
+                SqlCommand command = new SqlCommand("select * from naviUsers", holder.Connection);
             }
-
         }
     }
 }
