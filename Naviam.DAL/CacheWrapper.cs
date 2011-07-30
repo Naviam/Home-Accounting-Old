@@ -106,6 +106,18 @@ namespace Naviam.Code
             return res;
         }
 
+        public static void ProlongKey(string key)
+        {
+            if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
+            {
+                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                {
+                    TimeSpan exp = new TimeSpan(0, (int)FormsAuthentication.Timeout.TotalMinutes, 0);
+                    redisClient.ExpireEntryIn(key, exp);
+                }
+            }
+        }
+
         public static void Set<T>(string key, T val) { Set<T>(key, val, null, false); }
         public static void Set<T>(string key, T val, int? id, bool forceExpire)
         {

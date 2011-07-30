@@ -45,7 +45,6 @@ namespace Naviam.Controllers
                     string cId = Guid.NewGuid().ToString();
                     SessionHelper.SetNewUserProfile(cId, prof);
                     //setup forms ticket
-                    //TODO: sliding expiration (need to add into redis logic too)
                     DateTime exp = DateTime.Now.Add(FormsAuthentication.Timeout);
                     FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, model.UserName, DateTime.Now, exp, model.RememberMe, cId);
                     HttpCookie fCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));

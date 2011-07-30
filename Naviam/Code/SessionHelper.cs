@@ -39,7 +39,10 @@ namespace Naviam.Code
                 string cId = ContextId;
                 if (cId == null)
                     return null;
-                return CacheWrapper.Get<UserProfile>(cId); //HttpContext.Current.Session["userprofile"] as UserProfile;
+                UserProfile res = CacheWrapper.Get<UserProfile>(cId);
+                if (res != null && FormsAuthentication.SlidingExpiration) //sliding expiration in redis
+                    CacheWrapper.ProlongKey(cId);
+                return res; //HttpContext.Current.Session["userprofile"] as UserProfile;
             }
             set
             {
