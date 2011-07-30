@@ -304,15 +304,7 @@
         <Value>ExcludedType</Value>
       </PropertyElementName>
       <PropertyElementName>
-        <Name>Microsoft.Data.Schema.Sql.SchemaModel.ISqlServerOptions</Name>
-        <Value>ExcludedType</Value>
-      </PropertyElementName>
-      <PropertyElementName>
         <Name>Microsoft.Data.Schema.Sql.SchemaModel.ISqlPermissionStatement</Name>
-        <Value>ExcludedType</Value>
-      </PropertyElementName>
-      <PropertyElementName>
-        <Name>Microsoft.Data.Schema.Sql.SchemaModel.ISqlFilegroup</Name>
         <Value>ExcludedType</Value>
       </PropertyElementName>
       <PropertyElementName>
