@@ -81,7 +81,7 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>DeployDatabaseProperties</Name>
-        <Value>False</Value>
+        <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>IgnoreComments</Name>
@@ -173,7 +173,7 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>ScriptDatabaseCollation</Name>
-        <Value>False</Value>
+        <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>IgnoreDmlTriggerState</Name>
@@ -300,15 +300,7 @@
         <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
-        <Name>Microsoft.Data.Schema.Sql.SchemaModel.ISqlDatabaseOptions</Name>
-        <Value>ExcludedType</Value>
-      </PropertyElementName>
-      <PropertyElementName>
         <Name>Microsoft.Data.Schema.Sql.SchemaModel.ISqlPermissionStatement</Name>
-        <Value>ExcludedType</Value>
-      </PropertyElementName>
-      <PropertyElementName>
-        <Name>Microsoft.Data.Schema.Sql.SchemaModel.ISqlFile</Name>
         <Value>ExcludedType</Value>
       </PropertyElementName>
       <PropertyElementName>

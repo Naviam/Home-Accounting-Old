@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Threading;
+using System.Data.SqlClient;
 
 namespace Naviam.Data
 {
@@ -11,6 +12,12 @@ namespace Naviam.Data
     [Serializable]
     public class Transaction : DbEntity
     {
+        public Transaction() { }
+        public Transaction(SqlDataReader reader) 
+        { 
+         //TODO: read fields
+        }
+
         public DateTime? Date { get; set; }
         public string FormattedDate {
             get

@@ -13,7 +13,7 @@
     <RootPath>
     </RootPath>
     <IncludeSchemaNameInFileName>False</IncludeSchemaNameInFileName>
-    <ModelCollation>1033, CI</ModelCollation>
+    <ModelCollation>1033,CI</ModelCollation>
     <DefaultFileStructure>BySchema</DefaultFileStructure>
     <DeployToDatabaseAddToServerExplorer>True</DeployToDatabaseAddToServerExplorer>
     <DeployToScript>True</DeployToScript>
@@ -138,6 +138,7 @@
     <Folder Include="Schema Objects\Schemas\web\Views\Indexes\" />
     <Folder Include="Schema Objects\Schemas\web\Views\Triggers\" />
     <Folder Include="Schema Objects\Schemas\web\Views\Statistics\" />
+    <Folder Include="Scripts\OtherScripts" />
   </ItemGroup>
   <ItemGroup>
     <PropertiesFile Include="Properties\Database.sqlsettings">
@@ -161,6 +162,12 @@
   </ItemGroup>
   <ItemGroup>
     <NotInBuild Include="Schema Comparisons\FromNavDB.scmp">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\OtherScripts\categories_table_data.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\OtherScripts\insert_test_table_data.sql">
       <SubType>NotInBuild</SubType>
     </NotInBuild>
   </ItemGroup>
@@ -326,14 +333,13 @@
     </Build>
     <Build Include="Schema Objects\Schemas\web\Programmability\Stored Procedures\get_transactions.proc.sql">
       <SubType>Code</SubType>
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="Schema Objects\Schemas\web\Programmability\Stored Procedures\del_category.proc.sql">
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Schemas\web\Programmability\Stored Procedures\add_category.proc.sql">
-      <SubType>Code</SubType>
-    </Build>
-    <Build Include="Schema Objects\Database Level Objects\Security\Users\web_access.user.sql">
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Schemas\dbo\Tables\tags.table.sql">
@@ -382,6 +388,12 @@
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Database Level Objects\Security\Schemas\web.schema.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Database Level Objects\Storage\Files\naviam_log.sqlfile.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Database Level Objects\Storage\Files\naviam.sqlfile.sql">
       <SubType>Code</SubType>
     </Build>
   </ItemGroup>
