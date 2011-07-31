@@ -7,6 +7,7 @@ using Npgsql;
 
 using Naviam.Data;
 using Naviam.Code;
+using System.Data.SqlClient;
 
 namespace Naviam.DAL
 {
@@ -14,6 +15,57 @@ namespace Naviam.DAL
     {
 
         private const string CacheKey = "userTrans";
+
+        public static IEnumerable<Transaction> GetTransactionsByCompany(int? companyId) { return GetTransactionsByCompany(companyId, false); }
+        public static IEnumerable<Transaction> GetTransactionsByCompany(int? companyId, bool forceSqlLoad)
+        {
+            List<Transaction> res = CacheWrapper.GetList<Transaction>(CacheKey, companyId);
+            if (res == null || forceSqlLoad)
+            {
+                //load from DB
+                //res = GetTestTransactions(7);
+                using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+                {
+                    using (SqlCommand cmd = holder.Connection.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandTimeout = 120;
+                        cmd.CommandText = "get_transactions";
+                        cmd.Parameters.AddWithValue("@id_company", companyId);
+                        try
+                        {
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                    res.Add(new Transaction(reader));
+                            }
+                        }
+                        catch (SqlException e)
+                        {
+                            throw e;
+                        }
+                    }
+                }
+                //save to cache
+                CacheWrapper.SetList<Transaction>(CacheKey, res, companyId);
+            }
+            return res;
+        }
+
+        public static List<Transaction> GetTestTransactions(int recordsCount)
+        {
+            List<Transaction> res = new List<Transaction>(recordsCount);
+            for (int i = 0; i < recordsCount; i++)
+                res.Add(new Transaction()
+                    {
+                        Description = "Test" + i.ToString(),
+                        Category = "Category" + new Random(3).Next(recordsCount).ToString(),
+                        Amount = 100.20M,
+                        Id = i,
+                        Date = DateTime.Now
+                    });
+            return res;
+        }
         
         public static IEnumerable<Transaction> GetTransactions(int? userId) { return GetTransactions(userId, false); }
         public static IEnumerable<Transaction> GetTransactions(int? userId, bool forceSqlLoad)
