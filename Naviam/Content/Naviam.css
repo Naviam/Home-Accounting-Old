@@ -98,3 +98,17 @@ nav {
 
 .width100 {
   width: 100%; }
+
+.menu {
+  display: none;
+  border: 1px solid #000;
+  position: fixed;
+  background-color: white; }
+  .menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px; }
+  .menu li:hover {
+    background-color: blue;
+    cursor: pointer;
+    color: white; }

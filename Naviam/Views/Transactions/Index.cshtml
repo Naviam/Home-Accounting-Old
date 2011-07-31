@@ -121,7 +121,10 @@
                 //load data into form
                 editArea.slideDown();
             }
-            transModel.ShowCategorise = function (btn) {
+            transModel.ShowCategories = function (btn) {
+                var menu = $("#cat_menu");
+                menu.css({ top: $(btn).offset().top, left: $(btn).offset().left });
+                menu.slideDown();
             }
             transModel.Sort = function (val) {
                 var currSort = this.paging.SortField();
@@ -152,6 +155,16 @@
                     });
                 }
             };
+            catModel.AssignCategory = function (item) {
+                if (transModel.currentItem != null) {
+                    transModel.currentItem.Category(item.Name());
+                }
+            };
+            ko.applyBindings(catModel, $("#cat_menu")[0]);
+        });
+        $("#cat_menu").hover(function () {
+        }, function () {
+            $("#cat_menu").hide();
         });
     });
 </script>
@@ -162,7 +175,7 @@
         <td style="width:35%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
         <td style="width:35%">
             <span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span>
-            <div data-bind="visible: transModel.selectedRow() == Id()"><input class="width100" data-bind="value: Category" /><a href="#" onclick='return transModel.ShowCategorise(this);'>Cat</a></div>
+            <div data-bind="visible: transModel.selectedRow() == Id()"><input class="width100" data-bind="value: Category" /><a href="#" onclick='return transModel.ShowCategories(this);'>Cat</a></div>
         </td>
         <td style="width:10%">
             <span data-bind="text: Amount"></span>
@@ -213,4 +226,14 @@
     </div>*@
     <div data-bind='template: "transPagingTemplate"' class='paging'>
     </div>
+</div>
+
+<script type="text/html" id="catTemplate">
+    <li data-bind="click: function(event) { catModel.AssignCategory($data); }">
+    <span data-bind="text: Name"></span>
+    </li>
+</script>
+<div id="cat_menu" class='menu'>
+    <ul data-bind="template: {name:'catTemplate', foreach:items}" class='dropdown'>
+    </ul>
 </div>

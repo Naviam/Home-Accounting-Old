@@ -97,7 +97,7 @@ nav {
 		border:1px solid #000;
 	}
 	tr:hover {
-		td{background-color:#c0d2ad;cursor:pointer}
+		td{background-color:#c0d2ad;cursor:pointer;}
 	}
 }
 .hidden{
@@ -108,4 +108,20 @@ nav {
 }
 .width100{
 	width:100%;
+}
+.menu{
+	display: none;
+	border:1px solid #000;
+	position:fixed;
+	background-color:white;
+	ul {
+		list-style: none;
+		padding:0;
+		margin:10px;
+	}
+	li:hover{
+		background-color: blue;
+		cursor:pointer;
+		color:white;
+	}
 }
