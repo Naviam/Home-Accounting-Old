@@ -15,9 +15,55 @@
     var transModel = {
         paging: { Page: 1, SortField: 'Date', SortDirection: 1 }
     };
+    ko.numericObservable = function (initialValue) {
+        var _actual = ko.observable(initialValue);
+        var result = ko.dependentObservable({
+            read: function () {
+                return _actual();
+            },
+            write: function (newValue) {
+                var parsed = parseFloat(newValue);
+                if (isNaN(parsed))
+                    _actual.valueHasMutated();
+                _actual(isNaN(parsed) ? _actual() : parsed);
+            }
+        });
+        return result;
+    };
+    ko.categoryObservable = function (initialValue) {
+        var _actual = ko.observable(initialValue);
+        var result = ko.dependentObservable({
+            read: function () {
+                return _actual();
+            },
+            write: function (newValue) {
+                //find category
+                var found = false;
+                if (!found)
+                    _actual.valueHasMutated();
+                _actual(!found ? _actual() : newValue);
+            }
+        });
+        return result;
+    };
     $(document).ready(function () {
         $.postErr('@Url.Action("GetTransactions", "Transactions")', transModel.paging, function (res) {
-            transModel = ko.mapping.fromJS(res);
+            var childItem = function (data) {
+                ko.mapping.fromJS(data, {}, this);
+                this.Amount = ko.numericObservable(data.Amount);
+                this.Category = ko.categoryObservable(data.Category);
+            }
+            var mapping = {
+                'items': {
+                    key: function (data) {
+                        return ko.utils.unwrapObservable(data.Id);
+                    }
+                     ,create: function (options) {
+                        return new childItem(options.data, {}, this); ;
+                    }
+                }
+            }
+            transModel = ko.mapping.fromJS(res, mapping);
             transModel.paging.Page.subscribe(function (newValue) {
                 transModel.ReloadPage();
             });
@@ -43,8 +89,9 @@
                 //**********
 
                 //console.log(event);
+                //item.Amount = ko.numericObservable(item.Amount());
                 item.FullRow = ko.dependentObservable(function () {
-                    return this.Id() + "_" + this.Description() + "_" + this.Category();
+                    return this.Id() + "_" + this.Description() + "_" + this.Category() + "_" + this.Amount();
                 }, item);
                 this.selectedRow(item.Id());
                 this.currentItem = item;
