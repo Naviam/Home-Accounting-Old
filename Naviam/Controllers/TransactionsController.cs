@@ -95,6 +95,18 @@ namespace Naviam.Controllers
             TransactionsDataAdapter.Update(trans, user.Id);
             return "ok";
         }
+        
+        [HttpPost]
+        public ActionResult GetCategories()
+        {
+            UserProfile user = CurrentUser;
+
+            List<Category> items = new List<Category>();
+            items.Add(new Category() { Name = "Food", Id = 1});
+            items.Add(new Category() { Name = "Milk", Id = 2 });
+
+            return Json(new { items = items });
+        }
 
     }
 }

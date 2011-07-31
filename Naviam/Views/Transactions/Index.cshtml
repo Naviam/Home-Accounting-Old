@@ -38,10 +38,10 @@
             },
             write: function (newValue) {
                 //find category
-                var found = false;
-                if (!found)
+                var item = catModel.Search(newValue);
+                if (item == null)
                     _actual.valueHasMutated();
-                _actual(!found ? _actual() : newValue);
+                _actual(item == null ? _actual() : item.Name());
             }
         });
         return result;
@@ -58,9 +58,9 @@
                     key: function (data) {
                         return ko.utils.unwrapObservable(data.Id);
                     }
-                     ,create: function (options) {
-                        return new childItem(options.data, {}, this); ;
-                    }
+                     , create: function (options) {
+                         return new childItem(options.data, {}, this); ;
+                     }
                 }
             }
             transModel = ko.mapping.fromJS(res, mapping);
@@ -105,6 +105,9 @@
             //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
             transModel.Save = function () {
                 if (this.currentItem != null) {
+                    var item = catModel.Search(this.currentItem.Category());
+                    if (item != null)
+                        this.currentItem.CategoryId(item.Id());
                     //transModel.currentItem.Date = transModel.currentItem.Date().replace('/Date(', '\\/Date(').replace(')/', ')\\/');
                     //                    $.postErr('@Url.Action("UpdateTransaction", "Transactions")', ko.toJSON(transModel.currentItem), function (res) {
                     //                    }, 'json');
@@ -135,6 +138,20 @@
                 this.ReloadPage();
             }
             ko.applyBindings(transModel, $("#transGrid")[0]);
+        });
+        //Gategories
+        $.postErr('@Url.Action("GetCategories", "Transactions")', function (res) {
+            catModel = ko.mapping.fromJS(res);
+            catModel.Search = function (search) {
+                search = search.toLowerCase();
+                if (!search) {
+                    return null;
+                } else {
+                    return ko.utils.arrayFirst(this.items(), function (item) {
+                        return item.Name().toLowerCase() == search;
+                    });
+                }
+            };
         });
     });
 </script>
