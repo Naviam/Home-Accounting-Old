@@ -111,22 +111,5 @@ nav {
 }
 .menu{
 	display: none;
-	border:1px solid #000;
 	position:fixed;
-	background-color:white;
-	ul {
-		list-style: none;
-		padding:0;
-		margin:10px;
-		/*LEVEL TWO*/
-		ul {
-			visibility: hidden	;position: absolute; top: 0; left: 0;width: 220px;
-			li {font-weight: normal; color: #000; border-bottom: 1px solid #ccc; float: none; }
-		}
-	}
-	li:hover{
-		background-color: blue;
-		cursor:pointer;
-		color:white;
-	}
 }

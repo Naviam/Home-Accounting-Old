@@ -102,8 +102,15 @@ namespace Naviam.Controllers
             UserProfile user = CurrentUser;
 
             List<Category> items = new List<Category>();
-            items.Add(new Category() { Name = "Food", Id = 1});
-            items.Add(new Category() { Name = "Milk", Id = 2 });
+            Category cat = new Category() { Name = "Food", Id = 1 };
+            cat.Subitems.Add(new Category() { Name = "Milk", Id = 2 });
+            cat.Subitems.Add(new Category() { Name = "Meat", Id = 3 });
+            items.Add(cat);
+            cat = new Category() { Name = "Auto", Id = 4 };
+            cat.Subitems.Add(new Category() { Name = "Oil", Id = 5 });
+            cat.Subitems.Add(new Category() { Name = "Gas", Id = 6 });
+            cat.Subitems.Add(new Category() { Name = "Spares", Id = 7 });
+            items.Add(cat);
 
             return Json(new { items = items });
         }

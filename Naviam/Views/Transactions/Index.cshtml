@@ -123,7 +123,7 @@
             }
             transModel.ShowCategories = function (btn) {
                 var menu = $("#cat_menu");
-                menu.css({ top: $(btn).offset().top, left: $(btn).offset().left });
+                menu.css({ top: $(btn).offset().top + 15, left: $(btn).offset().left });
                 menu.slideDown();
             }
             transModel.Sort = function (val) {
@@ -150,22 +150,36 @@
                 if (!search) {
                     return null;
                 } else {
-                    return ko.utils.arrayFirst(this.items(), function (item) {
-                        return item.Name().toLowerCase() == search;
-                    });
+                    for (var i = 0, j = this.items().length; i < j; i++) {
+                        var fItem = ko.utils.arrayFirst(this.items()[i].Subitems(), function (item) {
+                            return item.Name().toLowerCase() == search;
+                        });
+                        if (fItem != null)
+                            return fItem;
+                    }
+                    //                    return ko.utils.arrayFirst(this.items(), function (item) {
+                    //                        return item.Name().toLowerCase() == search;
+                    //                    });
                 }
             };
             catModel.AssignCategory = function (item) {
                 if (transModel.currentItem != null) {
                     transModel.currentItem.Category(item.Name());
+                    $("#cat_menu").hide();
                 }
             };
             ko.applyBindings(catModel, $("#cat_menu")[0]);
-            $("ul.dropdown li").hover(function () {
-                $('ul:first', this).css('visibility', 'visible');
-            }, function () {
-                $('ul:first', this).css('visibility', 'hidden');
-            });
+            ddsmoothmenu.init({
+                mainmenuid: "cat_menu", //menu DIV id
+                orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
+                classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
+            })
+            $("#cat_menu").hide();
+            //            $("ul.dropdown li").hover(function () {
+            //                $('ul:first', this).css('visibility', 'visible');
+            //            }, function () {
+            //                $('ul:first', this).css('visibility', 'hidden');
+            //            });
         });
         $("#cat_menu").hover(function () {
         }, function () {
@@ -234,11 +248,18 @@
 </div>
 
 <script type="text/html" id="catTemplate">
-    <li data-bind="click: function(event) { catModel.AssignCategory($data); }">
-        <span data-bind="text: Name"></span>
+    <li>
+    <a href="#" data-bind="text: Name"></a>
+        <ul>
+        {{each(i, item) Subitems()}}
+            <li data-bind="click: function(event) { catModel.AssignCategory(item); }">
+            <a href="#" data-bind="text: Name"></a>
+            </li>
+        {{/each}}
+        </ul>
     </li>
 </script>
-<div id="cat_menu" class='menu'>
+<div id="cat_menu" style='position:fixed'>
     <ul data-bind="template: {name:'catTemplate', foreach:items}" class='dropdown'>
     </ul>
 </div>

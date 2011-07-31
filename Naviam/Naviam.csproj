@@ -152,6 +152,10 @@
     <Content Include="Content\blueprint\ie.css" />
     <Content Include="Content\blueprint\print.css" />
     <Content Include="Content\blueprint\screen.css" />
+    <Content Include="Content\ddsmoothmenu-v.css" />
+    <Content Include="Content\ddsmoothmenu.css" />
+    <Content Include="Content\images\down.gif" />
+    <Content Include="Content\images\right.gif" />
     <Content Include="Content\Naviam.css">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -166,6 +170,8 @@
     <Content Include="Scripts\backbone.js" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\common.min.js" />
+    <Content Include="Scripts\ddsmoothmenu.js" />
+    <Content Include="Scripts\ddsmoothmenu.min.js" />
     <Content Include="Scripts\jquery-1.6.2.js" />
     <Content Include="Scripts\jquery-1.6.2.min.js" />
     <Content Include="Scripts\jquery.jeditable.min.js" />

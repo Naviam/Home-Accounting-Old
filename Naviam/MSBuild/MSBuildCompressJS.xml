@@ -59,6 +59,7 @@
             
         </ItemGroup>
       <CompressorTask JavaScriptFiles="@(CommonJavaScript)" JavaScriptOutputFile="@(CommonJavaScriptOut)" CssFiles="" DeleteCssFiles="false" CssOutputFile="" CssCompressionType="YuiStockCompression" ObfuscateJavaScript="True" PreserveAllSemicolons="False" DisableOptimizations="True" EncodingType="Default" DeleteJavaScriptFiles="false" LineBreakPosition="-1" LoggingType="ALittleBit" ThreadCulture="en-au" IsEvalIgnored="false" />
+      <!--<CompressorTask JavaScriptFiles="..\Scripts\ddsmoothmenu.js" JavaScriptOutputFile="..\Scripts\ddsmoothmenu.min.js" CssFiles="" DeleteCssFiles="false" CssOutputFile="" CssCompressionType="YuiStockCompression" ObfuscateJavaScript="True" PreserveAllSemicolons="False" DisableOptimizations="True" EncodingType="Default" DeleteJavaScriptFiles="false" LineBreakPosition="-1" LoggingType="ALittleBit" ThreadCulture="en-au" IsEvalIgnored="false" />-->
       <!--<CompressorTask
             CssFiles="@(CssFiles)"
             DeleteCssFiles="false"
