@@ -161,6 +161,11 @@
                 }
             };
             ko.applyBindings(catModel, $("#cat_menu")[0]);
+            $("ul.dropdown li").hover(function () {
+                $('ul:first', this).css('visibility', 'visible');
+            }, function () {
+                $('ul:first', this).css('visibility', 'hidden');
+            });
         });
         $("#cat_menu").hover(function () {
         }, function () {
@@ -230,7 +235,7 @@
 
 <script type="text/html" id="catTemplate">
     <li data-bind="click: function(event) { catModel.AssignCategory($data); }">
-    <span data-bind="text: Name"></span>
+        <span data-bind="text: Name"></span>
     </li>
 </script>
 <div id="cat_menu" class='menu'>
