@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,7 +19,15 @@ namespace Naviam.Code
                 {
                     decimal? result = null;
                     if (!String.IsNullOrEmpty(valueProviderResult.AttemptedValue))
-                        result = Convert.ToDecimal(valueProviderResult.AttemptedValue);
+                    {
+                        decimal dec;
+                        if (Decimal.TryParse(valueProviderResult.AttemptedValue, NumberStyles.AllowDecimalPoint,  Thread.CurrentThread.CurrentUICulture.NumberFormat, out dec))
+                            result = dec;
+                        else
+                            if (Decimal.TryParse(valueProviderResult.AttemptedValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture.NumberFormat, out dec))
+                                result = dec;
+                        //result = Convert.ToDecimal(valueProviderResult.AttemptedValue);
+                    }
                     return result;
                 }
             }

@@ -81,9 +81,9 @@ nav {
   .trans_grid th {
     cursor: pointer;
     border: 1px solid #000; }
-  .trans_grid th:hover {
-    background-color: #ffe79c;
-    border-color: #c98400; }
+    .trans_grid th:hover {
+      background-color: #ffe79c;
+      border-color: #c98400; }
   .trans_grid tr.selected {
     border: 1px solid #000; }
   .trans_grid tr:hover td {
@@ -99,6 +99,10 @@ nav {
 .width100 {
   width: 100%; }
 
-.menu {
-  display: none;
-  position: fixed; }
+a.category_picker {
+  background: url("images/btn_categorypicker.png") no-repeat scroll left top transparent;
+  height: 20px;
+  position: fixed;
+  width: 20px; }
+  a.category_picker.active {
+    background-position: 0 -20px; }
