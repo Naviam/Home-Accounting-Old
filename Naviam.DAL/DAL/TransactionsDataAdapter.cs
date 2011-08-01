@@ -8,6 +8,7 @@ using Npgsql;
 using Naviam.Data;
 using Naviam.Code;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
 
 namespace Naviam.DAL
 {
@@ -114,8 +115,11 @@ namespace Naviam.DAL
             int res = -1;
             //insert to db
             res = 0;
-            Random randObj = new Random(1000);
-            trans.Id = randObj.Next(100000);
+            byte[] randomNumber = new byte[2]; 
+            RNGCryptoServiceProvider Gen = new RNGCryptoServiceProvider();
+            Gen.GetBytes(randomNumber);
+            int rand = Convert.ToInt32(randomNumber[1] * 256 + randomNumber[0]);
+            trans.Id = rand;
             if (res == 0)
             {
                 //if ok - save to cache

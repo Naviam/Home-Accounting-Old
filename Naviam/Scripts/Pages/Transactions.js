@@ -65,7 +65,7 @@ $(document).ready(function () {
                 ko.mapping.updateFromJS(transModel, res);
                 transModel.selectedRow(-1);
                 transModel.currentItem = null;
-                $('#edit_row').hide();
+                //$('#edit_row').hide();
             });
         }
         transModel.Add = function () {
@@ -121,7 +121,7 @@ $(document).ready(function () {
                 //transModel.currentItem.Date = transModel.currentItem.Date().replace('/Date(', '\\/Date(').replace(')/', ')\\/');
                 //                    $.postErr(updateTransUrl, ko.toJSON(transModel.currentItem), function (res) {
                 //                    }, 'json');
-                $.postErr(updateTransUrl, transModel.currentItem, function (res) {
+                $.postErr(updateTransUrl, ko.mapping.toJS(transModel.currentItem), function (res) {
                     transModel.currentItem.Id(res.Id);
                 });
                 //console.log(transModel.currentItem.Id());
@@ -160,10 +160,10 @@ $(document).ready(function () {
     $.postErr(getCatUrl, function (res) {
         catModel = ko.mapping.fromJS(res);
         catModel.Search = function (search) {
-            search = search.toLowerCase();
             if (!search) {
                 return null;
             } else {
+                search = search.toLowerCase();
                 for (var i = 0, j = this.items().length; i < j; i++) {
                     var item = this.items()[i];
                     if (item.Name().toLowerCase() == search)
