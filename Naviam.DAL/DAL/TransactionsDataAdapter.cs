@@ -114,6 +114,8 @@ namespace Naviam.DAL
             int res = -1;
             //insert to db
             res = 0;
+            Random randObj = new Random(1000);
+            trans.Id = randObj.Next(100000);
             if (res == 0)
             {
                 //if ok - save to cache
