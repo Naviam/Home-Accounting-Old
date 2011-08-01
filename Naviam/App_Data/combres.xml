@@ -73,6 +73,7 @@
     <resourceSet name="transactions" type="js">
       <resource reference="knockout map" />
       <resource reference="menu" />
+      <resource path="~/Scripts/Pages/Transactions.min.js" />
     </resourceSet>
     <!--End Pages -->
     <resourceSet name="spine" type="js">

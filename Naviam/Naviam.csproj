@@ -192,6 +192,8 @@
     <Content Include="Scripts\locale\Naviam.JavaScript.en.js" />
     <Content Include="Scripts\locale\Naviam.JavaScript.ru.js" />
     <Content Include="Scripts\locale\vsdoc\Naviam.JavaScript-vsdoc.js" />
+    <Content Include="Scripts\Pages\Transactions.js" />
+    <Content Include="Scripts\Pages\Transactions.min.js" />
     <Content Include="Scripts\spine.js" />
     <Content Include="Scripts\spine.min.js" />
     <Content Include="Scripts\underscore-min.js" />
