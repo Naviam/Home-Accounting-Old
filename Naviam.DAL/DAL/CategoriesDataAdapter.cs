@@ -22,11 +22,8 @@ namespace Naviam.DAL
                 //load from DB
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateCommand())
+                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_categories"))
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.CommandTimeout = 120;
-                        cmd.CommandText = "get_categories";
                         cmd.Parameters.AddWithValue("@id_user", userId);
                         try
                         {
