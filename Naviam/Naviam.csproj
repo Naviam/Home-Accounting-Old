@@ -154,6 +154,7 @@
     <Content Include="Content\blueprint\screen.css" />
     <Content Include="Content\ddsmoothmenu-v.css" />
     <Content Include="Content\ddsmoothmenu.css" />
+    <Content Include="Content\images\btn_categorypicker.png" />
     <Content Include="Content\images\down.gif" />
     <Content Include="Content\images\right.gif" />
     <Content Include="Content\Naviam.css">
@@ -162,7 +163,9 @@
       <DependentUpon>Naviam.scss</DependentUpon>
     </Content>
     <Content Include="Global.asax" />
-    <Content Include="MSBuild\MSBuildCompressJS.xml" />
+    <Content Include="MSBuild\MSBuildCompressJS.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="NaviamSiteMap.xml">
       <SubType>Designer</SubType>
     </Content>

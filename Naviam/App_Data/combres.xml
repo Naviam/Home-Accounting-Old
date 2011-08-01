@@ -26,7 +26,6 @@
                >
     <resourceSet name="naviamCss" type="css">
       <resource path="~/Content/Blueprint/screen.css" />
-      <resource path="~/Content/Blueprint/ie.css" />
       <resource path="~/Content/Naviam.css" />
       <resource path="~/Content/ddsmoothmenu.css" />
       <resource path="~/Content/ddsmoothmenu-v.css" />
@@ -49,6 +48,9 @@
       <resource reference="validate" />
       <resource path="~/Scripts/jquery.tools.min.js" />
     </resourceSet>
+    <resourceSet name="menu" type="js">
+      <resource path="~/Scripts/ddsmoothmenu.min.js" />
+    </resourceSet>
     <resourceSet name="knockout" type="js">
       <resource reference="jquery" />
       <resource path="~/Scripts/jquery.tmpl.min.js" />
@@ -61,13 +63,18 @@
     <resourceSet name="knockout map" type="js">
       <resource reference="knockout" />
       <resource path="~/Scripts/knockout.mapping.min.js" />
-      <resource path="~/Scripts/ddsmoothmenu.min.js" />
     </resourceSet>
     <resourceSet name="knockout map validate" type="js">
       <resource reference="knockout" />
       <resource reference="validate" />
       <resource path="~/Scripts/knockout.mapping.min.js" />
     </resourceSet>
+    <!--Pages -->
+    <resourceSet name="transactions" type="js">
+      <resource reference="knockout map" />
+      <resource reference="menu" />
+    </resourceSet>
+    <!--End Pages -->
     <resourceSet name="spine" type="js">
       <resource path="~/Scripts/spine.min.js" />
     </resourceSet>

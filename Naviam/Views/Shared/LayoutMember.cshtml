@@ -6,7 +6,7 @@
     <title>@ViewBag.Title</title>
     @Html.CombresLink("naviamCss")
     <!--[if lt IE 8]><link rel="stylesheet" href="@Url.Content("~/Content/blueprint/ie.css")" type="text/css" media="screen, projection"><![endif]-->
-    @Html.CombresLink("knockout map")
+    @Html.CombresLink(ViewBag.CombresScripts as string)
 
     <script type="text/javascript" src="@Url.Content(String.Format("~/Scripts/locale/Naviam.JavaScript.{0}.js", System.Threading.Thread.CurrentThread.CurrentUICulture.Name))"></script> 
     

@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = SharedStrings.TransactionsTitle;
     Layout = "~/Views/Shared/LayoutMember.cshtml";
+    ViewBag.CombresScripts = "transactions";
 }
 @*intellisense support*@
 @if (false)
@@ -118,12 +119,15 @@
             }
             transModel.ShowEditArea = function (btn) {
                 var editArea = $(btn).parent().find('.edit_area');
-                //load data into form
+                //TODO: load data into form
                 editArea.slideDown();
             }
             transModel.ShowCategories = function (btn) {
                 var menu = $("#cat_menu");
-                menu.css({ top: $(btn).offset().top + 15, left: $(btn).offset().left });
+                var input = $(btn).parent().find('[name="Category"]');
+                menu.css({ top: input.offset().top + 20, left: input.offset().left });
+                menu.width(input.width());
+                $("#cat_menu ul").width(input.width());
                 menu.slideDown();
             }
             transModel.Sort = function (val) {
@@ -157,9 +161,6 @@
                         if (fItem != null)
                             return fItem;
                     }
-                    //                    return ko.utils.arrayFirst(this.items(), function (item) {
-                    //                        return item.Name().toLowerCase() == search;
-                    //                    });
                 }
             };
             catModel.AssignCategory = function (item) {
@@ -175,15 +176,11 @@
                 classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
             })
             $("#cat_menu").hide();
-            //            $("ul.dropdown li").hover(function () {
-            //                $('ul:first', this).css('visibility', 'visible');
-            //            }, function () {
-            //                $('ul:first', this).css('visibility', 'hidden');
-            //            });
         });
         $("#cat_menu").hover(function () {
         }, function () {
             $("#cat_menu").hide();
+            $("#cat_menu ul li ul").hide();
         });
     });
 </script>
@@ -194,7 +191,7 @@
         <td style="width:35%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
         <td style="width:35%">
             <span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span>
-            <div data-bind="visible: transModel.selectedRow() == Id()"><input class="width100" data-bind="value: Category" /><a href="#" onclick='return transModel.ShowCategories(this);'>Cat</a></div>
+            <div data-bind="visible: transModel.selectedRow() == Id()"><input class="width100" data-bind="value: Category" name="Category"/><a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker'></a></div>
         </td>
         <td style="width:10%">
             <span data-bind="text: Amount"></span>
