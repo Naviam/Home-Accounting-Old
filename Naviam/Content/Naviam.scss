@@ -114,8 +114,9 @@ nav {
 a.category_picker {
     background: url("images/btn_categorypicker.png") no-repeat scroll left top transparent;
     height: 20px;
-    position: fixed;
+    position: absolute;
     width: 20px;
+	right: 0px;
 	&.active {
 		background-position: 0 -20px;
 	}
