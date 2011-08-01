@@ -7,7 +7,7 @@ using Naviam.Code;
 using System.Data.SqlClient;
 using System.Data;
 
-namespace Naviam.DAL.DAL
+namespace Naviam.DAL
 {
     public class CategoriesDataAdapter
     {
