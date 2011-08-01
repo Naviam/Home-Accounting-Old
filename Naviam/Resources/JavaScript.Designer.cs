@@ -68,5 +68,14 @@ namespace Naviam.Resources {
                 return ResourceManager.GetString("Cancel", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to en.
+        /// </summary>
+        public static string culture {
+            get {
+                return ResourceManager.GetString("culture", resourceCulture);
+            }
+        }
     }
 }

@@ -87,13 +87,16 @@ namespace Naviam.Controllers
         }
 
         [HttpPost]
-        public string UpdateTransaction(Transaction trans)
+        public ActionResult UpdateTransaction(Transaction trans)
         {
             UserProfile user = CurrentUser;
             //Transaction updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, user.Id);
             //TryUpdateModel(updateTrans);
-            TransactionsDataAdapter.Update(trans, user.Id);
-            return "ok";
+            if (trans.Id != null)
+                TransactionsDataAdapter.Update(trans, user.Id);
+            else
+                TransactionsDataAdapter.Insert(trans, user.Id);
+            return Json(trans);
         }
         
         [HttpPost]

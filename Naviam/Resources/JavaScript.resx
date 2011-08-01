@@ -120,4 +120,7 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="culture" xml:space="preserve">
+    <value>en</value>
+  </data>
 </root>

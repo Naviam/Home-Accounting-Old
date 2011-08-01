@@ -16,6 +16,7 @@
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
 </script>
+<a href="#" onclick='return transModel.Add();'>Add</a>
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
@@ -26,8 +27,8 @@
             <div data-bind="visible: transModel.selectedRow() == Id()" style='position:relative;'><input class="width100" data-bind="value: Category" name="Category"/><a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker'></a></div>
         </td>
         <td style="width:10%">
-            <span data-bind="text: Amount"></span>
-            @*<input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Amount" />*@
+            <span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
+            <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />
         </td>
         <td style="width:5%"><a href="#" onclick='return transModel.ShowEditArea(this);' data-bind="visible: transModel.selectedRow() == Id()">Edit</a></td>
     </tr>

@@ -59,12 +59,30 @@ $(document).ready(function () {
         transModel.selectedRow = ko.observable(-1);
         transModel.currentItem = null;
         transModel.ReloadPage = function () {
+            if (this.DescrSub != null)
+                this.DescrSub.dispose();
             $.postErr(getTransUrl, transModel.paging, function (res) {
                 ko.mapping.updateFromJS(transModel, res);
                 transModel.selectedRow(-1);
                 transModel.currentItem = null;
                 $('#edit_row').hide();
             });
+        }
+        transModel.Add = function () {
+            var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+                return item.Id() == null;
+            });
+            if (fItem != null) return;
+            var date = new Date();
+            if (Naviam.JavaScript.culture == 'ru')
+                var dateString = date.getDay().padZero() + '.' + (date.getMonth() + 1).padZero() + '.' + date.getFullYear() + ' ' + date.getHours().padZero() + ':' + date.getMinutes().padZero() + ':' + date.getSeconds().padZero();
+            if (Naviam.JavaScript.culture == 'en')
+                var dateString = (date.getMonth() + 1).padZero() + '/' + date.getDay().padZero() + '/' + date.getFullYear() + ' ' + date.getHours().padZero() + ':' + date.getMinutes().padZero() + ':' + date.getSeconds().padZero();
+            this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), FormattedDate: ko.observable(dateString), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
+                Date: '/Date(' + date.getTime() + ')/'
+            });
+            //this.currentItem = this.items[0];
+            this.GoToEdit(null, this.items()[0]);
         }
         transModel.DescrSub = null;
         transModel.GoToEdit = function (event, item) {
@@ -80,27 +98,31 @@ $(document).ready(function () {
             //console.log(event);
             //item.Amount = ko.numericObservable(item.Amount());
             item.FullRow = ko.dependentObservable(function () {
-                return this.Id() + "_" + this.Description() + "_" + this.Category() + "_" + this.Amount();
+                return this.Description() + "_" + this.Category() + "_" + this.Amount();
             }, item);
-            this.selectedRow(item.Id());
-            this.currentItem = item;
             if (this.DescrSub != null)
                 this.DescrSub.dispose();
             this.DescrSub = item.FullRow.subscribe(function (newValue) {
                 transModel.Save();
             });
+            this.currentItem = item;
+            this.selectedRow(item.Id());
         }
         //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
         //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
         transModel.Save = function () {
             if (this.currentItem != null) {
-                var item = catModel.Search(this.currentItem.Category());
-                if (item != null)
-                    this.currentItem.CategoryId(item.Id());
+                var cat = this.currentItem.Category();
+                if (cat != null) {
+                    var item = catModel.Search(cat);
+                    if (item != null)
+                        this.currentItem.CategoryId(item.Id());
+                }
                 //transModel.currentItem.Date = transModel.currentItem.Date().replace('/Date(', '\\/Date(').replace(')/', ')\\/');
                 //                    $.postErr(updateTransUrl, ko.toJSON(transModel.currentItem), function (res) {
                 //                    }, 'json');
                 $.postErr(updateTransUrl, transModel.currentItem, function (res) {
+                    transModel.currentItem.Id(res.Id);
                 });
                 //console.log(transModel.currentItem.Id());
             }
