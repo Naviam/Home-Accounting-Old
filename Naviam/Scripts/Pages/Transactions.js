@@ -134,6 +134,10 @@ $(document).ready(function () {
         }
         transModel.ShowCategories = function (btn) {
             var menu = $("#cat_menu");
+            if (menu.css("display") != "none") {
+                menu.hide();
+                return;
+            }
             var input = $(btn).parent().find('[name="Category"]');
             menu.css({ top: input.offset().top + 20, left: input.offset().left });
             menu.width(input.width());
