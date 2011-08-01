@@ -27,7 +27,7 @@ namespace Naviam.DAL
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.CommandTimeout = 120;
                         cmd.CommandText = "get_categories";
-                        cmd.Parameters.AddWithValue("@id_company", userId);
+                        cmd.Parameters.AddWithValue("@id_user", userId);
                         try
                         {
                             using (SqlDataReader reader = cmd.ExecuteReader())
