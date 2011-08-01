@@ -39,12 +39,6 @@ namespace Naviam.Data
             {
                 Add(new Category(reader));
             }
-
-            //foreach (Category item in FindAll(x => x.ParentId==null))
-            //{
-            //    item.Subitems.AddRange(FindAll(x => x.ParentId == item.Id));
-            //    this.RemoveAll(x => x.ParentId == item.Id);
-            //}
         }
 
         public static List<Category> GetTree(List<Category> categories)

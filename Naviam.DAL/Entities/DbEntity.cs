@@ -5,6 +5,8 @@ using System.Text;
 
 namespace Naviam.Data
 {
+    public enum DbActionType { Select, Insert, Update, Delete }
+
     [Serializable]
     public abstract class DbEntity
     {
