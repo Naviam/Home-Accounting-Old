@@ -191,7 +191,7 @@
         <td style="width:35%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
         <td style="width:35%">
             <span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span>
-            <div data-bind="visible: transModel.selectedRow() == Id()"><input class="width100" data-bind="value: Category" name="Category"/><a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker'></a></div>
+            <div data-bind="visible: transModel.selectedRow() == Id()" style='position:relative;'><input class="width100" data-bind="value: Category" name="Category"/><a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker'></a></div>
         </td>
         <td style="width:10%">
             <span data-bind="text: Amount"></span>
