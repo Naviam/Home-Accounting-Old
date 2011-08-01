@@ -104,7 +104,7 @@ namespace Naviam.Controllers
         {
             UserProfile user = CurrentUser;
 
-            IEnumerable<Category> items = CategoriesDataAdapter.GetCategories(user.Id);
+            List<Category> items = Categories.GetTree(CategoriesDataAdapter.GetCategories(user.Id));
 
             //List<Category> items = new List<Category>();
             //Category cat = new Category() { Name = "Food", Id = 1 };

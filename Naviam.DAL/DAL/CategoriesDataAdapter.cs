@@ -13,8 +13,8 @@ namespace Naviam.DAL
     {
         private const string CacheKey = "transCategory";
 
-        public static IEnumerable<Category> GetCategories(int? userId) { return GetCategories(userId, false); }
-        public static IEnumerable<Category> GetCategories(int? userId, bool forceSqlLoad)
+        public static List<Category> GetCategories(int? userId) { return GetCategories(userId, false); }
+        public static List<Category> GetCategories(int? userId, bool forceSqlLoad)
         {
             List<Category> res = CacheWrapper.GetList<Category>(CacheKey, userId);
             if (res == null || forceSqlLoad)
