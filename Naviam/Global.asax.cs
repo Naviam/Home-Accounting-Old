@@ -46,6 +46,7 @@ namespace Naviam
 
             ModelBinders.Binders.Add(typeof(decimal?), new CustomDecimalModelBinder());
             ModelBinders.Binders.Add(typeof(DateTime?), new CustomDateTimeModelBinder());
+            ModelBinders.Binders.Add(typeof(string), new CustomStringModelBinder());
         }
 
         protected void Application_AcquireRequestState(object sender, EventArgs e)

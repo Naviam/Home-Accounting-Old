@@ -149,6 +149,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\combres_full_with_annotation.xml" />
+    <Content Include="App_Data\jsCompress.xml" />
     <Content Include="Content\blueprint\ie.css" />
     <Content Include="Content\blueprint\print.css" />
     <Content Include="Content\blueprint\screen.css" />
@@ -311,7 +312,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>$(MSBuildBinPath)\msbuild "$(ProjectDir)MSBuild\MSBuildCompressJS.xml"
+    <PostBuildEvent>#$(MSBuildBinPath)\msbuild "$(ProjectDir)MSBuild\MSBuildCompressJS.xml"
+$(ProjectDir)bin\AjaxMin.exe -JS -CLOBBER -xml $(ProjectDir)App_Data\jsCompress.xml
 $(ProjectDir)..\JavascriptResxGenerator\bin\JavascriptResxGenerator $(ProjectDir)Resources\JavaScript.resx $(ProjectDir)Scripts\locale $(ProjectDir)\Scripts\locale\vsdoc Naviam</PostBuildEvent>
   </PropertyGroup>
 </Project>

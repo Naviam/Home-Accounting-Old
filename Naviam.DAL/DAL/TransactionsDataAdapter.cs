@@ -8,6 +8,7 @@ using Npgsql;
 using Naviam.Data;
 using Naviam.Code;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
 
 namespace Naviam.DAL
 {
@@ -98,37 +99,37 @@ namespace Naviam.DAL
         }
 
 
-        public static int? Insert(Transaction trans, int? companyId)
-        {
-            int? res = null;
-            //insert to db
-            using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
-            {
-                using (SqlCommand cmd = holder.Connection.CreateSPCommand("add_transaction"))
-                {
-                    //cmd.Parameters.AddWithValue("@id_transaction", id);
-                    //try
-                    //{
-                    //    using (SqlDataReader reader = cmd.ExecuteReader())
-                    //    {
-                    //        res = new Transaction(reader);
-                    //    }
-                    //}
-                    //catch (SqlException e)
-                    //{
-                    //    throw e;
-                    //}
-                }
-            }
+        //public static int? Insert(Transaction trans, int? companyId)
+        //{
+        //    int? res = null;
+        //    //insert to db
+        //    using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+        //    {
+        //        using (SqlCommand cmd = holder.Connection.CreateSPCommand("add_transaction"))
+        //        {
+        //            //cmd.Parameters.AddWithValue("@id_transaction", id);
+        //            //try
+        //            //{
+        //            //    using (SqlDataReader reader = cmd.ExecuteReader())
+        //            //    {
+        //            //        res = new Transaction(reader);
+        //            //    }
+        //            //}
+        //            //catch (SqlException e)
+        //            //{
+        //            //    throw e;
+        //            //}
+        //        }
+        //    }
 
-            res = 0;
-            if (res == 0)
-            {
-                //if ok - save to cache
-                CacheWrapper.AddToList<Transaction>(CacheKey, trans, companyId);
-            }
-            return res;
-        }
+        //    res = 0;
+        //    if (res == 0)
+        //    {
+        //        //if ok - save to cache
+        //        CacheWrapper.AddToList<Transaction>(CacheKey, trans, companyId);
+        //    }
+        //    return res;
+        //}
 
 
         public static IEnumerable<Transaction> GetTransactions(int? userId) { return GetTransactions(userId, false); }
@@ -169,6 +170,24 @@ namespace Naviam.DAL
                     CacheWrapper.AddToList<Transaction>(CacheKey, res, userId);
                 else
                     CacheWrapper.UpdateList<Transaction>(CacheKey, res, userId);
+            }
+            return res;
+        }
+
+        public static int Insert(Transaction trans, int? userId)
+        {
+            int res = -1;
+            //insert to db
+            res = 0;
+            byte[] randomNumber = new byte[2]; 
+            RNGCryptoServiceProvider Gen = new RNGCryptoServiceProvider();
+            Gen.GetBytes(randomNumber);
+            int rand = Convert.ToInt32(randomNumber[1] * 256 + randomNumber[0]);
+            trans.Id = rand;
+            if (res == 0)
+            {
+                //if ok - save to cache
+                CacheWrapper.AddToList<Transaction>(CacheKey, trans, userId);
             }
             return res;
         }

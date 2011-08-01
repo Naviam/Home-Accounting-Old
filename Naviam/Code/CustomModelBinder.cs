@@ -56,4 +56,25 @@ namespace Naviam.Code
             return base.BindModel(controllerContext, bindingContext);
         }
     }
+
+    public class CustomStringModelBinder : DefaultModelBinder
+    {
+        public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        {
+            if (bindingContext.ModelType == typeof(string))
+            {
+                ValueProviderResult valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
+                if (valueProviderResult != null)
+                {
+                    string result = valueProviderResult.AttemptedValue;
+                    if (result == "null")
+                    {
+                        result = "";
+                    }
+                    return result;
+                }
+            }
+            return base.BindModel(controllerContext, bindingContext);
+        }
+    }
 }

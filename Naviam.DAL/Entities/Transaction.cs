@@ -35,7 +35,7 @@ namespace Naviam.Data
             AccountId = reader["id_account"] as int?; 
 		    AccountNumber = reader["account_number"] as string;
             AccountType = Account.GetAccountType(reader["account_type"] as string);
-            CategoryName = reader["category_name"] as string; 
+            Category = reader["category_name"] as string; 
         }
 
         public DateTime? Date { get; set; }
@@ -59,7 +59,6 @@ namespace Naviam.Data
         public int? AccountId { get; set; }
         public string AccountNumber { get; set; }
         public Account.AccountTypes AccountType { get; set; }
-        public string CategoryName { get; set; }
 
         public static TransactionTypes GetTransactionType(string tranTypeStr)
         {
