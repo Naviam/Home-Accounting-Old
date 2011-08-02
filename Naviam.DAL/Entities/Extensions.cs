@@ -292,23 +292,60 @@ namespace Naviam.Data
     #endregion
 
     #region SqlCommandExtensions
-    
-    //public static partial class SqlCommandExtensions
-    //{
-    //    public static void AddDetailsToException(this SqlCommand command, SqlException e)
-    //    {
-    //        string procedureName = String.Format("Procedure Name: {0}", command.CommandText);
-    //        e.Data[Global.ProcNameExceptionDataKey] = procedureName;
-    //        string parameters = String.Format("Passed parameters: {0}", Environment.NewLine);
-    //        foreach (SqlParameter sqlParam in command.Parameters)
-    //        {
-    //            string paramValue = sqlParam.Value != null ? sqlParam.Value.ToString() : "";
-    //            parameters = parameters + sqlParam.ParameterName + ": " + paramValue +
-    //                "(" + sqlParam.Size.ToString() + "), ";
-    //        }
-    //        e.Data[Global.ParamExceptionDataKey] = parameters.Remove(parameters.Length - 2);
-    //    }
-    //}
+
+    public static partial class SqlCommandExtensions
+    {
+        /// <summary>
+        /// Appends DbEntity-specific parameter to the specificied SqlCommand. 
+        /// </summary>
+        /// <param name="command">SqlCommand to be executed.</param>
+        /// <param name="entityId">Instance of Company class</param>
+        /// <param name="action">Database action type (select, insert, update, delete).</param>
+        public static void AddCommonParameters(this SqlCommand command, int? entityId, DbActionType action)
+        {
+            command.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.ReturnValue;
+            switch (action)
+            {
+                case DbActionType.Insert:
+                    {
+                        command.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.InputOutput;
+                        command.Parameters["@id"].Value = entityId.ToDbValue();
+                        break;
+                    }
+                case DbActionType.Select:
+                case DbActionType.Update:
+                case DbActionType.Delete:
+                    {
+                        if (entityId != null)
+                            command.Parameters.Add("@id", SqlDbType.Int).Value = entityId.ToDbValue();
+                        break;
+                    }
+                default: throw new ArgumentOutOfRangeException("action");
+            }
+        }
+        /// <summary>
+        /// Appends DbEntity-specific parameter to the specificied select SqlCommand. 
+        /// </summary>
+        /// <param name="command">SqlCommand to be executed.</param>
+        /// <param name="entityId">Instance of Company class</param>
+        public static void AddCommonParameters(this SqlCommand command, int? entityId)
+        { AddCommonParameters(command, entityId, DbActionType.Select); }
+
+        public static int? GetRowIdParameter(this SqlCommand executedCommand)
+        {
+            return (executedCommand.Parameters.Contains("@id") && (ParameterDirection.Input != executedCommand.Parameters["@id"].Direction))
+                ? executedCommand.Parameters["@id"].Value as int?
+                : null;
+        }
+
+        public static int GetReturnParameter(this SqlCommand executedCommand)
+        {
+            return (executedCommand.Parameters.Contains("@ReturnValue") && (ParameterDirection.ReturnValue == executedCommand.Parameters["@ReturnValue"].Direction))
+                ? (int)executedCommand.Parameters["@ReturnValue"].Value
+                : -1;
+        }
+
+    }
 
     #endregion
 

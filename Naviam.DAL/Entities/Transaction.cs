@@ -35,6 +35,7 @@ namespace Naviam.Data
             AccountId = reader["id_account"] as int?; 
 		    AccountNumber = reader["account_number"] as string;
             AccountType = Account.GetAccountType(reader["account_type"] as string);
+            CategoryId = reader["category_id"] as int?;
             Category = reader["category_name"] as string; 
         }
 
@@ -71,6 +72,17 @@ namespace Naviam.Data
             }
         }
 
+        public static string GetTransactionTypeString(TransactionTypes tranType)
+        {
+            switch (tranType)
+            {
+                case TransactionTypes.Cash: return Cash;
+                case TransactionTypes.Check: return Check;
+                case TransactionTypes.Pending: return Pending;
+                default: return Cash;
+            }
+        }
+
         public static TransactionDirections GetTransactionDirection(string tranDirectionStr)
         {
             switch (tranDirectionStr)
@@ -79,6 +91,39 @@ namespace Naviam.Data
                 case Expence: return TransactionDirections.Expence;
                 default: return TransactionDirections.Income;
             }
+        }
+
+        public static string GetTransactionDirectionString(TransactionDirections tranDirection)
+        {
+            switch (tranDirection)
+            {
+                case TransactionDirections.Income: return Income;
+                case TransactionDirections.Expence: return Expence;
+                default: return Income;
+            }
+        }
+    }
+
+    public static partial class SqlCommandExtensions
+    {
+        /// <summary>
+        /// Appends Transaction-specific parameters to the specificied SqlCommand. 
+        /// </summary>
+        /// <param name="command">SqlCommand to be executed.</param>
+        /// <param name="alert">Instance of Transaction class</param>
+        /// <param name="action">Database action type (select, insert, update, delete).</param>
+        public static void AddEntityParameters(this SqlCommand command, Transaction transaction, DbActionType action)
+        {
+            command.AddCommonParameters(transaction.Id, action);
+            command.Parameters.Add("@date", SqlDbType.DateTime).Value = transaction.Date;
+            command.Parameters.Add("@amount", SqlDbType.Decimal).Value = transaction.Amount;
+            command.Parameters.Add("@merchant", SqlDbType.NVarChar).Value = transaction.Merchant;
+            command.Parameters.Add("@id_account", SqlDbType.Int).Value = transaction.AccountId;
+            command.Parameters.Add("@id_category", SqlDbType.Int).Value = transaction.CategoryId;
+            command.Parameters.Add("@description", SqlDbType.NVarChar).Value = transaction.Merchant;
+            command.Parameters.Add("@notes", SqlDbType.NVarChar).Value = transaction.Notes;
+            command.Parameters.Add("@type", SqlDbType.NVarChar).Value = Transaction.GetTransactionTypeString(transaction.TransactionType);
+            command.Parameters.Add("@direction", SqlDbType.NVarChar).Value = Transaction.GetTransactionDirectionString(transaction.Direction);
         }
     }
 }
