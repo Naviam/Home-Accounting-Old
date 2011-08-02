@@ -34,8 +34,8 @@ var CellWidth = 30;// width of day cell.
 var TimeMode = 24;// TimeMode value. 12 or 24
 var StartYear = 1940; //First Year in drop down year selection
 var EndYear = 5; // The last year of pickable date. if current year is 2011, the last year that still picker will be 2016 (2011+5)
-var CalPosOffsetX = -10; //X position offset relative to calendar icon, can be negative value
-var CalPosOffsetY = 40; //Y position offset relative to calendar icon, can be negative value
+var CalPosOffsetX = 0; //X position offset relative to calendar icon, can be negative value
+var CalPosOffsetY = 0; //Y position offset relative to calendar icon, can be negative value
 
 //Configurable parameters
 
@@ -71,9 +71,7 @@ var DisableBeforeToday = true; //Make date before today unclickable.
 
 //use the Month and Weekday in your preferred language.
 
-var MonthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 var WeekDayName1 = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-var WeekDayName2 = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 
 //end Configurable parameters
@@ -90,6 +88,7 @@ function Calendar(pDate, pCtrl)
 	this.Month = pDate.getMonth();//selected month number
 	this.Year = pDate.getFullYear();//selected year in 4 digits
 	this.Hours = pDate.getHours();
+
 
 	if (pDate.getMinutes() < 10)
 	{
@@ -181,10 +180,11 @@ Calendar.prototype.SwitchYear = function (intYear)
 
 Calendar.prototype.SetHour = function (intHour)
 {
-	var MaxHour,
+    var MaxHour,
 	MinHour,
 	HourExp = new RegExp("^\\d\\d"),
 	SingleDigit = new RegExp("\\d");
+
 
 	if (TimeMode === 24)
 	{
@@ -216,9 +216,9 @@ Calendar.prototype.SetHour = function (intHour)
 		intHour = "0" + intHour;
 	}
 
-	if (HourExp.test(intHour) && (parseInt(intHour, 10) <= MaxHour) && (parseInt(intHour, 10) >= MinHour))
+if (HourExp.test(intHour) && (parseInt(intHour, 10) <= MaxHour) && (parseInt(intHour, 10) >= MinHour))
 	{
-		if ((TimeMode === 12) && (Cal.AMorPM === "PM"))
+	    if ((TimeMode === 12) && (Cal.AMorPM === "PM"))
 		{
 			if (parseInt(intHour, 10) === 12)
 			{
@@ -320,7 +320,7 @@ Calendar.prototype.SetAmPm = function (pvalue)
 	this.AMorPM = pvalue;
 	if (pvalue === "PM")
 	{
-		this.Hours = parseInt(this.Hours, 10) + 12;
+	    this.Hours = parseInt(this.Hours, 10) + 12;
 		if (this.Hours === 24)
 		{
 			this.Hours = 12;
@@ -339,7 +339,7 @@ Calendar.prototype.getShowHour = function ()
 
 	if (TimeMode === 12)
 	{
-		if (parseInt(this.Hours, 10) === 0)
+	    if (parseInt(this.Hours, 10) === 0)
 		{
 			this.AMorPM = "AM";
 			finalHour = parseInt(this.Hours, 10) + 12;
@@ -797,7 +797,6 @@ function RenderCssCal(bNewCal)
 	if (Cal.ShowTime === true)
 	{
 		showHour = Cal.getShowHour();
-
 		if (Cal.ShowSeconds === false && TimeMode === 24)
 		{
 			ShowArrows = true;
@@ -839,7 +838,7 @@ function RenderCssCal(bNewCal)
 		}
 
 		vCalTime += "</td>\n<td align='right' valign='bottom' width='" + HourCellWidth + "px'></td></tr>";
-		vCalTime += "<tr><td colspan='7' style=\"text-align:center;\"><input style='width:60px;font-size:12px;' onClick='javascript:closewin();'  type=\"button\" value=\"OK\">&nbsp;<input style='width:60px;font-size:12px;' onClick='javascript: winCal.style.visibility = \"hidden\"' type=\"button\" value=\"Cancel\"></td></tr>";
+		vCalTime += "<tr><td colspan='7' style=\"text-align:center;\"><input style='width:60px;font-size:12px;' onClick='javascript:closewin();'  type=\"button\" value=\"Ok\">&nbsp;<input style='width:60px;font-size:12px;' onClick='javascript: winCal.style.visibility = \"hidden\"' type=\"button\" value=\"" + Naviam.JavaScript.Cancel + "\"></td></tr>";
 	}
 	else //if not to show time.
 	{
@@ -862,10 +861,9 @@ function RenderCssCal(bNewCal)
 
 
 	// determines if there is enough space to open the cal above the position where it is called
-	if (ypos > calHeight)
-	{
+	if (ypos > calHeight) {
 		ypos = ypos - calHeight;
-	}
+    }
 
 	if (!winCal)
 	{
@@ -901,7 +899,7 @@ function RenderCssCal(bNewCal)
 		span.style.width = CalWidth + 'px';
 		span.style.border = "solid 1pt " + SpanBorderColor;
 		span.style.padding = "0";
-		span.style.cursor = "move";
+		//span.style.cursor = "move";
 		span.style.backgroundColor = SpanBgColor;
 		span.style.zIndex = 100;
 		document.body.appendChild(span);
@@ -926,12 +924,13 @@ function RenderCssCal(bNewCal)
 }
 
 
-function NewCssCal(pCtrl, pFormat, pScroller, pShowTime, pTimeMode, pShowSeconds)
+function NewCssCal(pCtrl, pCallBack, pFormat, pScroller, pShowTime, pTimeMode, pShowSeconds)
 {
 	// get current date and time
 
 	dtToday = new Date();
-	Cal = new Calendar(dtToday);
+	Cal = new Calendar(dtToday, pCtrl);
+	Cal.pCallBack = pCallBack;
 
 	if (pShowTime !== undefined)
 	{
@@ -973,10 +972,6 @@ function NewCssCal(pCtrl, pFormat, pScroller, pShowTime, pTimeMode, pShowSeconds
 
 	}
 
-	if (pCtrl !== undefined)
-	{
-		Cal.Ctrl = pCtrl;
-	}
 
 	if (pFormat !== undefined)
 	{
@@ -1183,12 +1178,16 @@ function closewin() {
 //                //callback(id, Cal.FormatDate(Cal.Date));
         //   }     
 var val = Cal.FormatDate(Cal.Date);
-if(Cal.ShowTime){
-     val+=' '+Cal.getShowHour()+':'+Cal.Minutes;
-     if (Cal.ShowSeconds)  val+=':'+Cal.Seconds;
-     if (TimeMode === 12)  val+=''+Cal.getShowAMorPM();
-}
-
+if (Cal.ShowTime) {
+    selDate.setHours(Cal.Hours);
+    selDate.setMinutes(Cal.Minutes);
+    selDate.setSeconds(Cal.Seconds);
+    val += ' ' + Cal.getShowHour() + ':' + Cal.Minutes;
+     if (Cal.ShowSeconds) val += ':' + Cal.Seconds;
+     else val += ':00';
+     if (TimeMode === 12)  val+=' '+Cal.getShowAMorPM();
+ }
+ Cal.pCallBack('/Date(' + selDate.getTime() + ')/');
  $(Cal.Ctrl).text(val);
  $(Cal.Ctrl).val(val);
  $(Cal.Ctrl).focus();
@@ -1239,14 +1238,14 @@ function pickIt(evt)
 		if (objectID.indexOf(calSpanID) !== -1)
 		{
 			dom = document.getElementById(objectID);
-			cnLeft = evt.pageX;
+			/*cnLeft = evt.pageX;
 			cnTop = evt.pageY;
 
 			if (dom.offsetLeft)
 			{
 				cnLeft = (cnLeft - dom.offsetLeft);
 				cnTop = (cnTop - dom.offsetTop);
-			}
+			}*/
 		}
 
 		// get mouse position on click
@@ -1257,8 +1256,8 @@ function pickIt(evt)
 	else
 	{ // IE
 		objectID = event.srcElement.id;
-		cnLeft = event.offsetX;
-		cnTop = (event.offsetY);
+		/*cnLeft = event.offsetX;
+		cnTop = (event.offsetY);*/
 
 		// get mouse position on click
 		de = document.documentElement;
@@ -1289,14 +1288,14 @@ function pickIt(evt)
 
 
 
-function dragIt(evt)
+/*function dragIt(evt)
 {
 	if (domStyle)
 	{
 		if (document.addEventListener)
 		{ //for IE
-			domStyle.left = (event.clientX - cnLeft + document.body.scrollLeft) + 'px';
-			domStyle.top = (event.clientY - cnTop + document.body.scrollTop) + 'px';
+		    domStyle.left = (evt.clientX - cnLeft + document.body.scrollLeft) + 'px';
+		    domStyle.top = (evt.clientY - cnTop + document.body.scrollTop) + 'px';
 		}
 		else
 		{  //Firefox
@@ -1304,7 +1303,7 @@ function dragIt(evt)
 			domStyle.top = (evt.clientY - cnTop + document.body.scrollTop) + 'px';
 		}
 	}
-}
+}*/
 
 // performs a single increment or decrement
 function nextStep(whatSpinner, direction)
@@ -1353,18 +1352,18 @@ function stopSpin()
 	clearInterval(document.thisLoop);
 }
 
-function dropIt()
-{
-	stopSpin();
+//function dropIt()
+//{
+//	stopSpin();
 
-	if (domStyle)
-	{
-		domStyle = null;
-	}
-}
+//	if (domStyle)
+//	{
+//		domStyle = null;
+//	}
+//}
 
 // Default events configuration
 
 document.onmousedown = pickIt;
-document.onmousemove = dragIt;
-document.onmouseup = dropIt;
+//document.onmousemove = dragIt;
+//document.onmouseup = dropIt;

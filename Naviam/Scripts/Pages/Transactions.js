@@ -12,9 +12,11 @@ ko.numericObservable = function (initialValue) {
         },
         write: function (newValue) {
             var parsed = parseFloat(newValue);
-            if (isNaN(parsed))
+            var correct = !isNaN(parsed) && (parsed > 0);
+            if (!correct)
                 _actual.valueHasMutated();
-            _actual(isNaN(parsed) ? _actual() : parsed);
+            else
+                _actual(parsed);
         }
     });
     return result;
@@ -98,7 +100,7 @@ $(document).ready(function () {
             //console.log(event);
             //item.Amount = ko.numericObservable(item.Amount());
             item.FullRow = ko.dependentObservable(function () {
-                return this.Description() + "_" + this.Category() + "_" + this.Amount();
+                return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date();
             }, item);
             if (this.DescrSub != null)
                 this.DescrSub.dispose();

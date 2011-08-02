@@ -39,5 +39,6 @@ Number.prototype.padZero = function (len) {
     while (s.length < len) s = c + s;
     return s;
 }
-
- 
+var MonthName = [Naviam.JavaScript.January, Naviam.JavaScript.February, Naviam.JavaScript.March, Naviam.JavaScript.April, Naviam.JavaScript.May, Naviam.JavaScript.June, Naviam.JavaScript.July,
+    Naviam.JavaScript.August, Naviam.JavaScript.September, Naviam.JavaScript.October, Naviam.JavaScript.November, Naviam.JavaScript.December];
+var WeekDayName2 = [Naviam.JavaScript.MondayS, Naviam.JavaScript.TuesdayS, Naviam.JavaScript.WednesdayS, Naviam.JavaScript.ThursdayS, Naviam.JavaScript.FridayS, Naviam.JavaScript.SaturdayS, Naviam.JavaScript.SundayS];

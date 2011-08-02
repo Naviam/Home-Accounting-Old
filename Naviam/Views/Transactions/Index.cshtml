@@ -16,15 +16,16 @@
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
     var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
-    function showCalendar(btn) {
-        var input = $(btn).parent().find('[name="Date"]');
+    function showCalendar(event, item) {
+        var input = $(event.currentTarget).parent().find('[name="Date"]');
         DisableBeforeToday = false;
         if (Naviam.JavaScript.culture == 'ru') {
             DateSeparator = '.';
-            NewCssCal(input, 'ddMMyyyy', 'arrow', true, '24');
+            NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow', true, '24');
         }
         if (Naviam.JavaScript.culture == 'en') {
-            NewCssCal(input, 'MMddyyyy', 'arrow', true, '12');
+            DateSeparator = '/';
+            NewCssCal(input, item.Date, 'MMddyyyy', 'arrow', true, '12');
         }
         return false;
     }
@@ -33,21 +34,22 @@
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
-        <td style="width:18%">
-            <div style='position:relative;'>
+        <td style="width:19%">
+            <div>
             <span data-bind="text: FormattedDate" name="Date"></span>
-            <img data-bind="visible: transModel.selectedRow() == Id()" style="cursor:pointer;" onclick="return showCalendar(this)" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">
+            <img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">
             <div>
         </td>
         <td style="width:35%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
-        <td style="width:32%">
+        <td style="width:34%">
             <span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span>
             <div data-bind="visible: transModel.selectedRow() == Id()" style='position:relative;'><input class="width100" data-bind="value: Category" name="Category"/><a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker'></a></div>
         </td>
         <td style="width:10%">
-            <span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
-            <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />
-        </td>
+            @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
+            <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
+            <span data-bind="text: Amount, visible: transModel.selectedRow() != Id()"></span>
+            <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Amount" />        </td>
         <td style="width:5%"><a href="#" onclick='return transModel.ShowEditArea(this);' data-bind="visible: transModel.selectedRow() == Id()">Edit</a></td>
     </tr>
 @*    <div data-bind="visible: transModel.selectedRow() == Id()">
