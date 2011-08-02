@@ -99,37 +99,33 @@ namespace Naviam.DAL
         }
 
 
-        //public static int? Insert(Transaction trans, int? companyId)
-        //{
-        //    int? res = null;
-        //    //insert to db
-        //    using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
-        //    {
-        //        using (SqlCommand cmd = holder.Connection.CreateSPCommand("add_transaction"))
-        //        {
-        //            //cmd.Parameters.AddWithValue("@id_transaction", id);
-        //            //try
-        //            //{
-        //            //    using (SqlDataReader reader = cmd.ExecuteReader())
-        //            //    {
-        //            //        res = new Transaction(reader);
-        //            //    }
-        //            //}
-        //            //catch (SqlException e)
-        //            //{
-        //            //    throw e;
-        //            //}
-        //        }
-        //    }
-
-        //    res = 0;
-        //    if (res == 0)
-        //    {
-        //        //if ok - save to cache
-        //        CacheWrapper.AddToList<Transaction>(CacheKey, trans, companyId);
-        //    }
-        //    return res;
-        //}
+        public static int InsertTransaction(Transaction entity, int? companyId)
+        {
+            int res = -1;
+            //insert to db
+            using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+            {
+                using (SqlCommand command = holder.Connection.CreateSPCommand("add_transaction"))
+                {
+                    try
+                    {
+                        command.AddEntityParameters(entity, DbActionType.Insert);
+                        command.ExecuteNonQuery();
+                        entity.Id = command.GetRowIdParameter();
+                        res = command.GetReturnParameter();
+                    }
+                    catch (SqlException e)
+                    {
+                        throw e;
+                    }
+                }
+            }
+            if (res == 0)
+            {
+                CacheWrapper.AddToList<Transaction>(CacheKey, entity, companyId);
+            }
+            return res;
+        }
 
 
         public static IEnumerable<Transaction> GetTransactions(int? userId) { return GetTransactions(userId, false); }
