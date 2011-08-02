@@ -4,54 +4,109 @@
 var transModel = {
     paging: { Page: 1, SortField: 'Date', SortDirection: 1 }
 };
-ko.numericObservable = function (initialValue) {
-    var _actual = ko.observable(initialValue);
-    var result = ko.dependentObservable({
-        read: function () {
-            return _actual();
-        },
-        write: function (newValue) {
-            var parsed = parseFloat(newValue);
+ko.bindingHandlers.numeric = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+        //handle the field changing
+        ko.utils.registerEventHandler(element, "change", function () {
+            var observable = valueAccessor();
+            var parsed = parseFloat($(element).val());
             var correct = !isNaN(parsed) && (parsed > 0);
-            if (!correct)
-                _actual.valueHasMutated();
+            if (correct)
+                observable(parsed)
             else
-                _actual(parsed);
-        }
-    });
-    return result;
+                $(element).val(observable()); //restore old
+        });
+    },
+    update: function (element, valueAccessor) {
+        $(element).val(ko.utils.unwrapObservable(valueAccessor()));
+    }
 };
-ko.categoryObservable = function (initialValue) {
-    var _actual = ko.observable(initialValue);
-    var result = ko.dependentObservable({
-        read: function () {
-            return _actual();
-        },
-        write: function (newValue) {
+ko.bindingHandlers.category = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+        //handle the field changing
+        ko.utils.registerEventHandler(element, "change", function () {
+            var observable = valueAccessor();
+            var val = $(element).val();
             //find category
-            var item = catModel.Search(newValue);
-            if (item == null)
-                _actual.valueHasMutated();
-            _actual(item == null ? _actual() : item.Name());
-        }
-    });
-    return result;
+            var item = catModel.Search(val);
+            if (item != null)
+                observable(item.Name())
+            else
+                $(element).val(observable()); //restore old
+        });
+    },
+    update: function (element, valueAccessor) {
+        $(element).val(ko.utils.unwrapObservable(valueAccessor()));
+    }
 };
+ko.bindingHandlers.msDateTime = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+    },
+    update: function (element, valueAccessor) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        if (value != null) {
+            var date = eval("new " + value.replace(/\//g, ''));
+            if (Naviam.JavaScript.culture == 'ru')
+                var val = date.format(dateFormat.masks.ruDateTime);
+            if (Naviam.JavaScript.culture == 'en')
+                var val = date.format(dateFormat.masks.enDateTime);
+            $(element).text(val);
+        }
+    }
+};      //!!!replaced by bindingHandlers
+//ko.numericObservable = function (initialValue) {
+//    var _actual = ko.observable(initialValue);
+//    var result = ko.dependentObservable({
+//        read: function () {
+//            return _actual();
+//        },
+//        write: function (newValue) {
+//            var parsed = parseFloat(newValue);
+//            var correct = !isNaN(parsed) && (parsed > 0);
+//            if (!correct)
+//                _actual.valueHasMutated();
+//            else
+//                _actual(parsed);
+//        }
+//    });
+//    return result;
+//};
+//ko.categoryObservable = function (initialValue) {
+//    var _actual = ko.observable(initialValue);
+//    var result = ko.dependentObservable({
+//        read: function () {
+//            return _actual();
+//        },
+//        write: function (newValue) {
+//            //find category
+//            var item = catModel.Search(newValue);
+//            if (item == null)
+//                _actual.valueHasMutated();
+//            _actual(item == null ? _actual() : item.Name());
+//        }
+//    });
+//    return result;
+//};
+//!!!
 $(document).ready(function () {
     $.postErr(getTransUrl, transModel.paging, function (res) {
-        var childItem = function (data) {
-            ko.mapping.fromJS(data, {}, this);
-            this.Amount = ko.numericObservable(data.Amount);
-            this.Category = ko.categoryObservable(data.Category);
-        }
+        //!!!replaced by bindingHandlers
+        //        var childItem = function (data) {
+        //            ko.mapping.fromJS(data, {}, this);
+        //            this.Amount = ko.numericObservable(data.Amount);
+        //            this.Category = ko.categoryObservable(data.Category);
+        //        }
+        //!!!
         var mapping = {
             'items': {
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.Id);
                 }
-                    , create: function (options) {
-                        return new childItem(options.data, {}, this);
-                    }
+                //!!!replaced by bindingHandlers
+                //                    , create: function (options) {
+                //                       return new childItem(options.data, {}, this);
+                //                    }
+                //!!!
             }
         }
         transModel = ko.mapping.fromJS(res, mapping);
@@ -70,18 +125,27 @@ $(document).ready(function () {
                 //$('#edit_row').hide();
             });
         }
+        transModel.showCalendar = function (event, item) {
+            var input = $(event.currentTarget).parent().find('[name="Date"]');
+            DisableBeforeToday = false;
+            if (Naviam.JavaScript.culture == 'ru') {
+                DateSeparator = '.';
+                NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow', true, '24');
+            }
+            if (Naviam.JavaScript.culture == 'en') {
+                DateSeparator = '/';
+                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow', true, '12');
+            }
+            return false;
+        }
         transModel.Add = function () {
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {
                 return item.Id() == null;
             });
             if (fItem != null) return;
             var date = new Date();
-            if (Naviam.JavaScript.culture == 'ru')
-                var dateString = date.getDay().padZero() + '.' + (date.getMonth() + 1).padZero() + '.' + date.getFullYear() + ' ' + date.getHours().padZero() + ':' + date.getMinutes().padZero() + ':' + date.getSeconds().padZero();
-            if (Naviam.JavaScript.culture == 'en')
-                var dateString = (date.getMonth() + 1).padZero() + '/' + date.getDay().padZero() + '/' + date.getFullYear() + ' ' + date.getHours().padZero() + ':' + date.getMinutes().padZero() + ':' + date.getSeconds().padZero();
-            this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), FormattedDate: ko.observable(dateString), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
-                Date: '/Date(' + date.getTime() + ')/'
+            this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
+                Date: ko.observable('/Date(' + date.getTime() + ')/')
             });
             //this.currentItem = this.items[0];
             this.GoToEdit(null, this.items()[0]);
@@ -97,7 +161,7 @@ $(document).ready(function () {
             //                    rowEdit.show();
             //**********
 
-            //console.log(event);
+            //console.log();
             //item.Amount = ko.numericObservable(item.Amount());
             item.FullRow = ko.dependentObservable(function () {
                 return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date();
