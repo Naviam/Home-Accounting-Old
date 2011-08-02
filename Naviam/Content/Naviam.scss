@@ -121,3 +121,13 @@ a.category_picker {
 		background-position: 0 -20px;
 	}
 }
+#calBorder table{
+	background-color:white;
+	width:200px;
+	padding:0;
+	margin-bottom:0;
+	th, td, caption {padding:0 0 0 0;}
+	tbody tr:nth-child(even) td, tbody tr.even td {
+		background-color:white;
+	}
+}

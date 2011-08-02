@@ -157,6 +157,14 @@
     <Content Include="Content\ddsmoothmenu.css" />
     <Content Include="Content\images\btn_categorypicker.png" />
     <Content Include="Content\images\down.gif" />
+    <Content Include="Content\images\dpicker\cal.gif" />
+    <Content Include="Content\images\dpicker\cal_close.gif" />
+    <Content Include="Content\images\dpicker\cal_fastforward.gif" />
+    <Content Include="Content\images\dpicker\cal_fastreverse.gif" />
+    <Content Include="Content\images\dpicker\cal_forward.gif" />
+    <Content Include="Content\images\dpicker\cal_minus.gif" />
+    <Content Include="Content\images\dpicker\cal_plus.gif" />
+    <Content Include="Content\images\dpicker\cal_reverse.gif" />
     <Content Include="Content\images\right.gif" />
     <Content Include="Content\Naviam.css">
       <AutoGen>True</AutoGen>
@@ -174,6 +182,8 @@
     <Content Include="Scripts\backbone.js" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\common.min.js" />
+    <Content Include="Scripts\datetimepicker_css.js" />
+    <Content Include="Scripts\datetimepicker_css.min.js" />
     <Content Include="Scripts\ddsmoothmenu.js" />
     <Content Include="Scripts\ddsmoothmenu.min.js" />
     <Content Include="Scripts\jquery-1.6.2.js" />
@@ -313,7 +323,7 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>#$(MSBuildBinPath)\msbuild "$(ProjectDir)MSBuild\MSBuildCompressJS.xml"
-$(ProjectDir)bin\AjaxMin.exe -JS -CLOBBER -xml $(ProjectDir)App_Data\jsCompress.xml
+$(ProjectDir)bin\AjaxMin.exe -h -JS -CLOBBER -xml $(ProjectDir)App_Data\jsCompress.xml
 $(ProjectDir)..\JavascriptResxGenerator\bin\JavascriptResxGenerator $(ProjectDir)Resources\JavaScript.resx $(ProjectDir)Scripts\locale $(ProjectDir)\Scripts\locale\vsdoc Naviam</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -107,3 +107,13 @@ a.category_picker {
   right: 0px; }
   a.category_picker.active {
     background-position: 0 -20px; }
+
+#calBorder table {
+  background-color: white;
+  width: 200px;
+  padding: 0;
+  margin-bottom: 0; }
+  #calBorder table th, #calBorder table td, #calBorder table caption {
+    padding: 0 0 0 0; }
+  #calBorder table tbody tr:nth-child(even) td, #calBorder table tbody tr.even td {
+    background-color: white; }

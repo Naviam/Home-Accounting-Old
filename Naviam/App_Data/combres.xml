@@ -48,9 +48,6 @@
       <resource reference="validate" />
       <resource path="~/Scripts/jquery.tools.min.js" />
     </resourceSet>
-    <resourceSet name="menu" type="js">
-      <resource path="~/Scripts/ddsmoothmenu.min.js" />
-    </resourceSet>
     <resourceSet name="knockout" type="js">
       <resource reference="jquery" />
       <resource path="~/Scripts/jquery.tmpl.min.js" />
@@ -69,10 +66,17 @@
       <resource reference="validate" />
       <resource path="~/Scripts/knockout.mapping.min.js" />
     </resourceSet>
+    <resourceSet name="dateTimePicker" type="js">
+      <resource path="~/Scripts/datetimepicker_css.min.js" />
+    </resourceSet>
+    <resourceSet name="menu" type="js">
+      <resource path="~/Scripts/ddsmoothmenu.min.js" />
+    </resourceSet>
     <!--Pages -->
     <resourceSet name="transactions" type="js">
       <resource reference="knockout map" />
       <resource reference="menu" />
+      <resource reference="dateTimePicker" />
       <resource path="~/Scripts/Pages/Transactions.min.js" />
     </resourceSet>
     <!--End Pages -->
