@@ -13,7 +13,7 @@ ko.bindingHandlers.numeric = {
             var correct = !isNaN(parsed) && (parsed > 0);
             if (correct)
                 observable(parsed)
-            else
+            else 
                 $(element).val(observable()); //restore old
         });
     },
@@ -66,8 +66,10 @@ ko.bindingHandlers.datepicker = {
     },
     update: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
-        var date = eval("new " + value.replace(/\//g, ''));
-        $(element).data("dateinput").setValue(date);
+        if (value != null) {
+            var date = eval("new " + value.replace(/\//g, ''));
+            $(element).data("dateinput").setValue(date);
+        }
     }
 };
  //!!!replaced by bindingHandlers
@@ -107,6 +109,30 @@ ko.bindingHandlers.datepicker = {
 //!!!
 $(document).ready(function () {
     $("#edit_form").overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
+    //$("#add_form #cancel").click(function (e) { transModel.CancelAdd(); });
+    $("#add_form #ok").click(function (e) {
+        //TODO: check input
+        //tst
+        var row = $('#transGrid table tr:eq(1)');
+        var am = row.find('[name="Amount"]');
+        var cat = row.find('[name="Category"]');
+        am.removeClass("input-validation-error");
+        cat.removeClass("input-validation-error");
+        var item = transModel.currentItem;
+        if (item.Amount() <= 0)
+            am.addClass("input-validation-error");
+        if (item.Category() == null)
+            cat.addClass("input-validation-error");
+        if (item.Amount() <= 0 || item.Category() == null)
+            return e.stopImmediatePropagation();
+        transModel.Save(true);
+    });
+    addApi = $("#add_form").overlay({ fixed: false }).data('overlay');
+    addApi.onBeforeClose(function (e) {
+        //console.log(e);
+        transModel.CancelAdd();
+    });
+    //$("#add_form").overlay({ fixed: false });
     $.postErr(getTransUrl, transModel.paging, function (res) {
         //!!!replaced by bindingHandlers
         //        var childItem = function (data) {
@@ -140,6 +166,7 @@ $(document).ready(function () {
                 ko.mapping.updateFromJS(transModel, res);
                 transModel.selectedRow(-1);
                 transModel.currentItem = null;
+                addApi.close();
                 //$('#edit_row').hide();
             });
         }
@@ -165,8 +192,20 @@ $(document).ready(function () {
             this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
                 Date: ko.observable('/Date(' + date.getTime() + ')/')
             });
-            //this.currentItem = this.items[0];
+            var row = $('#transGrid table tr:eq(2)');
+            var frm = $("#add_form");
+            frm.css({ width: row.width() });
+            var conf = addApi.getConf();
+            conf.top = row.offset().top + 5;
+            frm.overlay().load();
+            this.currentItem = this.items[0];
             this.GoToEdit(null, this.items()[0]);
+        }
+        transModel.CancelAdd = function () {
+            var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+                return item.Id() == null;
+            });
+            ko.utils.arrayRemoveItem(this.items, fItem);
         }
         transModel.DescrSub = null;
         transModel.GoToEdit = function (event, item) {
@@ -180,21 +219,21 @@ $(document).ready(function () {
             //**********
 
             //console.log();
-            //$("#edit_form").overlay().close();
-            item.FullRow = ko.dependentObservable(function () {
+            if (item.Id() != null) addApi.close();
+            if (item.Id() != null) item.FullRow = ko.dependentObservable(function () {
                 return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date();
             }, item);
             if (this.DescrSub != null)
                 this.DescrSub.dispose();
-            this.DescrSub = item.FullRow.subscribe(function (newValue) {
-                transModel.Save();
+            if (item.Id() != null) this.DescrSub = item.FullRow.subscribe(function (newValue) {
+                transModel.Save(false);
             });
             this.currentItem = item;
             this.selectedRow(item.Id());
         }
         //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
         //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
-        transModel.Save = function () {
+        transModel.Save = function (reloadPage) {
             if (this.currentItem != null) {
                 var cat = this.currentItem.Category();
                 if (cat != null) {
@@ -202,11 +241,11 @@ $(document).ready(function () {
                     if (item != null)
                         this.currentItem.CategoryId(item.Id());
                 }
-                //transModel.currentItem.Date = transModel.currentItem.Date().replace('/Date(', '\\/Date(').replace(')/', ')\\/');
                 //                    $.postErr(updateTransUrl, ko.toJSON(transModel.currentItem), function (res) {
                 //                    }, 'json');
                 $.postErr(updateTransUrl, ko.mapping.toJS(transModel.currentItem), function (res) {
-                    transModel.currentItem.Id(res.Id);
+                    //transModel.currentItem.Id(res.Id);
+                    if (reloadPage) transModel.ReloadPage();
                 });
                 //console.log(transModel.currentItem.Id());
             }

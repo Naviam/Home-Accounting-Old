@@ -17,7 +17,7 @@
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
     var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
 </script>
-@*<a href="#" onclick='return transModel.Add();'>Add</a>*@
+<a href="#" onclick='return transModel.Add();'>Add</a>
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
@@ -37,9 +37,9 @@
             @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Amount, visible: transModel.selectedRow() != Id()"></span>
-            <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), numeric: Amount" />        
+            <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), numeric: Amount" name="Amount"/>        
         </td>
-        <td style="width:5%"><a href="#" data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.ShowEditArea(event, $data);}">Edit</a></td>
+        <td style="width:5%"><a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.ShowEditArea(event, $data);}">Edit</a></td>
     </tr>
 </script>
 
@@ -101,4 +101,9 @@
     <h3>TEST</h3>
     <button class='close'>Ok</button>
     <button class='close'>@SharedStrings.Cancel</button>
+</div>
+<div class="overlaywoshadow" id="add_form">
+    <h3>Add</h3>
+    <button class='close' id='ok'>Ok</button>
+    <button class='close' id='cancel'>@SharedStrings.Cancel</button>
 </div>

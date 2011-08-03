@@ -117,7 +117,7 @@ a.category_picker {
 	}
 }*/
 /* the overlayed element */
-.overlay {
+.overlay, .overlaywoshadow {
   /* must be initially hidden */
   display: none;
   /* place overlay on top of other elements */
@@ -133,7 +133,7 @@ a.category_picker {
   -webkit-box-shadow: 0 0 90px #000;
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px; }
-  .overlay a.close {
+  .overlay a.close, .overlaywoshadow a.close {
     background: url("images/close.png") no-repeat scroll 0 0 transparent;
     cursor: pointer;
     height: 35px;
@@ -141,6 +141,10 @@ a.category_picker {
     right: 5px;
     top: 2px;
     width: 35px; }
+
+.overlaywoshadow {
+  -moz-box-shadow: 0 0 0 0 #000;
+  -webkit-box-shadow: 0 0 0 #000; }
 
 button {
   -moz-border-radius: 10.2em 10.2em 10.2em 10.2em;
@@ -183,37 +187,35 @@ button {
   text-align: center;
   width: 155px;
   line-height: 20px;
-  text-shadow: 0 1px 0 #ddd; }
+  text-shadow: 0 1px 0 #ddd;
+  /* year/month selector */ }
+  #caltitle select {
+    font-size: 10px; }
 
 #calnext, #calprev {
   display: block;
   width: 20px;
   height: 20px;
-  background: transparent url(prev.gif) no-repeat scroll center center;
+  background: transparent url("images/prev.gif") no-repeat scroll center center;
   float: left;
   cursor: pointer; }
 
 #calnext {
-  background-image: url(next.gif);
+  background-image: url("images/next.gif");
   float: right; }
 
 #calprev.caldisabled, #calnext.caldisabled {
   visibility: hidden; }
 
-/* year/month selector */
-#caltitle select {
-  font-size: 10px; }
-
 /* names of the days */
 #caldays {
   height: 14px;
   border-bottom: 1px solid #ddd; }
-
-#caldays span {
-  display: block;
-  float: left;
-  width: 28px;
-  text-align: center; }
+  #caldays span {
+    display: block;
+    float: left;
+    width: 28px;
+    text-align: center; }
 
 /* container for weeks */
 #calweeks {
@@ -223,43 +225,37 @@ button {
 /* single week */
 .calweek {
   clear: left;
-  height: 22px; }
-
-/* single day */
-.calweek a {
-  display: block;
-  float: left;
-  width: 27px;
-  height: 20px;
-  text-decoration: none;
-  font-size: 11px;
-  margin-left: 1px;
-  text-align: center;
-  line-height: 20px;
-  color: #666;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px; }
-
-/* different states */
-.calweek a:hover, .calfocus {
-  background-color: #ddd; }
-
-/* sunday */
-a.calsun {
-  color: red; }
-
-/* offmonth day */
-a.caloff {
-  color: #ccc; }
-
-a.caloff:hover {
-  background-color: #f5f5fa; }
-
-/* unselecteble day */
-a.caldisabled {
-  background-color: #efefef !important;
-  color: #ccc	!important;
-  cursor: default; }
+  height: 22px;
+  /* single day */ }
+  .calweek a {
+    display: block;
+    float: left;
+    width: 27px;
+    height: 20px;
+    text-decoration: none;
+    font-size: 11px;
+    margin-left: 1px;
+    text-align: center;
+    line-height: 20px;
+    color: #666;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    /* different states */
+    /* sunday */
+    /* offmonth day */
+    /* unselecteble day */ }
+    .calweek a:hover, .calweek a.calfocus {
+      background-color: #ddd; }
+    .calweek a.calsunday {
+      color: red; }
+    .calweek a.caloff {
+      color: #ccc; }
+      .calweek a.caloff:hover {
+        background-color: #f5f5fa; }
+    .calweek a.caldisabled {
+      background-color: #efefef !important;
+      color: #ccc	!important;
+      cursor: default; }
 
 /* current day */
 #calcurrent {

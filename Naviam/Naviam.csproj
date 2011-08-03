@@ -149,7 +149,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\combres_full_with_annotation.xml" />
-    <Content Include="App_Data\jsCompress.xml" />
+    <Content Include="App_Data\jsCompress.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\blueprint\ie.css" />
     <Content Include="Content\blueprint\print.css" />
     <Content Include="Content\blueprint\screen.css" />
@@ -166,6 +168,8 @@
     <Content Include="Content\images\dpicker\cal_minus.gif" />
     <Content Include="Content\images\dpicker\cal_plus.gif" />
     <Content Include="Content\images\dpicker\cal_reverse.gif" />
+    <Content Include="Content\images\next.gif" />
+    <Content Include="Content\images\prev.gif" />
     <Content Include="Content\images\right.gif" />
     <Content Include="Content\Naviam.css">
       <AutoGen>True</AutoGen>

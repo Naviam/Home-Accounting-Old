@@ -69,6 +69,7 @@ namespace Naviam.DAL
             if (res == null || forceSqlLoad)
             {
                 //load from DB
+                //TODO: on db side - check that trans belongs to user
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
                     using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
@@ -87,7 +88,6 @@ namespace Naviam.DAL
                         }
                     }
                 }
-                //TODO: on db side - check that trans belongs to user
                 //res = new Transaction() { Description = "Test", Category = "Dinner", Amount = 100.20M, Id = 1, Date = DateTime.Now };
                 //save to cache
                 if (res == null) // not found in cache->add
