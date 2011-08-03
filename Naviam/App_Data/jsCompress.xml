@@ -8,7 +8,7 @@
   <output path="..\Scripts\datetimepicker_css.min.js">
     <input path="..\Scripts\datetimepicker_css.js"/>
   </output>
-  <!--<output path="..\Scripts\jquery.tools\toolbox\toolbox.expose.min.js">
-    <input path="..\Scripts\jquery.tools\toolbox\toolbox.expose.js"/>
+  <!--<output path="..\Scripts\jquery.tools\dateinput\dateinput.min.js">
+    <input path="..\Scripts\jquery.tools\dateinput\dateinput.js"/>
   </output>-->
 </root>

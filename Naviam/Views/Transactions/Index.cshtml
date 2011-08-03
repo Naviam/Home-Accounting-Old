@@ -23,8 +23,9 @@
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
         <td style="width:12%">
             <div>
-            <span data-bind="msDateTime: Date" name="Date"></span>
-            <img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">
+            <span data-bind="msDateTime: Date, visible: transModel.selectedRow() != Id()" name="Date"></span>
+            <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true}" />
+            @*<img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">*@
             <div>
         </td>
         <td style="width:38%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>

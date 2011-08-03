@@ -152,6 +152,10 @@ Date.prototype.format = function (mask, utc) {
 //	]
 //};
 var lang = Naviam.JavaScript;
-var MonthName = [lang.January, lang.February, lang.March, lang.April, lang.May, lang.June, lang.July,
-    lang.August, lang.September, lang.October, lang.November, lang.December];
-var WeekDayName2 = [lang.MondayS, lang.TuesdayS, lang.WednesdayS, lang.ThursdayS, lang.FridayS, lang.SaturdayS, lang.SundayS];
+if (lang.culture == 'ru')
+    dateFormat.masks["default"] = dateFormat.masks.ruDate;
+if (lang.culture == 'en')
+    dateFormat.masks["default"] = dateFormat.masks.enDate;
+//var MonthName = [lang.January, lang.February, lang.March, lang.April, lang.May, lang.June, lang.July,
+//    lang.August, lang.September, lang.October, lang.November, lang.December];
+//var WeekDayName2 = [lang.MondayS, lang.TuesdayS, lang.WednesdayS, lang.ThursdayS, lang.FridayS, lang.SaturdayS, lang.SundayS];

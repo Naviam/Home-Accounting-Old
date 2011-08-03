@@ -46,14 +46,31 @@ ko.bindingHandlers.msDateTime = {
         var value = ko.utils.unwrapObservable(valueAccessor());
         if (value != null) {
             var date = eval("new " + value.replace(/\//g, ''));
-            if (lang.culture == 'ru')
-                var val = date.format(dateFormat.masks.ruDate);
-            if (lang.culture == 'en')
-                var val = date.format(dateFormat.masks.enDate);
+            var val = date.format();
             $(element).text(val);
         }
     }
-};      //!!!replaced by bindingHandlers
+};
+ko.bindingHandlers.datepicker = {
+    init: function (element, valueAccessor, allBindingsAccessor, context) {
+        //initialize datepicker with some optional options
+        var options = allBindingsAccessor().datepickerOptions || {};
+        $(element).dateinput(options);
+        //handle the field changing
+        ko.utils.registerEventHandler(element, "change", function () {
+            var observable = valueAccessor();
+            //console.log();
+            observable('/Date(' + $(element).data("dateinput").getValue().getTime() + ')/');
+        });
+        //ko.bindingHandlers.visible.init(element, valueAccessor, allBindingsAccessor, context);
+    },
+    update: function (element, valueAccessor) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        var date = eval("new " + value.replace(/\//g, ''));
+        $(element).data("dateinput").setValue(date);
+    }
+};
+ //!!!replaced by bindingHandlers
 //ko.numericObservable = function (initialValue) {
 //    var _actual = ko.observable(initialValue);
 //    var result = ko.dependentObservable({
@@ -127,17 +144,17 @@ $(document).ready(function () {
             });
         }
         transModel.showCalendar = function (event, item) {
-            var input = $(event.currentTarget).parent().find('[name="Date"]');
-            DisableBeforeToday = false;
-            if (lang.culture == 'ru') {
-                DateSeparator = '.';
-                NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow');
-            }
-            if (lang.culture == 'en') {
-                DateSeparator = '/';
-                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
-            }
-            return false;
+            //var input = $(event.currentTarget).parent().find('[name="date1"]');
+            //           
+            //            DisableBeforeToday = false;
+            //            if (lang.culture == 'ru') {
+            //                DateSeparator = '.';
+            //                NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow');
+            //            }
+            //            if (lang.culture == 'en') {
+            //                DateSeparator = '/';
+            //                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
+            //            }
         }
         transModel.Add = function () {
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {

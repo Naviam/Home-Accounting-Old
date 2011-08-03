@@ -85,7 +85,7 @@
     <resourceSet name="transactions" type="js">
       <resource reference="knockout map" />
       <resource reference="menu" />
-      <resource reference="dateTimePicker" />
+      <resource reference="datePicker" />
       <resource reference="overlay" />
       <resource path="~/Scripts/Pages/Transactions.min.js" />
     </resourceSet>
