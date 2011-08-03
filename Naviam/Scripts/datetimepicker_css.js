@@ -528,7 +528,7 @@ function GenCell(pValue, pHighLight, pColor, pClickable)
 		if (PClickable === true) {
 		    if (Cal.ShowTime === true)
 		    { PCellStr = "<td id='c" + PValue + "' class='calTD' style='text-align:center;cursor:pointer;background-color:"+pColor+"' onmousedown='selectDate(this," + PValue + ");'>" + PValue + "</td>"; }
-		    else { PCellStr = "<td class='calTD' style='text-align:center;cursor:pointer;background-color:" + pColor + "' onmouseover='changeBorder(this, 0);' onmouseout=\"changeBorder(this, 1, '" + pColor + "');\" onClick=\"javascript:callback('" + Cal.Ctrl + "','" + Cal.FormatDate(PValue) + "');\">" + PValue + "</td>"; }
+		    else { PCellStr = "<td class='calTD' style='text-align:center;cursor:pointer;background-color:" + pColor + "' onmousedown='selectDate(this," + PValue + ");closewin();' onmouseover='changeBorder(this, 0);' onmouseout=\"changeBorder(this, 1, '" + pColor + "');\" >" + PValue + "</td>"; }
 		}
 		else
 		{ PCellStr = "<td style='text-align:center;background-color:"+pColor+"' class='calTD'>"+PValue+"</td>"; }
@@ -838,7 +838,7 @@ function RenderCssCal(bNewCal)
 		}
 
 		vCalTime += "</td>\n<td align='right' valign='bottom' width='" + HourCellWidth + "px'></td></tr>";
-		vCalTime += "<tr><td colspan='7' style=\"text-align:center;\"><input style='width:60px;font-size:12px;' onClick='javascript:closewin();'  type=\"button\" value=\"Ok\">&nbsp;<input style='width:60px;font-size:12px;' onClick='javascript: winCal.style.visibility = \"hidden\"' type=\"button\" value=\"" + Naviam.JavaScript.Cancel + "\"></td></tr>";
+		vCalTime += "<tr><td colspan='7' style=\"text-align:center;\"><input style='width:60px;font-size:12px;' onClick='javascript:closewin();'  type=\"button\" value=\"Ok\">&nbsp;<input style='width:60px;font-size:12px;' onClick='javascript: winCal.style.visibility = \"hidden\"' type=\"button\" value=\"" + lang.Cancel + "\"></td></tr>";
 	}
 	else //if not to show time.
 	{
@@ -1155,7 +1155,7 @@ if (exDateTime == null || exDateTime == '')
 	RenderCssCal(true);
 }
 
-function closewin() {
+function closewin(date) {
 //    if (Cal.ShowTime === true) {
 //        var MaxYear = dtToday.getFullYear() + EndYear;
 //        var beforeToday =
@@ -1176,8 +1176,11 @@ function closewin() {
 //            }
 //            //else
 //                //callback(id, Cal.FormatDate(Cal.Date));
-        //   }     
-var val = Cal.FormatDate(Cal.Date);
+    //   }     
+//if (date != null)
+//    var val = Cal.FormatDate(date);
+//else
+    var val = Cal.FormatDate(Cal.Date);
 if (Cal.ShowTime) {
     selDate.setHours(Cal.Hours);
     selDate.setMinutes(Cal.Minutes);

@@ -46,10 +46,10 @@ ko.bindingHandlers.msDateTime = {
         var value = ko.utils.unwrapObservable(valueAccessor());
         if (value != null) {
             var date = eval("new " + value.replace(/\//g, ''));
-            if (Naviam.JavaScript.culture == 'ru')
-                var val = date.format(dateFormat.masks.ruDateTime);
-            if (Naviam.JavaScript.culture == 'en')
-                var val = date.format(dateFormat.masks.enDateTime);
+            if (lang.culture == 'ru')
+                var val = date.format(dateFormat.masks.ruDate);
+            if (lang.culture == 'en')
+                var val = date.format(dateFormat.masks.enDate);
             $(element).text(val);
         }
     }
@@ -89,6 +89,7 @@ ko.bindingHandlers.msDateTime = {
 //};
 //!!!
 $(document).ready(function () {
+    $("#edit_form").overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
     $.postErr(getTransUrl, transModel.paging, function (res) {
         //!!!replaced by bindingHandlers
         //        var childItem = function (data) {
@@ -128,13 +129,13 @@ $(document).ready(function () {
         transModel.showCalendar = function (event, item) {
             var input = $(event.currentTarget).parent().find('[name="Date"]');
             DisableBeforeToday = false;
-            if (Naviam.JavaScript.culture == 'ru') {
+            if (lang.culture == 'ru') {
                 DateSeparator = '.';
-                NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow', true, '24');
+                NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow');
             }
-            if (Naviam.JavaScript.culture == 'en') {
+            if (lang.culture == 'en') {
                 DateSeparator = '/';
-                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow', true, '12');
+                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
             }
             return false;
         }
@@ -162,7 +163,7 @@ $(document).ready(function () {
             //**********
 
             //console.log();
-            //item.Amount = ko.numericObservable(item.Amount());
+            //$("#edit_form").overlay().close();
             item.FullRow = ko.dependentObservable(function () {
                 return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date();
             }, item);
@@ -193,10 +194,9 @@ $(document).ready(function () {
                 //console.log(transModel.currentItem.Id());
             }
         }
-        transModel.ShowEditArea = function (btn) {
-            var editArea = $(btn).parent().find('.edit_area');
+        transModel.ShowEditArea = function (event, item) {
             //TODO: load data into form
-            editArea.slideDown();
+            $("#edit_form").overlay().load();
         }
         transModel.ShowCategories = function (btn) {
             var menu = $("#cat_menu");

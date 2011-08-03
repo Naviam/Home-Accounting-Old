@@ -66,6 +66,15 @@
       <resource reference="validate" />
       <resource path="~/Scripts/knockout.mapping.min.js" />
     </resourceSet>
+    <!-- jquery.tools-->
+    <resourceSet name="datePicker" type="js">
+      <resource path="~/Scripts/jquery.tools/dateinput/dateinput.min.js" />
+    </resourceSet>
+    <resourceSet name="overlay" type="js">
+      <resource path="~/Scripts/jquery.tools/overlay/overlay.min.js" />
+      <resource path="~/Scripts/jquery.tools/toolbox/toolbox.expose.min.js" />
+    </resourceSet>
+    <!--End jquery.tools-->
     <resourceSet name="dateTimePicker" type="js">
       <resource path="~/Scripts/datetimepicker_css.min.js" />
     </resourceSet>
@@ -77,6 +86,7 @@
       <resource reference="knockout map" />
       <resource reference="menu" />
       <resource reference="dateTimePicker" />
+      <resource reference="overlay" />
       <resource path="~/Scripts/Pages/Transactions.min.js" />
     </resourceSet>
     <!--End Pages -->

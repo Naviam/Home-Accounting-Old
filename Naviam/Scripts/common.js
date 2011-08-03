@@ -121,7 +121,9 @@ var dateFormat = function () {
 dateFormat.masks = {
     "default": "ddd mmm dd yyyy HH:MM:ss",
     enDateTime: "mm/dd/yyyy h:MM:ss TT",
-    ruDateTime: "dd.mm.yyyy HH:MM:ss"
+    ruDateTime: "dd.mm.yyyy HH:MM:ss",
+    enDate: "mm/dd/yyyy",
+    ruDate: "dd.mm.yyyy"
 //    shortDate: "m/d/yy",
 //    mediumDate: "mmm d, yyyy",
 //    longDate: "mmmm d, yyyy",
@@ -149,6 +151,7 @@ Date.prototype.format = function (mask, utc) {
 //		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 //	]
 //};
-var MonthName = [Naviam.JavaScript.January, Naviam.JavaScript.February, Naviam.JavaScript.March, Naviam.JavaScript.April, Naviam.JavaScript.May, Naviam.JavaScript.June, Naviam.JavaScript.July,
-    Naviam.JavaScript.August, Naviam.JavaScript.September, Naviam.JavaScript.October, Naviam.JavaScript.November, Naviam.JavaScript.December];
-var WeekDayName2 = [Naviam.JavaScript.MondayS, Naviam.JavaScript.TuesdayS, Naviam.JavaScript.WednesdayS, Naviam.JavaScript.ThursdayS, Naviam.JavaScript.FridayS, Naviam.JavaScript.SaturdayS, Naviam.JavaScript.SundayS];
+var lang = Naviam.JavaScript;
+var MonthName = [lang.January, lang.February, lang.March, lang.April, lang.May, lang.June, lang.July,
+    lang.August, lang.September, lang.October, lang.November, lang.December];
+var WeekDayName2 = [lang.MondayS, lang.TuesdayS, lang.WednesdayS, lang.ThursdayS, lang.FridayS, lang.SaturdayS, lang.SundayS];

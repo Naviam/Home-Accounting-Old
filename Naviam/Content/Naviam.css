@@ -93,9 +93,6 @@ nav {
 .hidden {
   display: none; }
 
-.edit_area {
-  border: 1px solid #000; }
-
 .width100 {
   width: 100%; }
 
@@ -117,3 +114,42 @@ a.category_picker {
     padding: 0 0 0 0; }
   #calBorder table tbody tr:nth-child(even) td, #calBorder table tbody tr.even td {
     background-color: white; }
+
+/* the overlayed element */
+.overlay {
+  /* must be initially hidden */
+  display: none;
+  /* place overlay on top of other elements */
+  z-index: 10000;
+  /* styling */
+  background-color: white;
+  padding: 5px;
+  width: 675px;
+  /* for modern browsers use semi-transparent color on the border. nice! */
+  border: 1px solid rgba(82, 82, 82, 0.698);
+  /* CSS3 styling for latest browsers */
+  -moz-box-shadow: 0 0 90px 5px #000;
+  -webkit-box-shadow: 0 0 90px #000;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px; }
+  .overlay a.close {
+    background: url("images/close.png") no-repeat scroll 0 0 transparent;
+    cursor: pointer;
+    height: 35px;
+    position: absolute;
+    right: 5px;
+    top: 2px;
+    width: 35px; }
+
+button {
+  -moz-border-radius: 10.2em 10.2em 10.2em 10.2em;
+  -moz-box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.5);
+  background-color: #5D689A;
+  border-bottom: 0.2em solid #666666;
+  border-width: 1px 1px 0.2em;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-size: 1em;
+  line-height: 1;
+  padding: 0.3em 0.6em;
+  text-shadow: 0 0 0.1em #222222; }

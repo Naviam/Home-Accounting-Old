@@ -21,14 +21,14 @@
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
-        <td style="width:19%">
+        <td style="width:12%">
             <div>
             <span data-bind="msDateTime: Date" name="Date"></span>
             <img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">
             <div>
         </td>
-        <td style="width:35%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
-        <td style="width:34%">
+        <td style="width:38%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
+        <td style="width:35%">
             <span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span>
             <div data-bind="visible: transModel.selectedRow() == Id()" style='position:relative;'><input class="width100" data-bind="category: Category" name="Category"/><a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker'></a></div>
         </td>
@@ -38,14 +38,8 @@
             <span data-bind="text: Amount, visible: transModel.selectedRow() != Id()"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), numeric: Amount" />        
         </td>
-        <td style="width:5%"><a href="#" onclick='return transModel.ShowEditArea(this);' data-bind="visible: transModel.selectedRow() == Id()">Edit</a></td>
+        <td style="width:5%"><a href="#" data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.ShowEditArea(event, $data);}">Edit</a></td>
     </tr>
-@*    <div data-bind="visible: transModel.selectedRow() == Id()">
-        <a href="#" onclick='return transModel.ShowEditArea(this);'>Edit</a>
-        <div class='edit_area hidden' data-bind="visible: transModel.selectedRow() == Id()">
-            tstst
-        </div>
-    </div>*@
 </script>
 
 <script type="text/html" id="transPagingTemplate">
@@ -100,4 +94,10 @@
 <div id="cat_menu" style='position:fixed'>
     <ul data-bind="template: {name:'catTemplate', foreach:items}" class='dropdown'>
     </ul>
+</div>
+
+<div class="overlay" id="edit_form">
+    <h3>TEST</h3>
+    <button class='close'>Ok</button>
+    <button class='close'>@SharedStrings.Cancel</button>
 </div>
