@@ -83,12 +83,12 @@
 		days: 		 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday', 
 		shortDays: 	 'Sun,Mon,Tue,Wed,Thu,Fri,Sat'	  
 	});
-    tool.localize("ru", {
-        months: 'January,February,March,April,May,June,July,August,September,October,November,December',
+    LABELS['ru'] = {
+        months: [lang.January,lang.February,lang.March,lang.April,lang.May,lang.June,lang.July,lang.August,lang.September,lang.October,lang.November,lang.December],
         shortMonths: 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
         days: 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday',
-        shortDays: 'Sun,Mon,Tue,Wed,Thu,Fri,Sat'
-    });
+        shortDays: [lang.SundayS, lang.MondayS, lang.TuesdayS, lang.WednesdayS, lang.ThursdayS, lang.FridayS, lang.SaturdayS]
+    };
 
 	
 //{{{ private functions

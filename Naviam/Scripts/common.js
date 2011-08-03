@@ -152,8 +152,11 @@ Date.prototype.format = function (mask, utc) {
 //	]
 //};
 var lang = Naviam.JavaScript;
-if (lang.culture == 'ru')
+lang.firstDay = 0;
+if (lang.culture == 'ru') {
     dateFormat.masks["default"] = dateFormat.masks.ruDate;
+    lang.firstDay = 1;
+}
 if (lang.culture == 'en')
     dateFormat.masks["default"] = dateFormat.masks.enDate;
 //var MonthName = [lang.January, lang.February, lang.March, lang.April, lang.May, lang.June, lang.July,
