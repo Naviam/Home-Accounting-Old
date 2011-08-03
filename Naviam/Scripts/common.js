@@ -151,6 +151,7 @@ Date.prototype.format = function (mask, utc) {
 //		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 //	]
 //};
+var inputCssError = 'input-validation-error';
 var lang = Naviam.JavaScript;
 lang.firstDay = 0;
 if (lang.culture == 'ru') {

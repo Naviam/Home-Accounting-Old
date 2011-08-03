@@ -1,3 +1,6 @@
+.ddsmoothmenu-v {
+	z-index:10001;
+}
 .ddsmoothmenu-v ul{
 margin: 0;
 padding: 0;

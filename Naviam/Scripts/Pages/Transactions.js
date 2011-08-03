@@ -116,13 +116,13 @@ $(document).ready(function () {
         var row = $('#transGrid table tr:eq(1)');
         var am = row.find('[name="Amount"]');
         var cat = row.find('[name="Category"]');
-        am.removeClass("input-validation-error");
-        cat.removeClass("input-validation-error");
+        am.removeClass(inputCssError);
+        cat.removeClass(inputCssError);
         var item = transModel.currentItem;
         if (item.Amount() <= 0)
-            am.addClass("input-validation-error");
+            am.addClass(inputCssError);
         if (item.Category() == null)
-            cat.addClass("input-validation-error");
+            cat.addClass(inputCssError);
         if (item.Amount() <= 0 || item.Category() == null)
             return e.stopImmediatePropagation();
         transModel.Save(true);
