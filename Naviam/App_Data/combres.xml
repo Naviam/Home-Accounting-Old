@@ -66,6 +66,10 @@
       <resource reference="validate" />
       <resource path="~/Scripts/knockout.mapping.min.js" />
     </resourceSet>
+    <resourceSet name="uploadify" type="js">
+      <resource path="~/Scripts/swfobject.min.js" />
+      <resource path="~/Scripts/jquery.uploadify.v2.1.4.min.js" />
+    </resourceSet>
     <!-- jquery.tools-->
     <resourceSet name="datePicker" type="js">
       <resource path="~/Scripts/jquery.tools/dateinput/dateinput.min.js" />
@@ -78,13 +82,13 @@
     <resourceSet name="dateTimePicker" type="js">
       <resource path="~/Scripts/datetimepicker_css.min.js" />
     </resourceSet>
-    <resourceSet name="menu" type="js">
+    <resourceSet name="popmenu" type="js">
       <resource path="~/Scripts/ddsmoothmenu.min.js" />
     </resourceSet>
     <!--Pages -->
     <resourceSet name="transactions" type="js">
       <resource reference="knockout map" />
-      <resource reference="menu" />
+      <resource reference="popmenu" />
       <resource reference="datePicker" />
       <resource reference="overlay" />
       <resource path="~/Scripts/Pages/Transactions.min.js" />

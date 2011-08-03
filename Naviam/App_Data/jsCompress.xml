@@ -11,4 +11,10 @@
   <!--<output path="..\Scripts\jquery.tools\dateinput\dateinput.min.js">
     <input path="..\Scripts\jquery.tools\dateinput\dateinput.js"/>
   </output>-->
+  <!--<output path="..\Scripts\jquery.uploadify.v2.1.4.min.js">
+    <input path="..\Scripts\jquery.uploadify.v2.1.4.js"/>
+  </output>
+  <output path="..\Scripts\swfobject.min.js">
+    <input path="..\Scripts\swfobject.js"/>
+  </output>-->
 </root>

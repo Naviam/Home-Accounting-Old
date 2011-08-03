@@ -176,6 +176,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Naviam.scss</DependentUpon>
     </Content>
+    <Content Include="Content\uploadify\cancel.png" />
+    <Content Include="Content\uploadify\export.png" />
+    <Content Include="Content\uploadify\uploadify.css" />
+    <Content Include="Content\uploadify\uploadify.swf" />
     <Content Include="Global.asax" />
     <Content Include="MSBuild\MSBuildCompressJS.xml">
       <SubType>Designer</SubType>
@@ -218,6 +222,8 @@
     <Content Include="Scripts\jquery.tools\tooltip\tooltip.js" />
     <Content Include="Scripts\jquery.tools\tooltip\tooltip.slide.js" />
     <Content Include="Scripts\jquery.tools\validator\validator.js" />
+    <Content Include="Scripts\jquery.uploadify.v2.1.4.js" />
+    <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -233,6 +239,8 @@
     <Content Include="Scripts\Pages\Transactions.min.js" />
     <Content Include="Scripts\spine.js" />
     <Content Include="Scripts\spine.min.js" />
+    <Content Include="Scripts\swfobject.js" />
+    <Content Include="Scripts\swfobject.min.js" />
     <Content Include="Scripts\underscore-min.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Web.config">
