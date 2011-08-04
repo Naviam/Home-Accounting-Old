@@ -209,8 +209,9 @@ $(document).ready(function () {
         }
         transModel.DescrSub = null;
         transModel.GoToEdit = function (event, item) {
+            var row = $(event.currentTarget)
             //manual edit row
-            //                    var row = $(event.currentTarget)
+            //                    
             //                    var rowEdit = $('#edit_row');
             //                    rowEdit.css({ top: row.offset().top, width: row.width(), height: row.height() });
             //                    rowEdit.find('.edit_area').slideUp();
@@ -230,6 +231,11 @@ $(document).ready(function () {
             });
             this.currentItem = item;
             this.selectedRow(item.Id());
+            $(row.find('[name="Category"]')).autocomplete(catModel.Suggest(), {
+                minChars: 1
+                //,matchContains: true //if minChars>1
+                ,delay: 10
+            });
         }
         //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
         //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
@@ -307,6 +313,16 @@ $(document).ready(function () {
                 transModel.currentItem.Category(item.Name());
                 $("#cat_menu").hide();
             }
+        };
+        catModel.Suggest = function () {
+            var res = new Array();
+            ko.utils.arrayForEach(this.items(), function (item) {
+                res.push(item.Name());
+                ko.utils.arrayForEach(item.Subitems(), function (item) {
+                    res.push(item.Name());
+                });
+            });
+            return res;
         };
         ko.applyBindings(catModel, $("#cat_menu")[0]);
         ddsmoothmenu.init({
