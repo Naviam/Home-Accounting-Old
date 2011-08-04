@@ -13,9 +13,6 @@ namespace Naviam.Data
     [Serializable]
     public class UserProfile : DbEntity
     {
-        public string Name { get; set; }
-        public string Password { get; set; }
-        
         public UserProfile()  {}
 
         public UserProfile(IDataRecord record)
@@ -23,6 +20,13 @@ namespace Naviam.Data
             Id = record["id"] as int?;
             Name = record["email"] as string;
             Password = record["password"] as string;
+            FirstName = record["first_name"] as string;
+            LastName = record["last_name"] as string;
         }
+
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }
