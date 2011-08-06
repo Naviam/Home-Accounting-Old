@@ -26,7 +26,7 @@ namespace Naviam.Controllers
         {
             UserProfile user = CurrentUser;
             IEnumerable<Company> companies = CompaniesDataAdapter.GetCompanies(user.Id);
-
+            ViewBag.DefaultCompany = user.DefaultCompany;
             return PartialView(companies);
         }
 

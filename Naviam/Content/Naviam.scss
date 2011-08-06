@@ -359,3 +359,9 @@ text-shadow:0 0 0.1em #222222;
 	background-color: #0A246A;
 	color: white;
 }
+.company_menu{
+	.selected {
+		background-color: blue;
+		color: white;
+	}
+}
