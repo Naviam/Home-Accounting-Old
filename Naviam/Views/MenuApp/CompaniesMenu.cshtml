@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Naviam.Data.Company>
+    <ul class="left">
+        @foreach (var item in @Model)
+        {
+            if (item.IsSelected)
+            { 
+            <li><a style="color:Black;" href="#">@item.BuinessName</a></li>
+            }
+            else 
+            { 
+            <li class=""><a href="#">@item.BuinessName</a></li>
+            }
+        }
+    </ul>
