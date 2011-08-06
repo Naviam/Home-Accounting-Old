@@ -20,6 +20,7 @@ namespace Naviam.DAL
             if (res == null || forceSqlLoad)
             {
                 //load from DB
+                res = new List<Category>();
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
                     using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_categories"))

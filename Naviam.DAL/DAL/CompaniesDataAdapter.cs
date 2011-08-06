@@ -18,11 +18,12 @@ namespace Naviam.DAL
             List<Company> res = CacheWrapper.GetList<Company>(CacheKey, userId);
             if (res == null || forceSqlLoad)
             {
+                res = new List<Company>();
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
                     using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_companies"))
                     {
-                        cmd.Parameters.AddWithValue("@id_company", userId);
+                        cmd.Parameters.AddWithValue("@id_user", userId);
                         try
                         {
                             using (SqlDataReader reader = cmd.ExecuteReader())

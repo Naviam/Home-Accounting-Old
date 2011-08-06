@@ -84,7 +84,7 @@
     </resourceSet>
     <!--End jquery.tools-->
     <resourceSet name="dateTimePicker" type="js">
-      <resource path="~/Scripts/datetimepicker_css.min.js" />
+      <resource path="~/Scripts/datetimepicker_css.js" />
     </resourceSet>
     <resourceSet name="popmenu" type="js">
       <resource path="~/Scripts/ddsmoothmenu.min.js" />

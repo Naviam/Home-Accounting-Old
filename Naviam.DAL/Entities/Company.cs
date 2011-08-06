@@ -16,10 +16,12 @@ namespace Naviam.Data
             CountryId = record["id_country"] as int?;
             BuinessName = record["name_business"] as string;
             TypeId = record["id_company_type"] as int?;
+            IsSelected = false;
         }
 
         public int? CountryId { get; set; }
         public string BuinessName { get; set; }
         public int? TypeId { get; set; }
+        public bool IsSelected { get; set; }
     }
 }
