@@ -25,9 +25,8 @@ namespace Naviam.Controllers
         public ActionResult CompaniesMenu()
         {
             UserProfile user = CurrentUser;
-            IEnumerable<Company> companies = CompaniesDataAdapter.GetCompanies(user.Id);
             ViewBag.DefaultCompany = user.DefaultCompany;
-            return PartialView(companies);
+            return PartialView(user.Companies);
         }
 
         private string GetController()

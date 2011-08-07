@@ -12,8 +12,8 @@ namespace Naviam.DAL
     {
         private const string CacheKey = "userCompanies";
 
-        public static IEnumerable<Company> GetCompanies(int? userId) { return GetCompanies(userId, false); }
-        public static IEnumerable<Company> GetCompanies(int? userId, bool forceSqlLoad)
+        public static List<Company> GetCompanies(int? userId) { return GetCompanies(userId, false); }
+        public static List<Company> GetCompanies(int? userId, bool forceSqlLoad)
         {
             List<Company> res = CacheWrapper.GetList<Company>(CacheKey, userId);
             if (res == null || forceSqlLoad)

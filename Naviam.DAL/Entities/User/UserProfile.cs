@@ -29,5 +29,6 @@ namespace Naviam.Data
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? DefaultCompany { get; set; }
+        public List<Company> Companies { get; set; }
     }
 }
