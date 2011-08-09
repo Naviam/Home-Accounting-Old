@@ -192,7 +192,6 @@
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\common.min.js" />
     <Content Include="Scripts\datetimepicker_css.js" />
-    <Content Include="Scripts\datetimepicker_css.min.js" />
     <Content Include="Scripts\ddsmoothmenu.js" />
     <Content Include="Scripts\ddsmoothmenu.min.js" />
     <Content Include="Scripts\jquery-1.4.2.js" />
