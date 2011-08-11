@@ -74,6 +74,9 @@
       <resource path="~/Scripts/swfobject.min.js" />
       <resource path="~/Scripts/jquery.uploadify.v2.1.4.min.js" />
     </resourceSet>
+    <resourceSet name="upload_html5" type="js">
+      <resource path="~/Scripts/jquery.html5_upload.min.js" />
+    </resourceSet>
     <!-- jquery.tools-->
     <resourceSet name="datePicker" type="js">
       <resource path="~/Scripts/jquery.tools/dateinput/dateinput.min.js" />

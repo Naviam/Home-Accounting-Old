@@ -1,7 +1,6 @@
 ﻿using System.Security.Principal;
 using System.Threading;
 using System.Web.Mvc;
-using System.Web.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Naviam.Domain.Abstract;

@@ -213,6 +213,9 @@
     <Content Include="Scripts\jquery-1.6.2.min.js" />
     <Content Include="Scripts\jquery.autocomplete.js" />
     <Content Include="Scripts\jquery.autocomplete.min.js" />
+    <Content Include="Scripts\jquery.html5_upload.js" />
+    <Content Include="Scripts\jquery.html5_upload.min.js" />
+    <Content Include="Scripts\jquery.jeditable.js" />
     <Content Include="Scripts\jquery.jeditable.min.js" />
     <Content Include="Scripts\jquery.tmpl.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
