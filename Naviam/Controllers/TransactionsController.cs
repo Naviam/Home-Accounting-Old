@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
-
-using Naviam.Code;
 using Naviam.Data;
-using Naviam.Resources;
 using Naviam.DAL;
+using Naviam.WebUI.Resources;
 
-namespace Naviam.Controllers
+namespace Naviam.WebUI.Controllers
 {
     public class TransactionsController : BaseController
     {
@@ -38,7 +34,7 @@ namespace Naviam.Controllers
             {
                 if (input != null)
                 {
-                    IQueryable<T> q = null;
+                    IQueryable<T> q;
                     if (!String.IsNullOrEmpty(Filter) && Filter != "null")
                     {
                         q = input.AsQueryable();
@@ -72,24 +68,26 @@ namespace Naviam.Controllers
         [HttpPost]
         public ActionResult GetTransactions(Paging paging)
         {
-            UserProfile user = CurrentUser;
-            IEnumerable<Transaction> trans = TransactionsDataAdapter.GetTransactions(user.Id);
+            var user = CurrentUser;
+            var trans = TransactionsDataAdapter.GetTransactions(user.Id);
 
-            trans = paging.ApplyPaging<Transaction>(trans);
+            trans = paging.ApplyPaging(trans);
 
-            List<Head> head = new List<Head>();
-            head.Add(new Head() { Field = "Date", Text = DisplayNames.Date});
-            head.Add(new Head() { Field = "Description", Text = DisplayNames.Description });
-            head.Add(new Head() { Field = "Category", Text = DisplayNames.Category });
-            head.Add(new Head() { Field = "Amount", Text = DisplayNames.Amount, Columns = 2 });
+            var head = new List<Head>
+                           {
+                               new Head {Field = "Date", Text = DisplayNames.Date},
+                               new Head {Field = "Description", Text = DisplayNames.Description},
+                               new Head {Field = "Category", Text = DisplayNames.Category},
+                               new Head {Field = "Amount", Text = DisplayNames.Amount, Columns = 2}
+                           };
 
-            return Json(new { items = trans, paging = paging, headItems = head });
+            return Json(new { items = trans, paging, headItems = head });
         }
 
         [HttpPost]
         public ActionResult UpdateTransaction(Transaction trans)
         {
-            UserProfile user = CurrentUser;
+            var user = CurrentUser;
             //Transaction updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, user.Id);
             //TryUpdateModel(updateTrans);
             if (trans.Id != null)
@@ -102,9 +100,9 @@ namespace Naviam.Controllers
         [HttpPost]
         public ActionResult GetCategories()
         {
-            UserProfile user = CurrentUser;
+            var user = CurrentUser;
 
-            List<Category> items = Categories.GetTree(CategoriesDataAdapter.GetCategories(user.Id));
+            var items = Categories.GetTree(CategoriesDataAdapter.GetCategories(user.Id));
 
             //List<Category> items = new List<Category>();
             //Category cat = new Category() { Name = "Food", Id = 1 };
@@ -117,7 +115,7 @@ namespace Naviam.Controllers
             //cat.Subitems.Add(new Category() { Name = "Spares", Id = 7 });
             //items.Add(cat);
 
-            return Json(new { items = items });
+            return Json(new { items });
         }
 
     }
