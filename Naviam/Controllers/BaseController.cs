@@ -1,36 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Naviam.Entities.User;
+using Naviam.WebUI.Helpers;
 
-using Naviam.Data;
-using Naviam.Code;
-
-namespace Naviam.Controllers
+namespace Naviam.WebUI.Controllers
 {
+    // fixes an issue with browser's back button after logout
+    //[OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class BaseController : Controller
     {
-        private UserProfile _currentUser;
         /// <summary>
         /// Get current user from session or redis
         /// </summary>
-        protected UserProfile CurrentUser {
-            get
-            {
-                return _currentUser;
-            }
-            set
-            {
-                _currentUser = value;
-            }
-        }
+        protected UserProfile CurrentUser { get; set; }
 
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {
             base.OnAuthorization(filterContext);
             CurrentUser = SessionHelper.UserProfile;
-            if (_currentUser == null)
+            if (CurrentUser == null)
                 filterContext.Result = new HttpUnauthorizedResult();
         }
 
