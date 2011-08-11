@@ -17,6 +17,15 @@ namespace Naviam.WebUI.Controllers
             _userAccountRepository = userAccountRepository;
         }
 
+        private void SignOut()
+        {
+            SessionHelper.UserProfile = null;
+            if (User != null && User.Identity.IsAuthenticated)
+                FormsAuthentication.SignOut();
+            if (Session != null)
+                Session.Abandon();
+        }
+
         // **************************************
         // URL: /Account/LogOn
         // **************************************
@@ -24,10 +33,8 @@ namespace Naviam.WebUI.Controllers
         public ActionResult LogOn()
         {
             //remove from redis
-            SessionHelper.UserProfile = null;
-            FormsAuthentication.SignOut();
-            Session.Abandon();
-            return View();
+            SignOut();
+            return View("LogOn");
         }
 
         [HttpPost]
@@ -65,13 +72,16 @@ namespace Naviam.WebUI.Controllers
             return View(model);
         }
 
+        
+
         // **************************************
         // URL: /Account/LogOff
         // **************************************
 
         public ActionResult LogOff()
         {
-            return RedirectToAction("LogOn");
+            SignOut();
+            return View("LogOn");
         }
 
         public ActionResult SignIn()
