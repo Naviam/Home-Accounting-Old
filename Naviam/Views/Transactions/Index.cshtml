@@ -1,4 +1,4 @@
-﻿@using Naviam.Resources;
+﻿@using Naviam.WebUI.Resources
 @{
     ViewBag.Title = SharedStrings.TransactionsTitle;
     Layout = "~/Views/Shared/LayoutMember.cshtml";
@@ -26,7 +26,7 @@
             <span data-bind="msDateTime: Date, visible: transModel.selectedRow() != Id()" name="Date"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
             @*<img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">*@
-            <div>
+            </div>
         </td>
         <td style="width:38%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
         <td style="width:35%">
