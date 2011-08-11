@@ -8,7 +8,7 @@ using ServiceStack.Redis;
 using System.Web.WebPages;
 using System.Web.Security;
 
-namespace Naviam.Code
+namespace Naviam.WebUI
 {
     public class CacheWrapper
     {
