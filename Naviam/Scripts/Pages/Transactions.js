@@ -209,7 +209,6 @@ $(document).ready(function () {
         }
         transModel.DescrSub = null;
         transModel.GoToEdit = function (event, item) {
-            var row = $(event.currentTarget)
             //manual edit row
             //                    
             //                    var rowEdit = $('#edit_row');
@@ -231,11 +230,14 @@ $(document).ready(function () {
             });
             this.currentItem = item;
             this.selectedRow(item.Id());
-            $(row.find('[name="Category"]')).autocomplete(catModel.Suggest(), {
-                minChars: 1
-                //,matchContains: true //if minChars>1
-                ,delay: 10
-            });
+            if (event != null) {
+                var row = $(event.currentTarget)
+                $(row.find('[name="Category"]')).autocomplete(catModel.Suggest(), {
+                    minChars: 1
+                    //,matchContains: true //if minChars>1
+                , delay: 10
+                });
+            }
         }
         //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
         //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
