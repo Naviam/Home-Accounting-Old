@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Naviam.Models;
-using Naviam.Data;
-using Naviam.DAL;
+﻿using System.Web.Mvc;
+using Naviam.WebUI.Models;
 
-namespace Naviam.Controllers
+namespace Naviam.WebUI.Controllers
 {
 
     public class MenuAppController : BaseController
@@ -24,7 +18,7 @@ namespace Naviam.Controllers
 
         public ActionResult CompaniesMenu()
         {
-            UserProfile user = CurrentUser;
+            var user = CurrentUser;
             ViewBag.DefaultCompany = user.DefaultCompany;
             return PartialView(user.Companies);
         }
