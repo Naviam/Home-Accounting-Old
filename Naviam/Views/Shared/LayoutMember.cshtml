@@ -1,5 +1,6 @@
 ﻿@using Combres.Mvc;
 @using System.Reflection;
+@using Naviam.WebUI.Controllers
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +18,9 @@
 <body>
     <div class="container">
     <nav>
+        
         @{Html.RenderAction("CompaniesMenu", "MenuApp");}
+
         <ul class="right">
             <li><a href="Error.cshtml">Виталий Гатальский</a></li>
             <li><a href="Error.cshtml">0</a></li>
@@ -34,7 +37,7 @@
             @RenderBody()
         </div>
         <hr />
-        @{Assembly assembly = typeof(Naviam.Controllers.TransactionsController).Assembly;}
+        @{Assembly assembly = typeof(TransactionsController).Assembly;}
         <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
     </div>
     @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
