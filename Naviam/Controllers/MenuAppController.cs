@@ -8,7 +8,7 @@ namespace Naviam.WebUI.Controllers
     {
         public ActionResult TopMenu()
         {
-            return PartialView(new MenuModel(GetController(), GetAction()));
+            return PartialView(new MenuModel(GetController(), GetAction(), Request.QueryString));
         }
 
         public ActionResult SubMenu()

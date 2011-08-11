@@ -20,7 +20,7 @@
     <nav>
         
         @{Html.RenderAction("CompaniesMenu", "MenuApp");}
-
+       
         <ul class="right">
             <li><a href="Error.cshtml">Виталий Гатальский</a></li>
             <li><a href="Error.cshtml">0</a></li>
@@ -31,6 +31,7 @@
         <hr />
     <header>
         Logo
+         @{Html.RenderAction("TopMenu", "MenuApp");}
     </header>
         <hr />
         <div id="main">

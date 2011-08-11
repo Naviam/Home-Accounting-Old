@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using System.Globalization;
 using System.Configuration;
 using Naviam.WebUI.Resources;
+using System.Collections.Specialized;
 
 //using Resources;
 
@@ -16,8 +17,9 @@ namespace Naviam.WebUI.Models
     public class MenuModel
     {
         #region .fields
-        MainMenuItem _rootNode = new MainMenuItem();
-        List<MainMenuItem> _internalMenuItemsList = new List<MainMenuItem>();
+        private MainMenuItem _rootNode = new MainMenuItem();
+        private List<MainMenuItem> _internalMenuItemsList = new List<MainMenuItem>();
+        private NameValueCollection _queryString;
         #endregion .fields
 
         #region .properties
@@ -46,14 +48,16 @@ namespace Naviam.WebUI.Models
 
         #region .ctors
 
-        public MenuModel()
-        {
-            Initialize();
-
-        }
+        public MenuModel() :
+            this(string.Empty, string.Empty, null)
+        {}
         public MenuModel(string controller, string action) :
-            this()
+            this(controller, action, null)
+        {}
+        public MenuModel(string controller, string action, NameValueCollection queryString)
         {
+            _queryString = queryString;
+            Initialize();
             SetActiveMenuItems(controller, action);
         }
 
@@ -68,9 +72,16 @@ namespace Naviam.WebUI.Models
             GetInternalMenuItemsList(_rootNode);
         }
 
+        private string ToQueryString(NameValueCollection nvc)
+        {
+            return (nvc.Count>0?"?":"") + string.Join("&", Array.ConvertAll(nvc.AllKeys, key => string.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(nvc[key]))));
+        }
+
         private void GetInternalMenuItemsList(MainMenuItem mainMenuItem)
         {
             _internalMenuItemsList.Add(mainMenuItem);
+            if (mainMenuItem.Url != null && _queryString!=null)
+                mainMenuItem.Url = mainMenuItem.Url + ToQueryString(_queryString);
             foreach (MainMenuItem itm in mainMenuItem)
             {
                 GetInternalMenuItemsList(itm);
