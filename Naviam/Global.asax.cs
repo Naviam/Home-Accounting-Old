@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Combres;
 using System.Globalization;
 using System.Threading;
+using Naviam.WebUI;
+using Naviam.WebUI.Helpers;
 
-using Naviam.Code;
-
-namespace Naviam
+namespace Naviam.WebUI
 {
-    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
-    // visit http://go.microsoft.com/?LinkId=9394801
-
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -37,7 +32,9 @@ namespace Naviam
 
         }
 
+// ReSharper disable InconsistentNaming
         protected void Application_Start()
+// ReSharper restore InconsistentNaming
         {
             AreaRegistration.RegisterAllAreas();
 
@@ -47,13 +44,17 @@ namespace Naviam
             ModelBinders.Binders.Add(typeof(decimal?), new CustomDecimalModelBinder());
             ModelBinders.Binders.Add(typeof(DateTime?), new CustomDateTimeModelBinder());
             ModelBinders.Binders.Add(typeof(string), new CustomStringModelBinder());
+
+            ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
         }
 
+// ReSharper disable InconsistentNaming
         protected void Application_AcquireRequestState(object sender, EventArgs e)
+// ReSharper restore InconsistentNaming
         {
             if (HttpContext.Current.Session != null)
             {
-                CultureInfo ci = (CultureInfo)this.Session["Culture"];
+                var ci = (CultureInfo)Session["Culture"];
                 if (ci == null)
                 {
                     //default
@@ -64,7 +65,7 @@ namespace Naviam
                         langName = HttpContext.Current.Request.UserLanguages[0].Substring(0, 2);
                     }
                     ci = new CultureInfo(langName);
-                    this.Session["Culture"] = ci;
+                    Session["Culture"] = ci;
                 }
                 //Устанавливаем культуру для каждого запроса
                 Thread.CurrentThread.CurrentUICulture = ci;
