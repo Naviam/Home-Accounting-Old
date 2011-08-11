@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
 using System.Xml;
 using System.IO;
 using System.Xml.Serialization;
 using System.Globalization;
 using System.Configuration;
-using Naviam.Resources;
+using Naviam.WebUI.Resources;
+
 //using Resources;
 
-namespace Naviam.Models
+namespace Naviam.WebUI.Models
 {
     public class MenuModel
     {
