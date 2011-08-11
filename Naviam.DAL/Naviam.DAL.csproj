@@ -8,7 +8,7 @@
     <ProjectGuid>{76C27277-26E3-442E-B136-A4526A57A0AB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Naviam.DAL</RootNamespace>
+    <RootNamespace>Naviam</RootNamespace>
     <AssemblyName>Naviam.DAL</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
