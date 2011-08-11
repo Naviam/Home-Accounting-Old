@@ -38,6 +38,7 @@ namespace Naviam.DAL
             {
                 //load from DB
                 //res = GetTestTransactions(7);
+                res = new List<Transaction>();
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
                     using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))

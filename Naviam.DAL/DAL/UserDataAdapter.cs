@@ -128,6 +128,12 @@ namespace Naviam.DAL
                         throw e;
                     }
                 }
+                if (result != null)
+                {
+                    //TODO: read companies and attach to user, also assign default company
+                    result.Companies = CompaniesDataAdapter.GetCompanies(result.Id);
+                    result.DefaultCompany = 1;
+                }
             }
             return result;
         }

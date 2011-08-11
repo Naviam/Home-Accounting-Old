@@ -36,6 +36,9 @@
       <!--<resource path="~/Scripts/jquery-1.6.2.min.js" />-->
       <resource path="~/Scripts/common.min.js" />
     </resourceSet>
+    <resourceSet name="autocomplete" type="js">
+      <resource path="~/Scripts/jquery.autocomplete.min.js" />
+    </resourceSet>
     <resourceSet name="validate" type="js">
       <resource path="~/Scripts/jquery.validate.min.js" />
       <resource path="~/Scripts/jquery.validate.unobtrusive.min.js" />
@@ -81,7 +84,7 @@
     </resourceSet>
     <!--End jquery.tools-->
     <resourceSet name="dateTimePicker" type="js">
-      <resource path="~/Scripts/datetimepicker_css.min.js" />
+      <resource path="~/Scripts/datetimepicker_css.js" />
     </resourceSet>
     <resourceSet name="popmenu" type="js">
       <resource path="~/Scripts/ddsmoothmenu.min.js" />
@@ -92,6 +95,7 @@
       <resource reference="popmenu" />
       <resource reference="datePicker" />
       <resource reference="overlay" />
+      <resource reference="autocomplete" />
       <resource path="~/Scripts/Pages/Transactions.min.js" />
     </resourceSet>
     <!--End Pages -->

@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Naviam.Data.Company>
+    <ul class="left company_menu">
+        @foreach (var item in @Model)
+        {
+            int? companyId = Request.QueryString["cid"] != null ? (int?)Convert.ToInt32(Request.QueryString["cid"]) : ViewBag.DefaultCompany;
+            <li><a class='@( companyId == item.Id ? "selected" : "")'  href="@Url.Action("Index", "Transactions", new { cid = item.Id})">@item.BuinessName</a></li>
+        }
+    </ul>

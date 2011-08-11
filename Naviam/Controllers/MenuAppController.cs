@@ -4,11 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Naviam.Models;
+using Naviam.Data;
+using Naviam.DAL;
 
 namespace Naviam.Controllers
 {
 
-    public class MenuAppController : Controller
+    public class MenuAppController : BaseController
     {
         public ActionResult TopMenu()
         {
@@ -18,6 +20,13 @@ namespace Naviam.Controllers
         public ActionResult SubMenu()
         {
             return PartialView(new MenuModel(GetController(), GetAction()));
+        }
+
+        public ActionResult CompaniesMenu()
+        {
+            UserProfile user = CurrentUser;
+            ViewBag.DefaultCompany = user.DefaultCompany;
+            return PartialView(user.Companies);
         }
 
         private string GetController()

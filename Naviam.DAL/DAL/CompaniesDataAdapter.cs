@@ -2,35 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Naviam.Data;
 using Naviam.Code;
 using System.Data.SqlClient;
-using System.Data;
+using Naviam.Data;
 
 namespace Naviam.DAL
 {
-    public class CategoriesDataAdapter
+    public class CompaniesDataAdapter
     {
-        private const string CacheKey = "transCategory";
+        private const string CacheKey = "userCompanies";
 
-        public static List<Category> GetCategories(int? userId) { return GetCategories(userId, false); }
-        public static List<Category> GetCategories(int? userId, bool forceSqlLoad)
+        public static List<Company> GetCompanies(int? userId) { return GetCompanies(userId, false); }
+        public static List<Company> GetCompanies(int? userId, bool forceSqlLoad)
         {
-            List<Category> res = CacheWrapper.GetList<Category>(CacheKey, userId);
+            List<Company> res = CacheWrapper.GetList<Company>(CacheKey, userId);
             if (res == null || forceSqlLoad)
             {
-                //load from DB
-                res = new List<Category>();
+                res = new List<Company>();
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_categories"))
+                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_companies"))
                     {
                         cmd.Parameters.AddWithValue("@id_user", userId);
                         try
                         {
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                res = new Categories(reader);
+                                while (reader.Read())
+                                    res.Add(new Company(reader));
                             }
                         }
                         catch (SqlException e)
@@ -40,9 +39,10 @@ namespace Naviam.DAL
                     }
                 }
                 //save to cache
-                CacheWrapper.SetList<Category>(CacheKey, res, userId);
+                CacheWrapper.SetList<Company>(CacheKey, res, userId);
             }
             return res;
         }
+
     }
 }
