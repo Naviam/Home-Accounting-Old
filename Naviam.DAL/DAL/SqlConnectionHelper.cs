@@ -25,7 +25,7 @@ namespace Naviam.DAL
         private static readonly string DataSource = ConfigurationManager.AppSettings[KeyDataSource];
 
         #region METHOD::GetConnection
-        public static SqlConnectionHolder GetConnection(ConnectionType connectionType)
+        public static SqlConnectionHolder GetConnection(ConnectionType connectionType = ConnectionType.Naviam)
         {
             return GetConnection(GetConnString(connectionType));
         }
