@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Naviam.Code.Parsers;
+using Naviam.WebUI.Helpers.Parsers;
 
 namespace TestParsers
 {
