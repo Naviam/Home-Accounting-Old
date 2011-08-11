@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using System.Web.Security;
-using Naviam.Models;
+using Naviam.Domain.Abstract;
+using Naviam.WebUI.Helpers;
+using Naviam.WebUI.Models;
 
-using Naviam.DAL;
-using Naviam.Data;
-using Naviam.Code;
-
-namespace Naviam.Controllers
+namespace Naviam.WebUI.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IUserAccountRepository _userAccountRepository;
 
+        public AccountController(IUserAccountRepository userAccountRepository)
+        {
+            _userAccountRepository = userAccountRepository;
+        }
 
         // **************************************
         // URL: /Account/LogOn
@@ -29,7 +27,6 @@ namespace Naviam.Controllers
             SessionHelper.UserProfile = null;
             FormsAuthentication.SignOut();
             Session.Abandon();
-            //TestDataAdapter.Test();
             return View();
         }
 
@@ -38,16 +35,18 @@ namespace Naviam.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserProfile prof = UserDataAdapter.GetUserProfile(model.UserName, model.Password);
+                //var profile = UserDataAdapter.GetUserProfile(model.UserName, model.Password);
                 //UserProfile prof = new UserProfile() { Id = 10};
-                if (prof != null)
+                var profile = _userAccountRepository.GetUserProfile(model.UserName, model.Password);
+                
+                if (profile != null)
                 {
-                    string cId = Guid.NewGuid().ToString();
-                    SessionHelper.SetNewUserProfile(cId, prof);
+                    var cId = Guid.NewGuid().ToString();
+                    SessionHelper.SetNewUserProfile(cId, profile);
                     //setup forms ticket
-                    DateTime exp = DateTime.Now.Add(FormsAuthentication.Timeout);
-                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, model.UserName, DateTime.Now, exp, model.RememberMe, cId);
-                    HttpCookie fCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
+                    var exp = DateTime.Now.Add(FormsAuthentication.Timeout);
+                    var ticket = new FormsAuthenticationTicket(1, model.UserName, DateTime.Now, exp, model.RememberMe, cId);
+                    var fCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
                     if (model.RememberMe)
                         fCookie.Expires = ticket.Expiration;
                     Response.Cookies.Add(fCookie);
@@ -58,11 +57,9 @@ namespace Naviam.Controllers
                     {
                         return Redirect(returnUrl);
                     }
-                    else
-                        return RedirectToAction("Index", "Transactions");
-
+                    return RedirectToAction("Index", "Transactions");
                 }
-                ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                ModelState.AddModelError("", @"The user name or password provided is incorrect.");
             }
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -77,5 +74,26 @@ namespace Naviam.Controllers
             return RedirectToAction("LogOn");
         }
 
+        public ActionResult SignIn()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SignIn(string email, string password)
+        {
+            return View();
+        }
+
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ForgotPassword(string email, string captcha)
+        {
+            return View();
+        }
     }
 }
