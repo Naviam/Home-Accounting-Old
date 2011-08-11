@@ -47,9 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Naviam\Code\Parsers\BelSwissParser.cs">
-      <Link>BelSwissParser.cs</Link>
-    </Compile>
+    <Compile Include="BelSwissParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
