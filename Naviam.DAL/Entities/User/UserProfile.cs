@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data;
+using Naviam.Data;
 
-namespace Naviam.Data
+namespace Naviam.Entities.User
 {
-
     /// <summary>
     /// User Profile object
     /// </summary>
@@ -29,6 +27,6 @@ namespace Naviam.Data
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? DefaultCompany { get; set; }
-        public List<Company> Companies { get; set; }
+        public IEnumerable<Company> Companies { get; set; }
     }
 }
