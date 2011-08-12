@@ -12,14 +12,7 @@ namespace Naviam.Data
     public class Transaction : DbEntity
     {
         public enum TransactionTypes { Cash = 0, Check, Pending }
-        const string Cash = "cash";
-        const string Check = "check";
-        const string Pending = "pending";
-
-        public enum TransactionDirections { Income = 0, Expence }
-        const string Income = "income";
-        const string Expence = "expence";
-
+        public enum TransactionDirections { Expence  = 0, Income }
 
         public Transaction() { }
         public Transaction(SqlDataReader reader) 
@@ -30,8 +23,8 @@ namespace Naviam.Data
             Merchant = reader["merchant"] as string;
             Description = reader["description"] as string;
             Notes = reader["notes"] as string;
-		    TransactionType = GetTransactionType(reader["transaction_type"] as string);
-            Direction = GetTransactionDirection(reader["direction"] as string);
+		    TransactionType = (TransactionTypes)reader["transaction_type"];
+            Direction = (TransactionDirections)reader["direction"];
             AccountId = reader["id_account"] as int?; 
 		    AccountNumber = reader["account_number"] as string;
             AccountType = Account.GetAccountType(reader["account_type"] as string);
@@ -40,7 +33,6 @@ namespace Naviam.Data
         }
 
         public DateTime? Date { get; set; }
-
         public string Description { get; set; }
         public string Category { get; set; }
         public int? CategoryId { get; set; }
@@ -52,48 +44,6 @@ namespace Naviam.Data
         public int? AccountId { get; set; }
         public string AccountNumber { get; set; }
         public Account.AccountTypes AccountType { get; set; }
-
-        public static TransactionTypes GetTransactionType(string tranTypeStr)
-        {
-            switch (tranTypeStr)
-            {
-                case Cash: return TransactionTypes.Cash;
-                case Check: return TransactionTypes.Check;
-                case Pending: return TransactionTypes.Pending;
-                default: return TransactionTypes.Cash;
-            }
-        }
-
-        public static string GetTransactionTypeString(TransactionTypes tranType)
-        {
-            switch (tranType)
-            {
-                case TransactionTypes.Cash: return Cash;
-                case TransactionTypes.Check: return Check;
-                case TransactionTypes.Pending: return Pending;
-                default: return Cash;
-            }
-        }
-
-        public static TransactionDirections GetTransactionDirection(string tranDirectionStr)
-        {
-            switch (tranDirectionStr)
-            {
-                case Income: return TransactionDirections.Income;
-                case Expence: return TransactionDirections.Expence;
-                default: return TransactionDirections.Income;
-            }
-        }
-
-        public static string GetTransactionDirectionString(TransactionDirections tranDirection)
-        {
-            switch (tranDirection)
-            {
-                case TransactionDirections.Income: return Income;
-                case TransactionDirections.Expence: return Expence;
-                default: return Income;
-            }
-        }
     }
 
     public static partial class SqlCommandExtensions
@@ -114,8 +64,8 @@ namespace Naviam.Data
             command.Parameters.Add("@id_category", SqlDbType.Int).Value = transaction.CategoryId;
             command.Parameters.Add("@description", SqlDbType.NVarChar).Value = transaction.Merchant;
             command.Parameters.Add("@notes", SqlDbType.NVarChar).Value = transaction.Notes;
-            command.Parameters.Add("@type", SqlDbType.NVarChar).Value = Transaction.GetTransactionTypeString(transaction.TransactionType);
-            command.Parameters.Add("@direction", SqlDbType.NVarChar).Value = Transaction.GetTransactionDirectionString(transaction.Direction);
+            command.Parameters.Add("@type", SqlDbType.Int).Value = transaction.TransactionType;
+            command.Parameters.Add("@direction", SqlDbType.Int).Value = transaction.Direction;
         }
     }
 }
