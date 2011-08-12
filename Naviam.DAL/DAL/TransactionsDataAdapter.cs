@@ -71,7 +71,6 @@ namespace Naviam.DAL
             if (res == null || forceSqlLoad)
             {
                 //load from DB
-                //TODO: on db side - check that trans belongs to user
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
                     using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
@@ -100,20 +99,59 @@ namespace Naviam.DAL
             return res;
         }
 
+        private static int InsertUpdate(Transaction entity, int? companyId, int? languageId, DbActionType action)
+        {
+            int res = -1;
+            using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+            {
+                string commName = action == DbActionType.Insert ? "add_transaction" : "update_transaction";
+                SqlCommand command = holder.Connection.CreateSPCommand(commName);
+                try
+                {
+                    command.AddEntityParameters(entity, action);
+                    command.ExecuteNonQuery();
+                    if (action == DbActionType.Insert)
+                        entity.Id = command.GetRowIdParameter();
+                    res = command.GetReturnParameter();
+                }
+                catch (SqlException e)
+                {
+                    throw e;
+                }
+            }
+            if (res == 0)
+            {
+                if (action == DbActionType.Insert)
+                    CacheWrapper.AddToList<Transaction>(CacheKey, entity, companyId, languageId);
+                if (action == DbActionType.Update)
+                    //if ok - update cache
+                    CacheWrapper.UpdateList<Transaction>(CacheKey, entity, companyId, languageId);
+            }
+            return res;
+        }
 
         public static int Insert(Transaction entity, int? companyId, int? languageId)
         {
+            return InsertUpdate(entity, companyId, languageId, DbActionType.Insert);
+        }
+
+        public static int Update(Transaction entity, int? companyId, int? languageId)
+        {
+            return InsertUpdate(entity, companyId, languageId, DbActionType.Update);
+        }
+
+        //we need to provide full object (not only id) to delete from redis (restrict of redis)
+        public static int Delete(Transaction trans, int? companyId, int? languageId)
+        {
             int res = -1;
-            //insert to db
-            using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+            using (var holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
-                using (SqlCommand command = holder.Connection.CreateSPCommand("add_transaction"))
+                using (var command = holder.Connection.CreateSPCommand("del_transaction"))
                 {
                     try
                     {
-                        command.AddEntityParameters(entity, DbActionType.Insert);
+                        command.AddCommonParameters(trans.Id);
                         command.ExecuteNonQuery();
-                        entity.Id = command.GetRowIdParameter();
                         res = command.GetReturnParameter();
                     }
                     catch (SqlException e)
@@ -124,11 +162,11 @@ namespace Naviam.DAL
             }
             if (res == 0)
             {
-                CacheWrapper.AddToList<Transaction>(CacheKey, entity, companyId, languageId);
+                //if ok - remove from cache
+                CacheWrapper.RemoveFromList<Transaction>(CacheKey, trans, companyId, languageId);
             }
             return res;
         }
-
 
         //public static IEnumerable<Transaction> GetTransactions(int? userId) { return GetTransactions(userId, false); }
         //public static IEnumerable<Transaction> GetTransactions(int? userId, bool forceSqlLoad)
@@ -190,31 +228,5 @@ namespace Naviam.DAL
         //    return res;
         //}
 
-        public static int Update(Transaction trans, int? userId)
-        {
-            int res = -1;
-            //update db
-            res = 0;
-            if (res == 0)
-            {
-                //if ok - update cache
-                CacheWrapper.UpdateList<Transaction>(CacheKey, trans, userId);
-            }
-            return res;
-        }
-
-        //we need to provide full object (not only id) to delete (restrict of redis)
-        public static int Delete(Transaction trans, int? userId)
-        {
-            int res = -1;
-            //delete from db
-            res = 0;
-            if (res == 0)
-            {
-                //if ok - remove from cache
-                CacheWrapper.RemoveFromList<Transaction>(CacheKey, trans, userId);
-            }
-            return res;
-        }
     }
 }

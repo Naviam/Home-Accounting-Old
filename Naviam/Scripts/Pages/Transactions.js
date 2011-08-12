@@ -263,6 +263,9 @@ $(document).ready(function () {
             $("#edit_form").overlay().load();
         }
         transModel.DeleteItem = function (item) {
+            $.postErr(delTransUrl, { id: item.Id() }, function (res) {
+                ko.utils.arrayRemoveItem(transModel.items, item);
+            });
         }
         transModel.ShowCategories = function (btn) {
             var menu = $("#cat_menu");
