@@ -102,6 +102,9 @@
       <resource reference="upload_html5" />
       <resource path="~/Scripts/Pages/Transactions.min.js" />
     </resourceSet>
+    <resourceSet name="accounts" type="js">
+      <resource reference="knockout map" />
+    </resourceSet>
     <!--End Pages -->
     <resourceSet name="spine" type="js">
       <resource path="~/Scripts/spine.min.js" />

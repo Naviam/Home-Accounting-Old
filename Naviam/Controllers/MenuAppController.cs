@@ -18,9 +18,8 @@ namespace Naviam.WebUI.Controllers
 
         public ActionResult CompaniesMenu()
         {
-            var user = CurrentUser;
-            ViewBag.DefaultCompany = user.DefaultCompany;
-            return PartialView(user.Companies);
+            ViewBag.CurrentCompany = CurrentUser.CurrentCompany;
+            return PartialView(CurrentUser.Companies);
         }
 
         private string GetController()

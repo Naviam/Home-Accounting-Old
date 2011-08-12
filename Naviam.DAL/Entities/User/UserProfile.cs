@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Naviam.Data;
 using System.Web;
+using System.Xml.Serialization;
 
 namespace Naviam.Entities.User
 {
@@ -28,6 +29,7 @@ namespace Naviam.Entities.User
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? DefaultCompany { get; set; }
+        [XmlIgnore]
         public int? CurrentCompany { 
             get 
             {
@@ -36,8 +38,9 @@ namespace Naviam.Entities.User
                 if (context != null)
                 {
                     res = context.Request.QueryString["cid"] != null ? (int?)Convert.ToInt32(context.Request.QueryString["cid"]) : null;
+                    var frmReq = context.Request.Form["pageContext[companyId]"];
                     if (res == null)
-                        res = context.Request.Form["pageContext[companyId]"] != null ? (int?)Convert.ToInt32(context.Request.Form["pageContext[companyId]"]) : null;
+                        res = !String.IsNullOrEmpty(frmReq) ? (int?)Convert.ToInt32(frmReq) : null;
                     if (res == null)
                         res = DefaultCompany;
                 }

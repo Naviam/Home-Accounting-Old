@@ -7,6 +7,8 @@ using Naviam.Data;
 using Naviam.DAL;
 using Naviam.WebUI.Resources;
 
+using Naviam.WebUI.Models;
+
 namespace Naviam.WebUI.Controllers
 {
     public class TransactionsController : BaseController
@@ -69,7 +71,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetTransactions(Paging paging)
         {
             var user = CurrentUser;
-            var trans = TransactionsDataAdapter.GetTransactions(user.Id);
+            var trans = TransactionsDataAdapter.GetTransactionsByCompany(user.CurrentCompany);
 
             trans = paging.ApplyPaging(trans);
 

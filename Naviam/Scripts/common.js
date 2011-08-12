@@ -6,6 +6,10 @@ jQuery.postErr = function (url, data, callback, type) {
         callback = data;
         data = null;
     }
+    if (data == null)
+        data = {};
+    if (typeof pageContext != 'undefined' && pageContext != null)
+        data.pageContext = pageContext;
     var contentType = type == 'json' ? "application/json; charset=utf-8" : "application/x-www-form-urlencoded";
     $.ajax({
         type: "POST",
@@ -20,15 +24,18 @@ jQuery.postErr = function (url, data, callback, type) {
 
         dataType: type,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            if (XMLHttpRequest.status == 500) {
-                var errorObj = JSON.parse(XMLHttpRequest.responseText);
-                showSiteError(errorObj.Text);
-            }
-            else {
-                showSiteError(XMLHttpRequest.responseText);
-            }
+            parseSiteError(XMLHttpRequest); 
         }
     });
+}
+function parseSiteError(request) {
+    if (request.status == 500) {
+        var errorObj = JSON.parse(request.responseText);
+        showSiteError(errorObj.Text);
+    }
+    else {
+        showSiteError(request.responseText);
+    }
 }
 function showSiteError(errorText) {
     alert(errorText);

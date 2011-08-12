@@ -10,10 +10,18 @@ namespace Naviam.WebUI.Controllers
     {
 
         [HttpPost]
-        public ActionResult UploadStatement()
+        public string UploadStatement()
         {
-            throw new NotImplementedException();
-            return View();
+            //throw new NotImplementedException();
+            var result = "error";
+            if (Request.Files.Count > 0)
+            {
+                var file = Request.Files["fileToUpload"];
+                if (file != null && !String.IsNullOrEmpty(file.FileName))
+                {
+                }
+            }
+            return result;
         }
 
     }

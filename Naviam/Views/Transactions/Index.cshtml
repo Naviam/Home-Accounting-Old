@@ -1,4 +1,5 @@
 ﻿@using Naviam.WebUI.Resources
+@using Naviam.Entities.User;
 @{
     ViewBag.Title = SharedStrings.TransactionsTitle;
     Layout = "~/Views/Shared/LayoutMember.cshtml";
@@ -17,16 +18,20 @@
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
     var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
     $(document).ready(function () {
-        //$('#upload_statement').html5_upload();
+        var url = $('#upload_statement').parent().attr('action');
+        $('#upload_statement').html5_upload({ autostart: false, url: url });
     });
+    function beg_upload_statement() {
+        $('#upload_statement').trigger('html5_upload.start');
+        return false;
+    }
 </script>
-@using (Html.BeginForm("UploadStatement", "Attachments", FormMethod.Post, new { @enctype = "multipart/form-data" })) {
-<div>
+@{UserProfile user = ViewBag.CurrentUser as UserProfile;}
+@using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
     <input type="file" id='upload_statement'/>
-    @*<button type="submit">Upload</button>*@
-</div>
+    <button onclick='beg_upload_statement();' type="button">Upload</button>
 }
-@TempData["ddd"]
 <a href="#" onclick='return transModel.Add();'>Add</a>
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">

@@ -110,13 +110,21 @@
 						upload_file(number+1);
 					}
 				};
+                xhr.onreadystatechange = function (evt) {
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 500)
+                            parseSiteError(xhr);
+                    }
+                };
 				xhr.open("post", typeof(options.url) == "function" ? options.url() : options.url, true);
-				xhr.setRequestHeader("Cache-Control", "no-cache");
-				xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-				xhr.setRequestHeader("X-File-Name", file.fileName);
-				xhr.setRequestHeader("X-File-Size", file.fileSize);
-				xhr.setRequestHeader("Content-Type", "multipart/form-data");
-				xhr.send(file);
+//				xhr.setRequestHeader("Cache-Control", "no-cache");
+//				xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+//				xhr.setRequestHeader("X-File-Name", file.fileName);
+//				xhr.setRequestHeader("X-File-Size", file.fileSize);
+//				xhr.setRequestHeader("Content-Type", "multipart/form-data");
+				var fd = new FormData();
+				fd.append("fileToUpload", file);
+                xhr.send(fd);
 			}
 			upload_file(0);
 			return true;

@@ -19,6 +19,7 @@ namespace Naviam.WebUI.Controllers
         {
             base.OnAuthorization(filterContext);
             CurrentUser = SessionHelper.UserProfile;
+            ViewBag.CurrentUser = CurrentUser;
             if (CurrentUser == null)
                 filterContext.Result = new HttpUnauthorizedResult();
         }
