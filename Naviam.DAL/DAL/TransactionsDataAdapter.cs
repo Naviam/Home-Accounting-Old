@@ -30,36 +30,38 @@ namespace Naviam.DAL
                 });
             return res;
         }
-        public static IEnumerable<Transaction> GetTransactionsByCompany(int? companyId) { return GetTransactionsByCompany(companyId, false); }
-        public static IEnumerable<Transaction> GetTransactionsByCompany(int? companyId, bool forceSqlLoad)
+        public static IEnumerable<Transaction> GetTransactionsByCompany(int? companyId) { return GetTransactionsByCompany(companyId, null, false); }
+        public static IEnumerable<Transaction> GetTransactionsByCompany(int? companyId, int? languageId, bool forceSqlLoad)
         {
-            List<Transaction> res = CacheWrapper.GetList<Transaction>(CacheKey, companyId);
+            List<Transaction> res = CacheWrapper.GetList<Transaction>(CacheKey, companyId, languageId);
             if (res == null || forceSqlLoad)
             {
                 //load from DB
                 res = GetTestTransactions(7, companyId);
-                //res = new List<Transaction>();
-                //using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
-                //{
-                //    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
-                //    {
-                //        cmd.Parameters.AddWithValue("@id_company", companyId);
-                //        try
-                //        {
-                //            using (SqlDataReader reader = cmd.ExecuteReader())
-                //            {
-                //                while (reader.Read())
-                //                    res.Add(new Transaction(reader));
-                //            }
-                //        }
-                //        catch (SqlException e)
-                //        {
-                //            throw e;
-                //        }
-                //    }
-                //}
+                res = new List<Transaction>();
+                using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+                {
+                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
+                    {
+                        cmd.Parameters.AddWithValue("@id_company", companyId);
+                        if (languageId.HasValue)
+                            cmd.Parameters.AddWithValue("@id_language", languageId);
+                        try
+                        {
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                    res.Add(new Transaction(reader));
+                            }
+                        }
+                        catch (SqlException e)
+                        {
+                            throw e;
+                        }
+                    }
+                }
                 //save to cache
-                CacheWrapper.SetList<Transaction>(CacheKey, res, companyId);
+                CacheWrapper.SetList<Transaction>(CacheKey, res, companyId, languageId);
             }
             return res;
         }
