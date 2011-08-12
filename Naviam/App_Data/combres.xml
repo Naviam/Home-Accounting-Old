@@ -104,6 +104,7 @@
     </resourceSet>
     <resourceSet name="accounts" type="js">
       <resource reference="knockout map" />
+      <resource path="~/Scripts/Pages/Accounts.js" />
     </resourceSet>
     <!--End Pages -->
     <resourceSet name="spine" type="js">

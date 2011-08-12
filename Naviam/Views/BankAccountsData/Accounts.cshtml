@@ -11,7 +11,51 @@
     <script type="text/javascript" src="~/Scripts/knockout-1.2.1.js"></script> 
     <script type="text/javascript" src="~/Scripts/knockout.mapping.js"></script> 
 }
+
+<script type='text/javascript'>
+    function Item(date, number, balance) {
+        this.date = ko.observable(date);
+        this.number = ko.observable(number);
+        this.balance = ko.observable(balance);
+    }
+
+    $(document).ready(function () {
+        var viewModel = {
+            categories: ["Bread", "Dairy", "Fruits", "Vegetables"],
+            items: ko.observableArray([]),
+            addItem: function () {
+                this.items.push(new Item(Date(), "CARD", 1000));
+            },
+            removeItem: function (item) {
+                this.items.remove(item);
+            }
+        };
+        ko.applyBindings(viewModel);
+    });
+
+    
+</script>
+
 <h2>Accounts</h2>
-        
+<script id="accRowTemplate" type="text/html">
+    <tr>
+        <td data-bind="text: date"></td>
+        <td data-bind="text: number"></td>
+        <td data-bind="text: balance"></td>
+    </tr>
+</script>
 
-
+<div id="accountsGrid">
+ <a href="#" data-bind="click: addItem">Add Item</a>
+    <table class='trans_grid'>
+        <thead>
+        <tr>
+          <th>date</th>
+          <th>number</th>
+          <th>balance</th>
+        </tr>
+        </thead>
+        <tbody data-bind='template: { name: "accRowTemplate", foreach: items }'>
+        </tbody>
+    </table>
+</div>
