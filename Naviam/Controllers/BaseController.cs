@@ -41,13 +41,13 @@ namespace Naviam.WebUI.Controllers
                 filterContext.HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
                 filterContext.ExceptionHandled = true;
             }
-            //else
-            //{
-            //    filterContext.HttpContext.Response.Redirect(request.UrlReferrer.PathAndQuery);
-            //    TempData["ErrorContextText"] = ex.Message;
-            //    filterContext.ExceptionHandled = true;
-            //    //filterContext.HttpContext.Response.StatusCode = 200;
-            //}
+            else
+            {
+                filterContext.HttpContext.Response.Redirect(request.UrlReferrer.PathAndQuery);
+                TempData["ErrorContextText"] = ex.Message.Replace("\n", "").Replace("\r", "");
+                filterContext.ExceptionHandled = true;
+                //filterContext.HttpContext.Response.StatusCode = 200;
+            }
         }
 
     }

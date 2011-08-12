@@ -59,11 +59,11 @@ namespace Naviam.Data
             command.AddCommonParameters(transaction.Id, action);
             command.Parameters.Add("@date", SqlDbType.DateTime).Value = transaction.Date;
             command.Parameters.Add("@amount", SqlDbType.Decimal).Value = transaction.Amount;
-            command.Parameters.Add("@merchant", SqlDbType.NVarChar).Value = transaction.Merchant;
-            command.Parameters.Add("@id_account", SqlDbType.Int).Value = transaction.AccountId;
-            command.Parameters.Add("@id_category", SqlDbType.Int).Value = transaction.CategoryId;
-            command.Parameters.Add("@description", SqlDbType.NVarChar).Value = transaction.Merchant;
-            command.Parameters.Add("@notes", SqlDbType.NVarChar).Value = transaction.Notes;
+            command.Parameters.Add("@merchant", SqlDbType.NVarChar).Value = transaction.Merchant.ToDbValue();
+            command.Parameters.Add("@id_account", SqlDbType.Int).Value = transaction.AccountId.ToDbValue();
+            command.Parameters.Add("@id_category", SqlDbType.Int).Value = transaction.CategoryId.ToDbValue();
+            command.Parameters.Add("@description", SqlDbType.NVarChar).Value = transaction.Description.ToDbValue();
+            command.Parameters.Add("@notes", SqlDbType.NVarChar).Value = transaction.Notes.ToDbValue();
             command.Parameters.Add("@type", SqlDbType.Int).Value = transaction.TransactionType;
             command.Parameters.Add("@direction", SqlDbType.Int).Value = transaction.Direction;
         }

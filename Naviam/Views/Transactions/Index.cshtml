@@ -14,6 +14,7 @@
 }
 <script type='text/javascript'>
     var getTransUrl = '@Url.Action("GetTransactions", "Transactions")';
+    var delTransUrl = '@Url.Action("DeleteTransaction", "Transactions")';
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
     var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
@@ -29,7 +30,7 @@
 @{UserProfile user = ViewBag.CurrentUser as UserProfile;}
 @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
 {
-    <input type="file" id='upload_statement'/>
+    <input type="file" id='upload_statement' name='fileToUpload'/>
     <button onclick='beg_upload_statement();' type="button">Upload</button>
 }
 <a href="#" onclick='return transModel.Add();'>Add</a>
@@ -55,7 +56,10 @@
             <span data-bind="text: Amount, visible: transModel.selectedRow() != Id()"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), numeric: Amount" name="Amount"/>        
         </td>
-        <td style="width:5%"><a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.ShowEditArea(event, $data);}">Edit</a></td>
+        <td style="width:5%">
+            <a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}">Edit</a>
+            <a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.DeleteItem($data);}">Delete</a>
+        </td>
     </tr>
 </script>
 

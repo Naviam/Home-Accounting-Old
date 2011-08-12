@@ -71,7 +71,8 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetTransactions(Paging paging)
         {
             var user = CurrentUser;
-            var trans = TransactionsDataAdapter.GetTransactionsByCompany(user.CurrentCompany, user.LanguageId, false);
+            var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany, user.LanguageId, false);
+            //var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany);
 
             trans = paging.ApplyPaging(trans);
 
@@ -93,30 +94,26 @@ namespace Naviam.WebUI.Controllers
             //Transaction updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, user.Id);
             //TryUpdateModel(updateTrans);
             if (trans.Id != null)
-                TransactionsDataAdapter.Update(trans, user.Id);
+                TransactionsDataAdapter.Update(trans, user.CurrentCompany, user.LanguageId);
             else
-                TransactionsDataAdapter.Insert(trans, user.Id);
+                TransactionsDataAdapter.Insert(trans, user.CurrentCompany, user.LanguageId);
             return Json(trans);
         }
-        
+
+        [HttpPost]
+        public ActionResult DeleteTransaction(int? id)
+        {
+            var user = CurrentUser;
+            var trans = TransactionsDataAdapter.GetTransaction(id, user.Id, user.LanguageId, false);
+            TransactionsDataAdapter.Delete(trans, user.CurrentCompany, user.LanguageId);
+            return Json(id);
+        }
+
         [HttpPost]
         public ActionResult GetCategories()
         {
             var user = CurrentUser;
-
             var items = Categories.GetTree(CategoriesDataAdapter.GetCategories(user.Id));
-
-            //List<Category> items = new List<Category>();
-            //Category cat = new Category() { Name = "Food", Id = 1 };
-            //cat.Subitems.Add(new Category() { Name = "Milk", Id = 2 });
-            //cat.Subitems.Add(new Category() { Name = "Meat", Id = 3 });
-            //items.Add(cat);
-            //cat = new Category() { Name = "Auto", Id = 4 };
-            //cat.Subitems.Add(new Category() { Name = "Oil", Id = 5 });
-            //cat.Subitems.Add(new Category() { Name = "Gas", Id = 6 });
-            //cat.Subitems.Add(new Category() { Name = "Spares", Id = 7 });
-            //items.Add(cat);
-
             return Json(new { items });
         }
 
