@@ -16,7 +16,17 @@
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
     var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
+    $(document).ready(function () {
+        //$('#upload_statement').html5_upload();
+    });
 </script>
+@using (Html.BeginForm("UploadStatement", "Attachments", FormMethod.Post, new { @enctype = "multipart/form-data" })) {
+<div>
+    <input type="file" id='upload_statement'/>
+    @*<button type="submit">Upload</button>*@
+</div>
+}
+@TempData["ddd"]
 <a href="#" onclick='return transModel.Add();'>Add</a>
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">

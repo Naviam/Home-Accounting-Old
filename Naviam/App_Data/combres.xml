@@ -99,6 +99,7 @@
       <resource reference="datePicker" />
       <resource reference="overlay" />
       <resource reference="autocomplete" />
+      <resource reference="upload_html5" />
       <resource path="~/Scripts/Pages/Transactions.min.js" />
     </resourceSet>
     <!--End Pages -->

@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AttachmentsController.cs" />
     <Compile Include="Helpers\CustomModelBinder.cs" />
     <Compile Include="Helpers\NinjectControllerFactory.cs" />
     <Compile Include="Helpers\Parsers\BelSwissParser.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Naviam.Data;
+using System.Web;
 
 namespace Naviam.Entities.User
 {
@@ -27,6 +28,33 @@ namespace Naviam.Entities.User
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? DefaultCompany { get; set; }
+        public int? CurrentCompany { 
+            get 
+            {
+                int? res = null;
+                var context = HttpContext.Current;
+                if (context != null)
+                {
+                    res = context.Request.QueryString["cid"] != null ? (int?)Convert.ToInt32(context.Request.QueryString["cid"]) : null;
+                    if (res == null)
+                        res = context.Request.Form["pageContext[companyId]"] != null ? (int?)Convert.ToInt32(context.Request.Form["pageContext[companyId]"]) : null;
+                    if (res == null)
+                        res = DefaultCompany;
+                }
+                bool found = false;
+                foreach (var company in Companies)
+                {
+                    if (company.Id == res)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    throw new Exception("Access denied.");
+                return res;
+            } 
+        }
         public IEnumerable<Company> Companies { get; set; }
     }
 }

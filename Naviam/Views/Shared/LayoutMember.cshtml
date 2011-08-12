@@ -40,7 +40,14 @@
         @{Assembly assembly = typeof(TransactionsController).Assembly;}
         <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
     </div>
-    @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
+<script type="text/javascript">
+    $(document).ready(function () { 
+    @if (TempData["ErrorContextText"] != null){
+        <text>showSiteError('@TempData["ErrorContextText"]');</text>
+    }
+    });
+</script>
+   @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
     {
         <script type="text/javascript">
             var _gaq = _gaq || [];
