@@ -71,7 +71,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetTransactions(Paging paging)
         {
             var user = CurrentUser;
-            var trans = TransactionsDataAdapter.GetTransactionsByCompany(user.CurrentCompany, user.LanguageId, false);
+            var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany, user.LanguageId, false);
             //var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany);
 
             trans = paging.ApplyPaging(trans);
@@ -96,7 +96,7 @@ namespace Naviam.WebUI.Controllers
             if (trans.Id != null)
                 TransactionsDataAdapter.Update(trans, user.Id);
             else
-                TransactionsDataAdapter.Insert(trans, user.Id);
+                TransactionsDataAdapter.Insert(trans, user.Id, user.LanguageId);
             return Json(trans);
         }
         

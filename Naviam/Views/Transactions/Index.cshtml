@@ -55,7 +55,10 @@
             <span data-bind="text: Amount, visible: transModel.selectedRow() != Id()"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), numeric: Amount" name="Amount"/>        
         </td>
-        <td style="width:5%"><a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.ShowEditArea(event, $data);}">Edit</a></td>
+        <td style="width:5%">
+            <a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}">Edit</a>
+            <a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.DeleteItem($data);}">Delete</a>
+        </td>
     </tr>
 </script>
 

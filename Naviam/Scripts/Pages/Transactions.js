@@ -190,7 +190,7 @@ $(document).ready(function () {
             if (fItem != null) return;
             var date = new Date();
             this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
-                Date: ko.observable('/Date(' + date.getTime() + ')/')
+                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1)
             });
             var row = $('#transGrid table tr:eq(2)');
             var frm = $("#add_form");
@@ -258,9 +258,11 @@ $(document).ready(function () {
                 //console.log(transModel.currentItem.Id());
             }
         }
-        transModel.ShowEditArea = function (event, item) {
+        transModel.ShowEdit = function (event, item) {
             //TODO: load data into form
             $("#edit_form").overlay().load();
+        }
+        transModel.DeleteItem = function (item) {
         }
         transModel.ShowCategories = function (btn) {
             var menu = $("#cat_menu");
