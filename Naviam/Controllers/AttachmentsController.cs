@@ -46,7 +46,9 @@ namespace Naviam.WebUI.Controllers
                                 Description = trans.OperationDescription,
                                 Direction = trans.AccountAmount > 0 ? Transaction.TransactionDirections.Income : Transaction.TransactionDirections.Expence,
                                 Merchant = trans.Place,
-                                TransactionType = Transaction.TransactionTypes.Cash
+                                TransactionType = Transaction.TransactionTypes.Cash,
+                                AccountId = 1,
+                                CategoryId = 1
                             };
                             TransactionsDataAdapter.InsertTransaction(dbTrans, CurrentUser.CurrentCompany, CurrentUser.LanguageId);
                         }

@@ -44,7 +44,7 @@ namespace Naviam.WebUI.Controllers
             else
             {
                 filterContext.HttpContext.Response.Redirect(request.UrlReferrer.PathAndQuery);
-                TempData["ErrorContextText"] = ex.Message;
+                TempData["ErrorContextText"] = ex.Message.Replace("\n", "").Replace("\r", "");
                 filterContext.ExceptionHandled = true;
                 //filterContext.HttpContext.Response.StatusCode = 200;
             }

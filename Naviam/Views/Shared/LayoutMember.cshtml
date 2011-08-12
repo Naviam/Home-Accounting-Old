@@ -48,7 +48,7 @@
 <script type="text/javascript">
     $(document).ready(function () { 
     @if (TempData["ErrorContextText"] != null){
-        <text>showSiteError('@TempData["ErrorContextText"]');</text>
+        <text>showSiteError("@Html.Raw(TempData["ErrorContextText"] as string)");</text>
     }
     });
 </script>
