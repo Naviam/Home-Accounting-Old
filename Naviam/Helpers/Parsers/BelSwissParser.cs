@@ -6,42 +6,15 @@ using System.Globalization;
 
 namespace Naviam.WebUI.Helpers.Parsers
 {
-    public class BelSwissStatement
-    {
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
-        public string Account { get; set; }
-        public string Name { get; set; }
-        public List<BelSwissTransaction> Transactions { get; set; }
 
-        public BelSwissStatement()
-        {
-            Transactions = new List<BelSwissTransaction>();
-        }
-    }
-
-    public class BelSwissTransaction
-    {
-        public DateTime OperationDate { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public string Card { get; set; }
-        public string OperationDescription { get; set; }
-        public string Region { get; set; }
-        public string Place { get; set; }
-        public string Currency { get; set; }
-        public decimal TransactionAmount { get; set; }
-        public decimal AccountAmount { get; set; }
-        public decimal Balance { get; set; }
-    }
-
-    public class BelSwissParser
+    public class BelSwissParser : ParserBase
     {
         const string HEADER_PATTERN = @"Subject: Выписка по счету\s*(?<account>[^\s]+) за период с (?<startDate>[^\s]+) по (?<endDate>[^\s]+)\s*(?<client>.*)";
         const string TABLE_PATTERN = @"<table[^>]*=sea[^>]*>(?<content>.*?)</table>";
         const string ROW_PATTERN = @"<tr[^>]*>(?<content>.*?)</tr>";
         const string TD_PATTERN = @"<td[^>]*>(?<content>.*?)</td>";
-       
-        public bool IsMyFile(string fileName)
+
+        public override bool IsMyFile(string fileName)
         {
             bool res = false;
             string content = GetContent(fileName);
@@ -51,9 +24,9 @@ namespace Naviam.WebUI.Helpers.Parsers
             return res;
         }
 
-        public BelSwissStatement ParseFile(string fileName)
+        public override ParserStatement ParseFile(string fileName)
         {
-            BelSwissStatement res = null;
+            ParserStatement res = null;
             string content = GetContent(fileName);
             content = content.Replace("&nbsp;", "");
             CultureInfo ruCulture = new CultureInfo("ru", false);
@@ -64,7 +37,8 @@ namespace Naviam.WebUI.Helpers.Parsers
                 if (table.Success)
                 {
                     DateTime opDate;
-                    res = new BelSwissStatement();
+                    res = new ParserStatement();
+                    res.BankName = "ЗАО \"БелСвиссБанк\"";
                     if (!DateTime.TryParse(header.Groups["startDate"].Value.Trim(), ruCulture.DateTimeFormat, DateTimeStyles.None, out opDate))
                         throw new FormatException();
                     res.From = opDate;
@@ -80,7 +54,7 @@ namespace Naviam.WebUI.Helpers.Parsers
                         string srow = row.Groups["content"].Value.Trim();
                         bool isTransaction = false;
                         int nColumn = 1;
-                        BelSwissTransaction trans = null;
+                        ParserTransaction trans = null;
                         foreach (Match col in Regex.Matches(srow, TD_PATTERN, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline))
                         {
                             string scol = col.Groups["content"].Value.Trim();
@@ -89,7 +63,7 @@ namespace Naviam.WebUI.Helpers.Parsers
                             {
                                 //found transasction
                                 isTransaction = true;
-                                trans = new BelSwissTransaction();
+                                trans = new ParserTransaction();
                                 trans.OperationDate = opDate;
                             }
                             if (isTransaction && nColumn == 2)

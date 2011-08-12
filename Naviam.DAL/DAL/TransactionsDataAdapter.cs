@@ -101,7 +101,7 @@ namespace Naviam.DAL
         }
 
 
-        public static int InsertTransaction(Transaction entity, int? companyId)
+        public static int InsertTransaction(Transaction entity, int? companyId, int? languageId)
         {
             int res = -1;
             //insert to db
@@ -124,7 +124,7 @@ namespace Naviam.DAL
             }
             if (res == 0)
             {
-                CacheWrapper.AddToList<Transaction>(CacheKey, entity, companyId);
+                CacheWrapper.AddToList<Transaction>(CacheKey, entity, companyId, languageId);
             }
             return res;
         }

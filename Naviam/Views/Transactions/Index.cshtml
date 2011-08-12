@@ -29,7 +29,7 @@
 @{UserProfile user = ViewBag.CurrentUser as UserProfile;}
 @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
 {
-    <input type="file" id='upload_statement'/>
+    <input type="file" id='upload_statement' name='fileToUpload'/>
     <button onclick='beg_upload_statement();' type="button">Upload</button>
 }
 <a href="#" onclick='return transModel.Add();'>Add</a>

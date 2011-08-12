@@ -99,6 +99,8 @@
     <Compile Include="Helpers\CustomModelBinder.cs" />
     <Compile Include="Helpers\NinjectControllerFactory.cs" />
     <Compile Include="Helpers\Parsers\BelSwissParser.cs" />
+    <Compile Include="Helpers\Parsers\ParserBase.cs" />
+    <Compile Include="Helpers\Parsers\ParsersFactory.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BankAccountsDataController.cs" />

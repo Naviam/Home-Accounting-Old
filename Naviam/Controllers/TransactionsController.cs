@@ -72,6 +72,7 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             var trans = TransactionsDataAdapter.GetTransactionsByCompany(user.CurrentCompany, user.LanguageId, false);
+            //var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany);
 
             trans = paging.ApplyPaging(trans);
 
