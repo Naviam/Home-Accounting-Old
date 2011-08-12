@@ -44,8 +44,7 @@ namespace Naviam.DAL
                     using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
                     {
                         cmd.Parameters.AddWithValue("@id_company", companyId);
-                        if (languageId.HasValue)
-                            cmd.Parameters.AddWithValue("@id_language", languageId);
+                        cmd.Parameters.AddWithValue("@id_language", languageId.ToDbValue());
                         try
                         {
                             using (SqlDataReader reader = cmd.ExecuteReader())

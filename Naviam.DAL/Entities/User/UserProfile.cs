@@ -28,6 +28,7 @@ namespace Naviam.Entities.User
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int? LanguageId { get; set; }
         public int? DefaultCompany { get; set; }
         [XmlIgnore]
         public int? CurrentCompany { 
