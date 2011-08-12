@@ -45,13 +45,13 @@ namespace Naviam.WebUI.Helpers
                 string cId = ContextId;
                 if (cId == null)
                     return;
-                CacheWrapper.Set<UserProfile>(cId, value, null, true); //HttpContext.Current.Session["userprofile"] = value;
+                CacheWrapper.Set<UserProfile>(cId, value, true, null); //HttpContext.Current.Session["userprofile"] = value;
             }
         }
 
         public static void SetNewUserProfile(string cId, UserProfile user)
         {
-            CacheWrapper.Set<UserProfile>(cId, user, null, true);
+            CacheWrapper.Set<UserProfile>(cId, user, true, null);
         }
         #endregion
     }
