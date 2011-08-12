@@ -37,7 +37,7 @@ namespace Naviam.DAL
             if (res == null || forceSqlLoad)
             {
                 //load from DB
-                res = GetTestTransactions(7, companyId);
+                //res = GetTestTransactions(7, companyId);
                 res = new List<Transaction>();
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
