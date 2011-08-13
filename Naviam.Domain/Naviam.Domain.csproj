@@ -35,6 +35,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,8 +45,11 @@
   <ItemGroup>
     <Compile Include="Abstract\IMembershipRepository.cs" />
     <Compile Include="Concrete\MembershipRepository.cs" />
+    <Compile Include="Concrete\Providers\NaviamRoleProvider.cs" />
     <Compile Include="Entities\SecUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Concrete\Providers\NaviamMembershipProvider.cs" />
+    <Compile Include="Entities\NaviamMembershipUser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Naviam.DAL\Naviam.DAL.csproj">
