@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System;
+using System.Security.Principal;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -14,19 +15,10 @@ namespace Naviam.UnitTests.Controllers
     [TestClass]
     public class AccountControllerTest
     {
-        //public void BeforeTest()
-        //{
-        //    var mockPrincipal = new Mock<IPrincipal>();
-        //    var mockIdentity = new Mock<IIdentity>();
-        //    mockPrincipal.Setup(m => m).Returns(IPrincipal)
-        //    mockIdentity.Setup(m => m.Name).Returns("s@s.s");
-        //}
-
         [TestMethod]
         public void LogOn()
         {
-            var mock = new Mock<IUserAccountRepository>();
-            var controller = new AccountController(mock.Object);
+            var controller = GetAccountController();
 
             var result = controller.LogOn() as ViewResult;
 
@@ -37,32 +29,314 @@ namespace Naviam.UnitTests.Controllers
         [TestMethod]
         public void LogOff()
         {
-            var mock = new Mock<IUserAccountRepository>();
-            var controller = new AccountController(mock.Object);
-
-            var identity = new Mock<IIdentity>();
-
-            var principal = new Mock<IPrincipal>();
-            principal.Setup(p => p.Identity).Returns(identity.Object);
-            // ... mock IPrincipal as you wish
-
-            var httpContext = new Mock<HttpContextBase>();
-            httpContext.Setup(x => x.User).Returns(principal.Object);
-            // ... mock other httpContext's properties, methods, as needed
-
-            var reqContext = new RequestContext(httpContext.Object, new RouteData());
-
-            controller.ControllerContext =
-                new ControllerContext(reqContext, controller);
+            var controller = GetAccountController();
 
             var result = controller.LogOff() as ViewResult;
-
-            // check if user has been signed out
-            Assert.IsFalse(controller.User.Identity.IsAuthenticated);
-
+            
             Assert.IsNotNull(result);
             // User should see the logon page
             Assert.AreEqual("LogOn", result.ViewName);
+        }
+
+        private static AccountController GetAccountController()
+        {
+            var membershipRepository = new Mock<IMembershipRepository>();
+            IFormsAuthentication formsAuth = new MockFormsAuthenticationService();
+            MembershipProvider membershipProvider = new MockMembershipProvider();
+            var membershipService = new AccountMembershipService(membershipProvider);
+            var controller = new AccountController(membershipRepository.Object, formsAuth, membershipService);
+
+            var controllerContext = new ControllerContext(new MockHttpContext(), new RouteData(), controller);
+            controller.ControllerContext = controllerContext;
+            return controller;
+        }
+
+        public class MockFormsAuthenticationService : IFormsAuthentication
+        {
+            public void SignIn(string userName, bool createPersistentCookie)
+            {
+            }
+
+            public void SignOut()
+            {
+            }
+        }
+
+        public class MockIdentity : IIdentity
+        {
+            public string AuthenticationType
+            {
+                get
+                {
+                    return "MockAuthentication";
+                }
+            }
+
+            public bool IsAuthenticated
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return "someUser";
+                }
+            }
+        }
+
+        public class MockPrincipal : IPrincipal
+        {
+            IIdentity _identity;
+
+            public IIdentity Identity
+            {
+                get
+                {
+                    if (_identity == null)
+                    {
+                        _identity = new MockIdentity();
+                    }
+                    return _identity;
+                }
+            }
+
+            public bool IsInRole(string role)
+            {
+                return false;
+            }
+        }
+
+        public class MockMembershipUser : MembershipUser
+        {
+            public override bool ChangePassword(string oldPassword, string newPassword)
+            {
+                return newPassword.Equals("newPass");
+            }
+        }
+
+        public class MockHttpContext : HttpContextBase
+        {
+            private IPrincipal _user;
+
+            public override IPrincipal User
+            {
+                get { return _user ?? (_user = new MockPrincipal()); }
+                set
+                {
+                    _user = value;
+                }
+            }
+
+            public override HttpResponseBase Response
+            {
+                get
+                {
+                    return new MockHttpResponse();
+                }
+            }
+        }
+
+        public class MockHttpResponse : HttpResponseBase
+        {
+            public override HttpCookieCollection Cookies
+            {
+                get
+                {
+                    return new HttpCookieCollection();
+                }
+            }
+        }
+
+
+        public class MockMembershipProvider : MembershipProvider
+        {
+            public override string ApplicationName { get; set; }
+
+            public override bool EnablePasswordReset
+            {
+                get
+                {
+                    return false;
+                }
+            }
+
+            public override bool EnablePasswordRetrieval
+            {
+                get
+                {
+                    return false;
+                }
+            }
+
+            public override int MaxInvalidPasswordAttempts
+            {
+                get
+                {
+                    return 0;
+                }
+            }
+
+            public override int MinRequiredNonAlphanumericCharacters
+            {
+                get
+                {
+                    return 0;
+                }
+            }
+
+            public override int MinRequiredPasswordLength
+            {
+                get
+                {
+                    return 6;
+                }
+            }
+
+            public override string Name
+            {
+                get
+                {
+                    return null;
+                }
+            }
+
+            public override int PasswordAttemptWindow
+            {
+                get
+                {
+                    return 3;
+                }
+            }
+
+            public override MembershipPasswordFormat PasswordFormat
+            {
+                get
+                {
+                    return MembershipPasswordFormat.Clear;
+                }
+            }
+
+            public override string PasswordStrengthRegularExpression
+            {
+                get
+                {
+                    return null;
+                }
+            }
+
+            public override bool RequiresQuestionAndAnswer
+            {
+                get
+                {
+                    return false;
+                }
+            }
+
+            public override bool RequiresUniqueEmail
+            {
+                get
+                {
+                    return false;
+                }
+            }
+
+            public override bool ChangePassword(string username, string oldPassword, string newPassword)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, Object providerUserKey, out MembershipCreateStatus status)
+            {
+                var user = new MockMembershipUser();
+
+                if (username.Equals("someUser") && password.Equals("goodPass") && email.Equals("email"))
+                {
+                    status = MembershipCreateStatus.Success;
+                }
+                else
+                {
+                    // the 'email' parameter contains the status we want to return to the user
+                    status = (MembershipCreateStatus)Enum.Parse(typeof(MembershipCreateStatus), email);
+                }
+
+                return user;
+            }
+
+            public override bool DeleteUser(string username, bool deleteAllRelatedData)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize, out int totalRecords)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override MembershipUserCollection FindUsersByName(string usernameToMatch, int pageIndex, int pageSize, out int totalRecords)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override int GetNumberOfUsersOnline()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override string GetPassword(string username, string answer)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override string GetUserNameByEmail(string email)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override MembershipUser GetUser(Object providerUserKey, bool userIsOnline)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override MembershipUser GetUser(string username, bool userIsOnline)
+            {
+                return new MockMembershipUser();
+            }
+
+            public override string ResetPassword(string username, string answer)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override bool UnlockUser(string userName)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void UpdateUser(MembershipUser user)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override bool ValidateUser(string username, string password)
+            {
+                return password.Equals("goodPass");
+            }
+
         }
     }
 }
