@@ -27,9 +27,9 @@
             { Name: "Cash", Id: ko.observable(1) },
             { Name: "Card", Id: ko.observable(2) }
             ]),
-            SelectedItem: ko.observable(null)
+            selectedItem: ko.observable(null)
         };
-        accountsModel.SelectedItem.subscribe(function (newValue) {
+        accountsModel.selectedItem.subscribe(function (newValue) {
             pageContext.accountId = newValue.Id();
             transModel.ReloadPage();
         });
@@ -45,11 +45,11 @@
 @section LeftColumn {
 <script type="text/html" id="accountsTemplate">
     <li>
-        <a href="#" data-bind="click: function(event) { accountsModel.SelectedItem($data); }, text: Name, css: {selected: accountsModel.SelectedItem() == $data}"></a>
+        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}"></a>
     </li>
 </script>
 <div id="accounts">
-    <ul data-bind="template: {name:'accountsTemplate', foreach:items}" class='company_menu'>
+    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem } }" class='company_menu'>
     </ul>
 </div>
 }
@@ -60,7 +60,6 @@
     <input type="file" id='upload_statement' name='fileToUpload'/>
     <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
 }
-<a href="#" onclick='return transModel.Add();'>Add</a>
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
@@ -106,6 +105,7 @@
     </tr>
 </script>
 <div id="transGrid">
+    <a href="#" onclick='return transModel.Add();' data-bind="visible: accountsModel.selectedItem() != null">Add</a>
     <table class='trans_grid'>
         <thead data-bind='template: "transHeadTemplate"' >
         </thead>
