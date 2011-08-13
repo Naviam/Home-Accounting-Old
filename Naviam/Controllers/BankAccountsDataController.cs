@@ -4,9 +4,9 @@ namespace Naviam.WebUI.Controllers
 {
     public class BankAccountsDataController : BaseController
     {
-        public ActionResult Accounts()
+        public ActionResult Index()
         {
-            return View();
+            return View("Accounts");
         }
     }
 }

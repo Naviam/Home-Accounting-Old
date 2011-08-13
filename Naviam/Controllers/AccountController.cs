@@ -52,7 +52,7 @@ namespace Naviam.WebUI.Controllers
             {
                 //var profile = MembershipDataAdapter.GetUserProfile(model.UserName, model.Password);
                 //UserProfile prof = new UserProfile() { Id = 10};
-                var profile = _membershipRepository.GetUserProfile(model.UserName, model.Password);
+                var profile = _membershipRepository.GetUserProfile(model.UserName.ToLower(), model.Password);
                 
                 if (profile != null)
                 {

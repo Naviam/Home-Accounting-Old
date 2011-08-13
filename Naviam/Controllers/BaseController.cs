@@ -19,6 +19,7 @@ namespace Naviam.WebUI.Controllers
         {
             base.OnAuthorization(filterContext);
             CurrentUser = SessionHelper.UserProfile;
+            ViewBag.CurrentUser = CurrentUser;
             if (CurrentUser == null)
                 filterContext.Result = new HttpUnauthorizedResult();
         }
@@ -27,16 +28,26 @@ namespace Naviam.WebUI.Controllers
         {
             base.OnException(filterContext);
             if (filterContext == null) return;
-            if (!filterContext.HttpContext.Request.IsAjaxRequest()) return;
             Exception ex = filterContext.Exception;
             // If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method), ignore it.
             if (new HttpException(null, ex).GetHttpCode() != (int)System.Net.HttpStatusCode.InternalServerError)
             {
                 return;
             }
-            filterContext.Result = Json(new { header = "Error", Text = ex.Message, stackTrace = ex.StackTrace }, JsonRequestBehavior.AllowGet);
-            filterContext.HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
-            filterContext.ExceptionHandled = true;
+            var request = filterContext.HttpContext.Request;
+            if (request.IsAjaxRequest())
+            {
+                filterContext.Result = Json(new { header = "Error", Text = ex.Message, stackTrace = ex.StackTrace }, JsonRequestBehavior.AllowGet);
+                filterContext.HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
+                filterContext.ExceptionHandled = true;
+            }
+            else
+            {
+                filterContext.HttpContext.Response.Redirect(request.UrlReferrer.PathAndQuery);
+                TempData["ErrorContextText"] = ex.Message.Replace("\n", "").Replace("\r", "");
+                filterContext.ExceptionHandled = true;
+                //filterContext.HttpContext.Response.StatusCode = 200;
+            }
         }
 
     }

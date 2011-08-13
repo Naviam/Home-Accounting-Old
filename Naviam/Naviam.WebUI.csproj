@@ -113,10 +113,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AttachmentsController.cs" />
     <Compile Include="Helpers\CustomModelBinder.cs" />
     <Compile Include="Helpers\HandleErrorWithElmahAttribute.cs" />
+    <Compile Include="Helpers\MyFormValueProvider.cs" />
     <Compile Include="Helpers\NinjectControllerFactory.cs" />
     <Compile Include="Helpers\Parsers\BelSwissParser.cs" />
+    <Compile Include="Helpers\Parsers\ParserBase.cs" />
+    <Compile Include="Helpers\Parsers\ParsersFactory.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BankAccountsDataController.cs" />
@@ -128,6 +132,7 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\MenuAppModel.cs" />
+    <Compile Include="Models\PageContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\DisplayNames.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -276,6 +281,7 @@
     <Content Include="Scripts\locale\Naviam.JavaScript.en.js" />
     <Content Include="Scripts\locale\Naviam.JavaScript.ru.js" />
     <Content Include="Scripts\locale\vsdoc\Naviam.JavaScript-vsdoc.js" />
+    <Content Include="Scripts\Pages\Accounts.js" />
     <Content Include="Scripts\Pages\Transactions.js" />
     <Content Include="Scripts\Pages\Transactions.min.js" />
     <Content Include="Scripts\spine.js" />
@@ -389,6 +395,16 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>59334</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

@@ -16,11 +16,15 @@
     }
 </head>
 <body>
+<script type="text/javascript">
+    var pageContext = {};
+    pageContext.companyId = '@Request.QueryString["cid"]';
+</script>
     <div class="container">
     <nav>
         
         @{Html.RenderAction("CompaniesMenu", "MenuApp");}
-
+       
         <ul class="right">
             <li><a href="Error.cshtml">Виталий Гатальский</a></li>
             <li><a href="Error.cshtml">0</a></li>
@@ -31,6 +35,9 @@
         <hr />
     <header>
         Logo
+    <nav>
+         @{Html.RenderAction("TopMenu", "MenuApp");}
+    </nav>
     </header>
         <hr />
         <div id="main">
@@ -40,7 +47,14 @@
         @{Assembly assembly = typeof(TransactionsController).Assembly;}
         <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
     </div>
-    @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
+<script type="text/javascript">
+    $(document).ready(function () { 
+    @if (TempData["ErrorContextText"] != null){
+        <text>showSiteError("@Html.Raw(TempData["ErrorContextText"] as string)");</text>
+    }
+    });
+</script>
+   @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
     {
         <script type="text/javascript">
             var _gaq = _gaq || [];

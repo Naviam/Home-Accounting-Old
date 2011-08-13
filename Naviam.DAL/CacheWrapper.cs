@@ -21,16 +21,15 @@ namespace Naviam.WebUI
         #region Single obj
 
         public static T Get<T>(string key) { return Get<T>(key, null); }
-        public static T Get<T>(string key, int? id)
+        public static T Get<T>(string key, params int?[] id)
         {
             T res = default(T);
+            key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    if (id != null)
-                        key = id + "_" + key;
                     res = typedRedis[key];
                 }
             }
@@ -52,19 +51,16 @@ namespace Naviam.WebUI
         }
 
         public static T GetAndSet<T>(string key, T val) { return GetAndSet<T>(key, val, null); }
-        public static T GetAndSet<T>(string key, T val, int? id)
+        public static T GetAndSet<T>(string key, T val, params int?[] id)
         {
             T res = default(T);
+            key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     res = typedRedis[key];
-                    if (id != null)
-                    {
-                        key = id + "_" + key;
-                    }
                     if (id != null)
                     {
                         //session style
@@ -118,18 +114,15 @@ namespace Naviam.WebUI
             }
         }
 
-        public static void Set<T>(string key, T val) { Set<T>(key, val, null, false); }
-        public static void Set<T>(string key, T val, int? id, bool forceExpire)
+        public static void Set<T>(string key, T val) { Set<T>(key, val, false, null); }
+        public static void Set<T>(string key, T val, bool forceExpire, params int?[] id)
         {
+            key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    if (id != null)
-                    {
-                        key = id + "_" + key;
-                    }
                     if (id != null || forceExpire)
                     {
                         //session style
@@ -176,16 +169,15 @@ namespace Naviam.WebUI
         #region Lists
 
         public static List<T> GetList<T>(string key) { return GetList<T>(key, null); }
-        public static List<T> GetList<T>(string key, int? id)
+        public static List<T> GetList<T>(string key, params int?[] id)
         {
             List<T> res = null;
+            key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    if (id != null)
-                        key = id + "_" + key;
                     var list = typedRedis.Lists[key];
                     res = list.GetAll();
                     if (res.Count == 0)
@@ -210,17 +202,15 @@ namespace Naviam.WebUI
         }
 
         public static void SetList<T>(string key, List<T> val) { SetList<T>(key, val, null); }
-        public static void SetList<T>(string key, List<T> val, int? id)
+        public static void SetList<T>(string key, List<T> val, params int?[] id)
         {
+            key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    if (id != null)
-                    {
-                        key = id + "_" + key;
-                    }
+                    
                     using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
@@ -245,17 +235,15 @@ namespace Naviam.WebUI
         }
 
         public static void AddToList<T>(string key, T val) { AddToList<T>(key, val, null); }
-        public static void AddToList<T>(string key, T val, int? id)
+        public static void AddToList<T>(string key, T val, params int?[] id)
         {
+            key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    if (id != null)
-                    {
-                        key = id + "_" + key;
-                    }
+                    
                     using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
@@ -284,17 +272,15 @@ namespace Naviam.WebUI
         }
 
         public static void UpdateList<T>(string key, T val) { UpdateList<T>(key, val, null); }
-        public static void UpdateList<T>(string key, T val, int? id)
+        public static void UpdateList<T>(string key, T val, params int?[] id)
         {
+            key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    if (id != null)
-                    {
-                        key = id + "_" + key;
-                    }
+                    
                     using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
@@ -334,17 +320,15 @@ namespace Naviam.WebUI
         }
 
         public static void RemoveFromList<T>(string key, T val) { RemoveFromList<T>(key, val, null); }
-        public static void RemoveFromList<T>(string key, T val, int? id)
+        public static void RemoveFromList<T>(string key, T val, params int?[] id)
         {
+            key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    if (id != null)
-                    {
-                        key = id + "_" + key;
-                    }
+                    
                     using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
@@ -368,18 +352,16 @@ namespace Naviam.WebUI
         }
 
         public static T GetFromList<T>(string key, T val) { return GetFromList<T>(key, val, null); }
-        public static T GetFromList<T>(string key, T val, int? id)
+        public static T GetFromList<T>(string key, T val, params int?[] id)
         {
             T res = default(T);
+            key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
                 using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    if (id != null)
-                    {
-                        key = id + "_" + key;
-                    }
+                   
                     var list = typedRedis.Lists[key];
                     int index = list.IndexOf(val);
                     if (index != -1)
@@ -410,6 +392,19 @@ namespace Naviam.WebUI
             return res;
         }
 
+
+        private static string GetKey(string key, params int?[] id)
+        {
+            if (id != null)
+            {
+                for (int i = 0; i < id.Length; i++)
+                {
+                    if (id[i].HasValue)
+                        key = key + "_" + id[i].Value;
+                }
+            }
+            return key;
+        }
         #endregion
     }
 }

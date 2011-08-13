@@ -1,7 +1,8 @@
 ﻿@using Naviam.WebUI.Resources
+@using Naviam.Entities.User;
 @{
     ViewBag.Title = SharedStrings.TransactionsTitle;
-    Layout = "~/Views/Shared/LayoutMember.cshtml";
+    Layout = "~/Views/Shared/_LayoutWithSidebars.cshtml";
     ViewBag.CombresScripts = "transactions";
 }
 @*intellisense support*@
@@ -13,11 +14,52 @@
 }
 <script type='text/javascript'>
     var getTransUrl = '@Url.Action("GetTransactions", "Transactions")';
+    var delTransUrl = '@Url.Action("DeleteTransaction", "Transactions")';
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
     var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
+    $(document).ready(function () {
+        var url = $('#upload_statement').parent().attr('action');
+        $('#upload_statement').html5_upload({ autostart: false, url: url });
+
+        accountsModel = {
+            items: ko.observableArray([
+            { Name: "Cash", Id: ko.observable(1) },
+            { Name: "Card", Id: ko.observable(2) }
+            ]),
+            selectedItem: ko.observable(null)
+        };
+        accountsModel.selectedItem.subscribe(function (newValue) {
+            pageContext.accountId = newValue.Id();
+            transModel.ReloadPage();
+        });
+        ko.applyBindings(accountsModel, $("#accounts")[0]);
+        //accountsModel.SelectedItem(accountsModel.items()[0]);
+    });
+    function beg_upload_statement() {
+        $('#upload_statement').trigger('html5_upload.start');
+        return false;
+    }
 </script>
-<a href="#" onclick='return transModel.Add();'>Add</a>
+
+@section LeftColumn {
+<script type="text/html" id="accountsTemplate">
+    <li>
+        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}"></a>
+    </li>
+</script>
+<div id="accounts">
+    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem } }" class='company_menu'>
+    </ul>
+</div>
+}
+
+@{UserProfile user = ViewBag.CurrentUser as UserProfile;}
+@using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    <input type="file" id='upload_statement' name='fileToUpload'/>
+    <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
+}
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
@@ -36,10 +78,14 @@
         <td style="width:10%">
             @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
+            <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
             <span data-bind="text: Amount, visible: transModel.selectedRow() != Id()"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), numeric: Amount" name="Amount"/>        
         </td>
-        <td style="width:5%"><a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.ShowEditArea(event, $data);}">Edit</a></td>
+        <td style="width:5%">
+            <a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}">Edit</a>
+            <a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.DeleteItem($data);}">Delete</a>
+        </td>
     </tr>
 </script>
 
@@ -59,6 +105,7 @@
     </tr>
 </script>
 <div id="transGrid">
+    <a href="#" onclick='return transModel.Add();' data-bind="visible: accountsModel.selectedItem() != null">Add</a>
     <table class='trans_grid'>
         <thead data-bind='template: "transHeadTemplate"' >
         </thead>
