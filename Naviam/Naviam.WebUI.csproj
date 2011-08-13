@@ -129,10 +129,6 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\MenuAppModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\NaviamMembershipProvider.cs" />
-    <Compile Include="Providers\NaviamMembershipUser.cs" />
-    <Compile Include="Providers\SecUtility.cs" />
-    <Compile Include="Providers\SR.cs" />
     <Compile Include="Resources\DisplayNames.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
