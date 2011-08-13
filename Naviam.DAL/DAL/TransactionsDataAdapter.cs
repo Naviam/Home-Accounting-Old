@@ -71,6 +71,7 @@ namespace Naviam.DAL
             if (res == null || forceSqlLoad)
             {
                 //load from DB
+                //TODO: check that trans belongs to company
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
                     using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
@@ -137,6 +138,7 @@ namespace Naviam.DAL
 
         public static int Update(Transaction entity, int? companyId, int? languageId)
         {
+            //TODO: check that trans belongs to company
             return InsertUpdate(entity, companyId, languageId, DbActionType.Update);
         }
 
@@ -144,6 +146,7 @@ namespace Naviam.DAL
         public static int Delete(Transaction trans, int? companyId, int? languageId)
         {
             int res = -1;
+            //TODO: check that trans belongs to company
             using (var holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
                 using (var command = holder.Connection.CreateSPCommand("del_transaction"))

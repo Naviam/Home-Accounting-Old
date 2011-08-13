@@ -46,6 +46,8 @@ namespace Naviam.WebUI
             ModelBinders.Binders.Add(typeof(string), new CustomStringModelBinder());
 
             ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
+
+            ValueProviderFactories.Factories.Add(new MyFormValueProviderFactory());
         }
 
 // ReSharper disable InconsistentNaming

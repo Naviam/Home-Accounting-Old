@@ -192,14 +192,15 @@ $(document).ready(function () {
             this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
                 Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1)
             });
-            var row = $('#transGrid table tr:eq(2)');
+            this.currentItem = this.items[0];
+            this.GoToEdit(null, this.items()[0]);
+            var row = $('#transGrid table tr:eq(1)');
             var frm = $("#add_form");
             frm.css({ width: row.width() });
             var conf = addApi.getConf();
-            conf.top = row.offset().top + 5;
+            conf.top = row.offset().top + row.height();
+            conf.left = row.offset().left - 5;
             frm.overlay().load();
-            this.currentItem = this.items[0];
-            this.GoToEdit(null, this.items()[0]);
         }
         transModel.CancelAdd = function () {
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {

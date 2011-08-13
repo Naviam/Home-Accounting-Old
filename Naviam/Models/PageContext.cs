@@ -8,5 +8,6 @@ namespace Naviam.WebUI.Models
     public class PageContext
     {
         public int? CompanyId { get; set; }
+        public int? AccountId { get; set; }
     }
 }

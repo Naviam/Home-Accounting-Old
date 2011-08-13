@@ -44,7 +44,7 @@ namespace Naviam.WebUI.Controllers
             {
                 //var profile = UserDataAdapter.GetUserProfile(model.UserName, model.Password);
                 //UserProfile prof = new UserProfile() { Id = 10};
-                var profile = _userAccountRepository.GetUserProfile(model.UserName, model.Password);
+                var profile = _userAccountRepository.GetUserProfile(model.UserName.ToLower(), model.Password);
                 
                 if (profile != null)
                 {

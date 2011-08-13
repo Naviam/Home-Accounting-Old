@@ -68,10 +68,14 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetTransactions(Paging paging)
+        public ActionResult GetTransactions(Paging paging, PageContext pageContext)
         {
             var user = CurrentUser;
             var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany, user.LanguageId, false);
+            if (pageContext.AccountId != null)
+            {
+                paging.Filter = String.Format("AccountId={0}", pageContext.AccountId);
+            }
             //var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany);
 
             trans = paging.ApplyPaging(trans);
@@ -88,11 +92,13 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateTransaction(Transaction trans)
+        public ActionResult UpdateTransaction(Transaction trans, PageContext pageContext)
         {
             var user = CurrentUser;
             //Transaction updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, user.Id);
             //TryUpdateModel(updateTrans);
+            if (pageContext.AccountId != null)
+                trans.AccountId = pageContext.AccountId;
             if (trans.Id != null)
                 TransactionsDataAdapter.Update(trans, user.CurrentCompany, user.LanguageId);
             else

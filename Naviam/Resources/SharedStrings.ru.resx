@@ -129,4 +129,7 @@
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Операции</value>
   </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Загрузить</value>
+  </data>
 </root>
