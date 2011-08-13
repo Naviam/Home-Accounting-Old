@@ -8,14 +8,22 @@ using Naviam.WebUI.Models;
 
 namespace Naviam.WebUI.Controllers
 {
+    [HandleErrorWithElmah]
     public class AccountController : Controller
     {
-        private readonly IUserAccountRepository _userAccountRepository;
+        private readonly IMembershipRepository _membershipRepository;
 
-        public AccountController(IUserAccountRepository userAccountRepository)
+        public AccountController(IMembershipRepository membershipRepository,
+            IFormsAuthentication formsAuth, IMembershipService service)
         {
-            _userAccountRepository = userAccountRepository;
+            _membershipRepository = membershipRepository;
+            FormsAuth = formsAuth ?? new FormsAuthenticationService();
+            MembershipService = service ?? new AccountMembershipService();
         }
+
+        public IFormsAuthentication FormsAuth { get; private set; }
+
+        public IMembershipService MembershipService { get; private set; }
 
         private void SignOut()
         {
@@ -42,9 +50,9 @@ namespace Naviam.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var profile = UserDataAdapter.GetUserProfile(model.UserName, model.Password);
+                //var profile = MembershipDataAdapter.GetUserProfile(model.UserName, model.Password);
                 //UserProfile prof = new UserProfile() { Id = 10};
-                var profile = _userAccountRepository.GetUserProfile(model.UserName, model.Password);
+                var profile = _membershipRepository.GetUserProfile(model.UserName, model.Password);
                 
                 if (profile != null)
                 {
@@ -84,18 +92,13 @@ namespace Naviam.WebUI.Controllers
             return View("LogOn");
         }
 
-        public ActionResult SignIn()
+        public ActionResult Register()
         {
-            return View();
+            return View("Register");
         }
 
         [HttpPost]
-        public ActionResult SignIn(string email, string password)
-        {
-            return View();
-        }
-
-        public ActionResult ForgotPassword()
+        public ActionResult Register(string email, string password, string confirmPassword)
         {
             return View();
         }
@@ -103,7 +106,82 @@ namespace Naviam.WebUI.Controllers
         [HttpPost]
         public ActionResult ForgotPassword(string email, string captcha)
         {
-            return View();
+            return View("LogOn");
+        }
+    }
+
+    public interface IFormsAuthentication
+    {
+        void SignIn(string userName, bool createPersistentCookie);
+        void SignOut();
+    }
+
+    public class FormsAuthenticationService : IFormsAuthentication
+    {
+        public void SignIn(string userName, bool createPersistentCookie)
+        {
+            FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
+        }
+        public void SignOut()
+        {
+            FormsAuthentication.SignOut();
+        }
+    }
+
+    public interface IMembershipService
+    {
+        int MinPasswordLength { get; }
+
+        bool ValidateUser(string userName, string password);
+        string GetCanonicalUsername(string userName);
+        MembershipCreateStatus CreateUser(string userName, string password, string email);
+        bool ChangePassword(string userName, string oldPassword, string newPassword);
+    }
+
+    public class AccountMembershipService : IMembershipService
+    {
+        private readonly MembershipProvider _provider;
+
+        public AccountMembershipService()
+            : this(null)
+        {
+        }
+
+        public AccountMembershipService(MembershipProvider provider)
+        {
+            _provider = provider ?? Membership.Provider;
+        }
+
+        public int MinPasswordLength
+        {
+            get
+            {
+                return _provider.MinRequiredPasswordLength;
+            }
+        }
+
+        public bool ValidateUser(string userName, string password)
+        {
+            return _provider.ValidateUser(userName, password);
+        }
+
+        public string GetCanonicalUsername(string userName)
+        {
+            var user = _provider.GetUser(userName, true);
+            return user != null ? user.UserName : null;
+        }
+
+        public MembershipCreateStatus CreateUser(string userName, string password, string email)
+        {
+            MembershipCreateStatus status;
+            _provider.CreateUser(userName, password, email, null, null, true, null, out status);
+            return status;
+        }
+
+        public bool ChangePassword(string userName, string oldPassword, string newPassword)
+        {
+            var currentUser = _provider.GetUser(userName, true /* userIsOnline */);
+            return currentUser != null && currentUser.ChangePassword(oldPassword, newPassword);
         }
     }
 }
