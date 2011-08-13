@@ -7,7 +7,7 @@ using Naviam.Entities.User;
 
 namespace Naviam.Domain.Concrete
 {
-    public class UserAccountRepository : IUserAccountRepository
+    public class MembershipRepository : IMembershipRepository
     {
         public IEnumerable<Company> GetCompanies(int? userId)
         {
@@ -16,7 +16,7 @@ namespace Naviam.Domain.Concrete
 
         public UserProfile GetUserProfile(string userName, string password)
         {
-            var profile = UserDataAdapter.GetUserProfile(userName, password);
+            var profile = MembershipDataAdapter.GetUserProfile(userName, password);
             if (!SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", profile.Password))
                 profile = null;
 
@@ -28,6 +28,7 @@ namespace Naviam.Domain.Concrete
             }
             return profile;
         }
+
         
         public void ValidateUser(string email, string password)
         {

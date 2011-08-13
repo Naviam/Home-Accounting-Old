@@ -4,7 +4,7 @@ using Naviam.Entities.User;
 
 namespace Naviam.Domain.Abstract
 {
-    public interface IUserAccountRepository
+    public interface IMembershipRepository
     {
         IEnumerable<Company> GetCompanies(int? userId);
 
