@@ -24,7 +24,7 @@ namespace Naviam.WebUI.Helpers
         private void AddBindings()
         {
             // put bindings here
-            _ninjectKernel.Bind<IUserAccountRepository>().To<UserAccountRepository>();
+            _ninjectKernel.Bind<IMembershipRepository>().To<MembershipRepository>();
         }
     }
 }
