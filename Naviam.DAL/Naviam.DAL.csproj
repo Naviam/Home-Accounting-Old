@@ -60,7 +60,7 @@
     <Compile Include="DAL\TransactionsDataAdapter.cs" />
     <Compile Include="DAL\SqlConnectionHelper.cs" />
     <Compile Include="DAL\TestDataAdapter.cs" />
-    <Compile Include="DAL\UserDataAdapter.cs" />
+    <Compile Include="DAL\MembershipDataAdapter.cs" />
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Category.cs" />
     <Compile Include="Entities\Company.cs" />
