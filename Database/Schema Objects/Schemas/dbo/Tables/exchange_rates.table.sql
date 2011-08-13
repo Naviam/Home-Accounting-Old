@@ -6,3 +6,5 @@
     [id_currency] INT      NOT NULL
 );
 
+
+

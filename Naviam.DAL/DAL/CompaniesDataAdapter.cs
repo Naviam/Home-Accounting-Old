@@ -21,7 +21,7 @@ namespace Naviam.DAL
                 res = new List<Company>();
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_companies"))
+                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("companies_get"))
                     {
                         cmd.Parameters.AddWithValue("@id_user", userId);
                         try

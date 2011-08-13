@@ -41,7 +41,7 @@ namespace Naviam.DAL
                 res = new List<Transaction>();
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
+                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("transactions_get"))
                     {
                         cmd.Parameters.AddWithValue("@id_company", companyId);
                         cmd.Parameters.AddWithValue("@id_language", languageId.ToDbValue());
@@ -74,7 +74,7 @@ namespace Naviam.DAL
                 //TODO: check that trans belongs to company
                 using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
+                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("transactions_get"))
                     {
                         cmd.Parameters.AddWithValue("@id_transaction", id);
                         try
@@ -105,7 +105,7 @@ namespace Naviam.DAL
             int res = -1;
             using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
-                string commName = action == DbActionType.Insert ? "add_transaction" : "update_transaction";
+                string commName = action == DbActionType.Insert ? "transaction_create" : "transaction_update";
                 SqlCommand command = holder.Connection.CreateSPCommand(commName);
                 try
                 {
@@ -149,7 +149,7 @@ namespace Naviam.DAL
             //TODO: check that trans belongs to company
             using (var holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
-                using (var command = holder.Connection.CreateSPCommand("del_transaction"))
+                using (var command = holder.Connection.CreateSPCommand("transaction_delete"))
                 {
                     try
                     {

@@ -99,7 +99,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = 120;
-                    cmd.CommandText = "get_user";
+                    cmd.CommandText = "user_get";
 
                     cmd.Parameters.AddWithValue("@email", userName);
                     try

@@ -10,3 +10,5 @@
     [is_primory_contact] BIT           NOT NULL
 );
 
+
+
