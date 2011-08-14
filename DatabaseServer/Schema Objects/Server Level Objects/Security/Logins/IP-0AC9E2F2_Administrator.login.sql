@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [IP-0AC9E2F2\Administrator]
+    FROM WINDOWS WITH DEFAULT_DATABASE = [master], DEFAULT_LANGUAGE = [us_english];
+
