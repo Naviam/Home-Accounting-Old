@@ -101,7 +101,8 @@ a.category_picker {
   height: 20px;
   position: absolute;
   width: 20px;
-  right: 0px; }
+  right: 0px;
+  top: 2px; }
   a.category_picker.active {
     background-position: 0 -20px; }
 
