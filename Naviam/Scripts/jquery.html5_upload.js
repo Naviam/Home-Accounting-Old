@@ -128,7 +128,7 @@
                 };
                 xhr.open("post", typeof (options.url) == "function" ? options.url() : options.url, true);
                 //				xhr.setRequestHeader("Cache-Control", "no-cache");
-                //				xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                				xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
                 //				xhr.setRequestHeader("X-File-Name", file.fileName);
                 //				xhr.setRequestHeader("X-File-Size", file.fileSize);
                 //				xhr.setRequestHeader("Content-Type", "multipart/form-data");
