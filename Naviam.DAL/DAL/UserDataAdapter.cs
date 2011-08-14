@@ -114,7 +114,7 @@ namespace Naviam.DAL
                     }
                     catch (SqlException e)
                     {
-                        throw;
+                        throw e;
                     }
                 }
             }

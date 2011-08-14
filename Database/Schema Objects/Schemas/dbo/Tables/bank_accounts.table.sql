@@ -4,5 +4,3 @@
     [id_bank]    INT NOT NULL
 );
 
-
-

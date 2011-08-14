@@ -4,5 +4,3 @@
     [id_user] INT           NULL
 );
 
-
-

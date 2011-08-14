@@ -7,5 +7,3 @@
     [date]            DATETIME NOT NULL
 );
 
-
-

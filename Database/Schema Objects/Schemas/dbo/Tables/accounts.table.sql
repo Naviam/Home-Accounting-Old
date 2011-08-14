@@ -9,5 +9,3 @@
     [description]   NVARCHAR (500) NULL
 );
 
-
-

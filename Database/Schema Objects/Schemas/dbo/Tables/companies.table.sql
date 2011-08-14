@@ -5,5 +5,3 @@
     [id_company_type] INT           NOT NULL
 );
 
-
-

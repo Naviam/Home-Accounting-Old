@@ -4,5 +4,3 @@
     [name_short] NVARCHAR (10) COLLATE Latin1_General_CS_AS NULL
 );
 
-
-
