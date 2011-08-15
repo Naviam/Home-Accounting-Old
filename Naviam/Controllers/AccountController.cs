@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Naviam.Domain.Concrete;
 using Naviam.WebUI.Helpers;
+using Naviam.WebUI.Helpers.Cookies;
 using Naviam.WebUI.Models;
 
 namespace Naviam.WebUI.Controllers
@@ -13,18 +14,20 @@ namespace Naviam.WebUI.Controllers
     {
         private readonly MembershipRepository _membershipRepository;
         private readonly ICacheWrapper _cacheWrapper;
+        private readonly ICookieContainer _cookieContainer;
 
         // This constructor is used by the MVC framework to instantiate the controller using
         // the default forms authentication and membership providers.
 
         public AccountController()
-            : this(null, null, new MembershipRepository())
+            : this(null, null, null, new MembershipRepository())
         {
         }
 
-        public AccountController(IFormsAuthentication formsAuth, 
+        public AccountController(ICookieContainer cookieContainer, IFormsAuthentication formsAuth, 
             ICacheWrapper cacheWrapper, MembershipRepository membershipRepository)
         {
+            _cookieContainer = cookieContainer;
             _membershipRepository = membershipRepository;
             _cacheWrapper = cacheWrapper;
             FormsAuth = formsAuth ?? new FormsAuthenticationService();
@@ -51,28 +54,20 @@ namespace Naviam.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var profile = MembershipDataAdapter.GetUser(model.UserName, model.Password);
-                //UserProfile prof = new UserProfile() { Id = 10};
                 var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password);
 
                 if (profile != null)
                 {
-                    // generate session key
-                    var cId = Guid.NewGuid().ToString();
-                    _cacheWrapper.Set(cId, profile, true, null);
-                    //SessionHelper.SetNewUserProfile(cId, profile);
-
                     //setup forms ticket
-                    var exp = DateTime.Now.Add(FormsAuthentication.Timeout);
-                    var ticket = new FormsAuthenticationTicket(1, model.UserName.ToLower(), DateTime.Now, exp, model.RememberMe, cId);
-                    var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
-                    if (model.RememberMe)
-                        cookie.Expires = ticket.Expiration;
-                    Response.Cookies.Add(cookie);
+                    var sessionKey = _membershipRepository.SetSessionForUser(profile);
+
+                    _cookieContainer.SetAuthCookie(
+                        sessionKey, model.UserName.ToLower(), model.RememberMe);
 
                     //TODO: setup locale into Session["Culture"]
-
-                    if (!String.IsNullOrEmpty(returnUrl))
+                    // Make sure we only follow relative returnUrl parameters to protect against having an open redirector
+                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                     {
                         return Redirect(returnUrl);
                     }
@@ -83,8 +78,6 @@ namespace Naviam.WebUI.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
-        
 
         // **************************************
         // URL: /Account/LogOff

@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Moq;
-using System.Web.Caching;
 
 namespace Naviam.UnitTests.Mocks
 {
@@ -14,7 +13,6 @@ namespace Naviam.UnitTests.Mocks
         public static HttpContextBase FakeHttpContext()
         {
             var context = new Mock<HttpContextBase>();
-            var cache = new Mock<Cache>();
             var request = new Mock<HttpRequestBase>();
             var response = new Mock<HttpResponseBase>();
             var session = new Mock<HttpSessionStateBase>();
@@ -24,7 +22,6 @@ namespace Naviam.UnitTests.Mocks
             context.SetupGet(ctx => ctx.Request).Returns(request.Object);
             context.SetupGet(ctx => ctx.Response).Returns(response.Object);
             context.SetupGet(ctx => ctx.Session).Returns(session.Object);
-            context.SetupGet(ctx => ctx.Cache).Returns(cache.Object);
             context.SetupGet(ctx => ctx.Server).Returns(server.Object);
             context.SetupGet(ctx => ctx.User).Returns(user);
 

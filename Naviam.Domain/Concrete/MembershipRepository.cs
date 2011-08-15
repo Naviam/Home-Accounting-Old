@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using Naviam.DAL;
 using Naviam.Data;
 using Naviam.Entities.User;
@@ -22,11 +24,20 @@ namespace Naviam.Domain.Concrete
 
             if (profile != null)
             {
+
                 //TODO: read companies and attach to user, also assign default company
                 profile.Companies = GetCompanies(profile.Id);
                 profile.DefaultCompany = 1;
             }
             return profile;
+        }
+
+        public virtual string SetSessionForUser(UserProfile profile)
+        {
+            // generate session key
+            var cId = Guid.NewGuid().ToString();
+            new CacheWrapper().Set(cId, profile, true, null);
+            return cId;
         }
     }
 }
