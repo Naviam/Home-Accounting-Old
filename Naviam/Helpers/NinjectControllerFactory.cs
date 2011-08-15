@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
-using Naviam.Domain.Concrete;
+using Naviam.WebUI.Controllers;
 using Ninject;
-using Naviam.Domain.Abstract;
 
 namespace Naviam.WebUI.Helpers
 {
@@ -24,7 +23,8 @@ namespace Naviam.WebUI.Helpers
         private void AddBindings()
         {
             // put bindings here
-            _ninjectKernel.Bind<IMembershipRepository>().To<MembershipRepository>();
+            _ninjectKernel.Bind<IFormsAuthentication>().To<FormsAuthenticationService>();
+            _ninjectKernel.Bind<ICacheWrapper>().To<CacheWrapper>();
         }
     }
 }
