@@ -105,6 +105,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AttachmentsController.cs" />
+    <Compile Include="Helpers\Cookies\CookieContainer.cs" />
+    <Compile Include="Helpers\Cookies\ICookieContainer.cs" />
     <Compile Include="Helpers\CustomModelBinder.cs" />
     <Compile Include="Helpers\HandleErrorWithElmahAttribute.cs" />
     <Compile Include="Helpers\MyFormValueProvider.cs" />
