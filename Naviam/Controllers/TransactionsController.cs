@@ -122,6 +122,5 @@ namespace Naviam.WebUI.Controllers
             var items = Categories.GetTree(CategoriesDataAdapter.GetCategories(user.Id));
             return Json(new { items });
         }
-
     }
 }
