@@ -17,10 +17,13 @@
     var delTransUrl = '@Url.Action("DeleteTransaction", "Transactions")';
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
-    var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
+    //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
     $(document).ready(function () {
         var url = $('#upload_statement').parent().attr('action');
-        $('#upload_statement').html5_upload({ autostart: false, url: url });
+        $('#upload_statement').html5_upload({ autostart: false, url: url, onFinish: function (event, total) {
+            transModel.ReloadPage();
+            } 
+        });
 
         accountsModel = {
             items: ko.observableArray([
