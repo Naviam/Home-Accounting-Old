@@ -10,8 +10,8 @@ namespace Naviam.WebUI.Helpers
         {
             get
             {
-                HttpContext context = HttpContext.Current;
-                FormsIdentity identity = ((context != null) && (context.User != null)) ? (context.User.Identity as FormsIdentity) : null;
+                var context = HttpContext.Current;
+                var identity = ((context != null) && (context.User != null)) ? (context.User.Identity as FormsIdentity) : null;
                 return ((identity != null) && identity.IsAuthenticated) ? identity.Ticket : null;
             }
         }
@@ -19,7 +19,7 @@ namespace Naviam.WebUI.Helpers
         {
             get
             {
-                FormsAuthenticationTicket ticket = AuthenticationTicket;
+                var ticket = AuthenticationTicket;
                 return (null != ticket) ? ticket.UserData : null;
             }
         }
@@ -32,27 +32,29 @@ namespace Naviam.WebUI.Helpers
         {
             get
             {
-                string cId = ContextId;
+                var cache = new CacheWrapper();
+                var cId = ContextId;
                 if (cId == null)
                     return null;
-                var res = CacheWrapper.Get<UserProfile>(cId);
+                var res = cache.Get<UserProfile>(cId);
                 if (res != null && FormsAuthentication.SlidingExpiration) //sliding expiration in redis
-                    CacheWrapper.ProlongKey(cId);
+                    cache.ProlongKey(cId);
                 return res; //HttpContext.Current.Session["userprofile"] as UserProfile;
             }
             set
             {
-                string cId = ContextId;
+                var cache = new CacheWrapper();
+                var cId = ContextId;
                 if (cId == null)
                     return;
-                CacheWrapper.Set<UserProfile>(cId, value, true, null); //HttpContext.Current.Session["userprofile"] = value;
+                cache.Set(cId, value, true, null); //HttpContext.Current.Session["userprofile"] = value;
             }
         }
 
-        public static void SetNewUserProfile(string cId, UserProfile user)
-        {
-            CacheWrapper.Set<UserProfile>(cId, user, true, null);
-        }
+        //public static void SetNewUserProfile(string cId, UserProfile user)
+        //{
+        //    CacheWrapper.GetInstance().Set(cId, user, true, null);
+        //}
         #endregion
     }
 }
