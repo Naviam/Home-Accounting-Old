@@ -61,16 +61,16 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} field is required.
+        ///   Looks up a localized string similar to Please specify your password..
         /// </summary>
-        public static string Required {
+        public static string PasswordRequired {
             get {
-                return ResourceManager.GetString("Required", resourceCulture);
+                return ResourceManager.GetString("PasswordRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} field is required.
+        ///   Looks up a localized string similar to Please specify your username (email)..
         /// </summary>
         public static string UserNameRequired {
             get {
