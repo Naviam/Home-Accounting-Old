@@ -57,6 +57,7 @@
     <Compile Include="DAL\CategoriesDataAdapter.cs" />
     <Compile Include="DAL\CompaniesDataAdapter.cs" />
     <Compile Include="DAL\Dynamic.cs" />
+    <Compile Include="DAL\RoleDataAdapter.cs" />
     <Compile Include="DAL\TransactionsDataAdapter.cs" />
     <Compile Include="DAL\SqlConnectionHelper.cs" />
     <Compile Include="DAL\TestDataAdapter.cs" />
