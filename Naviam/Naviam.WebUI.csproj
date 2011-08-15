@@ -209,7 +209,6 @@
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\common.min.js" />
     <Content Include="Scripts\datetimepicker_css.js" />
-    <Content Include="Scripts\datetimepicker_css.min.js" />
     <Content Include="Scripts\ddsmoothmenu.js" />
     <Content Include="Scripts\ddsmoothmenu.min.js" />
     <Content Include="Scripts\jquery-1.4.2.js" />
@@ -254,6 +253,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-1.2.1.js" />
     <Content Include="Scripts\knockout-1.2.1.min.js" />
+    <Content Include="Scripts\knockout.bindingHandlers.js" />
+    <Content Include="Scripts\knockout.bindingHandlers.min.js" />
     <Content Include="Scripts\knockout.mapping.js" />
     <Content Include="Scripts\knockout.mapping.min.js" />
     <Content Include="Scripts\locale\Naviam.JavaScript.en.js" />

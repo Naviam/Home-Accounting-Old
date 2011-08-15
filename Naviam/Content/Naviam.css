@@ -76,17 +76,17 @@ nav {
   background-color: Black;
   color: White; }
 
-.trans_grid {
+.grid {
   border-collapse: collapse; }
-  .trans_grid th {
+  .grid th {
     cursor: pointer;
     border: 1px solid #000; }
-    .trans_grid th:hover {
+    .grid th:hover {
       background-color: #ffe79c;
       border-color: #c98400; }
-  .trans_grid tr.selected {
+  .grid tr.selected {
     border: 1px solid #000; }
-  .trans_grid tr:hover td {
+  .grid tr:hover td {
     background-color: #c0d2ad;
     cursor: pointer; }
 

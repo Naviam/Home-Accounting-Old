@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheWrapper.cs" />
-    <Compile Include="DAL\AccountDataAdapter.cs" />
+    <Compile Include="DAL\AccountsDataAdapter.cs" />
     <Compile Include="DAL\CategoriesDataAdapter.cs" />
     <Compile Include="DAL\CompaniesDataAdapter.cs" />
     <Compile Include="DAL\Dynamic.cs" />

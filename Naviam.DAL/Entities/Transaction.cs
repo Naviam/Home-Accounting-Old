@@ -27,7 +27,7 @@ namespace Naviam.Data
             Direction = (TransactionDirections)reader["direction"];
             AccountId = reader["id_account"] as int?; 
 		    AccountNumber = reader["account_number"] as string;
-            AccountType = Account.GetAccountType(reader["account_type"] as string);
+            AccountType = reader["account_type"] as string;
             CategoryId = reader["category_id"] as int?;
             Category = reader["category_name"] as string; 
         }
@@ -43,7 +43,7 @@ namespace Naviam.Data
         public TransactionDirections Direction { get; set; }
         public int? AccountId { get; set; }
         public string AccountNumber { get; set; }
-        public Account.AccountTypes AccountType { get; set; }
+        public string AccountType { get; set; }
     }
 
     public static partial class SqlCommandExtensions
