@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Naviam.Data;
-using Naviam.WebUI;
 using System.Data.SqlClient;
 
 namespace Naviam.DAL
@@ -15,19 +11,20 @@ namespace Naviam.DAL
         public static List<Account> GetAccounts(int? companyId) { return GetAccounts(companyId, null, false); }
         public static List<Account> GetAccounts(int? companyId, int? languageId, bool forceSqlLoad)
         {
-            List<Account> res = CacheWrapper.GetList<Account>(CacheKey, companyId, languageId);
+            var cache = new CacheWrapper();
+            var res = cache.GetList<Account>(CacheKey, companyId, languageId);
             if (res == null || forceSqlLoad)
             {
                 res = new List<Account>();
-                using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+                using (var holder = SqlConnectionHelper.GetConnection())
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("accounts_get"))
+                    using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
                     {
                         cmd.Parameters.AddWithValue("@id_company", companyId);
                         cmd.Parameters.AddWithValue("@id_language", languageId.ToDbValue());
                         try
                         {
-                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            using (var reader = cmd.ExecuteReader())
                             {
                                 while (reader.Read())
                                     res.Add(new Account(reader));
@@ -35,12 +32,13 @@ namespace Naviam.DAL
                         }
                         catch (SqlException e)
                         {
-                            throw e;
+                            cmd.AddDetailsToException(e);
+                            throw;
                         }
                     }
                 }
                 //save to cache
-                CacheWrapper.SetList<Account>(CacheKey, res, companyId, languageId);
+                cache.SetList(CacheKey, res, companyId, languageId);
             }
             return res;
         }
@@ -48,7 +46,8 @@ namespace Naviam.DAL
         public static Account GetAccount(int? id, int? companyId) { return GetAccount(id, companyId, null, false); }
         public static Account GetAccount(int? id, int? companyId, int? languageId, bool forceSqlLoad)
         {
-            Account res = CacheWrapper.GetFromList<Account>(CacheKey, new Account() { Id = id }, companyId);
+            var cache = new CacheWrapper();
+            var res = cache.GetFromList(CacheKey, new Account() { Id = id }, companyId);
             if (res == null || forceSqlLoad)
             {
                 //load from DB
@@ -67,26 +66,28 @@ namespace Naviam.DAL
                         }
                         catch (SqlException e)
                         {
-                            throw e;
+                            cmd.AddDetailsToException(e);
+                            throw;
                         }
                     }
                 }
                 //save to cache
                 if (res == null) // not found in cache->add
-                    CacheWrapper.AddToList<Account>(CacheKey, res, companyId);
+                    cache.AddToList<Account>(CacheKey, res, companyId);
                 else
-                    CacheWrapper.UpdateList<Account>(CacheKey, res, companyId);
+                    cache.UpdateList(CacheKey, res, companyId);
             }
             return res;
         }
 
         private static int InsertUpdate(Account entity, int? companyId, int? languageId, DbActionType action)
         {
-            int res = -1;
-            using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+            var cache = new CacheWrapper();
+            var res = -1;
+            using (var holder = SqlConnectionHelper.GetConnection())
             {
-                string commName = action == DbActionType.Insert ? "account_create" : "account_update";
-                SqlCommand command = holder.Connection.CreateSPCommand(commName);
+                var commName = action == DbActionType.Insert ? "account_create" : "account_update";
+                var command = holder.Connection.CreateSPCommand(commName);
                 try
                 {
                     command.AddEntityParameters(entity, action);
@@ -97,16 +98,17 @@ namespace Naviam.DAL
                 }
                 catch (SqlException e)
                 {
-                    throw e;
+                    command.AddDetailsToException(e);
+                    throw;
                 }
             }
             if (res == 0)
             {
                 if (action == DbActionType.Insert)
-                    CacheWrapper.AddToList<Account>(CacheKey, entity, companyId, languageId);
+                    cache.AddToList(CacheKey, entity, companyId, languageId);
                 if (action == DbActionType.Update)
                     //if ok - update cache
-                    CacheWrapper.UpdateList<Account>(CacheKey, entity, companyId, languageId);
+                    cache.UpdateList(CacheKey, entity, companyId, languageId);
             }
             return res;
         }
@@ -125,9 +127,10 @@ namespace Naviam.DAL
         //we need to provide full object (not only id) to delete from redis (restrict of redis)
         public static int Delete(Account entity, int? companyId, int? languageId)
         {
-            int res = -1;
+            var cache = new CacheWrapper();
+            var res = -1;
             //TODO: check that account belongs to company
-            using (var holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+            using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var command = holder.Connection.CreateSPCommand("accounts_delete"))
                 {
@@ -139,14 +142,15 @@ namespace Naviam.DAL
                     }
                     catch (SqlException e)
                     {
-                        throw e;
+                        command.AddDetailsToException(e);
+                        throw;
                     }
                 }
             }
             if (res == 0)
             {
                 //if ok - remove from cache
-                CacheWrapper.RemoveFromList<Account>(CacheKey, entity, companyId, languageId);
+                cache.RemoveFromList(CacheKey, entity, companyId, languageId);
             }
             return res;
         }
