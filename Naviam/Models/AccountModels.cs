@@ -16,7 +16,7 @@ namespace Naviam.WebUI.Models
         [Display(Name = "UserName", ResourceType = typeof(DisplayNames))]
         public string UserName { get; set; }
 
-        [Required(ErrorMessageResourceName="Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [Required(ErrorMessageResourceName="PasswordRequired", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
         [Display(Name = "Password", ResourceType = typeof(DisplayNames))]
         public string Password { get; set; }
