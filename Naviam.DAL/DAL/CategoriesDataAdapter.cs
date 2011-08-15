@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Naviam.Data;
-using Naviam.WebUI;
 using System.Data.SqlClient;
-using System.Data;
 
 namespace Naviam.DAL
 {
@@ -16,31 +11,33 @@ namespace Naviam.DAL
         public static List<Category> GetCategories(int? userId) { return GetCategories(userId, false); }
         public static List<Category> GetCategories(int? userId, bool forceSqlLoad)
         {
-            List<Category> res = CacheWrapper.GetList<Category>(CacheKey, userId);
+            var cache = new CacheWrapper();
+            var res = cache.GetList<Category>(CacheKey, userId);
             if (res == null || forceSqlLoad)
             {
                 //load from DB
                 res = new List<Category>();
-                using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+                using (var holder = SqlConnectionHelper.GetConnection())
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_categories"))
+                    using (var cmd = holder.Connection.CreateSPCommand("get_categories"))
                     {
                         cmd.Parameters.AddWithValue("@id_user", userId);
                         try
                         {
-                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            using (var reader = cmd.ExecuteReader())
                             {
                                 res = new Categories(reader);
                             }
                         }
                         catch (SqlException e)
                         {
-                            throw e;
+                            cmd.AddDetailsToException(e);
+                            throw;
                         }
                     }
                 }
                 //save to cache
-                CacheWrapper.SetList<Category>(CacheKey, res, userId);
+                cache.SetList(CacheKey, res, userId);
             }
             return res;
         }
