@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Naviam.WebUI;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using Naviam.Data;
 
@@ -15,18 +11,20 @@ namespace Naviam.DAL
         public static List<Company> GetCompanies(int? userId) { return GetCompanies(userId, false); }
         public static List<Company> GetCompanies(int? userId, bool forceSqlLoad)
         {
-            List<Company> res = CacheWrapper.GetList<Company>(CacheKey, userId);
+            var cache = new CacheWrapper();
+
+            var res = cache.GetList<Company>(CacheKey, userId);
             if (res == null || forceSqlLoad)
             {
                 res = new List<Company>();
-                using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+                using (var holder = SqlConnectionHelper.GetConnection())
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_companies"))
+                    using (var cmd = holder.Connection.CreateSPCommand("get_companies"))
                     {
                         cmd.Parameters.AddWithValue("@id_user", userId);
                         try
                         {
-                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            using (var reader = cmd.ExecuteReader())
                             {
                                 while (reader.Read())
                                     res.Add(new Company(reader));
@@ -34,12 +32,13 @@ namespace Naviam.DAL
                         }
                         catch (SqlException e)
                         {
-                            throw e;
+                            cmd.AddDetailsToException(e);
+                            throw;
                         }
                     }
                 }
                 //save to cache
-                CacheWrapper.SetList<Company>(CacheKey, res, userId);
+                cache.SetList(CacheKey, res, userId);
             }
             return res;
         }
