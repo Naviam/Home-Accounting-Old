@@ -7,17 +7,14 @@ namespace Naviam.DAL
 {
     public class MembershipDataAdapter
     {
-        public static int CommandTimeout { get; set; }
-
-        public static UserProfile GetUserProfile(string userName, string password)
+        public static UserProfile GetUser(string userName, string password)
         {
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "get_user";
+                    cmd.CommandText = "user_get";
 
                     cmd.Parameters.AddWithValue("@email", userName);
                     try
@@ -40,6 +37,11 @@ namespace Naviam.DAL
             return null;
         }
 
+        public static void CreateUser()
+        {
+            //TODO: Implement create user functionality
+        }
+
         public static int ChangePassword(string applicationName, string email, 
             string newPassword, string passwordSalt, int passwordFormat)
         {
@@ -48,7 +50,6 @@ namespace Naviam.DAL
                 using (var cmd = holder.Connection.CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandTimeout = CommandTimeout;
                     cmd.CommandText = "procedurename";
 
                     cmd.Parameters.AddWithValue("@ApplicationName", applicationName);
