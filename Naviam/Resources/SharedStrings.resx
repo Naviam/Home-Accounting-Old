@@ -126,6 +126,9 @@
   <data name="LogonHeader" xml:space="preserve">
     <value>Account Information</value>
   </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Transactions</value>
   </data>

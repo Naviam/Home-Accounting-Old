@@ -72,6 +72,7 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany, user.LanguageId, false);
+            paging.Filter = "";
             if (pageContext.AccountId != null)
             {
                 paging.Filter = String.Format("AccountId={0}", pageContext.AccountId);
@@ -121,6 +122,15 @@ namespace Naviam.WebUI.Controllers
             var user = CurrentUser;
             var items = Categories.GetTree(CategoriesDataAdapter.GetCategories(user.Id));
             return Json(new { items });
+        }
+
+        [HttpPost]
+        public ActionResult GetAccounts()
+        {
+            var user = CurrentUser;
+            var accounts = AccountsDataAdapter.GetAccounts(user.CurrentCompany, user.LanguageId, false);
+            accounts.Insert(0, new Account() { Number = "All"});
+            return Json(new { items = accounts });
         }
 
     }
