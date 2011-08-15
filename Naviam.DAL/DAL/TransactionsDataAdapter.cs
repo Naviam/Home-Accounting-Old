@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using Npgsql;
-
 using Naviam.Data;
-using Naviam.WebUI;
 using System.Data.SqlClient;
-using System.Security.Cryptography;
 
 namespace Naviam.DAL
 {
@@ -18,7 +11,7 @@ namespace Naviam.DAL
 
         public static List<Transaction> GetTestTransactions(int recordsCount, int? companyId)
         {
-            List<Transaction> res = new List<Transaction>(recordsCount);
+            var res = new List<Transaction>(recordsCount);
             for (int i = 0; i < recordsCount; i++)
                 res.Add(new Transaction()
                 {
@@ -33,21 +26,22 @@ namespace Naviam.DAL
         public static IEnumerable<Transaction> GetTransactions(int? companyId) { return GetTransactions(companyId, null, false); }
         public static IEnumerable<Transaction> GetTransactions(int? companyId, int? languageId, bool forceSqlLoad)
         {
-            List<Transaction> res = CacheWrapper.GetList<Transaction>(CacheKey, companyId, languageId);
+            var cache = new CacheWrapper();
+            var res = cache.GetList<Transaction>(CacheKey, companyId, languageId);
             if (res == null || forceSqlLoad)
             {
                 //load from DB
                 //res = GetTestTransactions(7, companyId);
                 res = new List<Transaction>();
-                using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+                using (var holder = SqlConnectionHelper.GetConnection())
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
+                    using (var cmd = holder.Connection.CreateSPCommand("get_transactions"))
                     {
                         cmd.Parameters.AddWithValue("@id_company", companyId);
                         cmd.Parameters.AddWithValue("@id_language", languageId.ToDbValue());
                         try
                         {
-                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            using (var reader = cmd.ExecuteReader())
                             {
                                 while (reader.Read())
                                     res.Add(new Transaction(reader));
@@ -55,78 +49,83 @@ namespace Naviam.DAL
                         }
                         catch (SqlException e)
                         {
-                            throw e;
+                            cmd.AddDetailsToException(e);
+                            throw;
                         }
                     }
                 }
                 //save to cache
-                CacheWrapper.SetList<Transaction>(CacheKey, res, companyId, languageId);
+                cache.SetList(CacheKey, res, companyId, languageId);
             }
             return res;
         }
         public static Transaction GetTransaction(int? id, int? companyId) { return GetTransaction(id, companyId, null, false); }
         public static Transaction GetTransaction(int? id, int? companyId, int? languageId, bool forceSqlLoad)
         {
-            Transaction res = CacheWrapper.GetFromList<Transaction>(CacheKey, new Transaction() { Id = id }, companyId);
+            var cache = new CacheWrapper();
+            var res = cache.GetFromList(CacheKey, new Transaction { Id = id }, companyId);
             if (res == null || forceSqlLoad)
             {
                 //load from DB
                 //TODO: check that trans belongs to company
-                using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+                using (var holder = SqlConnectionHelper.GetConnection())
                 {
-                    using (SqlCommand cmd = holder.Connection.CreateSPCommand("get_transactions"))
+                    using (var cmd = holder.Connection.CreateSPCommand("get_transactions"))
                     {
                         cmd.Parameters.AddWithValue("@id_transaction", id);
                         try
                         {
-                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            using (var reader = cmd.ExecuteReader())
                             {
                                 res = new Transaction(reader);
                             }
                         }
                         catch (SqlException e)
                         {
-                            throw e;
+                            cmd.AddDetailsToException(e);
+                            throw;
                         }
                     }
                 }
                 //res = new Transaction() { Description = "Test", Category = "Dinner", Amount = 100.20M, Id = 1, Date = DateTime.Now };
                 //save to cache
                 if (res == null) // not found in cache->add
-                    CacheWrapper.AddToList<Transaction>(CacheKey, res, companyId);
+                    cache.AddToList<Transaction>(CacheKey, res, companyId);
                 else
-                    CacheWrapper.UpdateList<Transaction>(CacheKey, res, companyId);
+                    cache.UpdateList(CacheKey, res, companyId);
             }
             return res;
         }
 
         private static int InsertUpdate(Transaction entity, int? companyId, int? languageId, DbActionType action)
         {
-            int res = -1;
-            using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+            var cache = new CacheWrapper();
+            var res = -1;
+            using (var holder = SqlConnectionHelper.GetConnection())
             {
-                string commName = action == DbActionType.Insert ? "add_transaction" : "update_transaction";
-                SqlCommand command = holder.Connection.CreateSPCommand(commName);
+                var commName = action == DbActionType.Insert ? "add_transaction" : "update_transaction";
+                var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {
-                    command.AddEntityParameters(entity, action);
-                    command.ExecuteNonQuery();
+                    cmd.AddEntityParameters(entity, action);
+                    cmd.ExecuteNonQuery();
                     if (action == DbActionType.Insert)
-                        entity.Id = command.GetRowIdParameter();
-                    res = command.GetReturnParameter();
+                        entity.Id = cmd.GetRowIdParameter();
+                    res = cmd.GetReturnParameter();
                 }
                 catch (SqlException e)
                 {
-                    throw e;
+                    cmd.AddDetailsToException(e);
+                    throw;
                 }
             }
             if (res == 0)
             {
                 if (action == DbActionType.Insert)
-                    CacheWrapper.AddToList<Transaction>(CacheKey, entity, companyId, languageId);
+                    cache.AddToList(CacheKey, entity, companyId, languageId);
                 if (action == DbActionType.Update)
                     //if ok - update cache
-                    CacheWrapper.UpdateList<Transaction>(CacheKey, entity, companyId, languageId);
+                    cache.UpdateList(CacheKey, entity, companyId, languageId);
             }
             return res;
         }
@@ -145,28 +144,29 @@ namespace Naviam.DAL
         //we need to provide full object (not only id) to delete from redis (restrict of redis)
         public static int Delete(Transaction trans, int? companyId, int? languageId)
         {
-            int res = -1;
+            var res = -1;
             //TODO: check that trans belongs to company
-            using (var holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
+            using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var command = holder.Connection.CreateSPCommand("del_transaction"))
+                using (var cmd = holder.Connection.CreateSPCommand("del_transaction"))
                 {
                     try
                     {
-                        command.AddCommonParameters(trans.Id);
-                        command.ExecuteNonQuery();
-                        res = command.GetReturnParameter();
+                        cmd.AddCommonParameters(trans.Id);
+                        cmd.ExecuteNonQuery();
+                        res = cmd.GetReturnParameter();
                     }
                     catch (SqlException e)
                     {
-                        throw e;
+                        cmd.AddDetailsToException(e);
+                        throw;
                     }
                 }
             }
             if (res == 0)
             {
                 //if ok - remove from cache
-                CacheWrapper.RemoveFromList<Transaction>(CacheKey, trans, companyId, languageId);
+                new CacheWrapper().RemoveFromList(CacheKey, trans, companyId, languageId);
             }
             return res;
         }
