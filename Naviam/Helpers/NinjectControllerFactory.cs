@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using Naviam.WebUI.Controllers;
+using Naviam.WebUI.Helpers.Cookies;
 using Ninject;
 
 namespace Naviam.WebUI.Helpers
@@ -25,6 +26,7 @@ namespace Naviam.WebUI.Helpers
             // put bindings here
             _ninjectKernel.Bind<IFormsAuthentication>().To<FormsAuthenticationService>();
             _ninjectKernel.Bind<ICacheWrapper>().To<CacheWrapper>();
+            _ninjectKernel.Bind<ICookieContainer>().To<CookieContainer>();
         }
     }
 }
