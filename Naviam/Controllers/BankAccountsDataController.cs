@@ -17,13 +17,13 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             var accounts = AccountsDataAdapter.GetAccounts(user.CurrentCompany, user.LanguageId, false);
-            var head = new List<Naviam.WebUI.Controllers.TransactionsController.Head>
+            var head = new List<TransactionsController.Head>
                            {
-                               new Naviam.WebUI.Controllers.TransactionsController.Head {Field = "DateCreation", Text = DisplayNames.Date},
-                               new Naviam.WebUI.Controllers.TransactionsController.Head {Field = "Number", Text = DisplayNames.Account},
-                               new Naviam.WebUI.Controllers.TransactionsController.Head {Field = "Balance", Text = DisplayNames.Balance},
-                               new Naviam.WebUI.Controllers.TransactionsController.Head {Field = "Currency", Text = DisplayNames.Currency},
-                               new Naviam.WebUI.Controllers.TransactionsController.Head {Field = "TypeName", Text = DisplayNames.AccountType},
+                               new TransactionsController.Head {Field = "DateCreation", Text = DisplayNames.Date},
+                               new TransactionsController.Head {Field = "Number", Text = DisplayNames.Account},
+                               new TransactionsController.Head {Field = "Balance", Text = DisplayNames.Balance},
+                               new TransactionsController.Head {Field = "Currency", Text = DisplayNames.Currency},
+                               new TransactionsController.Head {Field = "TypeName", Text = DisplayNames.AccountType},
                            };
 
             return Json(new { items = accounts, headItems = head });
