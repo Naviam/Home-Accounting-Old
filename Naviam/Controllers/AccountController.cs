@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using Naviam.Domain.Abstract;
+using Naviam.Domain.Concrete;
 using Naviam.WebUI.Helpers;
 using Naviam.WebUI.Models;
 
@@ -11,28 +11,26 @@ namespace Naviam.WebUI.Controllers
     [HandleErrorWithElmah]
     public class AccountController : Controller
     {
-        private readonly IMembershipRepository _membershipRepository;
+        private readonly MembershipRepository _membershipRepository;
+        private readonly ICacheWrapper _cacheWrapper;
 
-        public AccountController(IMembershipRepository membershipRepository,
-            IFormsAuthentication formsAuth, IMembershipService service)
+        // This constructor is used by the MVC framework to instantiate the controller using
+        // the default forms authentication and membership providers.
+
+        public AccountController()
+            : this(null, null, new MembershipRepository())
+        {
+        }
+
+        public AccountController(IFormsAuthentication formsAuth, 
+            ICacheWrapper cacheWrapper, MembershipRepository membershipRepository)
         {
             _membershipRepository = membershipRepository;
+            _cacheWrapper = cacheWrapper;
             FormsAuth = formsAuth ?? new FormsAuthenticationService();
-            MembershipService = service ?? new AccountMembershipService();
         }
 
         public IFormsAuthentication FormsAuth { get; private set; }
-
-        public IMembershipService MembershipService { get; private set; }
-
-        private void SignOut()
-        {
-            SessionHelper.UserProfile = null;
-            if (User != null && User.Identity.IsAuthenticated)
-                FormsAuthentication.SignOut();
-            if (Session != null)
-                Session.Abandon();
-        }
 
         // **************************************
         // URL: /Account/LogOn
@@ -41,7 +39,10 @@ namespace Naviam.WebUI.Controllers
         public ActionResult LogOn()
         {
             //remove from redis
-            SignOut();
+            SessionHelper.UserProfile = null;
+            if (User != null && User.Identity.IsAuthenticated)
+                FormsAuth.SignOut();
+            if (Session != null) Session.Abandon();
             return View("LogOn");
         }
 
@@ -50,21 +51,24 @@ namespace Naviam.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var profile = MembershipDataAdapter.GetUserProfile(model.UserName, model.Password);
+                //var profile = MembershipDataAdapter.GetUser(model.UserName, model.Password);
                 //UserProfile prof = new UserProfile() { Id = 10};
-                var profile = _membershipRepository.GetUserProfile(model.UserName.ToLower(), model.Password);
-                
+                var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password);
+
                 if (profile != null)
                 {
+                    // generate session key
                     var cId = Guid.NewGuid().ToString();
-                    SessionHelper.SetNewUserProfile(cId, profile);
+                    _cacheWrapper.Set(cId, profile, true, null);
+                    //SessionHelper.SetNewUserProfile(cId, profile);
+
                     //setup forms ticket
                     var exp = DateTime.Now.Add(FormsAuthentication.Timeout);
-                    var ticket = new FormsAuthenticationTicket(1, model.UserName, DateTime.Now, exp, model.RememberMe, cId);
-                    var fCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
+                    var ticket = new FormsAuthenticationTicket(1, model.UserName.ToLower(), DateTime.Now, exp, model.RememberMe, cId);
+                    var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
                     if (model.RememberMe)
-                        fCookie.Expires = ticket.Expiration;
-                    Response.Cookies.Add(fCookie);
+                        cookie.Expires = ticket.Expiration;
+                    Response.Cookies.Add(cookie);
 
                     //TODO: setup locale into Session["Culture"]
 
@@ -88,8 +92,7 @@ namespace Naviam.WebUI.Controllers
 
         public ActionResult LogOff()
         {
-            SignOut();
-            return View("LogOn");
+            return RedirectToAction("LogOn", "Account");
         }
 
         public ActionResult Register()
@@ -110,6 +113,11 @@ namespace Naviam.WebUI.Controllers
         }
     }
 
+    // The FormsAuthentication type is sealed and contains static members, so it is difficult to
+    // unit test code that calls its members. The interface and helper class below demonstrate
+    // how to create an abstract wrapper around such a type in order to make the AccountController
+    // code unit testable.
+
     public interface IFormsAuthentication
     {
         void SignIn(string userName, bool createPersistentCookie);
@@ -120,68 +128,20 @@ namespace Naviam.WebUI.Controllers
     {
         public void SignIn(string userName, bool createPersistentCookie)
         {
-            FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
+            var authTicket = new FormsAuthenticationTicket(
+                1, //version
+                userName, // user name
+                DateTime.Now,             //creation
+                DateTime.Now.AddMinutes(30), //Expiration
+                createPersistentCookie, //Persistent
+                userName); //since Classic logins don't have a "Friendly Name".  OpenID logins are handled in the AuthController.
+
+            var encTicket = FormsAuthentication.Encrypt(authTicket);
+            HttpContext.Current.Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
         }
         public void SignOut()
         {
             FormsAuthentication.SignOut();
-        }
-    }
-
-    public interface IMembershipService
-    {
-        int MinPasswordLength { get; }
-
-        bool ValidateUser(string userName, string password);
-        string GetCanonicalUsername(string userName);
-        MembershipCreateStatus CreateUser(string userName, string password, string email);
-        bool ChangePassword(string userName, string oldPassword, string newPassword);
-    }
-
-    public class AccountMembershipService : IMembershipService
-    {
-        private readonly MembershipProvider _provider;
-
-        public AccountMembershipService()
-            : this(null)
-        {
-        }
-
-        public AccountMembershipService(MembershipProvider provider)
-        {
-            _provider = provider ?? Membership.Provider;
-        }
-
-        public int MinPasswordLength
-        {
-            get
-            {
-                return _provider.MinRequiredPasswordLength;
-            }
-        }
-
-        public bool ValidateUser(string userName, string password)
-        {
-            return _provider.ValidateUser(userName, password);
-        }
-
-        public string GetCanonicalUsername(string userName)
-        {
-            var user = _provider.GetUser(userName, true);
-            return user != null ? user.UserName : null;
-        }
-
-        public MembershipCreateStatus CreateUser(string userName, string password, string email)
-        {
-            MembershipCreateStatus status;
-            _provider.CreateUser(userName, password, email, null, null, true, null, out status);
-            return status;
-        }
-
-        public bool ChangePassword(string userName, string oldPassword, string newPassword)
-        {
-            var currentUser = _provider.GetUser(userName, true /* userIsOnline */);
-            return currentUser != null && currentUser.ChangePassword(oldPassword, newPassword);
         }
     }
 }
