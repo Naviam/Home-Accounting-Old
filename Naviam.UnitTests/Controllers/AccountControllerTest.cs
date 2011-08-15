@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -6,7 +8,9 @@ using Naviam.Domain.Concrete;
 using Naviam.Entities.User;
 using Naviam.UnitTests.Mocks;
 using Naviam.WebUI.Controllers;
+using Naviam.WebUI.Helpers.Cookies;
 using Naviam.WebUI.Models;
+using Naviam.WebUI.Resources;
 
 namespace Naviam.UnitTests.Controllers
 {
@@ -27,17 +31,50 @@ namespace Naviam.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void LoginPostRedirectsTransactionsIfLoginSuccessful()
+        public void LoginPostRedirectsHomeIfLoginSuccessfulButNoReturnUrlGiven()
         {
             // Arrange
             var controller = GetAccountController();
 
             // Act
-            var result = (RedirectToRouteResult)controller.LogOn(new LogOnModel { UserName = "someUser", Password = "goodPass", RememberMe = true }, null);
+            var result = (RedirectToRouteResult)controller.LogOn(
+                new LogOnModel { UserName = "someUser", Password = "goodPass", RememberMe = true },
+                null);
 
             // Assert
             Assert.AreEqual("Transactions", result.RouteValues["controller"]);
             Assert.AreEqual("Index", result.RouteValues["action"]);
+        }
+
+        [TestMethod]
+        public void LoginPostRedirectsToReturnUrlIfLoginSuccessfulAndReturnUrlGiven()
+        {
+            // Arrange
+            var controller = GetAccountController();
+
+            // Act
+            var result = (RedirectResult)controller.LogOn(
+                new LogOnModel { UserName = "someUser", Password = "goodPass", RememberMe = true }, 
+                "/someUrl");
+
+            // Assert
+            Assert.AreEqual("/someUrl", result.Url);
+        }
+
+        [TestMethod]
+        public void LoginPostReturnsViewIfPasswordNotSpecified()
+        {
+            // Arrange
+            var controller = GetAccountController();
+
+            // Act
+            var result = (ViewResult)controller.LogOn(
+                new LogOnModel { UserName = "someUser", Password = String.Empty, RememberMe = true }, null);
+
+            // Assert
+            var model = (LogOnModel)result.Model;
+            Assert.AreEqual(true, model.RememberMe);
+            Assert.AreEqual(ValidationStrings.PasswordRequired, result.ViewData.ModelState["password"].Errors[0].ErrorMessage);
         }
 
         [TestMethod]
@@ -58,13 +95,20 @@ namespace Naviam.UnitTests.Controllers
         {
             var membershipRepository = new Mock<MembershipRepository>();
             var user = new UserProfile();
+
+            var cookieContainer = new Mock<ICookieContainer>();
+            cookieContainer.Setup(c => c.SetValue(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<DateTime>()));
+            cookieContainer.Setup(c => c.SetAuthCookie(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()));
+            
             var cacheWrapper = new Mock<ICacheWrapper>();
 
             membershipRepository.Setup(m => m.GetUser(It.IsAny<string>(), It.IsAny<string>())).Returns(user);
+
             IFormsAuthentication formsAuth = new MockFormsAuthenticationService();
             var contextBase = MvcMockHelpers.FakeHttpContext(); // new MockHttpContext();
 
-            var controller = new AccountController(formsAuth, cacheWrapper.Object, membershipRepository.Object);
+            var controller = new AccountController(
+                cookieContainer.Object, formsAuth, cacheWrapper.Object, membershipRepository.Object);
             controller.ControllerContext = new ControllerContext(contextBase, new RouteData(), controller);
             controller.Url = new UrlHelper(new RequestContext(contextBase, new RouteData()), new RouteCollection());
             return controller;
