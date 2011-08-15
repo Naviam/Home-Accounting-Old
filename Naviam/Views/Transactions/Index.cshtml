@@ -17,24 +17,27 @@
     var delTransUrl = '@Url.Action("DeleteTransaction", "Transactions")';
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
-    var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
+    var getAccountsUrl = '@Url.Action("GetAccounts", "Transactions")';
+    //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
     $(document).ready(function () {
-        var url = $('#upload_statement').parent().attr('action');
-        $('#upload_statement').html5_upload({ autostart: false, url: url });
-
-        accountsModel = {
-            items: ko.observableArray([
-            { Name: "Cash", Id: ko.observable(1) },
-            { Name: "Card", Id: ko.observable(2) }
-            ]),
-            selectedItem: ko.observable(null)
-        };
-        accountsModel.selectedItem.subscribe(function (newValue) {
-            pageContext.accountId = newValue.Id();
+        var url = $('#upload_statement').parents('form').attr('action');
+        $('#upload_statement').html5_upload({ autostart: false, url: url, onFinish: function (event, total) {
             transModel.ReloadPage();
+        }
         });
-        ko.applyBindings(accountsModel, $("#accounts")[0]);
-        //accountsModel.SelectedItem(accountsModel.items()[0]);
+
+        $.postErr(getAccountsUrl, transModel.paging, function (res) {
+            accountsModel = ko.mapping.fromJS(res);
+            accountsModel.selectedItem = ko.observable(null);
+            accountsModel.selectedItem(accountsModel.items()[0]);
+            accountsModel.selectedItem.subscribe(function (newValue) {
+                pageContext.accountId = newValue.Id();
+                transModel.ReloadPage();
+            });
+            ko.applyBindings(accountsModel, $("#accounts")[0]);
+            loadTransactions();
+        });
+
     });
     function beg_upload_statement() {
         $('#upload_statement').trigger('html5_upload.start');
@@ -45,7 +48,7 @@
 @section LeftColumn {
 <script type="text/html" id="accountsTemplate">
     <li>
-        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}"></a>
+        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
     </li>
 </script>
 <div id="accounts">
@@ -62,29 +65,33 @@
 }
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <script type="text/html" id="transRowTemplate">
-    <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedRow() == Id()}">
+    <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedItem() == $data}">
         <td style="width:12%">
             <div>
-            <span data-bind="msDateTime: Date, visible: transModel.selectedRow() != Id()" name="Date"></span>
-            <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
+            <span data-bind="msDateTime: Date, visible: transModel.selectedItem() != $data" name="Date"></span>
+            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
             @*<img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">*@
             </div>
         </td>
-        <td style="width:38%"><span data-bind="visible: transModel.selectedRow() != Id(), text: Description"></span><input class="width100" data-bind="visible: transModel.selectedRow() == Id(), value: Description" /></td>
-        <td style="width:35%">
-            <span data-bind="visible: transModel.selectedRow() != Id(), text: Category"></span>
-            <div data-bind="visible: transModel.selectedRow() == Id()" style='position:relative;'><input class="width100" data-bind="category: Category" name="Category"/><a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker'></a></div>
+        <td style="width:38%">
+            <span data-bind="visible: transModel.selectedItem() != $data, text: Description"></span>
+            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
         </td>
-        <td style="width:10%">
+        <td style="width:35%">
+            <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
+            <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'><input class="width100" data-bind="category: Category" name="Category"/>
+            <a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker'></a></div>
+        </td>
+        <td style="width:10%;white-space:nowrap">
             @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
-            <span data-bind="text: Amount, visible: transModel.selectedRow() != Id()"></span>
-            <input class="width100" data-bind="visible: transModel.selectedRow() == Id(), numeric: Amount" name="Amount"/>        
+            <span data-bind="text: Amount, visible: transModel.selectedItem() != $data"></span>
+            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, numeric: Amount" name="Amount"/>        
         </td>
         <td style="width:5%">
-            <a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}">Edit</a>
-            <a href="#" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() != null, click: function(event) {transModel.DeleteItem($data);}">Delete</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}">Edit</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.DeleteItem($data);}">Delete</a>
         </td>
     </tr>
 </script>
@@ -105,8 +112,8 @@
     </tr>
 </script>
 <div id="transGrid">
-    <a href="#" onclick='return transModel.Add();' data-bind="visible: accountsModel.selectedItem() != null">Add</a>
-    <table class='trans_grid'>
+    <a href="#" onclick='return transModel.Add();' data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">Add</a>
+    <table class='grid'>
         <thead data-bind='template: "transHeadTemplate"' >
         </thead>
         <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'>
@@ -143,14 +150,21 @@
     <ul data-bind="template: {name:'catTemplate', foreach:items}" class='dropdown'>
     </ul>
 </div>
-
+<div class="overlaywoshadow" id="transDlg">
+    <table>
+    <tr>
+        <td>@SharedStrings.Notes:</td>
+        <td><textarea data-bind="value: Notes" name="Notes" rows='2' cols='2'></textarea></td>
+    </tr>
+    </table>
+    <div>
+        <button class='close' id='ok'>Ok</button>
+        <button class='close' id='cancel'>@SharedStrings.Cancel</button>
+    </div>     
+</div>
 <div class="overlay" id="edit_form">
-    <h3>TEST</h3>
-    <button class='close'>Ok</button>
+    <input data-bind="value: Notes" name="Notes" type="text" />        
+    <button class='close' data-bind="click: function(event) { transModel.Save(); }">Ok</button>
     <button class='close'>@SharedStrings.Cancel</button>
 </div>
-<div class="overlaywoshadow" id="add_form">
-    <h3>Add</h3>
-    <button class='close' id='ok'>Ok</button>
-    <button class='close' id='cancel'>@SharedStrings.Cancel</button>
-</div>
+

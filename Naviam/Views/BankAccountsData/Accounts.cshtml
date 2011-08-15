@@ -13,24 +13,23 @@
 }
 
 <script type='text/javascript'>
-    function Item(date, number, balance) {
-        this.date = ko.observable(date);
-        this.number = ko.observable(number);
-        this.balance = ko.observable(balance);
-    }
+    var getTransUrl = '@Url.Action("GetAccounts", "BankAccountsData")';
 
     $(document).ready(function () {
         var viewModel = {
-            categories: ["Bread", "Dairy", "Fruits", "Vegetables"],
-            items: ko.observableArray([]),
-            addItem: function () {
-                this.items.push(new Item(Date(), "CARD", 1000));
-            },
-            removeItem: function (item) {
-                this.items.remove(item);
-            }
         };
-        ko.applyBindings(viewModel);
+            $.postErr(getTransUrl, function (res) {
+                var mapping = {
+                    'items': {
+                        key: function (data) {
+                            return ko.utils.unwrapObservable(data.Id);
+                        }
+                    }
+                }
+                viewModel = ko.mapping.fromJS(res, mapping);
+                viewModel.selectedItem = ko.observable(null);
+                ko.applyBindings(viewModel);
+            });
     });
 
     
@@ -38,24 +37,30 @@
 
 <h2>Accounts</h2>
 <script id="accRowTemplate" type="text/html">
-    <tr>
-        <td data-bind="text: date"></td>
-        <td data-bind="text: number"></td>
-        <td data-bind="text: balance"></td>
+    <tr data-bind="click: function(event) { $item.current($data); }, css: {selected: $item.current() == $data}">
+        <td data-bind="msDateTime: DateCreation"></td>
+        <td data-bind="text: Number"></td>
+        <td>
+            <span data-bind="text: Balance"></span>
+            <a href="#" data-bind="visible: $item.current() == $data, click: function(event) {viewModel.ShowEdit(event, $data);}">Edit</a>
+        </td>
+        <td data-bind="text: Currency"></td>
+        <td data-bind="text: TypeName"></td>
     </tr>
 </script>
-
+<script type="text/html" id="accHeadTemplate">
+    <tr>
+    {{each(i, head) headItems()}}
+        <th data-bind="attr: {colspan: Columns}, text: Text()"></th>
+    {{/each}}
+    </tr>
+</script>
 <div id="accountsGrid">
- <a href="#" data-bind="click: addItem">Add Item</a>
-    <table class='trans_grid'>
-        <thead>
-        <tr>
-          <th>date</th>
-          <th>number</th>
-          <th>balance</th>
-        </tr>
+ <a href="#" @*data-bind="click: addItem"*@>Add Item</a>
+    <table class='grid'>
+        <thead data-bind='template: "accHeadTemplate"' >
         </thead>
-        <tbody data-bind='template: { name: "accRowTemplate", foreach: items }'>
+        <tbody data-bind='template: { name: "accRowTemplate", foreach: items, templateOptions: { current: selectedItem } }'>
         </tbody>
     </table>
 </div>

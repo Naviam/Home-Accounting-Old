@@ -1,19 +1,19 @@
 ﻿-- =============================================
 -- Author:		Pavel Mironchik
 -- Create date: 29/07/2011
--- Description:	Add category
+-- Description:	Create category
 -- =============================================
-CREATE PROCEDURE [web].[add_category]
+CREATE PROCEDURE [web].[category_create]
 	@id_user int,
 	@parent_id int,
 	@name nvarchar(50),
 	@id int out
 AS
 BEGIN
-	INSERT INTO [naviam].[dbo].[categories]
+	INSERT INTO [dbo].[categories]
            ([name],[parent_id],[id_user])
      VALUES
-           (@name, @parent_id, @name);
+           (@name, @parent_id, @id_user);
            
     SET @id = SCOPE_IDENTITY();
 END

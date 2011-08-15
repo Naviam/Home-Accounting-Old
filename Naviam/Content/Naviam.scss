@@ -1,4 +1,4 @@
-﻿$base-color: Gray;
+$base-color: Gray;
 $error-color: #ff0000;
 
 @mixin rounded ($radius: 5px) {
@@ -7,8 +7,13 @@ $error-color: #ff0000;
   -moz-border-radius: $radius;
 }
 
+@mixin shadow ($shadow: 90px, $color: rgba(0, 0, 0, 0.5)) {
+	-moz-box-shadow: 0 0.1em 0.2em $color;
+	-webkit-box-shadow: 0 0.1em 0.2em $color;
+}
+
 header {
-  background-color: $base-color * 1;
+  background-color: $base-color * 2;
   @include rounded(10px);
   clear:right;
   float:none;
@@ -83,7 +88,7 @@ nav {
 	a { padding: 0.5em; }
 	a.selected { background-color: Black; color: White; }
 }
-.trans_grid {
+.grid {
 	border-collapse:collapse;
 	th {
 		cursor:pointer;
@@ -114,6 +119,7 @@ a.category_picker {
     position: absolute;
     width: 20px;
 	right: 0px;
+	top: 2px;
 	&.active {
 		background-position: 0 -20px;
 	}
@@ -170,17 +176,17 @@ a.category_picker {
 }
 
 button {
--moz-border-radius:10.2em 10.2em 10.2em 10.2em;
--moz-box-shadow:0 0.1em 0.2em rgba(0, 0, 0, 0.5);
-background-color:#5D689A;
-border-bottom:0.2em solid #666666;
-border-width:1px 1px 0.2em;
-color:#FFFFFF;
-cursor:pointer;
-font-size:1em;
-line-height:1;
-padding:0.3em 0.6em;
-text-shadow:0 0 0.1em #222222;
+	 @include rounded();
+	 @include shadow();
+	background-color:#5D689A;
+	border-bottom:0.2em solid #666666;
+	border-width:1px 1px 0.2em;
+	color:#FFFFFF;
+	cursor:pointer;
+	font-size:1em;
+	line-height:1;
+	padding:0.3em 0.6em;
+	text-shadow:0 0 0.1em #222222;
 }
 /* For the details, see: http://flowplayer.org/tools/dateinput/index.html#skinning */
 

@@ -5,6 +5,9 @@
   <output path="..\Scripts\common.min.js">
     <input path="..\Scripts\common.js"/>
   </output>
+  <output path="..\Scripts\knockout.bindingHandlers.min.js">
+    <input path="..\Scripts\knockout.bindingHandlers.js"/>
+  </output>
   <!--<output path="..\Scripts\jquery.html5_upload.min.js">
     <input path="..\Scripts\jquery.html5_upload.js"/>
   </output>-->

@@ -76,17 +76,17 @@ nav {
   background-color: Black;
   color: White; }
 
-.trans_grid {
+.grid {
   border-collapse: collapse; }
-  .trans_grid th {
+  .grid th {
     cursor: pointer;
     border: 1px solid #000; }
-    .trans_grid th:hover {
+    .grid th:hover {
       background-color: #ffe79c;
       border-color: #c98400; }
-  .trans_grid tr.selected {
+  .grid tr.selected {
     border: 1px solid #000; }
-  .trans_grid tr:hover td {
+  .grid tr:hover td {
     background-color: #c0d2ad;
     cursor: pointer; }
 
@@ -101,7 +101,8 @@ a.category_picker {
   height: 20px;
   position: absolute;
   width: 20px;
-  right: 0px; }
+  right: 0px;
+  top: 2px; }
   a.category_picker.active {
     background-position: 0 -20px; }
 
@@ -147,8 +148,11 @@ a.category_picker {
   -webkit-box-shadow: 0 0 0 #000; }
 
 button {
-  -moz-border-radius: 10.2em 10.2em 10.2em 10.2em;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
   -moz-box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.5);
   background-color: #5D689A;
   border-bottom: 0.2em solid #666666;
   border-width: 1px 1px 0.2em;

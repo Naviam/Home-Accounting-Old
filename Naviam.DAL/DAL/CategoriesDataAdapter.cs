@@ -19,7 +19,7 @@ namespace Naviam.DAL
                 res = new List<Category>();
                 using (var holder = SqlConnectionHelper.GetConnection())
                 {
-                    using (var cmd = holder.Connection.CreateSPCommand("get_categories"))
+                    using (var cmd = holder.Connection.CreateSPCommand("categories_get"))
                     {
                         cmd.Parameters.AddWithValue("@id_user", userId);
                         try

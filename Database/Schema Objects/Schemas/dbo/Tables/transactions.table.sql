@@ -5,9 +5,9 @@
     [merchant]    NVARCHAR (50)   COLLATE Latin1_General_CS_AS NULL,
     [id_account]  INT             NOT NULL,
     [id_category] INT             NOT NULL,
-    [description] NVARCHAR (100)  COLLATE Latin1_General_CS_AS NOT NULL,
+    [description] NVARCHAR (100)  COLLATE Latin1_General_CS_AS NULL,
     [notes]       NVARCHAR (1000) COLLATE Latin1_General_CS_AS NULL,
-    [type]        NVARCHAR (50)   NOT NULL,
-    [direction]   NVARCHAR (10)   NOT NULL
+    [type]        INT             NOT NULL,
+    [direction]   INT             NOT NULL
 );
 

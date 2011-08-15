@@ -1,9 +1,10 @@
 ﻿-- =============================================
 -- Author:		Pavel Mironchik
 -- Create date: 29/07/2011
--- Description:	Add transaction
+-- Description:	Create transaction
 -- =============================================
-CREATE PROCEDURE [web].[add_transaction]
+CREATE PROCEDURE [web].[transaction_create]
+	@id int out,
 	@date datetime,
 	@amount money,
 	@merchant nvarchar(50),
@@ -11,9 +12,9 @@ CREATE PROCEDURE [web].[add_transaction]
 	@id_category int,
 	@description nvarchar(100),
 	@notes nvarchar(1000),
-	@type nvarchar(50), --can be: cash, check, pending
-	@direction nvarchar(10),--can be: expense, income
-	@id int out 
+	@type int, --can be: 0-cash, 1-check, 2-pending
+	@direction int --can be: 0-expense, 1-income
+	
 AS
 BEGIN
 	INSERT [dbo].[transactions] 

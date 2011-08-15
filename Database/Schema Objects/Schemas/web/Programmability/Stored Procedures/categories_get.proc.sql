@@ -3,7 +3,7 @@
 -- Create date: 29/07/2011
 -- Description:	Get categories
 -- =============================================
-CREATE PROCEDURE [web].[get_categories]
+CREATE PROCEDURE [web].[categories_get]
 	@id_user int = NULL
 AS
 BEGIN

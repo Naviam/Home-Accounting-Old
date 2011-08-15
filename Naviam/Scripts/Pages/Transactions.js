@@ -39,39 +39,6 @@ ko.bindingHandlers.category = {
         $(element).val(ko.utils.unwrapObservable(valueAccessor()));
     }
 };
-ko.bindingHandlers.msDateTime = {
-    init: function (element, valueAccessor, allBindingsAccessor) {
-    },
-    update: function (element, valueAccessor) {
-        var value = ko.utils.unwrapObservable(valueAccessor());
-        if (value != null) {
-            var date = eval("new " + value.replace(/\//g, ''));
-            var val = date.format();
-            $(element).text(val);
-        }
-    }
-};
-ko.bindingHandlers.datepicker = {
-    init: function (element, valueAccessor, allBindingsAccessor, context) {
-        //initialize datepicker with some optional options
-        var options = allBindingsAccessor().datepickerOptions || {};
-        $(element).dateinput(options);
-        //handle the field changing
-        ko.utils.registerEventHandler(element, "change", function () {
-            var observable = valueAccessor();
-            //console.log();
-            observable('/Date(' + $(element).data("dateinput").getValue().getTime() + ')/');
-        });
-        //ko.bindingHandlers.visible.init(element, valueAccessor, allBindingsAccessor, context);
-    },
-    update: function (element, valueAccessor) {
-        var value = ko.utils.unwrapObservable(valueAccessor());
-        if (value != null) {
-            var date = eval("new " + value.replace(/\//g, ''));
-            $(element).data("dateinput").setValue(date);
-        }
-    }
-};
  //!!!replaced by bindingHandlers
 //ko.numericObservable = function (initialValue) {
 //    var _actual = ko.observable(initialValue);
@@ -107,32 +74,7 @@ ko.bindingHandlers.datepicker = {
 //    return result;
 //};
 //!!!
-$(document).ready(function () {
-    $("#edit_form").overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
-    //$("#add_form #cancel").click(function (e) { transModel.CancelAdd(); });
-    $("#add_form #ok").click(function (e) {
-        //TODO: check input
-        //tst
-        var row = $('#transGrid table tr:eq(1)');
-        var am = row.find('[name="Amount"]');
-        var cat = row.find('[name="Category"]');
-        am.removeClass(inputCssError);
-        cat.removeClass(inputCssError);
-        var item = transModel.currentItem;
-        if (item.Amount() <= 0)
-            am.addClass(inputCssError);
-        if (item.Category() == null)
-            cat.addClass(inputCssError);
-        if (item.Amount() <= 0 || item.Category() == null)
-            return e.stopImmediatePropagation();
-        transModel.Save(true);
-    });
-    addApi = $("#add_form").overlay({ fixed: false }).data('overlay');
-    addApi.onBeforeClose(function (e) {
-        //console.log(e);
-        transModel.CancelAdd();
-    });
-    //$("#add_form").overlay({ fixed: false });
+function loadTransactions() {
     $.postErr(getTransUrl, transModel.paging, function (res) {
         //!!!replaced by bindingHandlers
         //        var childItem = function (data) {
@@ -157,16 +99,16 @@ $(document).ready(function () {
         transModel.paging.Page.subscribe(function (newValue) {
             transModel.ReloadPage();
         });
-        transModel.selectedRow = ko.observable(-1);
-        transModel.currentItem = null;
+        transModel.selectedItem = ko.observable(null);
+        transModel.selectedRow = ko.observable(null);
+        transModel.editObj = null;
         transModel.ReloadPage = function () {
             if (this.DescrSub != null)
                 this.DescrSub.dispose();
             $.postErr(getTransUrl, transModel.paging, function (res) {
                 ko.mapping.updateFromJS(transModel, res);
-                transModel.selectedRow(-1);
-                transModel.currentItem = null;
-                addApi.close();
+                transModel.selectedItem(null);
+                transDlg.close();
                 //$('#edit_row').hide();
             });
         }
@@ -183,24 +125,30 @@ $(document).ready(function () {
             //                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
             //            }
         }
+        transModel.ShowDialog = function () {
+            var row = this.selectedRow();
+            var frm = $("#transDlg");
+            frm.css({ width: row.width() });
+            var conf = transDlg.getConf();
+            conf.top = row.offset().top + row.height();
+            conf.left = row.offset().left - 5;
+            frm.overlay().load();
+        }
         transModel.Add = function () {
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {
                 return item.Id() == null;
             });
             if (fItem != null) return;
+            transDlg.close();
+            this.editObj = null;
             var date = new Date();
             this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
-                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1)
+                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1), Notes: ko.observable(null)
             });
-            this.currentItem = this.items[0];
-            this.GoToEdit(null, this.items()[0]);
             var row = $('#transGrid table tr:eq(1)');
-            var frm = $("#add_form");
-            frm.css({ width: row.width() });
-            var conf = addApi.getConf();
-            conf.top = row.offset().top + row.height();
-            conf.left = row.offset().left - 5;
-            frm.overlay().load();
+            ko.applyBindings(this.items()[0], $("#transDlg")[0]);
+            this.GoToEdit(null, this.items()[0], row);
+            this.ShowDialog();
         }
         transModel.CancelAdd = function () {
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {
@@ -209,7 +157,7 @@ $(document).ready(function () {
             ko.utils.arrayRemoveItem(this.items, fItem);
         }
         transModel.DescrSub = null;
-        transModel.GoToEdit = function (event, item) {
+        transModel.GoToEdit = function (event, item, row) {
             //manual edit row
             //                    
             //                    var rowEdit = $('#edit_row');
@@ -220,39 +168,40 @@ $(document).ready(function () {
             //**********
 
             //console.log();
-            if (item.Id() != null) addApi.close();
-            if (item.Id() != null) item.FullRow = ko.dependentObservable(function () {
-                return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date();
-            }, item);
+            if (item != this.selectedItem()) transDlg.close();
             if (this.DescrSub != null)
                 this.DescrSub.dispose();
-            if (item.Id() != null) this.DescrSub = item.FullRow.subscribe(function (newValue) {
-                transModel.Save(false);
-            });
-            this.currentItem = item;
-            this.selectedRow(item.Id());
-            if (event != null) {
-                var row = $(event.currentTarget)
-                $(row.find('[name="Category"]')).autocomplete(catModel.Suggest(), {
-                    minChars: 1
-                    //,matchContains: true //if minChars>1
-                , delay: 10
+            if (item.Id() != null) {
+                item.FullRow = ko.dependentObservable(function () {
+                    return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date();
+                }, item);
+                this.DescrSub = item.FullRow.subscribe(function (newValue) {
+                    transModel.Save(false);
                 });
             }
+            this.selectedItem(item);
+            if (event != null)
+                row = $(event.currentTarget)
+            this.selectedRow(row);
+            $(row.find('[name="Category"]')).autocomplete(catModel.Suggest(), {
+                minChars: 1
+                //,matchContains: true //if minChars>1
+            , delay: 10
+            });
         }
         //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
         //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
         transModel.Save = function (reloadPage) {
-            if (this.currentItem != null) {
-                var cat = this.currentItem.Category();
+            if (this.selectedItem() != null) {
+                var cat = this.selectedItem().Category();
                 if (cat != null) {
                     var item = catModel.Search(cat);
                     if (item != null)
-                        this.currentItem.CategoryId(item.Id());
+                        this.selectedItem().CategoryId(item.Id());
                 }
                 //                    $.postErr(updateTransUrl, ko.toJSON(transModel.currentItem), function (res) {
                 //                    }, 'json');
-                $.postErr(updateTransUrl, ko.mapping.toJS(transModel.currentItem), function (res) {
+                $.postErr(updateTransUrl, ko.mapping.toJS(transModel.selectedItem()), function (res) {
                     //transModel.currentItem.Id(res.Id);
                     if (reloadPage) transModel.ReloadPage();
                 });
@@ -260,8 +209,11 @@ $(document).ready(function () {
             }
         }
         transModel.ShowEdit = function (event, item) {
-            //TODO: load data into form
-            $("#edit_form").overlay().load();
+            this.selectedRow($(event.currentTarget).parents('tr'));
+            this.editObj = ko.mapping.toJS(transModel.selectedItem());
+            ko.applyBindings(this.editObj, $("#transDlg")[0]);
+            this.ShowDialog();
+            //$("#edit_form").overlay().load();
         }
         transModel.DeleteItem = function (item) {
             $.postErr(delTransUrl, { id: item.Id() }, function (res) {
@@ -296,6 +248,37 @@ $(document).ready(function () {
         }
         ko.applyBindings(transModel, $("#transGrid")[0]);
     });
+}
+$(document).ready(function () {
+    //$("#edit_form").overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
+    //$("#transDlg #cancel").click(function (e) { transModel.CancelAdd(); });
+    $("#transDlg #ok").click(function (e) {
+        //TODO: check input
+        //tst
+        var row = transModel.selectedRow();
+        var am = row.find('[name="Amount"]');
+        var cat = row.find('[name="Category"]');
+        am.removeClass(inputCssError);
+        cat.removeClass(inputCssError);
+        if (transModel.editObj != null)
+            ko.mapping.fromJS(transModel.editObj, {}, transModel.selectedItem());
+        var item = transModel.selectedItem();
+        //console.log(item);
+        if (item.Amount() <= 0)
+            am.addClass(inputCssError);
+        if (item.Category() == null)
+            cat.addClass(inputCssError);
+        if (item.Amount() <= 0 || item.Category() == null)
+            return e.stopImmediatePropagation();
+        transModel.Save(transModel.editObj == null);
+    });
+    transDlg = $("#transDlg").overlay({ fixed: false }).data('overlay');
+    transDlg.onBeforeClose(function (e) {
+        //console.log(e);
+        transModel.CancelAdd();
+    });
+    //$("#transDlg").overlay({ fixed: false });
+    //loadTransactions();
     //Gategories
     $.postErr(getCatUrl, function (res) {
         catModel = ko.mapping.fromJS(res);
@@ -317,8 +300,8 @@ $(document).ready(function () {
             }
         };
         catModel.AssignCategory = function (item) {
-            if (transModel.currentItem != null) {
-                transModel.currentItem.Category(item.Name());
+            if (transModel.selectedItem() != null) {
+                transModel.selectedItem().Category(item.Name());
                 $("#cat_menu").hide();
             }
         };
