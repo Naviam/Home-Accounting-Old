@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Naviam.DAL;
 using Naviam.Data;
-using Naviam.Domain.Abstract;
 using Naviam.Entities.User;
 
 namespace Naviam.Domain.Concrete
 {
-    public class MembershipRepository : IMembershipRepository
+    public class MembershipRepository
     {
         public IEnumerable<Company> GetCompanies(int? userId)
         {
             return CompaniesDataAdapter.GetCompanies(userId).AsEnumerable();
         }
 
-        public UserProfile GetUserProfile(string userName, string password)
+        public virtual UserProfile GetUser(string userName, string password)
         {
-            var profile = MembershipDataAdapter.GetUserProfile(userName, password);
+            var profile = MembershipDataAdapter.GetUser(userName, password);
             if (!SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", profile.Password))
                 profile = null;
 
@@ -28,24 +28,5 @@ namespace Naviam.Domain.Concrete
             }
             return profile;
         }
-
-        
-        public void ValidateUser(string email, string password)
-        {
-            throw new System.NotImplementedException();
-        }
-
-
-        public void SignInUser(string email, string password)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void ForgotPassword(string email)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        
     }
 }
