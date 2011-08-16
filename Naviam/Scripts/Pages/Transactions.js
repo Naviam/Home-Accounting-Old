@@ -4,12 +4,12 @@
 var transModel = {
     paging: { Page: 1, SortField: 'Date', SortDirection: 1 }
 };
-ko.bindingHandlers.numeric = {
+ko.bindingHandlers.amount = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         //handle the field changing
         ko.utils.registerEventHandler(element, "change", function () {
             var observable = valueAccessor();
-            var parsed = parseFloat($(element).val());
+            var parsed = parseFloat($(element).val().replace(/[^\d.]+/g, ""))
             var correct = !isNaN(parsed) && (parsed > 0);
             if (correct)
                 observable(parsed)
@@ -18,7 +18,9 @@ ko.bindingHandlers.numeric = {
         });
     },
     update: function (element, valueAccessor) {
-        $(element).val(ko.utils.unwrapObservable(valueAccessor()));
+        var val = addCommas(ko.utils.unwrapObservable(valueAccessor()));
+        $(element).val(val);
+        $(element).text(val);
     }
 };
 ko.bindingHandlers.category = {
