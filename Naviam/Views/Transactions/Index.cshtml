@@ -86,8 +86,8 @@
             @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
-            <span data-bind="text: Amount, visible: transModel.selectedItem() != $data"></span>
-            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, numeric: Amount" name="Amount"/>        
+            <span data-bind="amount: Amount, visible: transModel.selectedItem() != $data"></span>
+            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount"/>        
         </td>
         <td style="width:5%">
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}">Edit</a>
