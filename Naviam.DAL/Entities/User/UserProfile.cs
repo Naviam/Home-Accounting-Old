@@ -87,13 +87,13 @@ namespace Naviam.Entities.User
         public string Comment { get; set; }
         public string PasswordQuestion { get; set; }
         public string PasswordAnswer { get; set; }
-        public CultureInfo Culture
-        {
-            get
-            {
-                return _ci;
-            }
+        //public CultureInfo Culture
+        //{
+        //    get
+        //    {
+        //        return _ci;
+        //    }
         
-        }
+        //}
     }
 }

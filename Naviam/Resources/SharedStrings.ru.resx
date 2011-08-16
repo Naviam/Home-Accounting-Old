@@ -126,9 +126,6 @@
   <data name="LogonHeader" xml:space="preserve">
     <value>Введите имя пользователя и пароль</value>
   </data>
-  <data name="Notes" xml:space="preserve">
-    <value>Заметки</value>
-  </data>
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Операции</value>
   </data>

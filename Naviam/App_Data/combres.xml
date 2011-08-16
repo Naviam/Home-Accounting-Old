@@ -82,6 +82,9 @@
     <resourceSet name="datePicker" type="js">
       <resource path="~/Scripts/jquery.tools/dateinput/dateinput.min.js" />
     </resourceSet>
+    <resourceSet name="validate_tools" type="js">
+      <resource path="~/Scripts/jquery.tools/validator/validator.min.js" />
+    </resourceSet>
     <resourceSet name="overlay" type="js">
       <resource path="~/Scripts/jquery.tools/overlay/overlay.min.js" />
       <resource path="~/Scripts/jquery.tools/toolbox/toolbox.expose.min.js" />
@@ -101,6 +104,7 @@
       <resource reference="overlay" />
       <resource reference="autocomplete" />
       <resource reference="upload_html5" />
+      <resource reference="validate_tools" />
       <resource path="~/Scripts/Pages/Transactions.min.js" />
     </resourceSet>
     <resourceSet name="accounts" type="js">

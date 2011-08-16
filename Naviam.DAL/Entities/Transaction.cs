@@ -12,7 +12,7 @@ namespace Naviam.Data
     public class Transaction : DbEntity
     {
         public enum TransactionTypes { Cash = 0, Check, Pending }
-        public enum TransactionDirections { Expence  = 0, Income }
+        public enum TransactionDirections { Expense  = 0, Income }
 
         public Transaction() { }
         public Transaction(SqlDataReader reader) 

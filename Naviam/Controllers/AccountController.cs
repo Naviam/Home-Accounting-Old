@@ -7,6 +7,7 @@ using Naviam.WebUI.Helpers;
 using Naviam.WebUI.Helpers.Cookies;
 using Naviam.WebUI.Models;
 using Naviam.WebUI.Resources;
+using System.Globalization;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -62,7 +63,7 @@ namespace Naviam.WebUI.Controllers
                     _cookieContainer.SetAuthCookie(
                         sessionKey, model.UserName.ToLower(), model.RememberMe);
 
-                    //TODO: setup locale into Session["Culture"]
+                    Session["Culture"] = !String.IsNullOrEmpty(profile.LanguageNameShort) ? new CultureInfo(profile.LanguageNameShort) : null;
                     // Make sure we only follow relative returnUrl parameters to protect against having an open redirector
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))

@@ -8,6 +8,7 @@ using Naviam.DAL;
 using Naviam.WebUI.Resources;
 
 using Naviam.WebUI.Models;
+using System.Resources;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -71,7 +72,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetTransactions(Paging paging, PageContext pageContext)
         {
             var user = CurrentUser;
-            var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany, user.LanguageId, false);
+            var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany);
             paging.Filter = "";
             if (pageContext.AccountId != null)
             {
@@ -101,9 +102,9 @@ namespace Naviam.WebUI.Controllers
             if (pageContext.AccountId != null)
                 trans.AccountId = pageContext.AccountId;
             if (trans.Id != null)
-                TransactionsDataAdapter.Update(trans, user.CurrentCompany, user.LanguageId);
+                TransactionsDataAdapter.Update(trans, user.CurrentCompany);
             else
-                TransactionsDataAdapter.Insert(trans, user.CurrentCompany, user.LanguageId);
+                TransactionsDataAdapter.Insert(trans, user.CurrentCompany);
             return Json(trans);
         }
 
@@ -111,7 +112,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult DeleteTransaction(int? id)
         {
             var user = CurrentUser;
-            var trans = TransactionsDataAdapter.GetTransaction(id, user.Id, user.LanguageId, false);
+            var trans = TransactionsDataAdapter.GetTransaction(id, user.Id);
             TransactionsDataAdapter.Delete(trans, user.CurrentCompany, user.LanguageId);
             return Json(id);
         }
@@ -120,7 +121,17 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetCategories()
         {
             var user = CurrentUser;
-            var items = Categories.GetTree(CategoriesDataAdapter.GetCategories(user.Id));
+            var cats = CategoriesDataAdapter.GetCategories(user.Id);
+            //Localize
+            var rm = new ResourceManager(typeof(CategoriesTr));
+            foreach (var item in cats)
+            {
+                var st = rm.GetString(item.Name);
+                if (!String.IsNullOrEmpty(st))
+                    item.Name = st;
+            }
+            //end Localize
+            var items = Categories.GetTree(cats);
             return Json(new { items });
         }
 
@@ -129,7 +140,7 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             var accounts = AccountsDataAdapter.GetAccounts(user.CurrentCompany, user.LanguageId, false);
-            accounts.Insert(0, new Account() { Number = "All"});
+            accounts.Insert(0, new Account { Number = "All" });
             return Json(new { items = accounts });
         }
 
