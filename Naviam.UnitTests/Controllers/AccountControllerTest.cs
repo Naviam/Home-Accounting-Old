@@ -17,6 +17,7 @@ namespace Naviam.UnitTests.Controllers
     [TestClass]
     public class AccountControllerTest
     {
+        #region LOGIN / LOGOFF TESTS
         [TestMethod]
         public void LoginGet()
         {
@@ -54,7 +55,7 @@ namespace Naviam.UnitTests.Controllers
 
             // Act
             var result = (RedirectResult)controller.LogOn(
-                new LogOnModel { UserName = "someUser", Password = "goodPass", RememberMe = true }, 
+                new LogOnModel { UserName = "someUser", Password = "goodPass", RememberMe = true },
                 "/someUrl");
 
             // Assert
@@ -66,7 +67,7 @@ namespace Naviam.UnitTests.Controllers
         {
             // Arrange
             var controller = GetAccountController(new UserProfile());
-            var model = new LogOnModel {UserName = "someUser", Password = String.Empty, RememberMe = true};
+            var model = new LogOnModel { UserName = "someUser", Password = String.Empty, RememberMe = true };
 
             // Act
             var result = (ViewResult)controller.CallWithModelValidation(m => m.LogOn(model, null), model);
@@ -117,12 +118,14 @@ namespace Naviam.UnitTests.Controllers
 
             // Act
             var result = (RedirectToRouteResult)controller.LogOff();
-            
+
             // Assert
             Assert.AreEqual("Account", result.RouteValues["controller"]);
             Assert.AreEqual("LogOn", result.RouteValues["action"]);
         }
+        #endregion
 
+        #region REGISTER TESTS
         [TestMethod]
         public void RegisterGet()
         {
@@ -142,7 +145,7 @@ namespace Naviam.UnitTests.Controllers
         {
             // Arrange
             var controller = GetAccountController();
-            var model = new RegisterModel {Email = "email", Password = "goodPass", ConfirmPassword = "goodPass"};
+            var model = new RegisterModel { UserName = "email", Password = "goodPass", ConfirmPassword = "goodPass" };
 
             // Act
             var result = (RedirectToRouteResult)controller.CallWithModelValidation(m => m.Register(model), model);
@@ -151,6 +154,91 @@ namespace Naviam.UnitTests.Controllers
             Assert.AreEqual("Transactions", result.RouteValues["controller"]);
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
+
+        [TestMethod]
+        public void RegisterPostReturnsViewIfEmailNotSpecified()
+        {
+            // Arrange
+            var controller = GetAccountController();
+
+            // Act
+            var result = (ViewResult)controller.Register(new RegisterModel { UserName = "", Password = "goodPass", ConfirmPassword = "goodPass" });
+
+            // Assert
+            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
+            Assert.AreEqual("You must specify an email address.", result.ViewData.ModelState["email"].Errors[0].ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RegisterPostReturnsViewIfNewPasswordDoesNotMatchConfirmPassword()
+        {
+            // Arrange
+            var controller = GetAccountController();
+
+            // Act
+            var result = (ViewResult)controller.Register(new RegisterModel { UserName = "email", Password = "goodPass", ConfirmPassword = "goodPass2" });
+
+            // Assert
+            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
+            Assert.AreEqual("The new password and confirmation password do not match.", result.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RegisterPostReturnsViewIfPasswordIsNull()
+        {
+            // Arrange
+            var controller = GetAccountController();
+
+            // Act
+            var result = (ViewResult)controller.Register(new RegisterModel { UserName = "email", Password = null, ConfirmPassword = null });
+
+            // Assert
+            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
+            Assert.AreEqual("You must specify a password of 6 or more characters.", result.ViewData.ModelState["password"].Errors[0].ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RegisterPostReturnsViewIfPasswordIsTooShort()
+        {
+            // Arrange
+            var controller = GetAccountController();
+
+            // Act
+            var result = (ViewResult)controller.Register(new RegisterModel { UserName = "email", Password = "12345", ConfirmPassword = "12345" });
+
+            // Assert
+            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
+            Assert.AreEqual("You must specify a password of 6 or more characters.", result.ViewData.ModelState["password"].Errors[0].ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RegisterPostReturnsViewIfRegistrationFails()
+        {
+            // Arrange
+            var controller = GetAccountController();
+
+            // Act
+            var result = (ViewResult)controller.Register(new RegisterModel { UserName = "DuplicateUserName", Password = "badPass", ConfirmPassword = "badPass" });
+
+            // Assert
+            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
+            Assert.AreEqual("Username already exists. Please enter a different user name.", result.ViewData.ModelState[""].Errors[0].ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RegisterPostReturnsViewIfUsernameNotSpecified()
+        {
+            // Arrange
+            var controller = GetAccountController();
+
+            // Act
+            var result = (ViewResult)controller.Register(new RegisterModel { UserName = "email", Password = "badPass", ConfirmPassword = "badPass" });
+
+            // Assert
+            Assert.AreEqual(6, result.ViewData["PasswordLength"]);
+            Assert.AreEqual("You must specify a username.", result.ViewData.ModelState["username"].Errors[0].ErrorMessage);
+        }
+        #endregion
 
         private static AccountController GetAccountController(UserProfile user = null)
         {
