@@ -25,6 +25,15 @@ namespace Naviam.WebUI.Models
         public bool RememberMe { get; set; }
     }
 
+    public class RegisterModel
+    {
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
+        public string ConfirmPassword { get; set; }
+    }
+
     #endregion
 
     #region Validation
