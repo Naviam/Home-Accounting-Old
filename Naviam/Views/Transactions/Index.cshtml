@@ -1,5 +1,6 @@
 ﻿@using Naviam.WebUI.Resources
 @using Naviam.Entities.User;
+@using Naviam.Data;
 @{
     ViewBag.Title = SharedStrings.TransactionsTitle;
     Layout = "~/Views/Shared/_LayoutWithSidebars.cshtml";
@@ -152,8 +153,17 @@
 </div>
 <div class="overlaywoshadow" id="transDlg">
     <table>
+        <td></td>
+        <td>
+            <label><input data-bind="checked: Direction" name="Direction" type="radio" value='0'/>@DisplayNames.Expense</label>
+            <label><input data-bind="checked: Direction" name="Direction" type="radio" value='1'/>@DisplayNames.Income</label>
+        </td>
     <tr>
-        <td>@SharedStrings.Notes:</td>
+        <td>@DisplayNames.Merchant:</td>
+        <td><input data-bind="value: Merchant" name="Merchant"/></td>
+    </tr>
+    <tr>
+        <td>@DisplayNames.Notes:</td>
         <td><textarea data-bind="value: Notes" name="Notes" rows='2' cols='2'></textarea></td>
     </tr>
     </table>

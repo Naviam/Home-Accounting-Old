@@ -44,17 +44,17 @@ namespace Naviam.WebUI.Controllers
                                 Amount = Math.Abs(trans.AccountAmount),
                                 Date = trans.TransactionDate,
                                 Description = trans.OperationDescription,
-                                Direction = trans.AccountAmount > 0 ? Transaction.TransactionDirections.Income : Transaction.TransactionDirections.Expence,
+                                Direction = trans.AccountAmount > 0 ? Transaction.TransactionDirections.Income : Transaction.TransactionDirections.Expense,
                                 Merchant = trans.Place,
                                 TransactionType = Transaction.TransactionTypes.Cash,
                                 AccountId = 1,
                                 CategoryId = 1
                             };
-                            TransactionsDataAdapter.Insert(dbTrans, CurrentUser.CurrentCompany, CurrentUser.LanguageId);
+                            TransactionsDataAdapter.Insert(dbTrans, CurrentUser.CurrentCompany);
                         }
                     }
                     //fill redis again
-                    TransactionsDataAdapter.GetTransactions(CurrentUser.CurrentCompany, CurrentUser.LanguageId, true);
+                    TransactionsDataAdapter.GetTransactions(CurrentUser.CurrentCompany, true);
                     result = "ok";
                     Response.Redirect(Request.UrlReferrer.PathAndQuery);
                 }

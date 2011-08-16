@@ -22,24 +22,24 @@ namespace Naviam.WebUI.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class SharedStrings {
+    internal class CategoriesTr {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal SharedStrings() {
+        internal CategoriesTr() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Naviam.WebUI.Resources.SharedStrings", typeof(SharedStrings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Naviam.WebUI.Resources.CategoriesTr", typeof(CategoriesTr).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,57 +51,12 @@ namespace Naviam.WebUI.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cancel.
-        /// </summary>
-        public static string Cancel {
-            get {
-                return ResourceManager.GetString("Cancel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Log On.
-        /// </summary>
-        public static string LogOn {
-            get {
-                return ResourceManager.GetString("LogOn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Account Information.
-        /// </summary>
-        public static string LogonHeader {
-            get {
-                return ResourceManager.GetString("LogonHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Transactions.
-        /// </summary>
-        public static string TransactionsTitle {
-            get {
-                return ResourceManager.GetString("TransactionsTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Upload.
-        /// </summary>
-        public static string Upload {
-            get {
-                return ResourceManager.GetString("Upload", resourceCulture);
             }
         }
     }

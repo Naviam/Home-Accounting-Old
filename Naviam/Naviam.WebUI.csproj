@@ -128,6 +128,11 @@
     <Compile Include="Models\MenuAppModel.cs" />
     <Compile Include="Models\PageContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\CategoriesTr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CategoriesTr.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\DisplayNames.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -315,6 +320,11 @@
     <Content Include="Views\MenuApp\TopMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\CategoriesTr.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CategoriesTr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\CategoriesTr.ru.resx" />
     <EmbeddedResource Include="Resources\DisplayNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DisplayNames.Designer.cs</LastGenOutput>
