@@ -12,6 +12,7 @@
     <script type="text/javascript" src="~/Scripts/jquery-1.6.2.js"></script> 
     <script type="text/javascript" src="~/Scripts/knockout-1.2.1.js"></script> 
     <script type="text/javascript" src="~/Scripts/knockout.mapping.js"></script> 
+    <script type="text/javascript" src="~/Scripts/common.js"></script> 
 }
 <script type='text/javascript'>
     var getTransUrl = '@Url.Action("GetTransactions", "Transactions")';
@@ -46,6 +47,7 @@
             accountsModel.hideEdit = function (show) {
                 var elem = $("#account_edit")[0];
                 var trans_elem = $("#transGrid");
+                $(elem).find('form').validator({ lang: lang.culture }).data("validator").reset();
                 if (!show) {
                     $(elem).hide();
                     trans_elem.show();
@@ -60,17 +62,17 @@
                 var trans_elem = $("#transGrid");
                 item.Save = function () {
                     if (item === this) {
-                        $.postErr(updateAccountUrl, this, function (res) {
-                            if (editItem != null)
-                                ko.mapping.fromJS(item, {}, editItem);
-                            else {
-                                //TODO:koNew = ko.mapping.fromJS(res)
-                                var koNew = {};
-                                ko.mapping.fromJS(item, {}, koNew);
-                                accountsModel.items.splice(1, 0, koNew);
-                            }
-                            accountsModel.hideEdit(false);
-                        });
+                        if ($(elem).find('form').data("validator").checkValidity()) {
+                            $.postErr(updateAccountUrl, this, function (res) {
+                                if (editItem != null)
+                                    ko.mapping.fromJS(item, {}, editItem);
+                                else {
+                                    koNew = ko.mapping.fromJS(res)
+                                    accountsModel.items.splice(1, 0, koNew);
+                                }
+                                accountsModel.hideEdit(false);
+                            });
+                        }
                     }
                 }
                 ko.cleanNode(elem);
@@ -226,16 +228,15 @@
 
 <div id='account_edit' class='hidden'>
 @*TODO: move to partial view*@
-@*TODO: validate input*@
-@using (Html.BeginForm("UpdateAccount", "Accounts"))
+@using (Html.BeginForm("UpdateAccount", "Accounts", FormMethod.Post, new {id = "editAccountFrm" }))
 {
     <table>
     <tr>
-    <td>Account</td>
-    <td><input data-bind="value: Number" name="Number"/></td>
+    <td>Account:</td>
+    <td><input data-bind="value: Number" name="Number" required="required"/></td>
     </tr>
     </table>
-    <button type="button" data-bind="click: function(event) { Save(event); }">Ok</button>
+    <button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
     <button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
 }
 </div>

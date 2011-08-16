@@ -263,6 +263,7 @@
     <Content Include="Scripts\jquery.tools\tooltip\tooltip.js" />
     <Content Include="Scripts\jquery.tools\tooltip\tooltip.slide.js" />
     <Content Include="Scripts\jquery.tools\validator\validator.js" />
+    <Content Include="Scripts\jquery.tools\validator\validator.min.js" />
     <Content Include="Scripts\jquery.uploadify.v2.1.4.js" />
     <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
     <Content Include="Scripts\jquery.validate.js" />

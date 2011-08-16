@@ -3,6 +3,8 @@ using Naviam.DAL;
 using Naviam.WebUI.Resources;
 using System.Collections.Generic;
 
+using Naviam.Data;
+
 namespace Naviam.WebUI.Controllers
 {
     public class AccountsController : BaseController
@@ -30,9 +32,9 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public string UpdateAccount()
+        public ActionResult UpdateAccount(Account account)
         {
-            return "ok";
+            return Json(account);
         }
     }
 }

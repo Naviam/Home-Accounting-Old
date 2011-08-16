@@ -40,6 +40,9 @@ function parseSiteError(request) {
 function showSiteError(errorText) {
     alert(errorText);
 }
+function debug(s) {
+    console.log(s);
+}
 function addCommas(nStr) {
     nStr += '';
     x = nStr.split('.');
