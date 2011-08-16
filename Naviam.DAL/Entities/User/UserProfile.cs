@@ -4,6 +4,7 @@ using System.Data;
 using Naviam.Data;
 using System.Web;
 using System.Xml.Serialization;
+using System.Globalization;
 
 namespace Naviam.Entities.User
 {
@@ -13,6 +14,9 @@ namespace Naviam.Entities.User
     [Serializable]
     public class UserProfile : DbEntity
     {
+        private CultureInfo _ci;
+        private string _language_short_name;
+
         public UserProfile()  {}
 
         public UserProfile(IDataRecord record)
@@ -22,6 +26,11 @@ namespace Naviam.Entities.User
             Password = record["password"] as string;
             FirstName = record["first_name"] as string;
             LastName = record["last_name"] as string;
+            Comment = record["comment"] as string;
+            PasswordQuestion = record["password_question"] as string;
+            PasswordAnswer = record["password_answer"] as string;
+            LanguageId = record["id_language"] as int?;
+            LanguageNameShort = record["language_name_short"] as string;
         }
 
         public string Name { get; set; }
@@ -29,6 +38,21 @@ namespace Naviam.Entities.User
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? LanguageId { get; set; }
+        public string LanguageNameShort
+        { 
+            get 
+            { 
+                return _language_short_name; 
+            }
+            set 
+            {
+                _language_short_name = value;
+                if(string.IsNullOrEmpty(_language_short_name))
+                    _ci = new CultureInfo("en");
+                else
+                    _ci = new CultureInfo(LanguageNameShort);
+            }
+        }
         public int? DefaultCompany { get; set; }
         [XmlIgnore]
         public int? CurrentCompany { 
@@ -60,5 +84,16 @@ namespace Naviam.Entities.User
             } 
         }
         public IEnumerable<Company> Companies { get; set; }
+        public string Comment { get; set; }
+        public string PasswordQuestion { get; set; }
+        public string PasswordAnswer { get; set; }
+        public CultureInfo Culture
+        {
+            get
+            {
+                return _ci;
+            }
+        
+        }
     }
 }
