@@ -6,6 +6,7 @@ using Naviam.Domain.Concrete;
 using Naviam.WebUI.Helpers;
 using Naviam.WebUI.Helpers.Cookies;
 using Naviam.WebUI.Models;
+using Naviam.WebUI.Resources;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -13,23 +14,20 @@ namespace Naviam.WebUI.Controllers
     public class AccountController : Controller
     {
         private readonly MembershipRepository _membershipRepository;
-        private readonly ICacheWrapper _cacheWrapper;
         private readonly ICookieContainer _cookieContainer;
 
         // This constructor is used by the MVC framework to instantiate the controller using
         // the default forms authentication and membership providers.
 
         public AccountController()
-            : this(null, null, null, new MembershipRepository())
+            : this(null, null, new MembershipRepository())
         {
         }
 
-        public AccountController(ICookieContainer cookieContainer, IFormsAuthentication formsAuth, 
-            ICacheWrapper cacheWrapper, MembershipRepository membershipRepository)
+        public AccountController(ICookieContainer cookieContainer, IFormsAuthentication formsAuth, MembershipRepository membershipRepository)
         {
             _cookieContainer = cookieContainer;
             _membershipRepository = membershipRepository;
-            _cacheWrapper = cacheWrapper;
             FormsAuth = formsAuth ?? new FormsAuthenticationService();
         }
 
@@ -73,7 +71,7 @@ namespace Naviam.WebUI.Controllers
                     }
                     return RedirectToAction("Index", "Transactions");
                 }
-                ModelState.AddModelError("", @"The user name or password provided is incorrect.");
+                ModelState.AddModelError(String.Empty, ValidationStrings.UsernameOrPasswordIsIncorrect);
             }
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -94,9 +92,13 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(string email, string password, string confirmPassword)
+        public ActionResult Register(RegisterModel model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("Index", "Transactions");
+            }
+            return View(model);
         }
 
         [HttpPost]
