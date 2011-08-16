@@ -34,7 +34,7 @@ namespace Naviam.UnitTests.Controllers
         public void LoginPostRedirectsHomeIfLoginSuccessfulButNoReturnUrlGiven()
         {
             // Arrange
-            var controller = GetAccountController();
+            var controller = GetAccountController(new UserProfile());
 
             // Act
             var result = (RedirectToRouteResult)controller.LogOn(
@@ -50,7 +50,7 @@ namespace Naviam.UnitTests.Controllers
         public void LoginPostRedirectsToReturnUrlIfLoginSuccessfulAndReturnUrlGiven()
         {
             // Arrange
-            var controller = GetAccountController();
+            var controller = GetAccountController(new UserProfile());
 
             // Act
             var result = (RedirectResult)controller.LogOn(
@@ -65,11 +65,11 @@ namespace Naviam.UnitTests.Controllers
         public void LoginPostReturnsViewIfPasswordNotSpecified()
         {
             // Arrange
-            var controller = GetAccountController();
-            LogOnModel[] model = {new LogOnModel {UserName = "someUser", Password = String.Empty, RememberMe = true}};
+            var controller = GetAccountController(new UserProfile());
+            var model = new LogOnModel {UserName = "someUser", Password = String.Empty, RememberMe = true};
 
             // Act
-            var result = (ViewResult)controller.CallWithModelValidation(m => m.LogOn(model[0], null), model[0]);
+            var result = (ViewResult)controller.CallWithModelValidation(m => m.LogOn(model, null), model);
 
             // Assert
             var resultModel = (LogOnModel)result.Model;
@@ -81,11 +81,11 @@ namespace Naviam.UnitTests.Controllers
         public void LoginPostReturnsViewIfUsernameNotSpecified()
         {
             // Arrange
-            var controller = GetAccountController();
-            LogOnModel[] model = { new LogOnModel { UserName = "", Password = "1", RememberMe = false } };
+            var controller = GetAccountController(new UserProfile());
+            var model = new LogOnModel { UserName = "", Password = "1", RememberMe = false };
 
             // Act
-            var result = (ViewResult)controller.CallWithModelValidation(m => m.LogOn(model[0], null), model[0]);
+            var result = (ViewResult)controller.CallWithModelValidation(m => m.LogOn(model, null), model);
 
             // Assert
             var resultModel = (LogOnModel)result.Model;
@@ -98,16 +98,15 @@ namespace Naviam.UnitTests.Controllers
         {
             // Arrange
             var controller = GetAccountController();
-
-            LogOnModel[] model = { new LogOnModel { UserName = "s@s.s", Password = "badPass", RememberMe = true } };
+            var model = new LogOnModel { UserName = "s@s.s", Password = "badPass", RememberMe = true };
 
             // Act
-            var result = (ViewResult)controller.CallWithModelValidation(m => m.LogOn(model[0], null), model[0]);
+            var result = (ViewResult)controller.CallWithModelValidation(m => m.LogOn(model, null), model);
 
             // Assert
             var resultModel = (LogOnModel)result.Model;
             Assert.AreEqual(true, resultModel.RememberMe);
-            Assert.AreEqual(ValidationStrings.UsernameOrPasswordIsIncorrect, result.ViewData.ModelState["_FORM"].Errors[0].ErrorMessage);
+            Assert.AreEqual(ValidationStrings.UsernameOrPasswordIsIncorrect, result.ViewData.ModelState[String.Empty].Errors[0].ErrorMessage);
         }
 
         [TestMethod]
@@ -153,10 +152,9 @@ namespace Naviam.UnitTests.Controllers
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
 
-        private static AccountController GetAccountController()
+        private static AccountController GetAccountController(UserProfile user = null)
         {
             var membershipRepository = new Mock<MembershipRepository>();
-            var user = new UserProfile();
 
             var cookieContainer = new Mock<ICookieContainer>();
             cookieContainer.Setup(c => c.SetValue(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<DateTime>()));
