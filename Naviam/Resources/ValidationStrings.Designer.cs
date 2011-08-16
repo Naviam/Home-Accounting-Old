@@ -70,6 +70,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The user name or password provided is incorrect..
+        /// </summary>
+        public static string UsernameOrPasswordIsIncorrect {
+            get {
+                return ResourceManager.GetString("UsernameOrPasswordIsIncorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please specify your username (email)..
         /// </summary>
         public static string UserNameRequired {

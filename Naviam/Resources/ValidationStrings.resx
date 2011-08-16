@@ -123,4 +123,7 @@
   <data name="UserNameRequired" xml:space="preserve">
     <value>Please specify your username (email).</value>
   </data>
+    <data name="UsernameOrPasswordIsIncorrect">
+        <value xml:space="preserve">The user name or password provided is incorrect.</value>
+    </data>
 </root>
