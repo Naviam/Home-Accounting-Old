@@ -104,6 +104,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\AttachmentsController.cs" />
     <Compile Include="Helpers\Cookies\CookieContainer.cs" />
     <Compile Include="Helpers\Cookies\ICookieContainer.cs" />
@@ -117,7 +118,6 @@
     <Compile Include="Helpers\Parsers\ParsersFactory.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\BankAccountsDataController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\MenuAppController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
@@ -363,9 +363,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\BankAccountsData\Accounts.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Shared\_LayoutWithSidebars.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -380,6 +377,7 @@
     <Content Include="Views\MenuApp\CompaniesMenu.cshtml" />
     <Content Include="packages.config" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Accounts\Accounts.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

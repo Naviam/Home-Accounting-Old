@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Naviam.WebUI.Controllers
 {
-    public class BankAccountsDataController : BaseController
+    public class AccountsController : BaseController
     {
         public ActionResult Index()
         {
@@ -27,6 +27,12 @@ namespace Naviam.WebUI.Controllers
                            };
 
             return Json(new { items = accounts, headItems = head });
+        }
+
+        [HttpPost]
+        public string UpdateAccount()
+        {
+            return "ok";
         }
     }
 }

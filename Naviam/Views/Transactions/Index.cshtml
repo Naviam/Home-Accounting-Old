@@ -19,6 +19,7 @@
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
     var getAccountsUrl = '@Url.Action("GetAccounts", "Transactions")';
+    var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
     //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
     $(document).ready(function () {
         var url = $('#upload_statement').parents('form').attr('action');
@@ -28,13 +29,61 @@
         });
 
         $.postErr(getAccountsUrl, transModel.paging, function (res) {
-            accountsModel = ko.mapping.fromJS(res);
+            var mapping = {
+                'items': {
+                    key: function (data) {
+                        return ko.utils.unwrapObservable(data.Id);
+                    }
+                }
+            }
+            accountsModel = ko.mapping.fromJS(res, mapping);
             accountsModel.selectedItem = ko.observable(null);
             accountsModel.selectedItem(accountsModel.items()[0]);
             accountsModel.selectedItem.subscribe(function (newValue) {
                 pageContext.accountId = newValue.Id();
                 transModel.ReloadPage();
             });
+            accountsModel.hideEdit = function (show) {
+                var elem = $("#account_edit")[0];
+                var trans_elem = $("#transGrid");
+                if (!show) {
+                    $(elem).hide();
+                    trans_elem.show();
+                }
+                else {
+                    $(elem).show();
+                    trans_elem.hide();
+                }
+            }
+            accountsModel.passToEdit = function (item, editItem) {
+                var elem = $("#account_edit")[0];
+                var trans_elem = $("#transGrid");
+                item.Save = function () {
+                    if (item === this) {
+                        $.postErr(updateAccountUrl, this, function (res) {
+                            if (editItem != null)
+                                ko.mapping.fromJS(item, {}, editItem);
+                            else {
+                                //TODO:koNew = ko.mapping.fromJS(res)
+                                var koNew = {};
+                                ko.mapping.fromJS(item, {}, koNew);
+                                accountsModel.items.splice(1, 0, koNew);
+                            }
+                            accountsModel.hideEdit(false);
+                        });
+                    }
+                }
+                ko.cleanNode(elem);
+                ko.applyBindings(item, elem);
+                accountsModel.hideEdit(true);
+            }
+            accountsModel.addItem = function () {
+                var newItem = { Id: null, Number: null };
+                this.passToEdit(newItem, null);
+            }
+            accountsModel.editItem = function (item) {
+                accountsModel.passToEdit(ko.mapping.toJS(item), item);
+            }
             ko.applyBindings(accountsModel, $("#accounts")[0]);
             loadTransactions();
         });
@@ -50,10 +99,12 @@
 <script type="text/html" id="accountsTemplate">
     <li>
         <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
+        <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">Edit</a>
     </li>
 </script>
 <div id="accounts">
-    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem } }" class='company_menu'>
+    <a href="#" data-bind="click: function(event) { addItem(); }">Add</a>
+    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem } }" class='company_menu'>
     </ul>
 </div>
 }
@@ -172,9 +223,20 @@
         <button class='close' id='cancel'>@SharedStrings.Cancel</button>
     </div>     
 </div>
-<div class="overlay" id="edit_form">
-    <input data-bind="value: Notes" name="Notes" type="text" />        
-    <button class='close' data-bind="click: function(event) { transModel.Save(); }">Ok</button>
-    <button class='close'>@SharedStrings.Cancel</button>
+
+<div id='account_edit' class='hidden'>
+@*TODO: move to partial view*@
+@*TODO: validate input*@
+@using (Html.BeginForm("UpdateAccount", "Accounts"))
+{
+    <table>
+    <tr>
+    <td>Account</td>
+    <td><input data-bind="value: Number" name="Number"/></td>
+    </tr>
+    </table>
+    <button type="button" data-bind="click: function(event) { Save(event); }">Ok</button>
+    <button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
+}
 </div>
 
