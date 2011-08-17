@@ -135,14 +135,5 @@ namespace Naviam.WebUI.Controllers
             return Json(new { items });
         }
 
-        [HttpPost]
-        public ActionResult GetAccounts()
-        {
-            var user = CurrentUser;
-            var accounts = AccountsDataAdapter.GetAccounts(user.CurrentCompany, user.LanguageId, false);
-            accounts.Insert(0, new Account() { Number = "All"});
-            return Json(new { items = accounts });
-        }
-
     }
 }

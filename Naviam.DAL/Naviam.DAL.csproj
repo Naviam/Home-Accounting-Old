@@ -56,6 +56,7 @@
     <Compile Include="DAL\AccountsDataAdapter.cs" />
     <Compile Include="DAL\CategoriesDataAdapter.cs" />
     <Compile Include="DAL\CompaniesDataAdapter.cs" />
+    <Compile Include="DAL\CurrenciesDataAdapter.cs" />
     <Compile Include="DAL\Dynamic.cs" />
     <Compile Include="DAL\RoleDataAdapter.cs" />
     <Compile Include="DAL\TransactionsDataAdapter.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Category.cs" />
     <Compile Include="Entities\Company.cs" />
+    <Compile Include="Entities\Currency.cs" />
     <Compile Include="Entities\DbEntity.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Entities\Transaction.cs" />

@@ -8,11 +8,11 @@ namespace Naviam.DAL
     {
         private const string CacheKey = "companyAcc";
 
-        public static List<Account> GetAccounts(int? companyId) { return GetAccounts(companyId, null, false); }
-        public static List<Account> GetAccounts(int? companyId, int? languageId, bool forceSqlLoad)
+        public static List<Account> GetAccounts(int? companyId) { return GetAccounts(companyId, false); }
+        public static List<Account> GetAccounts(int? companyId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
-            var res = cache.GetList<Account>(CacheKey, companyId, languageId);
+            var res = cache.GetList<Account>(CacheKey, companyId);
             if (res == null || forceSqlLoad)
             {
                 res = new List<Account>();
@@ -21,7 +21,6 @@ namespace Naviam.DAL
                     using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
                     {
                         cmd.Parameters.AddWithValue("@id_company", companyId);
-                        cmd.Parameters.AddWithValue("@id_language", languageId.ToDbValue());
                         try
                         {
                             using (var reader = cmd.ExecuteReader())
@@ -38,13 +37,13 @@ namespace Naviam.DAL
                     }
                 }
                 //save to cache
-                cache.SetList(CacheKey, res, companyId, languageId);
+                cache.SetList(CacheKey, res, companyId);
             }
             return res;
         }
 
-        public static Account GetAccount(int? id, int? companyId) { return GetAccount(id, companyId, null, false); }
-        public static Account GetAccount(int? id, int? companyId, int? languageId, bool forceSqlLoad)
+        public static Account GetAccount(int? id, int? companyId) { return GetAccount(id, companyId, false); }
+        public static Account GetAccount(int? id, int? companyId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetFromList(CacheKey, new Account() { Id = id }, companyId);
@@ -80,7 +79,7 @@ namespace Naviam.DAL
             return res;
         }
 
-        private static int InsertUpdate(Account entity, int? companyId, int? languageId, DbActionType action)
+        private static int InsertUpdate(Account entity, int? companyId, DbActionType action)
         {
             var cache = new CacheWrapper();
             var res = -1;
@@ -105,27 +104,27 @@ namespace Naviam.DAL
             if (res == 0)
             {
                 if (action == DbActionType.Insert)
-                    cache.AddToList(CacheKey, entity, companyId, languageId);
+                    cache.AddToList(CacheKey, entity, companyId);
                 if (action == DbActionType.Update)
                     //if ok - update cache
-                    cache.UpdateList(CacheKey, entity, companyId, languageId);
+                    cache.UpdateList(CacheKey, entity, companyId);
             }
             return res;
         }
 
-        public static int Insert(Account entity, int? companyId, int? languageId)
+        public static int Insert(Account entity, int? companyId)
         {
-            return InsertUpdate(entity, companyId, languageId, DbActionType.Insert);
+            return InsertUpdate(entity, companyId, DbActionType.Insert);
         }
 
-        public static int Update(Account entity, int? companyId, int? languageId)
+        public static int Update(Account entity, int? companyId)
         {
             //TODO: check that account belongs to company
-            return InsertUpdate(entity, companyId, languageId, DbActionType.Update);
+            return InsertUpdate(entity, companyId, DbActionType.Update);
         }
 
         //we need to provide full object (not only id) to delete from redis (restrict of redis)
-        public static int Delete(Account entity, int? companyId, int? languageId)
+        public static int Delete(Account entity, int? companyId)
         {
             var cache = new CacheWrapper();
             var res = -1;
@@ -150,7 +149,7 @@ namespace Naviam.DAL
             if (res == 0)
             {
                 //if ok - remove from cache
-                cache.RemoveFromList(CacheKey, entity, companyId, languageId);
+                cache.RemoveFromList(CacheKey, entity, companyId);
             }
             return res;
         }

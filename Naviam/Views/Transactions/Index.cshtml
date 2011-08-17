@@ -19,8 +19,9 @@
     var delTransUrl = '@Url.Action("DeleteTransaction", "Transactions")';
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
-    var getAccountsUrl = '@Url.Action("GetAccounts", "Transactions")';
+    var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
+    var deleteAccountUrl = '@Url.Action("DeleteAccount", "Accounts")';
     //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
     $(document).ready(function () {
         var url = $('#upload_statement').parents('form').attr('action');
@@ -80,11 +81,16 @@
                 accountsModel.hideEdit(true);
             }
             accountsModel.addItem = function () {
-                var newItem = { Id: null, Number: null };
+                var newItem = { Id: null, Number: null, Balance: null, Description: null };
                 this.passToEdit(newItem, null);
             }
             accountsModel.editItem = function (item) {
                 accountsModel.passToEdit(ko.mapping.toJS(item), item);
+            }
+            accountsModel.deleteItem = function (item) {
+                $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
+                    ko.utils.arrayRemoveItem(accountsModel.items, item);
+                });
             }
             ko.applyBindings(accountsModel, $("#accounts")[0]);
             loadTransactions();
@@ -102,11 +108,12 @@
     <li>
         <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
         <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">Edit</a>
+        <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">Delete</a>
     </li>
 </script>
 <div id="accounts">
     <a href="#" data-bind="click: function(event) { addItem(); }">Add</a>
-    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem } }" class='company_menu'>
+    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem, delete: deleteItem } }" class='company_menu'>
     </ul>
 </div>
 }
@@ -234,7 +241,16 @@
     <tr>
     <td>Account:</td>
     <td><input data-bind="value: Number" name="Number" required="required"/></td>
+    <td>Balance:</td>
+    <td><input data-bind="value: Balance" name="Balance" required="required"/></td>
     </tr>
+    <tr>
+
+    </tr>
+@*    <tr>
+    <td>Description:</td>
+    <td><textarea data-bind="value: Description" name="Description" rows='1' cols='1'/></td>
+    </tr>*@
     </table>
     <button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
     <button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
