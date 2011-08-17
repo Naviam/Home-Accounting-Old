@@ -9,6 +9,12 @@ namespace Naviam.DAL
     {
         private const string CacheKey = "userTrans";
 
+        public static void ResetCache(int? companyId)
+        {
+            var cache = new CacheWrapper();
+            cache.SetList<Transaction>(CacheKey, null, companyId);
+        }
+
         public static List<Transaction> GetTestTransactions(int recordsCount, int? companyId)
         {
             var res = new List<Transaction>(recordsCount);
@@ -97,7 +103,7 @@ namespace Naviam.DAL
             return res;
         }
 
-        private static int InsertUpdate(Transaction entity, int? companyId, DbActionType action)
+        private static int InsertUpdate(Transaction entity, int? companyId, DbActionType action, bool intoCache)
         {
             var cache = new CacheWrapper();
             var res = -1;
@@ -121,24 +127,28 @@ namespace Naviam.DAL
             }
             if (res == 0)
             {
-                if (action == DbActionType.Insert)
-                    cache.AddToList(CacheKey, entity, companyId);
-                if (action == DbActionType.Update)
-                    //if ok - update cache
-                    cache.UpdateList(CacheKey, entity, companyId);
+                //if ok - update cache
+                if (intoCache)
+                {
+                    if (action == DbActionType.Insert)
+                        cache.AddToList(CacheKey, entity, companyId);
+                    if (action == DbActionType.Update)
+                        cache.UpdateList(CacheKey, entity, companyId);
+                }
             }
             return res;
         }
 
-        public static int Insert(Transaction entity, int? companyId)
+        public static int Insert(Transaction entity, int? companyId) { return Insert(entity, companyId, true); }
+        public static int Insert(Transaction entity, int? companyId, bool intoCache)
         {
-            return InsertUpdate(entity, companyId, DbActionType.Insert);
+            return InsertUpdate(entity, companyId, DbActionType.Insert, intoCache);
         }
 
         public static int Update(Transaction entity, int? companyId)
         {
             //TODO: check that trans belongs to company
-            return InsertUpdate(entity, companyId, DbActionType.Update);
+            return InsertUpdate(entity, companyId, DbActionType.Update, true);
         }
 
         //we need to provide full object (not only id) to delete from redis (restrict of redis)

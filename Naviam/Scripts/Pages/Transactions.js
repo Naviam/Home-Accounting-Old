@@ -262,8 +262,15 @@ $(document).ready(function () {
         var cat = row.find('[name="Category"]');
         am.removeClass(inputCssError);
         cat.removeClass(inputCssError);
-        if (transModel.editObj != null)
-            ko.mapping.fromJS(transModel.editObj, {}, transModel.selectedItem());
+        if (transModel.editObj != null) {
+            //restore inline editing props
+            var selItem = transModel.selectedItem();
+            transModel.editObj.Amount = selItem.Amount();
+            transModel.editObj.Category = selItem.Category();
+            transModel.editObj.Description = selItem.Description();
+            transModel.editObj.Date = selItem.Date();
+            ko.mapping.fromJS(transModel.editObj, { }, selItem);
+        }
         var item = transModel.selectedItem();
         //console.log(item);
         if (item.Amount() <= 0)

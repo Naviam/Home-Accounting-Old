@@ -50,11 +50,11 @@ namespace Naviam.WebUI.Controllers
                                 AccountId = 1,
                                 CategoryId = 1
                             };
-                            TransactionsDataAdapter.Insert(dbTrans, CurrentUser.CurrentCompany);
+                            TransactionsDataAdapter.Insert(dbTrans, CurrentUser.CurrentCompany, false);
                         }
                     }
-                    //fill redis again
-                    TransactionsDataAdapter.GetTransactions(CurrentUser.CurrentCompany, true);
+                    //reset redis
+                    TransactionsDataAdapter.ResetCache(CurrentUser.CurrentCompany);
                     result = "ok";
                     Response.Redirect(Request.UrlReferrer.PathAndQuery);
                 }
