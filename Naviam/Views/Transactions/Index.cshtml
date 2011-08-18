@@ -32,17 +32,11 @@
         });
 
         $.postErr(getAccountsUrl, transModel.paging, function (res) {
-//            var childItem = function (data) {
-//                ko.mapping.fromJS(data, {}, this);
-//            }
             var mapping = {
                 'items': {
                     key: function (data) {
                         return ko.utils.unwrapObservable(data.Id);
                     }
-//                    , create: function (options) {
-//                        return new childItem(options.data, {}, this);
-//                    }
                 }
             }
 
@@ -89,7 +83,7 @@
                 accountsModel.hideEdit(true);
             }
             accountsModel.addItem = function () {
-                var newItem = { Id: null, Number: null, Balance: null, Description: null, CurrencyId: null };
+                var newItem = { Id: null, Number: null, Balance: null, Description: null, CurrencyId: null};
                 this.passToEdit(newItem, null);
             }
             accountsModel.editItem = function (item) {
@@ -250,14 +244,20 @@
 @using (Html.BeginForm("UpdateAccount", "Accounts", FormMethod.Post, new {id = "editAccountFrm" }))
 {
     <table>
+@*    <tr>
+        <td>Account Type:<select data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId", required="required" ></select></td>
+    </tr>*@
     <tr>
-    <td>Account:</td>
-    <td><input data-bind="value: Number" name="Number" required="required"/></td>
-    <td>Balance:</td>
-    <td><input data-bind="value: Balance" name="Balance" required="required"/></td>
+        <td>Account Name:<input data-bind="value: Number" name="Number" required="required"/></td>
     </tr>
     <tr>
-        <td>Destination country: <select required="required" data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId"></select></td>
+        <td>Balance:<input data-bind="value: Balance" name="Balance" required="required"/></td>
+    </tr>
+@*    <tr>
+        <td>Description:<textarea data-bind="value: Description" name="Description" required="required" rows='1' cols='1'></textarea></td>
+    </tr>*@
+    <tr>
+        <td>Currency: <select required="required" data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId"></select></td>
     </tr>
 @*    <tr>
     <td>Description:</td>

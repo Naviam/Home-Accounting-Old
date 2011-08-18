@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="CacheWrapper.cs" />
     <Compile Include="DAL\AccountsDataAdapter.cs" />
+    <Compile Include="DAL\AccountTypesDataAdapter.cs" />
     <Compile Include="DAL\CategoriesDataAdapter.cs" />
     <Compile Include="DAL\CompaniesDataAdapter.cs" />
     <Compile Include="DAL\CurrenciesDataAdapter.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="DAL\TestDataAdapter.cs" />
     <Compile Include="DAL\MembershipDataAdapter.cs" />
     <Compile Include="Entities\Account.cs" />
+    <Compile Include="Entities\AccountType.cs" />
     <Compile Include="Entities\Category.cs" />
     <Compile Include="Entities\Company.cs" />
     <Compile Include="Entities\Currency.cs" />

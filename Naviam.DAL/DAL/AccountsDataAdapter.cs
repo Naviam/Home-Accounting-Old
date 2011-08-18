@@ -8,8 +8,8 @@ namespace Naviam.DAL
     {
         private const string CacheKey = "companyAcc";
 
-        public static List<Account> GetAccounts(int? companyId) { return GetAccounts(companyId, false); }
-        public static List<Account> GetAccounts(int? companyId, bool forceSqlLoad)
+        public static List<Account> GetAccounts(int? companyId) { return GetAccounts(companyId, null, false); }
+        public static List<Account> GetAccounts(int? companyId, int? languageId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetList<Account>(CacheKey, companyId);
@@ -20,7 +20,8 @@ namespace Naviam.DAL
                 {
                     using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
                     {
-                        cmd.Parameters.AddWithValue("@id_company", companyId);
+                        cmd.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
+                        cmd.Parameters.AddWithValue("@id_language", languageId.ToDbValue());
                         try
                         {
                             using (var reader = cmd.ExecuteReader())
@@ -42,8 +43,9 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static Account GetAccount(int? id, int? companyId) { return GetAccount(id, companyId, false); }
-        public static Account GetAccount(int? id, int? companyId, bool forceSqlLoad)
+        public static Account GetAccount(int? id, int? companyId) { return GetAccount(id, companyId, null, false); }
+        public static Account GetAccount(int? id, int? companyId, int? languageId, bool forceSqlLoad)
+
         {
             var cache = new CacheWrapper();
             var res = cache.GetFromList(CacheKey, new Account() { Id = id }, companyId);
@@ -56,6 +58,7 @@ namespace Naviam.DAL
                     using (SqlCommand cmd = holder.Connection.CreateSPCommand("accounts_get"))
                     {
                         cmd.Parameters.AddWithValue("@id_account", id);
+                        cmd.Parameters.AddWithValue("@id_language", languageId.ToDbValue());
                         try
                         {
                             using (SqlDataReader reader = cmd.ExecuteReader())
