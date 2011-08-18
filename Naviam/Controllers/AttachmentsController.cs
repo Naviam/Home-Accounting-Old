@@ -40,7 +40,6 @@ namespace Naviam.WebUI.Controllers
                         {
                             var dbTrans = new Transaction()
                             {
-                                AccountNumber = statRes.Account,
                                 Amount = Math.Abs(trans.AccountAmount),
                                 Date = trans.TransactionDate,
                                 Description = trans.OperationDescription,
@@ -48,13 +47,14 @@ namespace Naviam.WebUI.Controllers
                                 Merchant = trans.Place,
                                 TransactionType = Transaction.TransactionTypes.Cash,
                                 AccountId = 1,
+                                //TODO: assign null and resolve on db side
                                 CategoryId = 1
                             };
                             TransactionsDataAdapter.Insert(dbTrans, CurrentUser.CurrentCompany, false);
                         }
                     }
                     //reset redis
-                    TransactionsDataAdapter.ResetCache(CurrentUser.CurrentCompany);
+                    //TransactionsDataAdapter.ResetCache(CurrentUser.CurrentCompany);
                     result = "ok";
                     Response.Redirect(Request.UrlReferrer.PathAndQuery);
                 }
