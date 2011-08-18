@@ -22,15 +22,15 @@ namespace Naviam.DAL
                 res.Add(new Transaction()
                 {
                     Description = "Test" + i.ToString() + "_" + companyId,
-                    Category = "Category" + new Random(3).Next(recordsCount).ToString(),
+                    CategoryId = new Random(19).Next(recordsCount),
                     Amount = 100.20M,
                     Id = i,
                     Date = DateTime.Now
                 });
             return res;
         }
-        public static IEnumerable<Transaction> GetTransactions(int? companyId, int? languageId) { return GetTransactions(companyId, languageId, false); }
-        public static IEnumerable<Transaction> GetTransactions(int? companyId, int? languageId, bool forceSqlLoad)
+        public static IEnumerable<Transaction> GetTransactions(int? companyId) { return GetTransactions(companyId, false); }
+        public static IEnumerable<Transaction> GetTransactions(int? companyId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetList<Transaction>(CacheKey, companyId);
@@ -44,7 +44,7 @@ namespace Naviam.DAL
                     using (var cmd = holder.Connection.CreateSPCommand("transactions_get"))
                     {
                         cmd.Parameters.AddWithValue("@id_company", companyId);
-                        cmd.Parameters.AddWithValue("@id_language", languageId);
+                        cmd.Parameters.AddWithValue("@id_language", null);
                         try
                         {
                             using (var reader = cmd.ExecuteReader())
@@ -65,8 +65,8 @@ namespace Naviam.DAL
             }
             return res;
         }
-        public static Transaction GetTransaction(int? id, int? companyId, int? languageId) { return GetTransaction(id, companyId, languageId, false); }
-        public static Transaction GetTransaction(int? id, int? companyId, int? languageId, bool forceSqlLoad)
+        public static Transaction GetTransaction(int? id, int? companyId) { return GetTransaction(id, companyId, false); }
+        public static Transaction GetTransaction(int? id, int? companyId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetFromList(CacheKey, new Transaction { Id = id }, companyId);

@@ -1,5 +1,6 @@
 ﻿/// <reference path="..\jquery-1.6.2.js" />
 /// <reference path="..\knockout-1.2.1.js" />
+/// <reference path="..\common.js" />
 //JSON.stringify
 var transModel = {
     paging: { Page: 1, SortField: 'Date', SortDirection: 1 }
@@ -26,16 +27,18 @@ ko.bindingHandlers.amount = {
 ko.bindingHandlers.category = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         //handle the field changing
-        ko.utils.registerEventHandler(element, "change", function () {
+        var checkElem = function () {
             var observable = valueAccessor();
             var val = $(element).val();
             //find category
             var item = catModel.Search(val);
-            if (item != null)
+            if (typeof item != 'undefined' && item != null)
                 observable(item.Name())
             else
                 $(element).val(observable()); //restore old
-        });
+        }
+        ko.utils.registerEventHandler(element, "change", checkElem);
+        ko.utils.registerEventHandler(element, "result", checkElem);
     },
     update: function (element, valueAccessor) {
         $(element).val(ko.utils.unwrapObservable(valueAccessor()));
@@ -78,23 +81,20 @@ ko.bindingHandlers.category = {
 //!!!
 function loadTransactions() {
     $.postErr(getTransUrl, transModel.paging, function (res) {
-        //!!!replaced by bindingHandlers
-        //        var childItem = function (data) {
-        //            ko.mapping.fromJS(data, {}, this);
-        //            this.Amount = ko.numericObservable(data.Amount);
-        //            this.Category = ko.categoryObservable(data.Category);
-        //        }
-        //!!!
+        var childItem = function (data) {
+            ko.mapping.fromJS(data, {}, this);
+            var catItem = catModel.itemById(data.CategoryId);
+            var catName = catItem != null ? catItem.Name() : '';
+            this.Category = ko.observable(catName);
+        }
         var mapping = {
             'items': {
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.Id);
                 }
-                //!!!replaced by bindingHandlers
-                //                    , create: function (options) {
-                //                       return new childItem(options.data, {}, this);
-                //                    }
-                //!!!
+                , create: function (options) {
+                    return new childItem(options.data, {}, this);
+                }
             }
         }
         transModel = ko.mapping.fromJS(res, mapping);
@@ -271,7 +271,7 @@ $(document).ready(function () {
             transModel.editObj.Category = selItem.Category();
             transModel.editObj.Description = selItem.Description();
             transModel.editObj.Date = selItem.Date();
-            ko.mapping.fromJS(transModel.editObj, { }, selItem);
+            ko.mapping.fromJS(transModel.editObj, {}, selItem);
         }
         var item = transModel.selectedItem();
         //console.log(item);
@@ -293,6 +293,23 @@ $(document).ready(function () {
     //Gategories
     $.postErr(getCatUrl, function (res) {
         catModel = ko.mapping.fromJS(res);
+        loadAccounts();
+        catModel.itemById = function (id) {
+            if (!id) {
+                return null;
+            } else {
+                for (var i = 0, j = this.items().length; i < j; i++) {
+                    var item = this.items()[i];
+                    if (item.Id() == id)
+                        return item;
+                    var fItem = ko.utils.arrayFirst(item.Subitems(), function (item) {
+                        return item.Id() == id;
+                    });
+                    if (fItem != null)
+                        return fItem;
+                }
+            }
+        };
         catModel.Search = function (search) {
             if (!search) {
                 return null;
