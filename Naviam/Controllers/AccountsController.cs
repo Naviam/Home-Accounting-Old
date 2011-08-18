@@ -38,7 +38,7 @@ namespace Naviam.WebUI.Controllers
             var accounts = AccountsDataAdapter.GetAccounts(user.CurrentCompany);
             var currencies = CurrenciesDataAdapter.GetCurrencies();
             //accounts.Insert(0, new Account() { Number = "All" });
-            return Json(new { items = accounts});
+            return Json(new { items = accounts, currItems = currencies });
         }
 
         [HttpPost]

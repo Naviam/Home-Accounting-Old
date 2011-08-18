@@ -14,6 +14,7 @@
     <script type="text/javascript" src="~/Scripts/knockout.mapping.js"></script> 
     <script type="text/javascript" src="~/Scripts/common.js"></script> 
 }
+
 <script type='text/javascript'>
     var getTransUrl = '@Url.Action("GetTransactions", "Transactions")';
     var delTransUrl = '@Url.Action("DeleteTransaction", "Transactions")';
@@ -31,13 +32,20 @@
         });
 
         $.postErr(getAccountsUrl, transModel.paging, function (res) {
+//            var childItem = function (data) {
+//                ko.mapping.fromJS(data, {}, this);
+//            }
             var mapping = {
                 'items': {
                     key: function (data) {
                         return ko.utils.unwrapObservable(data.Id);
                     }
+//                    , create: function (options) {
+//                        return new childItem(options.data, {}, this);
+//                    }
                 }
             }
+
             accountsModel = ko.mapping.fromJS(res, mapping);
             accountsModel.selectedItem = ko.observable(null);
             accountsModel.selectedItem(accountsModel.items()[0]);
@@ -81,7 +89,7 @@
                 accountsModel.hideEdit(true);
             }
             accountsModel.addItem = function () {
-                var newItem = { Id: null, Number: null, Balance: null, Description: null };
+                var newItem = { Id: null, Number: null, Balance: null, Description: null, CurrencyId: null };
                 this.passToEdit(newItem, null);
             }
             accountsModel.editItem = function (item) {
@@ -93,6 +101,7 @@
                 });
             }
             ko.applyBindings(accountsModel, $("#accounts")[0]);
+            
             loadTransactions();
         });
 
@@ -172,7 +181,8 @@
     {{/each}}
     </tr>
 </script>
-<div id="transGrid" style='position:relative'>
+<div style='position:relative'>
+    <div id="transGrid">
     <a href="#" onclick='return transModel.Add();' data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">Add</a>
     <table class='grid'>
         <thead data-bind='template: "transHeadTemplate"' >
@@ -192,6 +202,7 @@
         </div>
     </div>*@
     <div data-bind='template: "transPagingTemplate"' class='paging'>
+    </div>
     </div>
     <div class="overlaywoshadow" id="transDlg">
         <table>
@@ -246,7 +257,7 @@
     <td><input data-bind="value: Balance" name="Balance" required="required"/></td>
     </tr>
     <tr>
-
+        <td>Destination country: <select required="required" data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId"></select></td>
     </tr>
 @*    <tr>
     <td>Description:</td>
