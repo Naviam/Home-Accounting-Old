@@ -152,7 +152,7 @@ namespace Naviam.DAL
         }
 
         //we need to provide full object (not only id) to delete from redis (restrict of redis)
-        public static int Delete(Transaction trans, int? companyId, int? languageId)
+        public static int Delete(Transaction trans, int? companyId)
         {
             var res = -1;
             //TODO: check that trans belongs to company
@@ -176,7 +176,7 @@ namespace Naviam.DAL
             if (res == 0)
             {
                 //if ok - remove from cache
-                new CacheWrapper().RemoveFromList(CacheKey, trans, companyId, languageId);
+                new CacheWrapper().RemoveFromList(CacheKey, trans, companyId);
             }
             return res;
         }
