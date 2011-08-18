@@ -72,7 +72,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetTransactions(Paging paging, PageContext pageContext)
         {
             var user = CurrentUser;
-            var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany);
+            var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany, user.LanguageId);
             paging.Filter = "";
             if (pageContext.AccountId != null)
             {
@@ -112,7 +112,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult DeleteTransaction(int? id)
         {
             var user = CurrentUser;
-            var trans = TransactionsDataAdapter.GetTransaction(id, user.Id);
+            var trans = TransactionsDataAdapter.GetTransaction(id, user.Id, user.LanguageId);
             TransactionsDataAdapter.Delete(trans, user.CurrentCompany);
             return Json(id);
         }
