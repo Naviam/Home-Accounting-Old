@@ -4,13 +4,13 @@ using System.Web.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Naviam.Domain.Concrete;
-using Naviam.Entities.User;
 using Naviam.UnitTests.Mocks;
 using Naviam.WebUI.Controllers;
 using Naviam.WebUI.Helpers;
 using Naviam.WebUI.Helpers.Cookies;
 using Naviam.WebUI.Models;
 using Naviam.WebUI.Resources;
+using Naviam.Data;
 
 namespace Naviam.UnitTests.Controllers
 {
