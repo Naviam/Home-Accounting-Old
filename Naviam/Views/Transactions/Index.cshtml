@@ -172,7 +172,7 @@
     {{/each}}
     </tr>
 </script>
-<div id="transGrid">
+<div id="transGrid" style='position:relative'>
     <a href="#" onclick='return transModel.Add();' data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">Add</a>
     <table class='grid'>
         <thead data-bind='template: "transHeadTemplate"' >
@@ -193,6 +193,27 @@
     </div>*@
     <div data-bind='template: "transPagingTemplate"' class='paging'>
     </div>
+    <div class="overlaywoshadow" id="transDlg">
+        <table>
+            <td></td>
+            <td>
+                <label><input data-bind="checked: Direction" name="Direction" type="radio" value='0'/>@DisplayNames.Expense</label>
+                <label><input data-bind="checked: Direction" name="Direction" type="radio" value='1'/>@DisplayNames.Income</label>
+            </td>
+        <tr>
+            <td>@DisplayNames.Merchant:</td>
+            <td><input data-bind="value: Merchant" name="Merchant"/></td>
+        </tr>
+        <tr>
+            <td>@DisplayNames.Notes:</td>
+            <td><textarea data-bind="value: Notes" name="Notes" rows='2' cols='2'></textarea></td>
+        </tr>
+        </table>
+        <div>
+            <button class='close' id='ok'>Ok</button>
+            <button class='close' id='cancel'>@SharedStrings.Cancel</button>
+        </div>     
+    </div>
 </div>
 
 <script type="text/html" id="catTemplate">
@@ -211,27 +232,7 @@
     <ul data-bind="template: {name:'catTemplate', foreach:items}" class='dropdown'>
     </ul>
 </div>
-<div class="overlaywoshadow" id="transDlg">
-    <table>
-        <td></td>
-        <td>
-            <label><input data-bind="checked: Direction" name="Direction" type="radio" value='0'/>@DisplayNames.Expense</label>
-            <label><input data-bind="checked: Direction" name="Direction" type="radio" value='1'/>@DisplayNames.Income</label>
-        </td>
-    <tr>
-        <td>@DisplayNames.Merchant:</td>
-        <td><input data-bind="value: Merchant" name="Merchant"/></td>
-    </tr>
-    <tr>
-        <td>@DisplayNames.Notes:</td>
-        <td><textarea data-bind="value: Notes" name="Notes" rows='2' cols='2'></textarea></td>
-    </tr>
-    </table>
-    <div>
-        <button class='close' id='ok'>Ok</button>
-        <button class='close' id='cancel'>@SharedStrings.Cancel</button>
-    </div>     
-</div>
+
 
 <div id='account_edit' class='hidden'>
 @*TODO: move to partial view*@
