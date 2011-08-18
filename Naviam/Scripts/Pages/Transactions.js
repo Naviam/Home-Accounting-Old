@@ -132,8 +132,10 @@ function loadTransactions() {
             var frm = $("#transDlg");
             frm.css({ width: row.width() });
             var conf = transDlg.getConf();
-            conf.top = row.offset().top + row.height();
-            conf.left = row.offset().left - 5;
+            //conf.top = row.offset().top + row.height();
+            //conf.left = row.offset().left - 5;
+            conf.top = row.parents('table')[0].offsetTop + row[0].offsetTop + row.height();
+            conf.left = -5;
             frm.overlay().load();
         }
         transModel.Add = function () {
