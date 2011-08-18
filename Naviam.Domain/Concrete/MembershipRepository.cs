@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Security;
 using Naviam.DAL;
 using Naviam.Data;
-using Naviam.Entities.User;
 
 namespace Naviam.Domain.Concrete
 {

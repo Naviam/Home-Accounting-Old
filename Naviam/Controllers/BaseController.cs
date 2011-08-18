@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web;
 using System.Web.Mvc;
-using Naviam.Entities.User;
+using Naviam.Data;
 using Naviam.WebUI.Helpers;
 
 namespace Naviam.WebUI.Controllers
