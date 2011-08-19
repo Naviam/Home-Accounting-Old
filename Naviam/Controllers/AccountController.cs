@@ -59,24 +59,29 @@ namespace Naviam.WebUI.Controllers
 
                 if (profile != null)
                 {
-                    //setup forms ticket
-                    var sessionKey = _membershipRepository.SetSessionForUser(profile);
-
-                    _cookieContainer.SetAuthCookie(sessionKey, model.UserName.ToLower(), model.RememberMe);
-
-                    Session["Culture"] = !String.IsNullOrEmpty(profile.LanguageNameShort) ? new CultureInfo(profile.LanguageNameShort) : null;
-                    // Make sure we only follow relative returnUrl parameters to protect against having an open redirector
-                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    return RedirectToAction("Index", "Transactions");
+                    return AuthSuccess(profile, model, returnUrl);
                 }
                 ModelState.AddModelError(String.Empty, ValidationStrings.UsernameOrPasswordIsIncorrect);
             }
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private ActionResult AuthSuccess(Data.UserProfile profile, LogOnModel model, string returnUrl)
+        {
+            //setup forms ticket
+            var sessionKey = _membershipRepository.SetSessionForUser(profile);
+
+            _cookieContainer.SetAuthCookie(sessionKey, model.UserName.ToLower(), model.RememberMe);
+
+            Session["Culture"] = !String.IsNullOrEmpty(profile.LanguageNameShort) ? new CultureInfo(profile.LanguageNameShort) : null;
+            // Make sure we only follow relative returnUrl parameters to protect against having an open redirector
+            if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Transactions");
         }
 
         [HttpGet]
@@ -106,6 +111,13 @@ namespace Naviam.WebUI.Controllers
                         {
                             var fResp = response.GetExtension<FetchResponse>();
                             //TODO: login or register
+                            LogOnModel model = new LogOnModel() { UserName = fResp.Attributes[WellKnownAttributes.Contact.Email].Values[0] };
+                            var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
+
+                            if (profile != null)
+                                AuthSuccess(profile, model, null);
+                            else
+                                return Register();
                         }
                         break;
                     case AuthenticationStatus.Canceled:
