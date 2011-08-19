@@ -180,4 +180,10 @@
   <data name="WednesdayS" xml:space="preserve">
     <value>We</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="EditCategories" xml:space="preserve">
+    <value>Edit categories...</value>
+  </data>
 </root>

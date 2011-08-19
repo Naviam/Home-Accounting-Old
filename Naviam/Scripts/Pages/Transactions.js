@@ -292,8 +292,21 @@ $(document).ready(function () {
     //loadTransactions();
     //Gategories
     $.postErr(getCatUrl, function (res) {
+        //        var mapping = {
+        //            'items': {
+        //                key: function (data) {
+        //                    return ko.utils.unwrapObservable(data.Id);
+        //                }
+        //            }
+        //        }
         catModel = ko.mapping.fromJS(res);
+        for (var i = 0, j = catModel.items().length; i < j; i++) {
+            var item = catModel.items()[i];
+            //debug(item.Subitems());
+            item.Subitems.push({ Name: ko.observable(lang.EditCategories), Id: ko.observable(null) });
+        }
         loadAccounts();
+        catModel.editItem = ko.observable(null);
         catModel.itemById = function (id) {
             if (!id) {
                 return null;
@@ -310,6 +323,14 @@ $(document).ready(function () {
                 }
             }
         };
+        catModel.catNameToAdd = ko.observable("");
+        catModel.AddSubitem = function () {
+            if (this.catNameToAdd() && catModel.editItem()) {
+                //this.editItem().Subitems.push({ Name: ko.observable(this.catNameToAdd()), Id: ko.observable(1) });
+                this.catNameToAdd("");
+                //ko.applyBindings(catModel, $("#cat_menu")[0]);
+            }
+        }
         catModel.Search = function (search) {
             if (!search) {
                 return null;
@@ -327,10 +348,25 @@ $(document).ready(function () {
                 }
             }
         };
+        catModel.EditCategories = function () {
+            var hld = $('#cat_edit_area');
+            if (hld.html() == '') {
+                $.postErr(getCatEditDlg, function (res) {
+                    hld.html(res);
+                    hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
+                    ko.applyBindings(catModel, hld[0]);
+                    hld.overlay().load();
+                });
+            }
+            else
+                hld.overlay().load();
+        }
         catModel.AssignCategory = function (item) {
+            $("#cat_menu").hide();
+            if (item.Id() == null)
+                return this.EditCategories();
             if (transModel.selectedItem() != null) {
                 transModel.selectedItem().Category(item.Name());
-                $("#cat_menu").hide();
             }
         };
         catModel.Suggest = function () {

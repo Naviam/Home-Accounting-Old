@@ -173,6 +173,7 @@ public class SimpleHash
                                   string hashAlgorithm,
                                   string hashValue)
     {
+        if (hashValue == null) hashValue = "";
         // Convert base64-encoded hash value into a byte array.
         byte[] hashWithSaltBytes = Convert.FromBase64String(hashValue);
 
