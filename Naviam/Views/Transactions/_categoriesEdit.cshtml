@@ -4,7 +4,8 @@
 {{each $data}}
 {{if Id()!=null}} 
     <li>
-        ${ Name() }
+        <span data-bind="text: Name(), visible: UserId() == null"></span>
+        <input data-bind="value: Name(), visible: UserId() != null"/>
     </li>
 {{/if}} 
 {{/each}}
@@ -12,12 +13,12 @@
 
 <table>
 <tr>
-<td width='50%'>
-    <select data-bind="options: items, optionsText: 'Name', value: editItem" size="20"></select>
+<td width='30%'>
+    <select class="width100" data-bind="options: items, optionsText: 'Name', value: editItem" size="20"></select>
 </td>
-<td width='50%'>
-    <ul data-bind="visible: editItem, template: { name: 'catEditSubTemplate', data: editItem() ? editItem().Subitems : null }"></ul>
+<td width='70%' style='vertical-align:top'>
     <div data-bind="visible: editItem">
+    <ul data-bind="template: { name: 'catEditSubTemplate', data: editItem() ? editItem().Subitems : null }"></ul>
     <form data-bind="submit: AddSubitem">
         <label>@SharedStrings.AddCategory:</label>
         <input data-bind='value: catNameToAdd, valueUpdate: "keyup"' />

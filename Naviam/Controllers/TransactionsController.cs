@@ -145,6 +145,7 @@ namespace Naviam.WebUI.Controllers
         [HttpPost]
         public ActionResult UpdateCategory(Category cat)
         {
+            var user = CurrentUser;
             cat.Id = 10;
             return Json(cat);
         }
