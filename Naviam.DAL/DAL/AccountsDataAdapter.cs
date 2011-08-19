@@ -7,15 +7,18 @@ namespace Naviam.DAL
     
     public class AccountsDataAdapter
     {
-        
-        public static List<Account> GetAccounts(params object[] id)
+
+        public static List<Account> GetAccounts(Dictionary<string, object> parameters)
         {
             List<Account> res = new List<Account>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
                 {
-                    cmd.Parameters.AddWithValue("@id_company", ((int?)id[0]).ToDbValue());
+                    foreach( var param in parameters)
+                    {
+                        cmd.Parameters.AddWithValue(param.Key, param.Value);
+                    }
                     try
                     {
                         using (var reader = cmd.ExecuteReader())

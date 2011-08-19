@@ -10,7 +10,7 @@ namespace Naviam.Domain.Concrete
    
     public class Repository<T> where T: class
     {
-        public delegate List<T> GetListDelegat<T>(params object[] id);
+        public delegate List<T> GetListDelegat<T>(Dictionary<string, object> parameters);
 
         public static string CacheKey = typeof(T).ToString();
         
@@ -21,15 +21,15 @@ namespace Naviam.Domain.Concrete
             cache.SetList<T>(CacheKey, null, id);
         }
 
-        public static List<T> GetList(GetListDelegat<T> dlgt, params int?[] id) { return GetList(dlgt, false, id); }
-        public static List<T> GetList(GetListDelegat<T> dlgt, bool forceSqlLoad, params int?[] id)
+        public static List<T> GetList(GetListDelegat<T> dlgt, Dictionary<string, object> searchParams, params int?[] id) { return GetList(dlgt, searchParams, false, id); }
+        public static List<T> GetList(GetListDelegat<T> dlgt, Dictionary<string, object> searchParams, bool forceSqlLoad, params int?[] id)
         {
             var cache = new CacheWrapper();
             var res = cache.GetList<T>(CacheKey, id);
             if (res == null || forceSqlLoad)
             {
                 //load from DB
-                res = dlgt.Invoke(id[0].Value);// AccountsDataAdapter.GetAccounts(1);
+                res = dlgt.Invoke(searchParams);
                 //save to cache
                 cache.SetList(CacheKey, res, id);
             }
@@ -47,20 +47,20 @@ namespace Naviam.Domain.Concrete
             cache.SetList<Account>(CacheKey, null, companyId);
         }
 
-        public static List<Account> GetAccounts(int? companyId) { return GetAccounts(companyId, false); }
-        public static List<Account> GetAccounts(int? companyId, bool forceSqlLoad)
-        {
-            var cache = new CacheWrapper();
-            var res = cache.GetList<Account>(CacheKey, companyId);
-            if (res == null || forceSqlLoad)
-            {
-                //load from DB
-                res = AccountsDataAdapter.GetAccounts(companyId);
-                //save to cache
-                cache.SetList(CacheKey, res, companyId);
-            }
-            return res;
-        }
+        //public static List<Account> GetAccounts(int? companyId) { return GetAccounts(companyId, false); }
+        //public static List<Account> GetAccounts(int? companyId, bool forceSqlLoad)
+        //{
+        //    var cache = new CacheWrapper();
+        //    var res = cache.GetList<Account>(CacheKey, companyId);
+        //    if (res == null || forceSqlLoad)
+        //    {
+        //        //load from DB
+        //        res = AccountsDataAdapter.GetAccounts(companyId);
+        //        //save to cache
+        //        cache.SetList(CacheKey, res, companyId);
+        //    }
+        //    return res;
+        //}
 
         public static Account GetAccount(int? id, int? companyId) { return GetAccount(id, companyId, false); }
         public static Account GetAccount(int? id, int? companyId, bool forceSqlLoad)
