@@ -9,6 +9,7 @@ using Naviam.WebUI.Models;
 using Naviam.WebUI.Resources;
 using System.Globalization;
 using DotNetOpenAuth.OpenId.RelyingParty;
+using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -61,8 +62,7 @@ namespace Naviam.WebUI.Controllers
                     //setup forms ticket
                     var sessionKey = _membershipRepository.SetSessionForUser(profile);
 
-                    _cookieContainer.SetAuthCookie(
-                        sessionKey, model.UserName.ToLower(), model.RememberMe);
+                    _cookieContainer.SetAuthCookie(sessionKey, model.UserName.ToLower(), model.RememberMe);
 
                     Session["Culture"] = !String.IsNullOrEmpty(profile.LanguageNameShort) ? new CultureInfo(profile.LanguageNameShort) : null;
                     // Make sure we only follow relative returnUrl parameters to protect against having an open redirector
@@ -83,26 +83,45 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GoogleLogin()
         {
             var openId = new OpenIdRelyingParty();
-
+            var response = openId.GetResponse();
             // If we have no response, start
-            //if (openId.Response == null)
+            if (response == null)
             {
                 // Create a request and redirect the user
-                openId.CreateRequest("https://www.google.com/accounts/o8/id").RedirectToProvider();
-
+                var authReq = openId.CreateRequest("https://www.google.com/accounts/o8/id");
+                var fetch = new FetchRequest();
+                fetch.Attributes.AddRequired(WellKnownAttributes.Contact.Email);
+                fetch.Attributes.AddOptional(WellKnownAttributes.Name.FullName);
+                authReq.AddExtension(fetch);
+                authReq.RedirectToProvider();
                 return null;
             }
-            //else
+            else
             {
-                // We got a response - check it's valid and that it's me
-            //    if (openId.Response.Status == AuthenticationStatus.Authenticated
-            //            && openId.Response.ClaimedIdentifier.ToString() == Settings.AdminClaimedIdentifier)
-            //    {
-            //        Session["Admin"] = true;
-            //        return Redirect("/posts/edit");
-            //    }
-            //    else
-            //        return Content("Go away, you're not me.");
+                var errorMessage = "Success";
+                // We got a response - check it's valid
+                switch (response.Status)
+                {
+                    case AuthenticationStatus.Authenticated:
+                        {
+                            var fResp = response.GetExtension<FetchResponse>();
+                            //TODO: login or register
+                        }
+                        break;
+                    case AuthenticationStatus.Canceled:
+                        errorMessage = "Login was cancelled at the provider.";
+                        break;
+                    case AuthenticationStatus.Failed:
+                        errorMessage = "Login failed at the provider.";
+                        break;
+                    case AuthenticationStatus.SetupRequired:
+                        errorMessage = "The provider requires setup.";
+                        break;
+                    default:
+                        errorMessage = "Login failed.";
+                        break;
+                }
+                return Content(errorMessage);
             }
         }
 
@@ -152,11 +171,12 @@ namespace Naviam.WebUI.Controllers
     {
         public void SignIn(string userName, bool createPersistentCookie)
         {
+            var exp = DateTime.Now.Add(FormsAuthentication.Timeout);
             var authTicket = new FormsAuthenticationTicket(
                 1, //version
                 userName, // user name
                 DateTime.Now,             //creation
-                DateTime.Now.AddMinutes(30), //Expiration
+                exp, //Expiration
                 createPersistentCookie, //Persistent
                 userName); //since Classic logins don't have a "Friendly Name".  OpenID logins are handled in the AuthController.
 

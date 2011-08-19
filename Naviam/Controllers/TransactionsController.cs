@@ -8,6 +8,7 @@ using Naviam.DAL;
 using Naviam.WebUI.Resources;
 
 using Naviam.WebUI.Models;
+using Naviam.Domain.Concrete;
 using System.Resources;
 
 namespace Naviam.WebUI.Controllers
@@ -72,7 +73,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetTransactions(Paging paging, PageContext pageContext)
         {
             var user = CurrentUser;
-            var trans = TransactionsDataAdapter.GetTransactions(user.CurrentCompany);
+            var trans = new TransactionsRepository().GetTransactions(user.CurrentCompany);
             paging.Filter = "";
             if (pageContext.AccountId != null)
             {
@@ -102,9 +103,9 @@ namespace Naviam.WebUI.Controllers
             if (pageContext.AccountId != null)
                 trans.AccountId = pageContext.AccountId;
             if (trans.Id != null)
-                TransactionsDataAdapter.Update(trans, user.CurrentCompany);
+                new TransactionsRepository().Update(trans, user.CurrentCompany);
             else
-                TransactionsDataAdapter.Insert(trans, user.CurrentCompany);
+                new TransactionsRepository().Insert(trans, user.CurrentCompany);
             return Json(trans);
         }
 
@@ -112,8 +113,8 @@ namespace Naviam.WebUI.Controllers
         public ActionResult DeleteTransaction(int? id)
         {
             var user = CurrentUser;
-            var trans = TransactionsDataAdapter.GetTransaction(id, user.Id);
-            TransactionsDataAdapter.Delete(trans, user.CurrentCompany);
+            var trans = new TransactionsRepository().GetTransaction(id, user.Id);
+            new TransactionsRepository().Delete(trans, user.CurrentCompany);
             return Json(id);
         }
 

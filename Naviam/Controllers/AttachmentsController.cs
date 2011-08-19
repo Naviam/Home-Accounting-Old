@@ -8,6 +8,7 @@ using System.IO;
 using Naviam.WebUI.Helpers.Parsers;
 using Naviam.DAL;
 using Naviam.Data;
+using Naviam.Domain.Concrete;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -33,6 +34,7 @@ namespace Naviam.WebUI.Controllers
                     if (statRes == null)
                         throw new Exception("Invalid file format");
                     //TODO: check that user have account, bank...
+                    var reps = new TransactionsRepository();
                     foreach (var trans in statRes.Transactions)
                     {
                         //Add to DB
@@ -50,7 +52,7 @@ namespace Naviam.WebUI.Controllers
                                 //TODO: assign null and resolve on db side
                                 CategoryId = 1
                             };
-                            TransactionsDataAdapter.Insert(dbTrans, CurrentUser.CurrentCompany, false);
+                            reps.Insert(dbTrans, CurrentUser.CurrentCompany, false);
                         }
                     }
                     //reset redis

@@ -1,5 +1,4 @@
 ﻿@using Naviam.WebUI.Resources
-@using Naviam.Entities.User;
 @using Naviam.Data;
 @{
     ViewBag.Title = SharedStrings.TransactionsTitle;
@@ -36,7 +35,8 @@
 
             accountsModel = ko.mapping.fromJS(res, mapping);
             accountsModel.selectedItem = ko.observable(null);
-            //accountsModel.selectedItem(accountsModel.items()[0]);
+            accountsModel.items.splice(0, 0, { Number: ko.observable('All'), Id: ko.observable(null) });
+            accountsModel.selectedItem(accountsModel.items()[0]);
             accountsModel.selectedItem.subscribe(function (newValue) {
                 pageContext.accountId = newValue.Id();
                 transModel.ReloadPage();
