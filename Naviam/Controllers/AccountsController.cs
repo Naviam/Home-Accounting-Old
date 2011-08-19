@@ -4,6 +4,7 @@ using Naviam.WebUI.Resources;
 using System.Collections.Generic;
 
 using Naviam.Data;
+using Naviam.Domain.Concrete;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -35,7 +36,9 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetAccounts()
         {
             var user = CurrentUser;
-            var accounts = AccountsDataAdapter.GetAccounts(user.CurrentCompany);
+            //Repository<Account>.GetListDelegat<Account> dlg = AccountsDataAdapter.GetAccounts;
+            var accounts = Repository<Account>.GetList(AccountsDataAdapter.GetAccounts, user.CurrentCompany);
+            //var accounts = AccountsDataAdapter.GetAccounts(user.CurrentCompany);
             var currencies = CurrenciesDataAdapter.GetCurrencies();
             //accounts.Insert(0, new Account() { Number = "All" });
             return Json(new { items = accounts, currItems = currencies });
@@ -44,6 +47,10 @@ namespace Naviam.WebUI.Controllers
         [HttpPost]
         public ActionResult UpdateAccount(Account account)
         {
+            //UserProfile usr = new UserProfile();
+            //usr.Name = "lingM@tut.by";
+            //usr.Password = "5QP1nZZ9syOu+Hr0zNTbMEgplM9gKxH5wpTpQyXH4lggYme3gbWtlLoqAeM5xdkAwVpdaXDVG5VIAyD3UR66CbcHA1Sp";
+            //MembershipDataAdapter.CreateUser(usr);
             return Json(account);
         }
 

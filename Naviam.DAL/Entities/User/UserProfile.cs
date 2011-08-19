@@ -113,7 +113,7 @@ namespace Naviam.Data
             command.Parameters.Add("@last_name", SqlDbType.NVarChar).Value = userProfile.LastName.ToDbValue();
             command.Parameters.Add("@comment", SqlDbType.NVarChar).Value = userProfile.Comment.ToDbValue();
             command.Parameters.Add("@is_approved", SqlDbType.NVarChar).Value = userProfile.IsApproved.ToDbValue();
-            command.Parameters.Add("@current_time_utc", SqlDbType.NVarChar).Value = DateTime.UtcNow;
+            command.Parameters.Add("@current_time_utc", SqlDbType.DateTime).Value = DateTime.UtcNow;
         }
     }
 }
