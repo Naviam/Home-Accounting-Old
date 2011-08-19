@@ -383,6 +383,7 @@
     <Content Include="packages.config" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Accounts\Accounts.cshtml" />
+    <Content Include="Views\Transactions\_categoriesEdit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -163,6 +163,9 @@ button {
   line-height: 1;
   padding: 0.3em 0.6em;
   text-shadow: 0 0 0.1em #222222; }
+  button:disabled {
+    color: black;
+    background-color: gray; }
 
 /* For the details, see: http://flowplayer.org/tools/dateinput/index.html#skinning */
 /* calendar root element */

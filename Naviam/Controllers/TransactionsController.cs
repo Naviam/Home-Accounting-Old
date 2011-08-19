@@ -136,5 +136,11 @@ namespace Naviam.WebUI.Controllers
             return Json(new { items });
         }
 
+        [HttpPost]
+        public ActionResult GetCategoriesEditDialog()
+        {
+            return PartialView("_categoriesEdit");
+        }
+
     }
 }

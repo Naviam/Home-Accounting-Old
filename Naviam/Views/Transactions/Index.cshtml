@@ -19,6 +19,8 @@
     var delTransUrl = '@Url.Action("DeleteTransaction", "Transactions")';
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
+    var getCatEditDlg = '@Url.Action("GetCategoriesEditDialog", "Transactions")';
+
     var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
     var deleteAccountUrl = '@Url.Action("DeleteAccount", "Accounts")';
@@ -35,7 +37,7 @@
 
             accountsModel = ko.mapping.fromJS(res, mapping);
             accountsModel.selectedItem = ko.observable(null);
-            accountsModel.items.splice(0, 0, { Number: ko.observable('All'), Id: ko.observable(null) });
+            accountsModel.items.splice(0, 0, { Number: ko.observable(lang.All), Id: ko.observable(null) });
             accountsModel.selectedItem(accountsModel.items()[0]);
             accountsModel.selectedItem.subscribe(function (newValue) {
                 pageContext.accountId = newValue.Id();
@@ -129,6 +131,7 @@
     <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
 }
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
+<a href="#" onclick='return catModel.EditCategories();'>edit cats</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedItem() == $data}">
         <td style="width:12%">
@@ -269,4 +272,6 @@
     <button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
 }
 </div>
+
+<div id='cat_edit_area' class="overlay"></div>
 
