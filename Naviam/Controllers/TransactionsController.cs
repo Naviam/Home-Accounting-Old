@@ -142,5 +142,12 @@ namespace Naviam.WebUI.Controllers
             return PartialView("_categoriesEdit");
         }
 
+        [HttpPost]
+        public ActionResult UpdateCategory(Category cat)
+        {
+            cat.Id = 10;
+            return Json(cat);
+        }
+
     }
 }

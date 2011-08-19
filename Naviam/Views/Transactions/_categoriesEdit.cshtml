@@ -17,13 +17,13 @@
 </td>
 <td width='50%'>
     <ul data-bind="visible: editItem, template: { name: 'catEditSubTemplate', data: editItem() ? editItem().Subitems : null }"></ul>
+    <div data-bind="visible: editItem">
+    <form data-bind="submit: AddSubitem">
+        <label>@SharedStrings.AddCategory:</label>
+        <input data-bind='value: catNameToAdd, valueUpdate: "keyup"' />
+        <button type="submit" data-bind="enable: catNameToAdd() != ''">@SharedStrings.Add</button>
+    </form>
+    </div>
 </td>
 </tr>
 </table>
-<div data-bind="visible: editItem">
-<form data-bind="submit: AddSubitem">
-    <label>@SharedStrings.AddCategory:</label>
-    <input data-bind='value: catNameToAdd, valueUpdate: "keyup"' />
-    <button type="submit" data-bind="enable: catNameToAdd() != ''">@SharedStrings.Add</button>
-</form>
-</div>

@@ -325,10 +325,18 @@ $(document).ready(function () {
         };
         catModel.catNameToAdd = ko.observable("");
         catModel.AddSubitem = function () {
-            if (this.catNameToAdd() && catModel.editItem()) {
-                //this.editItem().Subitems.push({ Name: ko.observable(this.catNameToAdd()), Id: ko.observable(1) });
-                this.catNameToAdd("");
-                //ko.applyBindings(catModel, $("#cat_menu")[0]);
+            if (this.catNameToAdd() && this.editItem()) {
+                var v = { Name: this.catNameToAdd(), ParentId: this.editItem().Id() };
+                $this = this;
+                $.postErr(updateCatUrl, v, function (res) {
+                    var koNew = ko.mapping.fromJS(res);
+                    $this.editItem().Subitems.splice($this.editItem().Subitems().length - 1, 0, koNew);
+                    $this.catNameToAdd("");
+                    ddsmoothmenu.init({ mainmenuid: "cat_menu", //menu DIV id
+                        orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
+                        classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
+                    })
+                });
             }
         }
         catModel.Search = function (search) {
@@ -380,8 +388,7 @@ $(document).ready(function () {
             return res;
         };
         ko.applyBindings(catModel, $("#cat_menu")[0]);
-        ddsmoothmenu.init({
-            mainmenuid: "cat_menu", //menu DIV id
+        ddsmoothmenu.init({ mainmenuid: "cat_menu", //menu DIV id
             orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
             classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
         })
