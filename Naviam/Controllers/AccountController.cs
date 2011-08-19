@@ -8,6 +8,7 @@ using Naviam.WebUI.Helpers.Cookies;
 using Naviam.WebUI.Models;
 using Naviam.WebUI.Resources;
 using System.Globalization;
+using DotNetOpenAuth.OpenId.RelyingParty;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -37,7 +38,7 @@ namespace Naviam.WebUI.Controllers
         // **************************************
         // URL: /Account/LogOn
         // **************************************
-
+        
         public ActionResult LogOn()
         {
             //remove from redis
@@ -76,6 +77,33 @@ namespace Naviam.WebUI.Controllers
             }
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult GoogleLogin()
+        {
+            var openId = new OpenIdRelyingParty();
+
+            // If we have no response, start
+            //if (openId.Response == null)
+            {
+                // Create a request and redirect the user
+                openId.CreateRequest("https://www.google.com/accounts/o8/id").RedirectToProvider();
+
+                return null;
+            }
+            //else
+            {
+                // We got a response - check it's valid and that it's me
+            //    if (openId.Response.Status == AuthenticationStatus.Authenticated
+            //            && openId.Response.ClaimedIdentifier.ToString() == Settings.AdminClaimedIdentifier)
+            //    {
+            //        Session["Admin"] = true;
+            //        return Redirect("/posts/edit");
+            //    }
+            //    else
+            //        return Content("Go away, you're not me.");
+            }
         }
 
         // **************************************

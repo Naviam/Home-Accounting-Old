@@ -7,6 +7,7 @@
     Layout = "~/Views/Shared/LayoutPublic.cshtml";
 }
 
+@Html.ActionLink("Login with google", "GoogleLogin")
 @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
 
 @using (Html.BeginForm()) {
