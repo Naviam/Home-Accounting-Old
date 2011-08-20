@@ -36,31 +36,32 @@ namespace Naviam.DAL
             }
             return res;
         }
-        //public static List<Account> GetAccounts(int? companyId)
-        //{
-        //    List<Account> res = new List<Account>();
-        //    using (var holder = SqlConnectionHelper.GetConnection())
-        //    {
-        //        using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
-        //        {
-        //            cmd.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
-        //            try
-        //            {
-        //                using (var reader = cmd.ExecuteReader())
-        //                {
-        //                    while (reader.Read())
-        //                        res.Add(new Account(reader));
-        //                }
-        //            }
-        //            catch (SqlException e)
-        //            {
-        //                cmd.AddDetailsToException(e);
-        //                throw;
-        //            }
-        //        }
-        //    }
-        //    return res;
-        //}
+
+        public static List<Account> GetAccounts(int? companyId)
+        {
+            List<Account> res = new List<Account>();
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
+                {
+                    cmd.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
+                    try
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                                res.Add(new Account(reader));
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return res;
+        }
 
         public static Account GetAccount(int? id, int? companyId)
         {
