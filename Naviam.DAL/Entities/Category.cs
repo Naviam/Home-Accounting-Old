@@ -21,12 +21,14 @@ namespace Naviam.Data
             Id = reader["id"] as int?;
             ParentId = reader["parent_id"] as int?;
             Name = reader["name"] as string;
+            UserId = reader["id_user"] as int?;
             Subitems = new List<Category>();
         }
 
         public string Name { get; set; }
         public List<Category> Subitems { get; set; }
         public int? ParentId { get; set; }
+        public int? UserId { get; set; }
     }
     
     [Serializable]

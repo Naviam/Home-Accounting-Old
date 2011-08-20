@@ -189,6 +189,7 @@ button {
 	&:disabled {
 		color: black;
 		background-color:gray;
+		cursor:default;
 	}
 }
 /* For the details, see: http://flowplayer.org/tools/dateinput/index.html#skinning */
