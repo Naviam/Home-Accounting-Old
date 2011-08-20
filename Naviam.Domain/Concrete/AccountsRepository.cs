@@ -47,20 +47,20 @@ namespace Naviam.Domain.Concrete
             cache.SetList<Account>(CacheKey, null, companyId);
         }
 
-        //public static List<Account> GetAccounts(int? companyId) { return GetAccounts(companyId, false); }
-        //public static List<Account> GetAccounts(int? companyId, bool forceSqlLoad)
-        //{
-        //    var cache = new CacheWrapper();
-        //    var res = cache.GetList<Account>(CacheKey, companyId);
-        //    if (res == null || forceSqlLoad)
-        //    {
-        //        //load from DB
-        //        res = AccountsDataAdapter.GetAccounts(companyId);
-        //        //save to cache
-        //        cache.SetList(CacheKey, res, companyId);
-        //    }
-        //    return res;
-        //}
+        public static List<Account> GetAccounts(int? companyId) { return GetAccounts(companyId, false); }
+        public static List<Account> GetAccounts(int? companyId, bool forceSqlLoad)
+        {
+            var cache = new CacheWrapper();
+            var res = cache.GetList<Account>(CacheKey, companyId);
+            if (res == null || forceSqlLoad)
+            {
+                //load from DB
+                res = AccountsDataAdapter.GetAccounts(companyId);
+                //save to cache
+                cache.SetList(CacheKey, res, companyId);
+            }
+            return res;
+        }
 
         public static Account GetAccount(int? id, int? companyId) { return GetAccount(id, companyId, false); }
         public static Account GetAccount(int? id, int? companyId, bool forceSqlLoad)
