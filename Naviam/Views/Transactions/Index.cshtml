@@ -40,7 +40,7 @@
 
             accountsModel = ko.mapping.fromJS(res, mapping);
             accountsModel.selectedItem = ko.observable(null);
-            accountsModel.items.splice(0, 0, { Number: ko.observable(lang.All), Id: ko.observable(null) });
+            accountsModel.items.splice(0, 0, { Number: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null) });
             accountsModel.selectedItem(accountsModel.items()[0]);
             accountsModel.selectedItem.subscribe(function (newValue) {
                 pageContext.accountId = newValue.Id();
@@ -82,7 +82,7 @@
                 accountsModel.hideEdit(true);
             }
             accountsModel.addItem = function () {
-                var newItem = { Id: null, Number: null, Balance: null, Description: null, CurrencyId: null };
+                var newItem = { Id: null, Number: null, InitialBalance: null, Description: null, CurrencyId: null };
                 this.passToEdit(newItem, null);
             }
             accountsModel.editItem = function (item) {
@@ -116,8 +116,9 @@
 <script type="text/html" id="accountsTemplate">
     <li>
         <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
-        <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">Edit</a>
-        <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">Delete</a>
+        <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
+        <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">@SharedStrings.Delete</a>
+        <span data-bind="text: Balance"></span>
     </li>
 </script>
 <div id="accounts">
@@ -258,7 +259,7 @@
         <td>Account Name:<input data-bind="value: Number" name="Number" required="required"/></td>
     </tr>
     <tr>
-        <td>Balance:<input data-bind="value: Balance" name="Balance" required="required"/></td>
+        <td>InitialBalance:<input data-bind="value: InitialBalance" name="InitialBalance" required="required"/></td>
     </tr>
 @*    <tr>
         <td>Description:<textarea data-bind="value: Description" name="Description" required="required" rows='1' cols='1'></textarea></td>
