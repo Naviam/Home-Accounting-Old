@@ -147,7 +147,15 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             cat.Id = 10;
+            cat.UserId = user.Id;
             return Json(cat);
+        }
+        
+        [HttpPost]
+        public ActionResult DeleteCategory(int? id)
+        {
+            var user = CurrentUser;
+            return Json(id);
         }
 
     }

@@ -302,8 +302,7 @@ $(document).ready(function () {
         catModel = ko.mapping.fromJS(res);
         for (var i = 0, j = catModel.items().length; i < j; i++) {
             var item = catModel.items()[i];
-            //debug(item.Subitems());
-            item.Subitems.push({ Name: ko.observable(lang.EditCategories), Id: ko.observable(null) });
+            item.Subitems.push({ Name: ko.observable(lang.EditCategories), Id: ko.observable(null), parent: item });
         }
         loadAccounts();
         catModel.editItem = ko.observable(null);
@@ -327,15 +326,12 @@ $(document).ready(function () {
         catModel.AddSubitem = function () {
             if (this.catNameToAdd() && this.editItem()) {
                 var v = { Name: this.catNameToAdd(), ParentId: this.editItem().Id() };
-                $this = this;
+                var $this = this;
                 $.postErr(updateCatUrl, v, function (res) {
                     var koNew = ko.mapping.fromJS(res);
                     $this.editItem().Subitems.splice($this.editItem().Subitems().length - 1, 0, koNew);
                     $this.catNameToAdd("");
-                    ddsmoothmenu.init({ mainmenuid: "cat_menu", //menu DIV id
-                        orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
-                        classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
-                    })
+                    $this.assignMenu();
                 });
             }
         }
@@ -356,8 +352,23 @@ $(document).ready(function () {
                 }
             }
         };
-        catModel.EditCategories = function () {
+        catModel.editCat = function (item) {
+            $.postErr(updateCatUrl, item, function (res) {
+                catModel.assignMenu();
+            });
+        }
+        catModel.deleteItem = function (item) {
+            $.postErr(delCatUrl, { id: item.Id() }, function (res) {
+                if (res != null) {
+                    ko.utils.arrayRemoveItem(catModel.editItem().Subitems, item);
+                    catModel.assignMenu();
+                }
+            });
+        }
+        catModel.EditCategories = function (item) {
             var hld = $('#cat_edit_area');
+            if (item != null)
+                this.editItem(item);
             if (hld.html() == '') {
                 $.postErr(getCatEditDlg, function (res) {
                     hld.html(res);
@@ -372,7 +383,7 @@ $(document).ready(function () {
         catModel.AssignCategory = function (item) {
             $("#cat_menu").hide();
             if (item.Id() == null)
-                return this.EditCategories();
+                return this.EditCategories(item.parent);
             if (transModel.selectedItem() != null) {
                 transModel.selectedItem().Category(item.Name());
             }
@@ -387,11 +398,14 @@ $(document).ready(function () {
             });
             return res;
         };
+        catModel.assignMenu = function () {
+            ddsmoothmenu.init({ mainmenuid: "cat_menu", //menu DIV id
+                orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
+                classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
+            })
+        }
         ko.applyBindings(catModel, $("#cat_menu")[0]);
-        ddsmoothmenu.init({ mainmenuid: "cat_menu", //menu DIV id
-            orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
-            classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
-        })
+        catModel.assignMenu();
         $("#cat_menu").hide();
     });
     $("#cat_menu").hover(function () {

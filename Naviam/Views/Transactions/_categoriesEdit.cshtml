@@ -5,7 +5,10 @@
 {{if Id()!=null}} 
     <li>
         <span data-bind="text: Name(), visible: UserId() == null"></span>
-        <input data-bind="value: Name(), visible: UserId() != null"/>
+        <div data-bind="visible: UserId() != null">
+            <input data-bind="value: Name, event: {change: function() {$item.edit($value);} }"/>
+            <a href="#" data-bind="click: function(event) {$item.delete($value);}">Delete</a>
+        </div>
     </li>
 {{/if}} 
 {{/each}}
@@ -18,7 +21,7 @@
 </td>
 <td width='70%' style='vertical-align:top'>
     <div data-bind="visible: editItem">
-    <ul data-bind="template: { name: 'catEditSubTemplate', data: editItem() ? editItem().Subitems : null }"></ul>
+    <ul data-bind="template: { name: 'catEditSubTemplate', data: editItem() ? editItem().Subitems : null, templateOptions: { delete: deleteItem, edit: editCat } }"></ul>
     <form data-bind="submit: AddSubitem">
         <label>@SharedStrings.AddCategory:</label>
         <input data-bind='value: catNameToAdd, valueUpdate: "keyup"' />
