@@ -8,34 +8,34 @@ namespace Naviam.DAL
     public class AccountsDataAdapter
     {
 
-        public static List<Account> GetAccounts(Dictionary<string, object> parameters)
-        {
-            List<Account> res = new List<Account>();
-            using (var holder = SqlConnectionHelper.GetConnection())
-            {
-                using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
-                {
-                    foreach( var param in parameters)
-                    {
-                        cmd.Parameters.AddWithValue(param.Key, param.Value);
-                    }
-                    try
-                    {
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                                res.Add(new Account(reader));
-                        }
-                    }
-                    catch (SqlException e)
-                    {
-                        cmd.AddDetailsToException(e);
-                        throw;
-                    }
-                }
-            }
-            return res;
-        }
+        //public static List<Account> GetAccounts(Dictionary<string, object> parameters)
+        //{
+        //    List<Account> res = new List<Account>();
+        //    using (var holder = SqlConnectionHelper.GetConnection())
+        //    {
+        //        using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
+        //        {
+        //            foreach( var param in parameters)
+        //            {
+        //                cmd.Parameters.AddWithValue(param.Key, param.Value);
+        //            }
+        //            try
+        //            {
+        //                using (var reader = cmd.ExecuteReader())
+        //                {
+        //                    while (reader.Read())
+        //                        res.Add(new Account(reader));
+        //                }
+        //            }
+        //            catch (SqlException e)
+        //            {
+        //                cmd.AddDetailsToException(e);
+        //                throw;
+        //            }
+        //        }
+        //    }
+        //    return res;
+        //}
 
         public static List<Account> GetAccounts(int? companyId)
         {

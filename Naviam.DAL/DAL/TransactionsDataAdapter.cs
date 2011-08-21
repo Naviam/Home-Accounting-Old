@@ -31,7 +31,6 @@ namespace Naviam.DAL
                 using (var cmd = holder.Connection.CreateSPCommand("transactions_get"))
                 {
                     cmd.Parameters.AddWithValue("@id_company", companyId);
-                    cmd.Parameters.AddWithValue("@id_language", null);
                     try
                     {
                         using (var reader = cmd.ExecuteReader())

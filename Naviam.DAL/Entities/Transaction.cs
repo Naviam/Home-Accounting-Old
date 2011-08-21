@@ -30,7 +30,7 @@ namespace Naviam.Data
 		    //AccountNumber = reader["account_number"] as string;
             //AccountType = reader["account_type"] as string;
             //Category = reader["category_name"] as string;
-            CategoryId = reader["category_id"] as int?;
+            CategoryId = reader["id_category"] as int?;
         }
 
         public DateTime? Date { get; set; }

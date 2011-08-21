@@ -12,8 +12,8 @@ namespace Naviam.DAL
 
         private const string CacheKey = "accountType";
 
-        public static List<AccountType> GetAccountTypes() { return GetAccountTypes(null, false); }
-        public static List<AccountType> GetAccountTypes(int? languageId, bool forceSqlLoad)
+        public static List<AccountType> GetAccountTypes() { return GetAccountTypes(false); }
+        public static List<AccountType> GetAccountTypes(bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetList<AccountType>(CacheKey);
@@ -22,9 +22,8 @@ namespace Naviam.DAL
                 res = new List<AccountType>();
                 using (var holder = SqlConnectionHelper.GetConnection())
                 {
-                    using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
+                    using (var cmd = holder.Connection.CreateSPCommand("account_types_get"))
                     {
-                        cmd.Parameters.AddWithValue("@id_language", languageId.ToDbValue());
                         try
                         {
                             using (var reader = cmd.ExecuteReader())

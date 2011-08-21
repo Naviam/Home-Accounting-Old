@@ -22,7 +22,6 @@ namespace Naviam.Data
             CurrencyId = reader["id_currency"] as int?;
             Currency = reader["currency"] as string;
             TypeId = reader["id_type"] as int?;
-            TypeName = reader["type_name"] as string;
             //TODO: calculate Balance
             Balance = 0;
         }
@@ -36,7 +35,6 @@ namespace Naviam.Data
         public int? CurrencyId { get; set; }
         public string Currency { get; set; }
         public int? TypeId { get; set; }
-        public string TypeName { get; set; }
     }
 
     public static partial class SqlCommandExtensions
