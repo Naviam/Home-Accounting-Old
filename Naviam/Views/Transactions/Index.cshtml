@@ -93,6 +93,14 @@
                     ko.utils.arrayRemoveItem(accountsModel.items, item);
                 });
             }
+            accountsModel.addAmount = function (id, amount) {
+                var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+                    return item.Id() == id;
+                });
+                if (fItem) {
+                    fItem.Balance(fItem.Balance() + amount);
+                }
+            }
             ko.applyBindings(accountsModel, $("#accounts")[0]);
 
             loadTransactions();

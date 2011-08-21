@@ -184,6 +184,7 @@ function loadTransactions() {
                 });
             }
             this.selectedItem(item);
+            this.editObj2 = ko.mapping.toJS(transModel.selectedItem());
             if (event != null)
                 row = $(event.currentTarget)
             this.selectedRow(row);
@@ -196,17 +197,24 @@ function loadTransactions() {
         //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
         //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
         transModel.Save = function (reloadPage) {
-            if (this.selectedItem() != null) {
-                var cat = this.selectedItem().Category();
+            var sItem = transModel.selectedItem();
+            if (sItem != null) {
+                var cat = sItem.Category();
                 if (cat != null) {
                     var item = catModel.Search(cat);
                     if (item != null)
-                        this.selectedItem().CategoryId(item.Id());
+                        sItem.CategoryId(item.Id());
                 }
                 //                    $.postErr(updateTransUrl, ko.toJSON(transModel.currentItem), function (res) {
                 //                    }, 'json');
-                $.postErr(updateTransUrl, ko.mapping.toJS(transModel.selectedItem()), function (res) {
-                    //transModel.currentItem.Id(res.Id);
+                $.postErr(updateTransUrl, ko.mapping.toJS(sItem), function (res) {
+                    //transModel.selectedItem().Id(res.Id);
+                    //debug(transModel.editObj2);
+                    var amount = (sItem.Direction() == transModel.editObj2.Direction) ? -(transModel.editObj2.Amount - sItem.Amount()) : sItem.Amount();
+                    if (transModel.editObj2.Amount == 0) //add
+                        amount = sItem.Amount(); 
+                    amount = sItem.Direction() == 0 ? -amount : amount;
+                    accountsModel.addAmount(transModel.selectedItem().AccountId(), amount);
                     if (reloadPage) transModel.ReloadPage();
                 });
                 //console.log(transModel.currentItem.Id());
@@ -221,6 +229,8 @@ function loadTransactions() {
         }
         transModel.DeleteItem = function (item) {
             $.postErr(delTransUrl, { id: item.Id() }, function (res) {
+                var amount = item.Direction() == 0 ? item.Amount() : -item.Amount();
+                accountsModel.addAmount(item.AccountId(), amount);
                 ko.utils.arrayRemoveItem(transModel.items, item);
             });
         }
