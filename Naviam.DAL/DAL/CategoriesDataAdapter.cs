@@ -6,40 +6,78 @@ namespace Naviam.DAL
 {
     public class CategoriesDataAdapter
     {
-        private const string CacheKey = "transCategory";
-
-        public static List<Category> GetCategories(int? userId) { return GetCategories(userId, false); }
-        public static List<Category> GetCategories(int? userId, bool forceSqlLoad)
+        public static List<Category> GetCategories(int? userId)
         {
-            var cache = new CacheWrapper();
-            var res = cache.GetList<Category>(CacheKey, userId);
-            if (res == null || forceSqlLoad)
+            var res = new List<Category>();
+            using (var holder = SqlConnectionHelper.GetConnection())
             {
-                //load from DB
-                res = new List<Category>();
-                using (var holder = SqlConnectionHelper.GetConnection())
+                using (var cmd = holder.Connection.CreateSPCommand("categories_get"))
                 {
-                    using (var cmd = holder.Connection.CreateSPCommand("categories_get"))
+                    cmd.Parameters.AddWithValue("@id_user", userId);
+                    try
                     {
-                        cmd.Parameters.AddWithValue("@id_user", userId);
-                        try
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            using (var reader = cmd.ExecuteReader())
-                            {
-                                res = new Categories(reader);
-                            }
-                        }
-                        catch (SqlException e)
-                        {
-                            cmd.AddDetailsToException(e);
-                            throw;
+                            res = new Categories(reader);
                         }
                     }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
                 }
-                //save to cache
-                cache.SetList(CacheKey, res, userId);
+            }
+            return res;
+        }
+
+        public static int Insert(Category entity, int? userId)
+        {
+            var res = -1;
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                var commName = "category_create";
+                var cmd = holder.Connection.CreateSPCommand(commName);
+                try
+                {
+                    cmd.AddEntityParameters(entity, DbActionType.Insert);
+                    cmd.ExecuteNonQuery();
+                    entity.Id = cmd.GetRowIdParameter();
+                    res = cmd.GetReturnParameter();
+                }
+                catch (SqlException e)
+                {
+                    cmd.AddDetailsToException(e);
+                    throw;
+                }
+            }
+            return res;
+        }
+
+        public static int Delete(Category entity, int? userId)
+        {
+            var res = -1;
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("category_delete"))
+                {
+                    try
+                    {
+                        cmd.AddCommonParameters(entity.Id);
+                        cmd.ExecuteNonQuery();
+                        res = cmd.GetReturnParameter();
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
             }
             return res;
         }
     }
+
+
+
 }

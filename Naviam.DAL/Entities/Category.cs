@@ -53,4 +53,21 @@ namespace Naviam.Data
             return categories;
         }
     }
+
+    public static partial class SqlCommandExtensions
+    {
+        /// <summary>
+        /// Appends Category-specific parameters to the specificied SqlCommand. 
+        /// </summary>
+        /// <param name="command">SqlCommand to be executed.</param>
+        /// <param name="alert">Instance of Category class</param>
+        /// <param name="action">Database action type (select, insert, update, delete).</param>
+        public static void AddEntityParameters(this SqlCommand command, Category entity, DbActionType action)
+        {
+            command.AddCommonParameters(entity.Id, action);
+            command.Parameters.Add("@id_user", SqlDbType.Int).Value = entity.UserId.ToDbValue();
+            command.Parameters.Add("@parent_id", SqlDbType.NVarChar).Value = entity.ParentId.ToDbValue();
+            command.Parameters.Add("@name", SqlDbType.Int).Value = entity.Name.ToDbValue();
+        }
+    }
 }

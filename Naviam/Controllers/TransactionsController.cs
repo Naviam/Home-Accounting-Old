@@ -122,7 +122,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetCategories()
         {
             var user = CurrentUser;
-            var cats = CategoriesDataAdapter.GetCategories(user.Id);
+            var cats = CategoriesRepository.GetCategories(user.Id);
             //Localize
             var rm = new ResourceManager(typeof(Resources.CategoriesTr));
             foreach (var item in cats)
