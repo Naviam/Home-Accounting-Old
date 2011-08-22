@@ -41,24 +41,33 @@ namespace Naviam.WebUI.Controllers
             var currencies = CurrenciesDataAdapter.GetCurrencies();
             var accauntTypes = AccountTypesDataAdapter.GetAccountTypes();
             //accounts.Insert(0, new Account() { Number = "All" });
-            return Json(new { items = accounts, currItems = currencies });
+            return Json(new { items = accounts, currItems = currencies, typesItems = accauntTypes });
         }
 
         [HttpPost]
         public ActionResult UpdateAccount(Account account)
         {
-            //UserProfile usr = new UserProfile();
-            //usr.Name = "lingM@tut.by";
-            //usr.Password = "5QP1nZZ9syOu+Hr0zNTbMEgplM9gKxH5wpTpQyXH4lggYme3gbWtlLoqAeM5xdkAwVpdaXDVG5VIAyD3UR66CbcHA1Sp";
-            //MembershipDataAdapter.CreateUser(usr);
+            var user = CurrentUser;
+
+            if (account.Id == null)
+            {
+                account.CompanyId = user.CurrentCompany;
+                AccountsRepository.Insert(account,user.CurrentCompany);
+            }
+            else 
+            {
+                AccountsRepository.Update(account, user.CurrentCompany);
+            }
             return Json(account);
         }
 
         [HttpPost]
-        public string DeleteAccount(int? id)
+        public ActionResult DeleteAccount(int? id)
         {
-
-            return "ok";        
+            var user = CurrentUser;
+            Account acc = AccountsRepository.GetAccount(id, CurrentUser.CurrentCompany);
+            AccountsRepository.Delete(acc, CurrentUser.CurrentCompany);
+            return Json(id);        
         }
     }
 }

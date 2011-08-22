@@ -20,7 +20,6 @@ namespace Naviam.Data
             Description = reader["description"] as string;
             CompanyId = reader["id_company"] as int?;
             CurrencyId = reader["id_currency"] as int?;
-            Currency = reader["currency"] as string;
             TypeId = reader["id_type"] as int?;
             //TODO: calculate Balance
             Balance = 0;

@@ -72,11 +72,16 @@ namespace Naviam.DAL
                 using (SqlCommand cmd = holder.Connection.CreateSPCommand("accounts_get"))
                 {
                     cmd.Parameters.AddWithValue("@id_account", id);
+                    cmd.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
                     try
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            res = new Account(reader);
+                            reader.Read();
+                            if (reader.HasRows)
+                            {
+                                res = new Account(reader);
+                            }
                         }
                     }
                     catch (SqlException e)

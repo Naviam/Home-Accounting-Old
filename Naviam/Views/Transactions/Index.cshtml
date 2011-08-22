@@ -82,7 +82,7 @@
                 accountsModel.hideEdit(true);
             }
             accountsModel.addItem = function () {
-                var newItem = { Id: null, Number: null, InitialBalance: null, Description: null, CurrencyId: null };
+                var newItem = { Id: null, Number: null, InitialBalance: null, Description: null, CurrencyId: null, TypeId: null };
                 this.passToEdit(newItem, null);
             }
             accountsModel.editItem = function (item) {
@@ -269,9 +269,12 @@
     <tr>
         <td>InitialBalance:<input data-bind="value: InitialBalance" name="InitialBalance" required="required"/></td>
     </tr>
-@*    <tr>
-        <td>Description:<textarea data-bind="value: Description" name="Description" required="required" rows='1' cols='1'></textarea></td>
-    </tr>*@
+    <tr>
+        <td>Description:<textarea data-bind="value: Description" name="Description" rows='1' cols='1'></textarea></td>
+    </tr>
+    <tr>
+        <td>Account Type: <select required="required" data-bind="options: accountsModel.typesItems, optionsText: 'TypeName', optionsValue: 'Id', optionsCaption: 'Select an item...', value: TypeId"></select></td>
+    </tr>
     <tr>
         <td>Currency: <select required="required" data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId"></select></td>
     </tr>
@@ -279,6 +282,7 @@
     <td>Description:</td>
     <td><textarea data-bind="value: Description" name="Description" rows='1' cols='1'/></td>
     </tr>*@
+
     </table>
     <button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
     <button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
