@@ -121,7 +121,6 @@ namespace Naviam.DAL
         public static int Delete(Account entity, int? companyId)
         {
             var res = -1;
-            //TODO: check that account belongs to company
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var command = holder.Connection.CreateSPCommand("accounts_delete"))

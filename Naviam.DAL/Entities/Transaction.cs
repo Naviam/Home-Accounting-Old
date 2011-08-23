@@ -26,10 +26,6 @@ namespace Naviam.Data
 		    TransactionType = (TransactionTypes)reader["transaction_type"];
             Direction = (TransactionDirections)reader["direction"];
             AccountId = reader["id_account"] as int?; 
-            //TODO: remove from sql
-		    //AccountNumber = reader["account_number"] as string;
-            //AccountType = reader["account_type"] as string;
-            //Category = reader["category_name"] as string;
             CategoryId = reader["id_category"] as int?;
         }
 

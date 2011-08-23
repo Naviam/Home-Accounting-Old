@@ -84,8 +84,9 @@ namespace Naviam.DAL
                 var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {
-                    //TODO: if update - check that trans belongs to company
                     cmd.AddEntityParameters(entity, action);
+                    if (action == DbActionType.Update)
+                        cmd.Parameters.AddWithValue("@id_company", companyId);
                     cmd.ExecuteNonQuery();
                     if (action == DbActionType.Insert)
                         entity.Id = cmd.GetRowIdParameter();
@@ -111,6 +112,7 @@ namespace Naviam.DAL
                     try
                     {
                         cmd.AddCommonParameters(trans.Id);
+                        cmd.Parameters.AddWithValue("@id_company", companyId);
                         cmd.ExecuteNonQuery();
                         res = cmd.GetReturnParameter();
                     }
