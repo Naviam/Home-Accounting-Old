@@ -26,6 +26,7 @@
 
     var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
+    var addAccountAmountUrl = '@Url.Action("AddAccountAmount", "Accounts")';
     var deleteAccountUrl = '@Url.Action("DeleteAccount", "Accounts")';
     //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
     function loadAccounts() {
@@ -45,6 +46,7 @@
             accountsModel.selectedItem.subscribe(function (newValue) {
                 pageContext.accountId = newValue.Id();
                 transModel.ReloadPage();
+                accountsModel.hideEdit(false);
             });
             accountsModel.hideEdit = function (show) {
                 var elem = $("#account_edit")[0];
@@ -103,7 +105,7 @@
                 });
                 if (fItem) {
                     fItem.Balance(fItem.Balance() + amount);
-                    $.postErr(updateAccountUrl, fItem, function (res) {
+                    $.postErr(addAccountAmountUrl, { id: id, amount: amount }, function (res) {
                     });
                 }
             }

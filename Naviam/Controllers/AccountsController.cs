@@ -69,5 +69,15 @@ namespace Naviam.WebUI.Controllers
             AccountsRepository.Delete(acc, CurrentUser.CurrentCompany);
             return Json(id);        
         }
+
+        [HttpPost]
+        public ActionResult AddAccountAmount(int? id, decimal amount)
+        {
+            var user = CurrentUser;
+            Account acc = AccountsRepository.GetAccount(id, CurrentUser.CurrentCompany);
+            acc.Balance = acc.Balance + amount;
+            AccountsRepository.Update(acc, CurrentUser.CurrentCompany);
+            return Json(id);
+        }
     }
 }
