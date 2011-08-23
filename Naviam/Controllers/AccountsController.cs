@@ -37,10 +37,9 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             //var accounts = Repository<Account>.GetList(AccountsDataAdapter.GetAccounts, new Dictionary<string, object>(){{"@id_company", user.CurrentCompany.ToDbValue()}}, user.CurrentCompany);
-            var accounts = AccountsDataAdapter.GetAccounts(user.CurrentCompany);
+            var accounts = AccountsRepository.GetAccounts(user.CurrentCompany);
             var currencies = CurrenciesDataAdapter.GetCurrencies();
             var accauntTypes = AccountTypesDataAdapter.GetAccountTypes();
-            //accounts.Insert(0, new Account() { Number = "All" });
             return Json(new { items = accounts, currItems = currencies, typesItems = accauntTypes });
         }
 

@@ -104,7 +104,6 @@ namespace Naviam.DAL
         public static int Delete(Transaction trans, int? companyId)
         {
             var res = -1;
-            //TODO: check that trans belongs to company
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateSPCommand("transaction_delete"))
