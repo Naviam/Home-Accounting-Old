@@ -105,7 +105,7 @@
       <resource reference="autocomplete" />
       <resource reference="upload_html5" />
       <resource reference="validate_tools" />
-      <resource path="~/Scripts/Pages/Transactions.min.js" />
+      <resource path="~/Scripts/Pages/Transactions.js" />
     </resourceSet>
     <resourceSet name="accounts" type="js">
       <resource reference="knockout map" />

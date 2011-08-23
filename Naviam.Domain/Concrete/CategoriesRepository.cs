@@ -33,29 +33,42 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        private int Insert(Category entity, int? userId, bool intoCache)
+        private static int InsertUpdate(Category entity, int? userId, DbActionType action, bool intoCache)
         {
             var cache = new CacheWrapper();
-            var res = CategoriesDataAdapter.Insert(entity, userId);
+            var res = CategoriesDataAdapter.InsertUpdate(entity, userId, action);
             if (res == 0)
             {
                 //if ok - update cache
                 if (intoCache)
                 {
-                    cache.AddToList(CacheKey, entity, userId);
+                    if (action == DbActionType.Insert)
+                        cache.AddToList(CacheKey, entity, userId);
+                    if (action == DbActionType.Update)
+                        cache.UpdateList(CacheKey, entity, userId);
                 }
             }
             return res;
         }
 
-        //we need to provide full object (not only id) to delete from redis (restrict of redis)
-        public int Delete(Category entity, int? userId)
+        public static int Insert(Category entity, int? userId) { return Insert(entity, userId, true); }
+        public static int Insert(Category entity, int? userId, bool intoCache)
         {
-            var res = CategoriesDataAdapter.Delete(entity, userId);
+            return InsertUpdate(entity, userId, DbActionType.Insert, intoCache);
+        }
+
+        public static int Update(Category entity, int? userId)
+        {
+            return InsertUpdate(entity, userId, DbActionType.Update, true);
+        }
+
+        public static int Delete(int? id, int? userId)
+        {
+            var res = CategoriesDataAdapter.Delete(id, userId);
             if (res == 0)
             {
                 //if ok - remove from cache
-                new CacheWrapper().RemoveFromList(CacheKey, entity, userId);
+                new CacheWrapper().RemoveFromList2(CacheKey, new Category() { Id = id }, userId);
             }
             return res;
         }

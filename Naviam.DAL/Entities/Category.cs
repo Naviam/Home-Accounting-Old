@@ -66,8 +66,8 @@ namespace Naviam.Data
         {
             command.AddCommonParameters(entity.Id, action);
             command.Parameters.Add("@id_user", SqlDbType.Int).Value = entity.UserId.ToDbValue();
-            command.Parameters.Add("@parent_id", SqlDbType.NVarChar).Value = entity.ParentId.ToDbValue();
-            command.Parameters.Add("@name", SqlDbType.Int).Value = entity.Name.ToDbValue();
+            command.Parameters.Add("@parent_id", SqlDbType.Int).Value = entity.ParentId.ToDbValue();
+            command.Parameters.Add("@name", SqlDbType.NVarChar).Value = entity.Name.ToDbValue();
         }
     }
 }

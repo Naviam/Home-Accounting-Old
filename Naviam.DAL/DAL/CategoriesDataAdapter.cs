@@ -31,18 +31,19 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static int Insert(Category entity, int? userId)
+        public static int InsertUpdate(Category entity, int? userId, DbActionType action)
         {
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = "category_create";
+                var commName = action == DbActionType.Insert ? "category_create" : "category_update";
                 var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {
-                    cmd.AddEntityParameters(entity, DbActionType.Insert);
+                    cmd.AddEntityParameters(entity, action);
                     cmd.ExecuteNonQuery();
-                    entity.Id = cmd.GetRowIdParameter();
+                    if (action == DbActionType.Insert)
+                        entity.Id = cmd.GetRowIdParameter();
                     res = cmd.GetReturnParameter();
                 }
                 catch (SqlException e)
@@ -54,7 +55,7 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static int Delete(Category entity, int? userId)
+        public static int Delete(int? id, int? userId)
         {
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
@@ -63,7 +64,7 @@ namespace Naviam.DAL
                 {
                     try
                     {
-                        cmd.AddCommonParameters(entity.Id);
+                        cmd.AddCommonParameters(id);
                         cmd.ExecuteNonQuery();
                         res = cmd.GetReturnParameter();
                     }
