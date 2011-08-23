@@ -8,7 +8,8 @@ using Naviam.Data;
 namespace Naviam.WebUI.Controllers
 {
     public class AccountsController : BaseController
-    {
+    {   
+        // test
         public ActionResult Index()
         {
             return View("Accounts");
