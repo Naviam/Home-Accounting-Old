@@ -129,6 +129,7 @@ namespace Naviam.DAL
                     try
                     {
                         command.AddCommonParameters(entity.Id);
+                        command.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
                         command.ExecuteNonQuery();
                         res = command.GetReturnParameter();
                     }
