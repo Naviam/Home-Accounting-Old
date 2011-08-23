@@ -127,7 +127,7 @@ namespace Naviam.WebUI.Controllers
             var rm = new ResourceManager(typeof(Resources.CategoriesTr));
             foreach (var item in cats)
             {
-                var st = rm.GetString(item.Name);
+                var st = rm.GetString(item.Id.ToString());
                 if (!String.IsNullOrEmpty(st))
                     item.Name = st;
             }
@@ -146,8 +146,13 @@ namespace Naviam.WebUI.Controllers
         public ActionResult UpdateCategory(Category cat)
         {
             var user = CurrentUser;
-            cat.Id = 10;
             cat.UserId = user.Id;
+            if (cat.Subitems.Count == 1 && cat.Subitems[0] == null)
+                cat.Subitems.Clear();
+            if (cat.Id != null)
+                CategoriesRepository.Update(cat, cat.UserId);
+            else
+                CategoriesRepository.Insert(cat, cat.UserId);
             return Json(cat);
         }
         
@@ -155,6 +160,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult DeleteCategory(int? id)
         {
             var user = CurrentUser;
+            CategoriesRepository.Delete(id, user.Id);
             return Json(id);
         }
 
