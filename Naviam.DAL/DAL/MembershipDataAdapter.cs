@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Data;
-using Naviam.Entities.User;
+using Naviam.Data;
 
 namespace Naviam.DAL
 {
@@ -37,9 +37,27 @@ namespace Naviam.DAL
             return null;
         }
 
-        public static void CreateUser()
+        public static int CreateUser(UserProfile entity)
         {
-            //TODO: Implement create user functionality
+            var res = -1;
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                var commName = "user_create";
+                var cmd = holder.Connection.CreateSPCommand(commName);
+                try
+                {
+                    cmd.AddEntityParameters(entity, DbActionType.Insert);
+                    cmd.ExecuteNonQuery();
+                    entity.Id = cmd.GetRowIdParameter();
+                    res = cmd.GetReturnParameter();
+                }
+                catch (SqlException e)
+                {
+                    cmd.AddDetailsToException(e);
+                    throw;
+                }
+            }
+            return res;
         }
 
         public static int ChangePassword(string applicationName, string email, 

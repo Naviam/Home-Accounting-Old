@@ -1,5 +1,6 @@
 ﻿@using Combres.Mvc;
 @using System.Reflection;
+@using Naviam.Data;
 @using Naviam.WebUI.Controllers
 <!DOCTYPE html>
 <html>
@@ -24,9 +25,11 @@
     <nav>
         
         @{Html.RenderAction("CompaniesMenu", "MenuApp");}
+        
+        @{var user = ViewBag.CurrentUser as UserProfile;}
        
         <ul class="right">
-            <li><a href="Error.cshtml">Виталий Гатальский</a></li>
+            <li><a href="Error.cshtml">@user.FirstName @user.LastName</a></li>
             <li><a href="Error.cshtml">0</a></li>
             <li><a href="Error.cshtml">?</a></li>
             <li><a href="@Url.Action("LogOn", "Account")">Выйти</a></li>

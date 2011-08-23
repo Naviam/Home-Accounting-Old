@@ -11,8 +11,8 @@
   <!--<output path="..\Scripts\jquery.html5_upload.min.js">
     <input path="..\Scripts\jquery.html5_upload.js"/>
   </output>-->
-  <!--<output path="..\Scripts\jquery.tools\dateinput\dateinput.min.js">
-    <input path="..\Scripts\jquery.tools\dateinput\dateinput.js"/>
+  <!--<output path="..\Scripts\ddsmoothmenu.min.js">
+    <input path="..\Scripts\ddsmoothmenu.js"/>
   </output>-->
   <!--<output path="..\Scripts\jquery.uploadify.v2.1.4.min.js">
     <input path="..\Scripts\jquery.uploadify.v2.1.4.js"/>

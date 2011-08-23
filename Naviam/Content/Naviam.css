@@ -1,5 +1,5 @@
 header {
-  background-color: gray;
+  background-color: white;
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -132,8 +132,9 @@ a.category_picker {
   /* CSS3 styling for latest browsers */
   -moz-box-shadow: 0 0 90px 5px #000;
   -webkit-box-shadow: 0 0 90px #000;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px; }
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px; }
   .overlay a.close, .overlaywoshadow a.close {
     background: url("images/close.png") no-repeat scroll 0 0 transparent;
     cursor: pointer;
@@ -162,6 +163,10 @@ button {
   line-height: 1;
   padding: 0.3em 0.6em;
   text-shadow: 0 0 0.1em #222222; }
+  button:disabled {
+    color: black;
+    background-color: gray;
+    cursor: default; }
 
 /* For the details, see: http://flowplayer.org/tools/dateinput/index.html#skinning */
 /* calendar root element */

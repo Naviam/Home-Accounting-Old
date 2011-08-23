@@ -44,6 +44,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Combres.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetOpenAuth, Version=3.4.7.11121, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DotNetOpenAuth.dll</HintPath>
+    </Reference>
     <Reference Include="EcmaScript.NET.modified, Version=0.1.1.0, Culture=neutral, PublicKeyToken=7d53ba4f537753a5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\EcmaScript.NET.modified.dll</HintPath>
@@ -104,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\AttachmentsController.cs" />
     <Compile Include="Helpers\Cookies\CookieContainer.cs" />
     <Compile Include="Helpers\Cookies\ICookieContainer.cs" />
@@ -117,7 +122,6 @@
     <Compile Include="Helpers\Parsers\ParsersFactory.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\BankAccountsDataController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\MenuAppController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
@@ -128,6 +132,11 @@
     <Compile Include="Models\MenuAppModel.cs" />
     <Compile Include="Models\PageContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\CategoriesTr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CategoriesTr.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\DisplayNames.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -258,6 +267,7 @@
     <Content Include="Scripts\jquery.tools\tooltip\tooltip.js" />
     <Content Include="Scripts\jquery.tools\tooltip\tooltip.slide.js" />
     <Content Include="Scripts\jquery.tools\validator\validator.js" />
+    <Content Include="Scripts\jquery.tools\validator\validator.min.js" />
     <Content Include="Scripts\jquery.uploadify.v2.1.4.js" />
     <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -315,6 +325,11 @@
     <Content Include="Views\MenuApp\TopMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\CategoriesTr.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CategoriesTr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\CategoriesTr.ru.resx" />
     <EmbeddedResource Include="Resources\DisplayNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DisplayNames.Designer.cs</LastGenOutput>
@@ -353,9 +368,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\BankAccountsData\Accounts.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Shared\_LayoutWithSidebars.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +382,8 @@
     <Content Include="Views\MenuApp\CompaniesMenu.cshtml" />
     <Content Include="packages.config" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Accounts\Accounts.cshtml" />
+    <Content Include="Views\Transactions\_categoriesEdit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

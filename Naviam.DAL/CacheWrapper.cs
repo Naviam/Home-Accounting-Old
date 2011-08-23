@@ -344,6 +344,44 @@ namespace Naviam
             }
         }
 
+        public void RemoveFromList2<T>(string key, T val) { RemoveFromList2(key, val, null); }
+        public void RemoveFromList2<T>(string key, T val, params int?[] id)
+        {
+            key = GetKey(key, id);
+            if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
+            {
+                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                {
+                    var typedRedis = redisClient.GetTypedClient<T>();
+
+                    using (redisClient.AcquireLock(key + "lock"))
+                    {
+                        var list = typedRedis.Lists[key];
+                        var index = list.IndexOf(val);
+                        if (index != -1)
+                            list.RemoveAt(index);
+                    }
+                }
+            }
+            else
+            {
+                var obj = id != null ? HttpContext.Current.Session[key] : HttpContext.Current.Cache[key];
+                if (obj != null)
+                {
+                    var lst = (List<T>)obj;
+                    for (var i = 0; i < lst.Count; i++)
+                    {
+                        var existingItem = lst[i];
+                        if (existingItem.Equals(val))
+                        {
+                            lst.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         public T GetFromList<T>(string key, T val) { return GetFromList(key, val, null); }
         public T GetFromList<T>(string key, T val, params int?[] id)
         {

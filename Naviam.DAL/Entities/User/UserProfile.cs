@@ -5,8 +5,9 @@ using Naviam.Data;
 using System.Web;
 using System.Xml.Serialization;
 using System.Globalization;
+using System.Data.SqlClient;
 
-namespace Naviam.Entities.User
+namespace Naviam.Data
 {
     /// <summary>
     /// User Profile object
@@ -31,6 +32,8 @@ namespace Naviam.Entities.User
             PasswordAnswer = record["password_answer"] as string;
             LanguageId = record["id_language"] as int?;
             LanguageNameShort = record["language_name_short"] as string;
+            IsApproved = record["is_approved"] as bool?;
+            CreationDate = record["creation_date"] as DateTime?;
         }
 
         public string Name { get; set; }
@@ -87,13 +90,30 @@ namespace Naviam.Entities.User
         public string Comment { get; set; }
         public string PasswordQuestion { get; set; }
         public string PasswordAnswer { get; set; }
-        //public CultureInfo Culture
-        //{
-        //    get
-        //    {
-        //        return _ci;
-        //    }
-        
-        //}
+        public bool? IsApproved { get; set; }
+        public DateTime? CreationDate { get; set; }
+    }
+
+    public static partial class SqlCommandExtensions
+    {
+        /// <summary>
+        /// Appends UserProfile-specific parameters to the specificied SqlCommand. 
+        /// </summary>
+        /// <param name="command">SqlCommand to be executed.</param>
+        /// <param name="alert">Instance of UserProfile class</param>
+        /// <param name="action">Database action type (select, insert, update, delete).</param>
+        public static void AddEntityParameters(this SqlCommand command, UserProfile userProfile, DbActionType action)
+        {
+            command.AddCommonParameters(userProfile.Id, action);
+            command.Parameters.Add("@email", SqlDbType.NVarChar).Value = userProfile.Name.ToDbValue(); 
+            command.Parameters.Add("@password", SqlDbType.NVarChar).Value = userProfile.Password.ToDbValue();
+            command.Parameters.Add("@password_question", SqlDbType.NVarChar).Value = userProfile.PasswordQuestion.ToDbValue(); 
+            command.Parameters.Add("@password_answer", SqlDbType.NVarChar).Value = userProfile.PasswordAnswer.ToDbValue(); 
+            command.Parameters.Add("@first_name", SqlDbType.NVarChar).Value = userProfile.FirstName.ToDbValue(); 
+            command.Parameters.Add("@last_name", SqlDbType.NVarChar).Value = userProfile.LastName.ToDbValue();
+            command.Parameters.Add("@comment", SqlDbType.NVarChar).Value = userProfile.Comment.ToDbValue();
+            command.Parameters.Add("@is_approved", SqlDbType.NVarChar).Value = userProfile.IsApproved.ToDbValue();
+            command.Parameters.Add("@current_time_utc", SqlDbType.DateTime).Value = DateTime.UtcNow;
+        }
     }
 }

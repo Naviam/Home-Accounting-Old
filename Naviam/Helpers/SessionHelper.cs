@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using System.Web.Security;
-using Naviam.Entities.User;
+using Naviam.Data;
 
 namespace Naviam.WebUI.Helpers
 {

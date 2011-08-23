@@ -16,24 +16,23 @@ namespace Naviam.Data
             Id = reader["id"] as int?;
             Number = reader["number"] as string;
             DateCreation = reader["date_creation"] as DateTime?;
-            Balance = reader["balance"] as decimal?;
+            InitialBalance = reader["initial_balance"] as decimal?;
             Description = reader["description"] as string;
             CompanyId = reader["id_company"] as int?;
             CurrencyId = reader["id_currency"] as int?;
-            Currency = reader["currency"] as string;
             TypeId = reader["id_type"] as int?;
-            TypeName = reader["type_name"] as string;
+            Balance = reader["balance"] as decimal?;
         }
 
         public string Number { get; set; }
         public DateTime? DateCreation { get; set; }
+        public decimal? InitialBalance { get; set; }
         public decimal? Balance { get; set; }
         public string Description { get; set; }
         public int? CompanyId { get; set; }
         public int? CurrencyId { get; set; }
         public string Currency { get; set; }
         public int? TypeId { get; set; }
-        public string TypeName { get; set; }
     }
 
     public static partial class SqlCommandExtensions
@@ -51,9 +50,10 @@ namespace Naviam.Data
             command.Parameters.Add("@number", SqlDbType.NVarChar).Value = account.Number.ToDbValue();
             command.Parameters.Add("@id_company", SqlDbType.Int).Value = account.CompanyId.ToDbValue();
             command.Parameters.Add("@id_currency", SqlDbType.Int).Value = account.CurrencyId.ToDbValue();
-            command.Parameters.Add("@balance", SqlDbType.Decimal).Value = account.Balance;
+            command.Parameters.Add("@initial_balance", SqlDbType.Decimal).Value = account.InitialBalance;
             command.Parameters.Add("@id_type", SqlDbType.Int).Value = account.TypeId.ToDbValue();
             command.Parameters.Add("@description", SqlDbType.NVarChar).Value = account.Description.ToDbValue();
+            command.Parameters.Add("@balance", SqlDbType.Decimal).Value = account.Balance;
         }
     }
 }

@@ -45,8 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concrete\AccountsRepository.cs" />
+    <Compile Include="Concrete\CategoriesRepository.cs" />
     <Compile Include="Concrete\MembershipRepository.cs" />
     <Compile Include="Concrete\RoleRepository.cs" />
+    <Compile Include="Concrete\TransactionsRepository.cs" />
     <Compile Include="Entities\SecUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Concrete\Providers\NaviamMembershipProvider.cs" />

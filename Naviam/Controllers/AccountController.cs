@@ -8,6 +8,8 @@ using Naviam.WebUI.Helpers.Cookies;
 using Naviam.WebUI.Models;
 using Naviam.WebUI.Resources;
 using System.Globalization;
+using DotNetOpenAuth.OpenId.RelyingParty;
+using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -37,7 +39,7 @@ namespace Naviam.WebUI.Controllers
         // **************************************
         // URL: /Account/LogOn
         // **************************************
-
+        
         public ActionResult LogOn()
         {
             //remove from redis
@@ -57,25 +59,82 @@ namespace Naviam.WebUI.Controllers
 
                 if (profile != null)
                 {
-                    //setup forms ticket
-                    var sessionKey = _membershipRepository.SetSessionForUser(profile);
-
-                    _cookieContainer.SetAuthCookie(
-                        sessionKey, model.UserName.ToLower(), model.RememberMe);
-
-                    Session["Culture"] = !String.IsNullOrEmpty(profile.LanguageNameShort) ? new CultureInfo(profile.LanguageNameShort) : null;
-                    // Make sure we only follow relative returnUrl parameters to protect against having an open redirector
-                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    return RedirectToAction("Index", "Transactions");
+                    return AuthSuccess(profile, model, returnUrl);
                 }
                 ModelState.AddModelError(String.Empty, ValidationStrings.UsernameOrPasswordIsIncorrect);
             }
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private ActionResult AuthSuccess(Data.UserProfile profile, LogOnModel model, string returnUrl)
+        {
+            //setup forms ticket
+            var sessionKey = _membershipRepository.SetSessionForUser(profile);
+
+            _cookieContainer.SetAuthCookie(sessionKey, model.UserName.ToLower(), model.RememberMe);
+
+            Session["Culture"] = !String.IsNullOrEmpty(profile.LanguageNameShort) ? new CultureInfo(profile.LanguageNameShort) : null;
+            // Make sure we only follow relative returnUrl parameters to protect against having an open redirector
+            if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Transactions");
+        }
+
+        [HttpGet]
+        public ActionResult GoogleLogin()
+        {
+            var openId = new OpenIdRelyingParty();
+            var response = openId.GetResponse();
+            // If we have no response, start
+            if (response == null)
+            {
+                // Create a request and redirect the user
+                var authReq = openId.CreateRequest("https://www.google.com/accounts/o8/id");
+                var fetch = new FetchRequest();
+                fetch.Attributes.AddRequired(WellKnownAttributes.Contact.Email);
+                fetch.Attributes.AddOptional(WellKnownAttributes.Name.FullName);
+                authReq.AddExtension(fetch);
+                authReq.RedirectToProvider();
+                return null;
+            }
+            else
+            {
+                var errorMessage = "Success";
+                // We got a response - check it's valid
+                switch (response.Status)
+                {
+                    case AuthenticationStatus.Authenticated:
+                        {
+                            var fResp = response.GetExtension<FetchResponse>();
+                            //TODO: login or register
+                            LogOnModel model = new LogOnModel() { UserName = fResp.Attributes[WellKnownAttributes.Contact.Email].Values[0] };
+                            var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
+
+                            if (profile != null)
+                                AuthSuccess(profile, model, null);
+                            else
+                                return Register();
+                        }
+                        break;
+                    case AuthenticationStatus.Canceled:
+                        errorMessage = "Login was cancelled at the provider.";
+                        break;
+                    case AuthenticationStatus.Failed:
+                        errorMessage = "Login failed at the provider.";
+                        break;
+                    case AuthenticationStatus.SetupRequired:
+                        errorMessage = "The provider requires setup.";
+                        break;
+                    default:
+                        errorMessage = "Login failed.";
+                        break;
+                }
+                return Content(errorMessage);
+            }
         }
 
         // **************************************
@@ -124,11 +183,12 @@ namespace Naviam.WebUI.Controllers
     {
         public void SignIn(string userName, bool createPersistentCookie)
         {
+            var exp = DateTime.Now.Add(FormsAuthentication.Timeout);
             var authTicket = new FormsAuthenticationTicket(
                 1, //version
                 userName, // user name
                 DateTime.Now,             //creation
-                DateTime.Now.AddMinutes(30), //Expiration
+                exp, //Expiration
                 createPersistentCookie, //Persistent
                 userName); //since Classic logins don't have a "Friendly Name".  OpenID logins are handled in the AuthController.
 

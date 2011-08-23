@@ -1,5 +1,4 @@
 ﻿@using Naviam.WebUI.Resources
-@using Naviam.Entities.User;
 @using Naviam.Data;
 @{
     ViewBag.Title = SharedStrings.TransactionsTitle;
@@ -14,21 +13,22 @@
     <script type="text/javascript" src="~/Scripts/knockout.mapping.js"></script> 
     <script type="text/javascript" src="~/Scripts/common.js"></script> 
 }
+
 <script type='text/javascript'>
     var getTransUrl = '@Url.Action("GetTransactions", "Transactions")';
     var delTransUrl = '@Url.Action("DeleteTransaction", "Transactions")';
     var updateTransUrl = '@Url.Action("UpdateTransaction", "Transactions")';
+    
     var getCatUrl = '@Url.Action("GetCategories", "Transactions")';
-    var getAccountsUrl = '@Url.Action("GetAccounts", "Transactions")';
-    var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
-    //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
-    $(document).ready(function () {
-        var url = $('#upload_statement').parents('form').attr('action');
-        $('#upload_statement').html5_upload({ autostart: false, url: url, onFinish: function (event, total) {
-            transModel.ReloadPage();
-        }
-        });
+    var getCatEditDlg = '@Url.Action("GetCategoriesEditDialog", "Transactions")';
+    var updateCatUrl = '@Url.Action("UpdateCategory", "Transactions")';
+    var delCatUrl = '@Url.Action("DeleteCategory", "Transactions")';
 
+    var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
+    var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
+    var deleteAccountUrl = '@Url.Action("DeleteAccount", "Accounts")';
+    //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
+    function loadAccounts() {
         $.postErr(getAccountsUrl, transModel.paging, function (res) {
             var mapping = {
                 'items': {
@@ -37,8 +37,10 @@
                     }
                 }
             }
+
             accountsModel = ko.mapping.fromJS(res, mapping);
             accountsModel.selectedItem = ko.observable(null);
+            accountsModel.items.splice(0, 0, { Number: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null) });
             accountsModel.selectedItem(accountsModel.items()[0]);
             accountsModel.selectedItem.subscribe(function (newValue) {
                 pageContext.accountId = newValue.Id();
@@ -63,6 +65,10 @@
                 item.Save = function () {
                     if (item === this) {
                         if ($(elem).find('form').data("validator").checkValidity()) {
+                            if (editItem == null) //add
+                                item.Balance = item.InitialBalance;
+                            else
+                                item.Balance = editItem.Balance() + (item.InitialBalance - editItem.InitialBalance());
                             $.postErr(updateAccountUrl, this, function (res) {
                                 if (editItem != null)
                                     ko.mapping.fromJS(item, {}, editItem);
@@ -80,14 +86,37 @@
                 accountsModel.hideEdit(true);
             }
             accountsModel.addItem = function () {
-                var newItem = { Id: null, Number: null };
+                var newItem = { Id: null, Number: null, InitialBalance: null, Description: null, CurrencyId: null, TypeId: null };
                 this.passToEdit(newItem, null);
             }
             accountsModel.editItem = function (item) {
                 accountsModel.passToEdit(ko.mapping.toJS(item), item);
             }
+            accountsModel.deleteItem = function (item) {
+                $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
+                    ko.utils.arrayRemoveItem(accountsModel.items, item);
+                });
+            }
+            accountsModel.addAmount = function (id, amount) {
+                var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+                    return item.Id() == id;
+                });
+                if (fItem) {
+                    fItem.Balance(fItem.Balance() + amount);
+                    $.postErr(updateAccountUrl, fItem, function (res) {
+                    });
+                }
+            }
             ko.applyBindings(accountsModel, $("#accounts")[0]);
+
             loadTransactions();
+        });
+    }
+    $(document).ready(function () {
+        var url = $('#upload_statement').parents('form').attr('action');
+        $('#upload_statement').html5_upload({ autostart: false, url: url, onFinish: function (event, total) {
+            transModel.ReloadPage();
+        }
         });
 
     });
@@ -101,23 +130,20 @@
 <script type="text/html" id="accountsTemplate">
     <li>
         <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
-        <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">Edit</a>
+        <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
+        <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">@SharedStrings.Delete</a>
+        <span data-bind="text: Balance"></span>
     </li>
 </script>
 <div id="accounts">
     <a href="#" data-bind="click: function(event) { addItem(); }">Add</a>
-    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem } }" class='company_menu'>
+    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem, delete: deleteItem } }" class='company_menu'>
     </ul>
 </div>
 }
 
-@{UserProfile user = ViewBag.CurrentUser as UserProfile;}
-@using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
-{
-    <input type="file" id='upload_statement' name='fileToUpload'/>
-    <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
-}
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
+<a href="#" onclick='return catModel.EditCategories();'>edit cats</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedItem() == $data}">
         <td style="width:12%">
@@ -165,8 +191,17 @@
     {{/each}}
     </tr>
 </script>
-<div id="transGrid">
-    <a href="#" onclick='return transModel.Add();' data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">Add</a>
+<div style='position:relative'>
+    <div id="transGrid">
+    @{UserProfile user = ViewBag.CurrentUser as UserProfile;}
+    <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
+        @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            <input type="file" id='upload_statement' name='fileToUpload'/>
+            <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
+        }
+        <a href="#" onclick='return transModel.Add();'>Add</a>
+    </div>
     <table class='grid'>
         <thead data-bind='template: "transHeadTemplate"' >
         </thead>
@@ -186,6 +221,28 @@
     </div>*@
     <div data-bind='template: "transPagingTemplate"' class='paging'>
     </div>
+    </div>
+    <div class="overlaywoshadow" id="transDlg">
+        <table>
+            <td></td>
+            <td>
+                <label><input data-bind="checked: Direction" name="Direction" type="radio" value='0'/>@DisplayNames.Expense</label>
+                <label><input data-bind="checked: Direction" name="Direction" type="radio" value='1'/>@DisplayNames.Income</label>
+            </td>
+        <tr>
+            <td>@DisplayNames.Merchant:</td>
+            <td><input class="width100" data-bind="value: Merchant" name="Merchant"/></td>
+        </tr>
+        <tr>
+            <td>@DisplayNames.Notes:</td>
+            <td><textarea data-bind="value: Notes" name="Notes" rows='1' cols='1'></textarea></td>
+        </tr>
+        </table>
+        <div>
+            <button class='close' id='ok'>Ok</button>
+            <button class='close' id='cancel'>@SharedStrings.Cancel</button>
+        </div>     
+    </div>
 </div>
 
 <script type="text/html" id="catTemplate">
@@ -204,40 +261,41 @@
     <ul data-bind="template: {name:'catTemplate', foreach:items}" class='dropdown'>
     </ul>
 </div>
-<div class="overlaywoshadow" id="transDlg">
-    <table>
-        <td></td>
-        <td>
-            <label><input data-bind="checked: Direction" name="Direction" type="radio" value='0'/>@DisplayNames.Expense</label>
-            <label><input data-bind="checked: Direction" name="Direction" type="radio" value='1'/>@DisplayNames.Income</label>
-        </td>
-    <tr>
-        <td>@DisplayNames.Merchant:</td>
-        <td><input data-bind="value: Merchant" name="Merchant"/></td>
-    </tr>
-    <tr>
-        <td>@DisplayNames.Notes:</td>
-        <td><textarea data-bind="value: Notes" name="Notes" rows='2' cols='2'></textarea></td>
-    </tr>
-    </table>
-    <div>
-        <button class='close' id='ok'>Ok</button>
-        <button class='close' id='cancel'>@SharedStrings.Cancel</button>
-    </div>     
-</div>
+
 
 <div id='account_edit' class='hidden'>
 @*TODO: move to partial view*@
 @using (Html.BeginForm("UpdateAccount", "Accounts", FormMethod.Post, new {id = "editAccountFrm" }))
 {
     <table>
+@*    <tr>
+        <td>Account Type:<select data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId", required="required" ></select></td>
+    </tr>*@
     <tr>
-    <td>Account:</td>
-    <td><input data-bind="value: Number" name="Number" required="required"/></td>
+        <td>Account Name:<input data-bind="value: Number" name="Number" required="required"/></td>
     </tr>
+    <tr>
+        <td>Initial Balance:<input data-bind="value: InitialBalance" name="InitialBalance" required="required"/></td>
+    </tr>
+    <tr>
+        <td>Description:<textarea data-bind="value: Description" name="Description" rows='1' cols='1'></textarea></td>
+    </tr>
+    <tr>
+        <td>Account Type: <select required="required" data-bind="options: accountsModel.typesItems, optionsText: 'TypeName', optionsValue: 'Id', optionsCaption: 'Select an item...', value: TypeId"></select></td>
+    </tr>
+    <tr>
+        <td>Currency: <select required="required" data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId"></select></td>
+    </tr>
+@*    <tr>
+    <td>Description:</td>
+    <td><textarea data-bind="value: Description" name="Description" rows='1' cols='1'/></td>
+    </tr>*@
+
     </table>
     <button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
     <button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
 }
 </div>
+
+<div id='cat_edit_area' class="overlay"></div>
 

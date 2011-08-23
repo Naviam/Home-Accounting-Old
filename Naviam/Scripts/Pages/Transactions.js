@@ -1,5 +1,6 @@
 ﻿/// <reference path="..\jquery-1.6.2.js" />
 /// <reference path="..\knockout-1.2.1.js" />
+/// <reference path="..\common.js" />
 //JSON.stringify
 var transModel = {
     paging: { Page: 1, SortField: 'Date', SortDirection: 1 }
@@ -26,16 +27,18 @@ ko.bindingHandlers.amount = {
 ko.bindingHandlers.category = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         //handle the field changing
-        ko.utils.registerEventHandler(element, "change", function () {
+        var checkElem = function () {
             var observable = valueAccessor();
             var val = $(element).val();
             //find category
             var item = catModel.Search(val);
-            if (item != null)
+            if (typeof item != 'undefined' && item != null)
                 observable(item.Name())
             else
                 $(element).val(observable()); //restore old
-        });
+        }
+        ko.utils.registerEventHandler(element, "change", checkElem);
+        ko.utils.registerEventHandler(element, "result", checkElem);
     },
     update: function (element, valueAccessor) {
         $(element).val(ko.utils.unwrapObservable(valueAccessor()));
@@ -78,23 +81,20 @@ ko.bindingHandlers.category = {
 //!!!
 function loadTransactions() {
     $.postErr(getTransUrl, transModel.paging, function (res) {
-        //!!!replaced by bindingHandlers
-        //        var childItem = function (data) {
-        //            ko.mapping.fromJS(data, {}, this);
-        //            this.Amount = ko.numericObservable(data.Amount);
-        //            this.Category = ko.categoryObservable(data.Category);
-        //        }
-        //!!!
+        var childItem = function (data) {
+            ko.mapping.fromJS(data, {}, this);
+            var catItem = catModel.itemById(data.CategoryId);
+            var catName = catItem != null ? catItem.Name() : '';
+            this.Category = ko.observable(catName);
+        }
         var mapping = {
             'items': {
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.Id);
                 }
-                //!!!replaced by bindingHandlers
-                //                    , create: function (options) {
-                //                       return new childItem(options.data, {}, this);
-                //                    }
-                //!!!
+                , create: function (options) {
+                    return new childItem(options.data, {}, this);
+                }
             }
         }
         transModel = ko.mapping.fromJS(res, mapping);
@@ -132,8 +132,10 @@ function loadTransactions() {
             var frm = $("#transDlg");
             frm.css({ width: row.width() });
             var conf = transDlg.getConf();
-            conf.top = row.offset().top + row.height();
-            conf.left = row.offset().left - 5;
+            //conf.top = row.offset().top + row.height();
+            //conf.left = row.offset().left - 5;
+            conf.top = row.parents('table')[0].offsetTop + row[0].offsetTop + row.height();
+            conf.left = -5;
             frm.overlay().load();
         }
         transModel.Add = function () {
@@ -182,6 +184,7 @@ function loadTransactions() {
                 });
             }
             this.selectedItem(item);
+            this.editObj2 = ko.mapping.toJS(transModel.selectedItem());
             if (event != null)
                 row = $(event.currentTarget)
             this.selectedRow(row);
@@ -194,17 +197,24 @@ function loadTransactions() {
         //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
         //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
         transModel.Save = function (reloadPage) {
-            if (this.selectedItem() != null) {
-                var cat = this.selectedItem().Category();
+            var sItem = transModel.selectedItem();
+            if (sItem != null) {
+                var cat = sItem.Category();
                 if (cat != null) {
                     var item = catModel.Search(cat);
                     if (item != null)
-                        this.selectedItem().CategoryId(item.Id());
+                        sItem.CategoryId(item.Id());
                 }
                 //                    $.postErr(updateTransUrl, ko.toJSON(transModel.currentItem), function (res) {
                 //                    }, 'json');
-                $.postErr(updateTransUrl, ko.mapping.toJS(transModel.selectedItem()), function (res) {
-                    //transModel.currentItem.Id(res.Id);
+                $.postErr(updateTransUrl, ko.mapping.toJS(sItem), function (res) {
+                    //transModel.selectedItem().Id(res.Id);
+                    //debug(transModel.editObj2);
+                    var amount = (sItem.Direction() == transModel.editObj2.Direction) ? -(transModel.editObj2.Amount - sItem.Amount()) : sItem.Amount();
+                    if (transModel.editObj2.Amount == 0) //add
+                        amount = sItem.Amount(); 
+                    amount = sItem.Direction() == 0 ? -amount : amount;
+                    accountsModel.addAmount(res.AccountId, amount);
                     if (reloadPage) transModel.ReloadPage();
                 });
                 //console.log(transModel.currentItem.Id());
@@ -219,6 +229,8 @@ function loadTransactions() {
         }
         transModel.DeleteItem = function (item) {
             $.postErr(delTransUrl, { id: item.Id() }, function (res) {
+                var amount = item.Direction() == 0 ? item.Amount() : -item.Amount();
+                accountsModel.addAmount(item.AccountId(), amount);
                 ko.utils.arrayRemoveItem(transModel.items, item);
             });
         }
@@ -262,8 +274,15 @@ $(document).ready(function () {
         var cat = row.find('[name="Category"]');
         am.removeClass(inputCssError);
         cat.removeClass(inputCssError);
-        if (transModel.editObj != null)
-            ko.mapping.fromJS(transModel.editObj, {}, transModel.selectedItem());
+        if (transModel.editObj != null) {
+            //restore inline editing props
+            var selItem = transModel.selectedItem();
+            transModel.editObj.Amount = selItem.Amount();
+            transModel.editObj.Category = selItem.Category();
+            transModel.editObj.Description = selItem.Description();
+            transModel.editObj.Date = selItem.Date();
+            ko.mapping.fromJS(transModel.editObj, {}, selItem);
+        }
         var item = transModel.selectedItem();
         //console.log(item);
         if (item.Amount() <= 0)
@@ -283,7 +302,49 @@ $(document).ready(function () {
     //loadTransactions();
     //Gategories
     $.postErr(getCatUrl, function (res) {
+        //        var mapping = {
+        //            'items': {
+        //                key: function (data) {
+        //                    return ko.utils.unwrapObservable(data.Id);
+        //                }
+        //            }
+        //        }
         catModel = ko.mapping.fromJS(res);
+        for (var i = 0, j = catModel.items().length; i < j; i++) {
+            var item = catModel.items()[i];
+            item.Subitems.push({ Name: ko.observable(lang.EditCategories), Id: ko.observable(null), parent: item });
+        }
+        loadAccounts();
+        catModel.editItem = ko.observable(null);
+        catModel.itemById = function (id) {
+            if (!id) {
+                return null;
+            } else {
+                for (var i = 0, j = this.items().length; i < j; i++) {
+                    var item = this.items()[i];
+                    if (item.Id() == id)
+                        return item;
+                    var fItem = ko.utils.arrayFirst(item.Subitems(), function (item) {
+                        return item.Id() == id;
+                    });
+                    if (fItem != null)
+                        return fItem;
+                }
+            }
+        };
+        catModel.catNameToAdd = ko.observable("");
+        catModel.AddSubitem = function () {
+            if (this.catNameToAdd() && this.editItem()) {
+                var v = { Name: this.catNameToAdd(), ParentId: this.editItem().Id() };
+                var $this = this;
+                $.postErr(updateCatUrl, v, function (res) {
+                    var koNew = ko.mapping.fromJS(res);
+                    $this.editItem().Subitems.splice($this.editItem().Subitems().length - 1, 0, koNew);
+                    $this.catNameToAdd("");
+                    $this.assignMenu();
+                });
+            }
+        }
         catModel.Search = function (search) {
             if (!search) {
                 return null;
@@ -301,10 +362,40 @@ $(document).ready(function () {
                 }
             }
         };
+        catModel.editCat = function (item) {
+            $.postErr(updateCatUrl, item, function (res) {
+                catModel.assignMenu();
+            });
+        }
+        catModel.deleteItem = function (item) {
+            $.postErr(delCatUrl, { id: item.Id() }, function (res) {
+                if (res != null) {
+                    ko.utils.arrayRemoveItem(catModel.editItem().Subitems, item);
+                    catModel.assignMenu();
+                }
+            });
+        }
+        catModel.EditCategories = function (item) {
+            var hld = $('#cat_edit_area');
+            if (item != null)
+                this.editItem(item);
+            if (hld.html() == '') {
+                $.postErr(getCatEditDlg, function (res) {
+                    hld.html(res);
+                    hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
+                    ko.applyBindings(catModel, hld[0]);
+                    hld.overlay().load();
+                });
+            }
+            else
+                hld.overlay().load();
+        }
         catModel.AssignCategory = function (item) {
+            $("#cat_menu").hide();
+            if (item.Id() == null)
+                return this.EditCategories(item.parent);
             if (transModel.selectedItem() != null) {
                 transModel.selectedItem().Category(item.Name());
-                $("#cat_menu").hide();
             }
         };
         catModel.Suggest = function () {
@@ -317,12 +408,14 @@ $(document).ready(function () {
             });
             return res;
         };
+        catModel.assignMenu = function () {
+            ddsmoothmenu.init({ mainmenuid: "cat_menu", //menu DIV id
+                orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
+                classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
+            })
+        }
         ko.applyBindings(catModel, $("#cat_menu")[0]);
-        ddsmoothmenu.init({
-            mainmenuid: "cat_menu", //menu DIV id
-            orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
-            classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
-        })
+        catModel.assignMenu();
         $("#cat_menu").hide();
     });
     $("#cat_menu").hover(function () {

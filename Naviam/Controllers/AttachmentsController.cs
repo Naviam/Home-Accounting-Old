@@ -8,6 +8,7 @@ using System.IO;
 using Naviam.WebUI.Helpers.Parsers;
 using Naviam.DAL;
 using Naviam.Data;
+using Naviam.Domain.Concrete;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -33,6 +34,7 @@ namespace Naviam.WebUI.Controllers
                     if (statRes == null)
                         throw new Exception("Invalid file format");
                     //TODO: check that user have account, bank...
+                    var reps = new TransactionsRepository();
                     foreach (var trans in statRes.Transactions)
                     {
                         //Add to DB
@@ -40,7 +42,6 @@ namespace Naviam.WebUI.Controllers
                         {
                             var dbTrans = new Transaction()
                             {
-                                AccountNumber = statRes.Account,
                                 Amount = Math.Abs(trans.AccountAmount),
                                 Date = trans.TransactionDate,
                                 Description = trans.OperationDescription,
@@ -48,13 +49,14 @@ namespace Naviam.WebUI.Controllers
                                 Merchant = trans.Place,
                                 TransactionType = Transaction.TransactionTypes.Cash,
                                 AccountId = 1,
+                                //TODO: assign null and resolve on db side
                                 CategoryId = 1
                             };
-                            TransactionsDataAdapter.Insert(dbTrans, CurrentUser.CurrentCompany);
+                            reps.Insert(dbTrans, CurrentUser.CurrentCompany, false);
                         }
                     }
-                    //fill redis again
-                    TransactionsDataAdapter.GetTransactions(CurrentUser.CurrentCompany, true);
+                    //reset redis
+                    //TransactionsDataAdapter.ResetCache(CurrentUser.CurrentCompany);
                     result = "ok";
                     Response.Redirect(Request.UrlReferrer.PathAndQuery);
                 }

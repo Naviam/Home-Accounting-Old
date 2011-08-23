@@ -1,0 +1,33 @@
+﻿@using Naviam.WebUI.Resources
+
+<script type="text/html" id="catEditSubTemplate">
+{{each $data}}
+{{if Id()!=null}} 
+    <li>
+        <span data-bind="text: Name(), visible: UserId() == null"></span>
+        <div data-bind="visible: UserId() != null">
+            <input data-bind="value: Name, event: {change: function() {$item.edit($value);} }"/>
+            <a href="#" data-bind="click: function(event) {$item.delete($value);}">@SharedStrings.Delete</a>
+        </div>
+    </li>
+{{/if}} 
+{{/each}}
+</script>
+
+<table>
+<tr>
+<td width='30%'>
+    <select class="width100" data-bind="options: items, optionsText: 'Name', value: editItem" size="20"></select>
+</td>
+<td width='70%' style='vertical-align:top'>
+    <div data-bind="visible: editItem">
+    <ul data-bind="template: { name: 'catEditSubTemplate', data: editItem() ? editItem().Subitems : null, templateOptions: { delete: deleteItem, edit: editCat } }"></ul>
+    <form data-bind="submit: AddSubitem">
+        <label>@SharedStrings.AddCategory:</label>
+        <input data-bind='value: catNameToAdd, valueUpdate: "keyup"' />
+        <button type="submit" data-bind="enable: catNameToAdd() != ''">@SharedStrings.Add</button>
+    </form>
+    </div>
+</td>
+</tr>
+</table>

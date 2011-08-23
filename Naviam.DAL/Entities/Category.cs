@@ -21,12 +21,14 @@ namespace Naviam.Data
             Id = reader["id"] as int?;
             ParentId = reader["parent_id"] as int?;
             Name = reader["name"] as string;
+            UserId = reader["id_user"] as int?;
             Subitems = new List<Category>();
         }
 
         public string Name { get; set; }
         public List<Category> Subitems { get; set; }
         public int? ParentId { get; set; }
+        public int? UserId { get; set; }
     }
     
     [Serializable]
@@ -49,6 +51,23 @@ namespace Naviam.Data
                 categories.RemoveAll(x => x.ParentId == item.Id);
             }
             return categories;
+        }
+    }
+
+    public static partial class SqlCommandExtensions
+    {
+        /// <summary>
+        /// Appends Category-specific parameters to the specificied SqlCommand. 
+        /// </summary>
+        /// <param name="command">SqlCommand to be executed.</param>
+        /// <param name="alert">Instance of Category class</param>
+        /// <param name="action">Database action type (select, insert, update, delete).</param>
+        public static void AddEntityParameters(this SqlCommand command, Category entity, DbActionType action)
+        {
+            command.AddCommonParameters(entity.Id, action);
+            command.Parameters.Add("@id_user", SqlDbType.Int).Value = entity.UserId.ToDbValue();
+            command.Parameters.Add("@parent_id", SqlDbType.Int).Value = entity.ParentId.ToDbValue();
+            command.Parameters.Add("@name", SqlDbType.NVarChar).Value = entity.Name.ToDbValue();
         }
     }
 }
