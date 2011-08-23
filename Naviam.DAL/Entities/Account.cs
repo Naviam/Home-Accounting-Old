@@ -16,13 +16,12 @@ namespace Naviam.Data
             Id = reader["id"] as int?;
             Number = reader["number"] as string;
             DateCreation = reader["date_creation"] as DateTime?;
-            InitialBalance = reader["balance"] as decimal?;
+            InitialBalance = reader["initial_balance"] as decimal?;
             Description = reader["description"] as string;
             CompanyId = reader["id_company"] as int?;
             CurrencyId = reader["id_currency"] as int?;
             TypeId = reader["id_type"] as int?;
-            //TODO: calculate Balance
-            Balance = 0;
+            Balance = reader["balance"] as decimal?;
         }
 
         public string Number { get; set; }
@@ -51,9 +50,10 @@ namespace Naviam.Data
             command.Parameters.Add("@number", SqlDbType.NVarChar).Value = account.Number.ToDbValue();
             command.Parameters.Add("@id_company", SqlDbType.Int).Value = account.CompanyId.ToDbValue();
             command.Parameters.Add("@id_currency", SqlDbType.Int).Value = account.CurrencyId.ToDbValue();
-            command.Parameters.Add("@balance", SqlDbType.Decimal).Value = account.InitialBalance;
+            command.Parameters.Add("@initial_balance", SqlDbType.Decimal).Value = account.InitialBalance;
             command.Parameters.Add("@id_type", SqlDbType.Int).Value = account.TypeId.ToDbValue();
             command.Parameters.Add("@description", SqlDbType.NVarChar).Value = account.Description.ToDbValue();
+            command.Parameters.Add("@balance", SqlDbType.Decimal).Value = account.Balance;
         }
     }
 }

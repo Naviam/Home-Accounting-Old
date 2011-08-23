@@ -214,7 +214,7 @@ function loadTransactions() {
                     if (transModel.editObj2.Amount == 0) //add
                         amount = sItem.Amount(); 
                     amount = sItem.Direction() == 0 ? -amount : amount;
-                    accountsModel.addAmount(transModel.selectedItem().AccountId(), amount);
+                    accountsModel.addAmount(res.AccountId, amount);
                     if (reloadPage) transModel.ReloadPage();
                 });
                 //console.log(transModel.currentItem.Id());

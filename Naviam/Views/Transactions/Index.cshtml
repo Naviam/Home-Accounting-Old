@@ -65,6 +65,10 @@
                 item.Save = function () {
                     if (item === this) {
                         if ($(elem).find('form').data("validator").checkValidity()) {
+                            if (editItem == null) //add
+                                item.Balance = item.InitialBalance;
+                            else
+                                item.Balance = editItem.Balance() + (item.InitialBalance - editItem.InitialBalance());
                             $.postErr(updateAccountUrl, this, function (res) {
                                 if (editItem != null)
                                     ko.mapping.fromJS(item, {}, editItem);
@@ -99,6 +103,8 @@
                 });
                 if (fItem) {
                     fItem.Balance(fItem.Balance() + amount);
+                    $.postErr(updateAccountUrl, fItem, function (res) {
+                    });
                 }
             }
             ko.applyBindings(accountsModel, $("#accounts")[0]);
@@ -267,7 +273,7 @@
         <td>Account Name:<input data-bind="value: Number" name="Number" required="required"/></td>
     </tr>
     <tr>
-        <td>InitialBalance:<input data-bind="value: InitialBalance" name="InitialBalance" required="required"/></td>
+        <td>Initial Balance:<input data-bind="value: InitialBalance" name="InitialBalance" required="required"/></td>
     </tr>
     <tr>
         <td>Description:<textarea data-bind="value: Description" name="Description" rows='1' cols='1'></textarea></td>
