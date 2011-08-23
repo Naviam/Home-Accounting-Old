@@ -278,6 +278,7 @@ $(document).ready(function () {
             //restore inline editing props
             var selItem = transModel.selectedItem();
             transModel.editObj.Amount = selItem.Amount();
+            transModel.editObj2.Amount = transModel.editObj.Amount;
             transModel.editObj.Category = selItem.Category();
             transModel.editObj.Description = selItem.Description();
             transModel.editObj.Date = selItem.Date();
