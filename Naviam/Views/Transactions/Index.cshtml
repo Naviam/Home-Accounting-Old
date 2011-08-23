@@ -142,12 +142,6 @@
 </div>
 }
 
-@{UserProfile user = ViewBag.CurrentUser as UserProfile;}
-@using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
-{
-    <input type="file" id='upload_statement' name='fileToUpload'/>
-    <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
-}
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <a href="#" onclick='return catModel.EditCategories();'>edit cats</a>
 <script type="text/html" id="transRowTemplate">
@@ -199,7 +193,15 @@
 </script>
 <div style='position:relative'>
     <div id="transGrid">
-    <a href="#" onclick='return transModel.Add();' data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">Add</a>
+    @{UserProfile user = ViewBag.CurrentUser as UserProfile;}
+    <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
+        @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            <input type="file" id='upload_statement' name='fileToUpload'/>
+            <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
+        }
+        <a href="#" onclick='return transModel.Add();'>Add</a>
+    </div>
     <table class='grid'>
         <thead data-bind='template: "transHeadTemplate"' >
         </thead>
