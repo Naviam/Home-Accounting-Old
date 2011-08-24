@@ -132,7 +132,7 @@
         <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
         <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
         <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">@SharedStrings.Delete</a>
-        <span data-bind="text: Balance"></span>
+        <span data-bind="amount: Balance"></span>
     </li>
 </script>
 <div id="accounts">
