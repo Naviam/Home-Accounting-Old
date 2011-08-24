@@ -70,7 +70,6 @@ namespace Naviam.Domain.Concrete
             if (res == null || forceSqlLoad)
             {
                 //load from DB
-                //TODO: check that trans belongs to company
                 res = AccountsDataAdapter.GetAccount(id, companyId);
                 //save to cache
                 if (res == null) // not found in cache->add
