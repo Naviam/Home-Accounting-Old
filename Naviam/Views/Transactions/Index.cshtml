@@ -26,6 +26,7 @@
 
     var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
+    var addAccountAmountUrl = '@Url.Action("AddAccountAmount", "Accounts")';
     var deleteAccountUrl = '@Url.Action("DeleteAccount", "Accounts")';
     //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
     function loadAccounts() {
@@ -45,6 +46,10 @@
             accountsModel.selectedItem.subscribe(function (newValue) {
                 pageContext.accountId = newValue.Id();
                 transModel.ReloadPage();
+                accountsModel.hideEdit(false);
+                var regExp = new RegExp('(accId)=([^&]*)', 'g');
+                var form = $('#upload_statement').parents('form')[0];
+                form.action = form.action.replace(regExp, '$1=' + pageContext.accountId);
             });
             accountsModel.hideEdit = function (show) {
                 var elem = $("#account_edit")[0];
@@ -95,16 +100,22 @@
             accountsModel.deleteItem = function (item) {
                 $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
                     ko.utils.arrayRemoveItem(accountsModel.items, item);
+                    if (accountsModel.selectedItem() == item)
+                        accountsModel.selectedItem(accountsModel.items()[0]);
+                    else
+                        transModel.ReloadPage();
                 });
             }
             accountsModel.addAmount = function (id, amount) {
-                var fItem = ko.utils.arrayFirst(this.items(), function (item) {
-                    return item.Id() == id;
-                });
-                if (fItem) {
-                    fItem.Balance(fItem.Balance() + amount);
-                    $.postErr(updateAccountUrl, fItem, function (res) {
+                if (amount != 0) {
+                    var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+                        return item.Id() == id;
                     });
+                    if (fItem) {
+                        fItem.Balance(fItem.Balance() + amount);
+                        $.postErr(addAccountAmountUrl, { id: id, amount: amount }, function (res) {
+                        });
+                    }
                 }
             }
             ko.applyBindings(accountsModel, $("#accounts")[0]);
@@ -113,12 +124,10 @@
         });
     }
     $(document).ready(function () {
-        var url = $('#upload_statement').parents('form').attr('action');
-        $('#upload_statement').html5_upload({ autostart: false, url: url, onFinish: function (event, total) {
+        $('#upload_statement').html5_upload({ autostart: false, onFinish: function (event, total) {
             transModel.ReloadPage();
         }
         });
-
     });
     function beg_upload_statement() {
         $('#upload_statement').trigger('html5_upload.start');
@@ -132,7 +141,7 @@
         <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
         <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
         <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">@SharedStrings.Delete</a>
-        <span data-bind="text: Balance"></span>
+        <span data-bind="amount: Balance"></span>
     </li>
 </script>
 <div id="accounts">
@@ -142,12 +151,6 @@
 </div>
 }
 
-@{UserProfile user = ViewBag.CurrentUser as UserProfile;}
-@using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
-{
-    <input type="file" id='upload_statement' name='fileToUpload'/>
-    <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
-}
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <a href="#" onclick='return catModel.EditCategories();'>edit cats</a>
 <script type="text/html" id="transRowTemplate">
@@ -199,7 +202,15 @@
 </script>
 <div style='position:relative'>
     <div id="transGrid">
-    <a href="#" onclick='return transModel.Add();' data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">Add</a>
+    @{UserProfile user = ViewBag.CurrentUser as UserProfile;}
+    <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
+        @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany, @accId = 0 }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            <input type="file" id='upload_statement' name='fileToUpload'/>
+            <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
+        }
+        <a href="#" onclick='return transModel.Add();'>Add</a>
+    </div>
     <table class='grid'>
         <thead data-bind='template: "transHeadTemplate"' >
         </thead>

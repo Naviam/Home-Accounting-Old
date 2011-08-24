@@ -114,7 +114,7 @@ function loadTransactions() {
                 //$('#edit_row').hide();
             });
         }
-        transModel.showCalendar = function (event, item) {
+        //transModel.showCalendar = function (event, item) {
             //var input = $(event.currentTarget).parent().find('[name="date1"]');
             //           
             //            DisableBeforeToday = false;
@@ -126,7 +126,7 @@ function loadTransactions() {
             //                DateSeparator = '/';
             //                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
             //            }
-        }
+        //}
         transModel.ShowDialog = function () {
             var row = this.selectedRow();
             var frm = $("#transDlg");
@@ -184,7 +184,6 @@ function loadTransactions() {
                 });
             }
             this.selectedItem(item);
-            this.editObj2 = ko.mapping.toJS(transModel.selectedItem());
             if (event != null)
                 row = $(event.currentTarget)
             this.selectedRow(row);
@@ -209,11 +208,8 @@ function loadTransactions() {
                 //                    }, 'json');
                 $.postErr(updateTransUrl, ko.mapping.toJS(sItem), function (res) {
                     //transModel.selectedItem().Id(res.Id);
-                    //debug(transModel.editObj2);
-                    var amount = (sItem.Direction() == transModel.editObj2.Direction) ? -(transModel.editObj2.Amount - sItem.Amount()) : sItem.Amount();
-                    if (transModel.editObj2.Amount == 0) //add
-                        amount = sItem.Amount(); 
-                    amount = sItem.Direction() == 0 ? -amount : amount;
+                    var amount = res.Amount;
+                    amount = res.Direction == 0 ? -amount : amount;
                     accountsModel.addAmount(res.AccountId, amount);
                     if (reloadPage) transModel.ReloadPage();
                 });

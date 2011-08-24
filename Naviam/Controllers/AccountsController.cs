@@ -63,10 +63,22 @@ namespace Naviam.WebUI.Controllers
         [HttpPost]
         public ActionResult DeleteAccount(int? id)
         {
-            var user = CurrentUser;
-            Account acc = AccountsRepository.GetAccount(id, CurrentUser.CurrentCompany);
-            AccountsRepository.Delete(acc, CurrentUser.CurrentCompany);
+            var companyId = CurrentUser.CurrentCompany;
+            Account acc = AccountsRepository.GetAccount(id, companyId);
+            var res = AccountsRepository.Delete(acc, companyId);
+            if (res == 0)
+                new TransactionsRepository().ResetCache(companyId);
             return Json(id);        
+        }
+
+        [HttpPost]
+        public ActionResult AddAccountAmount(int? id, decimal amount)
+        {
+            var companyId = CurrentUser.CurrentCompany;
+            Account acc = AccountsRepository.GetAccount(id, companyId);
+            acc.Balance = acc.Balance + amount;
+            AccountsRepository.Update(acc, companyId);
+            return Json(id);
         }
     }
 }
