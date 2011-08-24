@@ -55,14 +55,16 @@ namespace Naviam.DAL
             //TODO: check that trans belongs to company
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("transaction_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("transactions_get"))
                 {
+                    cmd.Parameters.AddWithValue("@id_company", companyId);
                     cmd.Parameters.AddWithValue("@id_transaction", id);
                     try
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
-                            res = new Transaction(reader);
+                            if (reader.Read())
+                                res = new Transaction(reader);
                         }
                     }
                     catch (SqlException e)
@@ -104,7 +106,6 @@ namespace Naviam.DAL
         public static int Delete(Transaction trans, int? companyId)
         {
             var res = -1;
-            //TODO: check that trans belongs to company
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateSPCommand("transaction_delete"))

@@ -9,6 +9,7 @@ using Naviam.WebUI.Helpers.Parsers;
 using Naviam.DAL;
 using Naviam.Data;
 using Naviam.Domain.Concrete;
+using Naviam.WebUI.Models;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -16,7 +17,7 @@ namespace Naviam.WebUI.Controllers
     {
 
         [HttpPost]
-        public string UploadStatement()
+        public string UploadStatement(int? accId)
         {
             //throw new NotImplementedException();
             var result = "error";
@@ -48,7 +49,7 @@ namespace Naviam.WebUI.Controllers
                                 Direction = trans.AccountAmount > 0 ? Transaction.TransactionDirections.Income : Transaction.TransactionDirections.Expense,
                                 Merchant = trans.Place,
                                 TransactionType = Transaction.TransactionTypes.Cash,
-                                AccountId = 1,
+                                AccountId = accId,
                                 //TODO: assign null and resolve on db side
                                 CategoryId = 1
                             };

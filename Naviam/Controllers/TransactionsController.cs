@@ -97,15 +97,20 @@ namespace Naviam.WebUI.Controllers
         [HttpPost]
         public ActionResult UpdateTransaction(Transaction trans, PageContext pageContext)
         {
-            var user = CurrentUser;
-            //Transaction updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, user.Id);
+            var companyId = CurrentUser.CurrentCompany;
+            var rep = new TransactionsRepository();
             //TryUpdateModel(updateTrans);
             if (pageContext.AccountId != null)
                 trans.AccountId = pageContext.AccountId;
             if (trans.Id != null)
-                new TransactionsRepository().Update(trans, user.CurrentCompany);
+            {
+                var updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, companyId);
+                var amount = (trans.Direction == updateTrans.Direction) ? -(updateTrans.Amount - trans.Amount) : trans.Amount * 2;
+                rep.Update(trans, companyId);
+                trans.Amount = amount;
+            }
             else
-                new TransactionsRepository().Insert(trans, user.CurrentCompany);
+                rep.Insert(trans, companyId);
             return Json(trans);
         }
 
