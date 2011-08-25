@@ -36,7 +36,6 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetAccounts()
         {
             var user = CurrentUser;
-            //var accounts = Repository<Account>.GetList(AccountsDataAdapter.GetAccounts, new Dictionary<string, object>(){{"@id_company", user.CurrentCompany.ToDbValue()}}, user.CurrentCompany);
             var accounts = AccountsRepository.GetAccounts(user.CurrentCompany);
             var currencies = CurrenciesDataAdapter.GetCurrencies();
             var accauntTypes = AccountTypesDataAdapter.GetAccountTypes();
