@@ -32,22 +32,22 @@
     function loadAccounts() {
         $.postErr(getAccountsUrl, function (res) {
             //var childItem = function (data) {
-                //ko.mapping.fromJS(data, {}, this);
-                //                var fItem = ko.utils.arrayFirst(item.Subitems(), function (item) {
-                //                    return item.Id() == data.CurrencyId;
-                //                });
-                //                //var catItem = catModel.itemById(data.CategoryId);
-                //                var name = fItem != null ? fItem.NameShort() : '';
-                //                this.Currency = ko.observable(name);
+            //ko.mapping.fromJS(data, {}, this);
+            //                var fItem = ko.utils.arrayFirst(item.Subitems(), function (item) {
+            //                    return item.Id() == data.CurrencyId;
+            //                });
+            //                //var catItem = catModel.itemById(data.CategoryId);
+            //                var name = fItem != null ? fItem.NameShort() : '';
+            //                this.Currency = ko.observable(name);
             //}
             var mapping = {
                 'items': {
                     key: function (data) {
                         return ko.utils.unwrapObservable(data.Id);
                     }
-//                    , create: function (options) {
-//                        return new childItem(options.data, {}, this);
-//                    }
+                    //                    , create: function (options) {
+                    //                        return new childItem(options.data, {}, this);
+                    //                    }
                 }
             }
 
@@ -67,6 +67,12 @@
                 $.postErr(getAccountsUrl, function (res) {
                     ko.mapping.updateFromJS(accountsModel, res);
                 });
+            }
+            accountsModel.currencyById = function (id) {
+                var fItem = ko.utils.arrayFirst(this.currItems(), function (item) {
+                    return item.Id() == id;
+                });
+                return fItem != null ? fItem.NameShort() : '';
             }
             accountsModel.hideEdit = function (show) {
                 var elem = $("#account_edit")[0];
@@ -195,6 +201,7 @@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
             <span data-bind="amount: Amount, visible: transModel.selectedItem() != $data"></span>
             <input class="width100" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount"/>        
+            <span data-bind="text: Currency"></span>
         </td>
         <td style="width:5%">
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}">Edit</a>

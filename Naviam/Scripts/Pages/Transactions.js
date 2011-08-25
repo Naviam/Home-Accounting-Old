@@ -88,13 +88,14 @@ function loadTransactions() {
             var catItem = catModel.itemById(data.CategoryId);
             var catName = catItem != null ? catItem.Name() : '';
             this.Category = ko.observable(catName);
+            this.Currency = accountsModel.currencyById(this.CurrencyId());
         }
         var mapping = {
             'items': {
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.Id);
                 }
-                ,create: function (options) {
+                , create: function (options) {
                     return new childItem(options.data, {}, this);
                 }
             }
@@ -117,17 +118,17 @@ function loadTransactions() {
             });
         }
         //transModel.showCalendar = function (event, item) {
-            //var input = $(event.currentTarget).parent().find('[name="date1"]');
-            //           
-            //            DisableBeforeToday = false;
-            //            if (lang.culture == 'ru') {
-            //                DateSeparator = '.';
-            //                NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow');
-            //            }
-            //            if (lang.culture == 'en') {
-            //                DateSeparator = '/';
-            //                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
-            //            }
+        //var input = $(event.currentTarget).parent().find('[name="date1"]');
+        //           
+        //            DisableBeforeToday = false;
+        //            if (lang.culture == 'ru') {
+        //                DateSeparator = '.';
+        //                NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow');
+        //            }
+        //            if (lang.culture == 'en') {
+        //                DateSeparator = '/';
+        //                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
+        //            }
         //}
         transModel.ShowDialog = function () {
             var row = this.selectedRow();
@@ -149,7 +150,8 @@ function loadTransactions() {
             this.editObj = null;
             var date = new Date();
             this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
-                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1), Notes: ko.observable(null), Merchant: ko.observable(null), Direction: ko.observable(0)
+                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1), Notes: ko.observable(null), Merchant: ko.observable(null), Direction: ko.observable(0),
+                Currency: ''
             });
             var row = $('#transGrid table tr:eq(1)');
             ko.applyBindings(this.items()[0], $("#transDlg")[0]);

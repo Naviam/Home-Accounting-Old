@@ -27,11 +27,13 @@ namespace Naviam.Data
             Direction = (TransactionDirections)reader["direction"];
             AccountId = reader["id_account"] as int?; 
             CategoryId = reader["id_category"] as int?;
+            CurrencyId = reader["id_currency"] as int?;
         }
 
         public DateTime? Date { get; set; }
         public string Description { get; set; }
         public int? CategoryId { get; set; }
+        public int? CurrencyId { get; set; }
         public decimal? Amount { get; set; }
         public string Merchant { get; set; }
         public string Notes { get; set; }
