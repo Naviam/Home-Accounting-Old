@@ -93,7 +93,7 @@
                                 item.Balance = editItem.Balance() + (item.InitialBalance - editItem.InitialBalance());
                             $.postErr(updateAccountUrl, this, function (res) {
                                 if (editItem != null)
-                                    ko.mapping.fromJS(item, {}, editItem);
+                                    ko.mapping.fromJS(res, {}, editItem);
                                 else {
                                     koNew = ko.mapping.fromJS(res)
                                     accountsModel.items.splice(1, 0, koNew);
@@ -108,7 +108,7 @@
                 accountsModel.hideEdit(true);
             }
             accountsModel.addItem = function () {
-                var newItem = { Id: null, Number: null, InitialBalance: null, Description: null, CurrencyId: null, TypeId: null };
+                var newItem = { Id: null, Number: null, InitialBalance: 0, Description: null, CurrencyId: null, TypeId: null };
                 this.passToEdit(newItem, null);
             }
             accountsModel.editItem = function (item) {
@@ -221,7 +221,7 @@
 <div style='position:relative'>
     <div id="transGrid">
     @{UserProfile user = ViewBag.CurrentUser as UserProfile;}
-    <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null" class='hidden'>
+    <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
         @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany, @accId = 0 }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
             <input type="file" id='upload_statement' name='fileToUpload'/>
@@ -302,7 +302,7 @@
         <td>Account Name:<input data-bind="value: Number" name="Number" required="required"/></td>
     </tr>
     <tr>
-        <td>Initial Balance:<input data-bind="value: InitialBalance" name="InitialBalance" required="required"/></td>
+        <td>Initial Balance:<input data-bind="value: InitialBalance, amountOptions: {allowZero: true}" name="InitialBalance" required="required"/></td>
     </tr>
     <tr>
         <td>Description:<textarea data-bind="value: Description" name="Description" rows='1' cols='1'></textarea></td>

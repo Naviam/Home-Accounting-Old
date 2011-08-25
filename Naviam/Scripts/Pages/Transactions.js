@@ -7,14 +7,16 @@ var transModel = {
 };
 ko.bindingHandlers.amount = {
     init: function (element, valueAccessor, allBindingsAccessor) {
+        var options = allBindingsAccessor().amountOptions || {};
+        var allowZero = options.allowZero || false;
         //handle the field changing
         ko.utils.registerEventHandler(element, "change", function () {
             var observable = valueAccessor();
             var parsed = parseFloat($(element).val().replace(/[^\d.]+/g, ""))
-            var correct = !isNaN(parsed) && (parsed > 0);
+            var correct = !isNaN(parsed) && (parsed > 0 || allowZero);
             if (correct)
                 observable(parsed)
-            else 
+            else
                 $(element).val(observable()); //restore old
         });
     },
@@ -183,7 +185,7 @@ function loadTransactions() {
                     transModel.Save(false);
                 });
             }
-            this.selectedItem(item);
+            if (item != this.selectedItem()) this.selectedItem(item);
             if (event != null)
                 row = $(event.currentTarget)
             this.selectedRow(row);
@@ -208,9 +210,9 @@ function loadTransactions() {
                 //                    }, 'json');
                 $.postErr(updateTransUrl, ko.mapping.toJS(sItem), function (res) {
                     //transModel.selectedItem().Id(res.Id);
-                    var amount = res.Amount;
-                    amount = res.Direction == 0 ? -amount : amount;
-                    accountsModel.addAmount(res.AccountId, amount);
+                    var amount = res.amount;
+                    amount = res.trans.Direction == 0 ? -amount : amount;
+                    accountsModel.addAmount(res.trans.AccountId, amount);
                     if (reloadPage) transModel.ReloadPage();
                 });
                 //console.log(transModel.currentItem.Id());

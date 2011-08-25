@@ -54,7 +54,7 @@ namespace Naviam.WebUI.Controllers
                                 TransactionType = Transaction.TransactionTypes.Cash,
                                 AccountId = accId,
                                 //TODO: assign null and resolve on db side
-                                CategoryId = 1
+                                CategoryId = 20
                             };
                             var res = reps.Insert(dbTrans, companyId);
                             if (res == 0)

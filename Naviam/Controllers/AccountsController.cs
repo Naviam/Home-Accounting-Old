@@ -61,6 +61,8 @@ namespace Naviam.WebUI.Controllers
             {
                 AccountsRepository.Update(account, user.CurrentCompany);
             }
+            var currencies = CurrenciesDataAdapter.GetCurrencies();
+            account.Currency = currencies.Find(c => c.Id == account.CurrencyId).NameShort;
             return Json(account);
         }
 

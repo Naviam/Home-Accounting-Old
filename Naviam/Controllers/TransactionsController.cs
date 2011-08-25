@@ -100,18 +100,18 @@ namespace Naviam.WebUI.Controllers
             var companyId = CurrentUser.CurrentCompany;
             var rep = new TransactionsRepository();
             //TryUpdateModel(updateTrans);
+            var amount = trans.Amount;
             if (pageContext.AccountId != null)
                 trans.AccountId = pageContext.AccountId;
             if (trans.Id != null)
             {
                 var updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, companyId);
-                var amount = (trans.Direction == updateTrans.Direction) ? -(updateTrans.Amount - trans.Amount) : trans.Amount * 2;
+                amount = (trans.Direction == updateTrans.Direction) ? -(updateTrans.Amount - trans.Amount) : trans.Amount * 2;
                 rep.Update(trans, companyId);
-                trans.Amount = amount;
             }
             else
                 rep.Insert(trans, companyId);
-            return Json(trans);
+            return Json(new { trans, amount });
         }
 
         [HttpPost]
