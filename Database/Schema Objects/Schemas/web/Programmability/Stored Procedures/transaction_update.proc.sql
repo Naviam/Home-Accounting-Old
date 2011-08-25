@@ -5,6 +5,7 @@
 -- =============================================
 CREATE PROCEDURE [web].[transaction_update]
 	@id int,
+	@id_company int,
 	@date datetime,
 	@amount money,
 	@merchant nvarchar(50),
@@ -17,6 +18,12 @@ CREATE PROCEDURE [web].[transaction_update]
 	
 AS
 BEGIN
+    IF (NOT EXISTS( SELECT TOP 1 t.id FROM transactions t 
+					INNER JOIN accounts a ON t.id =@id AND
+											 a.id = t.id_account AND
+											 a.id_company = @id_company ))
+        RETURN(1);
+        
 	UPDATE [dbo].[transactions] 
 		SET  [date] = @date
 			,[amount] = @amount

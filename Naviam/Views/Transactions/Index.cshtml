@@ -30,18 +30,30 @@
     var deleteAccountUrl = '@Url.Action("DeleteAccount", "Accounts")';
     //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
     function loadAccounts() {
-        $.postErr(getAccountsUrl, transModel.paging, function (res) {
+        $.postErr(getAccountsUrl, function (res) {
+            //var childItem = function (data) {
+                //ko.mapping.fromJS(data, {}, this);
+                //                var fItem = ko.utils.arrayFirst(item.Subitems(), function (item) {
+                //                    return item.Id() == data.CurrencyId;
+                //                });
+                //                //var catItem = catModel.itemById(data.CategoryId);
+                //                var name = fItem != null ? fItem.NameShort() : '';
+                //                this.Currency = ko.observable(name);
+            //}
             var mapping = {
                 'items': {
                     key: function (data) {
                         return ko.utils.unwrapObservable(data.Id);
                     }
+//                    , create: function (options) {
+//                        return new childItem(options.data, {}, this);
+//                    }
                 }
             }
 
             accountsModel = ko.mapping.fromJS(res, mapping);
             accountsModel.selectedItem = ko.observable(null);
-            accountsModel.items.splice(0, 0, { Number: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null) });
+            accountsModel.items.splice(0, 0, { Number: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
             accountsModel.selectedItem(accountsModel.items()[0]);
             accountsModel.selectedItem.subscribe(function (newValue) {
                 pageContext.accountId = newValue.Id();
@@ -51,6 +63,11 @@
                 var form = $('#upload_statement').parents('form')[0];
                 form.action = form.action.replace(regExp, '$1=' + pageContext.accountId);
             });
+            accountsModel.Refresh = function () {
+                $.postErr(getAccountsUrl, function (res) {
+                    ko.mapping.updateFromJS(accountsModel, res);
+                });
+            }
             accountsModel.hideEdit = function (show) {
                 var elem = $("#account_edit")[0];
                 var trans_elem = $("#transGrid");
@@ -126,6 +143,7 @@
     $(document).ready(function () {
         $('#upload_statement').html5_upload({ autostart: false, onFinish: function (event, total) {
             transModel.ReloadPage();
+            accountsModel.Refresh();
         }
         });
     });
@@ -141,7 +159,7 @@
         <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
         <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
         <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">@SharedStrings.Delete</a>
-        <span data-bind="amount: Balance"></span>
+        <span data-bind="amount: Balance, visible: $data.Id() != null"></span> <span data-bind="text: Currency, visible: $data.Id() != null"></span>
     </li>
 </script>
 <div id="accounts">
@@ -203,7 +221,7 @@
 <div style='position:relative'>
     <div id="transGrid">
     @{UserProfile user = ViewBag.CurrentUser as UserProfile;}
-    <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
+    <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null" class='hidden'>
         @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany, @accId = 0 }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
             <input type="file" id='upload_statement' name='fileToUpload'/>

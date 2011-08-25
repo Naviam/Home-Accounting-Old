@@ -92,7 +92,7 @@ function loadTransactions() {
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.Id);
                 }
-                , create: function (options) {
+                ,create: function (options) {
                     return new childItem(options.data, {}, this);
                 }
             }

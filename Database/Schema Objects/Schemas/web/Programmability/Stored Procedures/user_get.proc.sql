@@ -7,11 +7,12 @@ CREATE PROCEDURE [web].[user_get]
 	@email nvarchar(50)
 AS
 BEGIN
-  SELECT id, email, [password], first_name, last_name, comment, password_question, password_answer,
-		 is_approved, last_activity_date, last_login_date, last_password_changed_date, creation_date,
-		 is_locked_out, last_locked_out_date, failed_password_attempt_count, 
-		 failed_password_attempt_window_start, failed_password_answer_attempt_count, 
-		 failed_password_answer_attempt_window_start 
-	FROM users 
-		WHERE users.email = @email
+  SELECT u.id, u.email, u.[password], u.first_name, u.last_name, u.comment, u.password_question, u.password_answer,
+		 u.is_approved, u.last_activity_date, u.last_login_date, u.last_password_changed_date, u.creation_date,
+		 u.is_locked_out, u.last_locked_out_date, u.failed_password_attempt_count, 
+		 u.failed_password_attempt_window_start, u.failed_password_answer_attempt_count, 
+		 u.failed_password_answer_attempt_window_start, u.id_language, l.name_short as language_name_short 
+	FROM users u
+		 LEFT JOIN languages l ON l.id= u.id_language 
+			WHERE LOWER(u.email) = LOWER(@email)
 END

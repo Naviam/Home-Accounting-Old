@@ -19,7 +19,7 @@ namespace Naviam.Domain.Concrete
         public virtual UserProfile GetUser(string userName, string password, bool extAuth)
         {
             var profile = MembershipDataAdapter.GetUser(userName, password);
-            if (!extAuth && !SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", profile.Password))
+            if (!extAuth && profile !=null && !SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", profile.Password))
                 profile = null;
 
             if (profile != null)

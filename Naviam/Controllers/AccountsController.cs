@@ -40,6 +40,10 @@ namespace Naviam.WebUI.Controllers
             var accounts = AccountsRepository.GetAccounts(user.CurrentCompany);
             var currencies = CurrenciesDataAdapter.GetCurrencies();
             var accauntTypes = AccountTypesDataAdapter.GetAccountTypes();
+            foreach (var account in accounts)
+            {
+                account.Currency = currencies.Find(c => c.Id == account.CurrencyId).NameShort;
+            }
             return Json(new { items = accounts, currItems = currencies, typesItems = accauntTypes });
         }
 

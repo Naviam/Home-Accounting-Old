@@ -115,7 +115,7 @@ namespace Naviam.WebUI.Controllers
                             var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
 
                             if (profile != null)
-                                AuthSuccess(profile, model, null);
+                                return AuthSuccess(profile, model, null);
                             else
                                 return Register();
                         }

@@ -25,7 +25,7 @@ namespace Naviam.WebUI.Controllers
 
         public class Paging
         {
-            public int PageSize = 3;
+            public int PageSize = 10;
             public int Page { get; set; }
             public int PagesCount { get; set; }
             public int RowsOnPage { get; set; }
