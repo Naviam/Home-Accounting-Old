@@ -45,7 +45,7 @@
 @section LeftColumn {
 <script type="text/html" id="accountsTemplate">
     <li>
-        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
+        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}"></a>
         <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
         <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">@SharedStrings.Delete</a>
         <span data-bind="amount: Balance, visible: $data.Id() != null"></span> <span data-bind="text: Currency, visible: $data.Id() != null"></span>
@@ -193,7 +193,7 @@
         <td>Account Type:<select data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId", required="required" ></select></td>
     </tr>*@
     <tr>
-        <td>Account Name:<input data-bind="value: Number" name="Number" required="required"/></td>
+        <td>Account Name:<input data-bind="value: Name" name="Name" required="required"/></td>
     </tr>
     <tr>
         <td>Initial Balance:<input data-bind="value: InitialBalance, amountOptions: {allowZero: true}" name="InitialBalance" required="required"/></td>

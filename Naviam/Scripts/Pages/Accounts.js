@@ -25,7 +25,7 @@ function loadAccounts() {
 
         accountsModel = ko.mapping.fromJS(res, mapping);
         accountsModel.selectedItem = ko.observable(null);
-        accountsModel.items.splice(0, 0, { Number: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
+        accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
         accountsModel.selectedItem(accountsModel.items()[0]);
         accountsModel.selectedItem.subscribe(function (newValue) {
             pageContext.accountId = newValue.Id();
@@ -86,7 +86,7 @@ function loadAccounts() {
             accountsModel.hideEdit(true);
         }
         accountsModel.addItem = function () {
-            var newItem = { Id: null, Number: null, InitialBalance: 0, Description: null, CurrencyId: null, TypeId: null };
+            var newItem = { Id: null, Name: null, InitialBalance: 0, Description: null, CurrencyId: null, TypeId: null };
             this.passToEdit(newItem, null);
         }
         accountsModel.editItem = function (item) {
