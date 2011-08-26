@@ -15,31 +15,17 @@ namespace Naviam.WebUI.Controllers
             return View("Accounts");
         }
 
-        //[HttpPost]
-        //public ActionResult GetAccounts()
-        //{
-        //    var user = CurrentUser;
-        //    var accounts = AccountsDataAdapter.GetAccounts(user.CurrentCompany, user.LanguageId, false);
-        //    var head = new List<TransactionsController.Head>
-        //                   {
-        //                       new TransactionsController.Head {Field = "DateCreation", Text = DisplayNames.Date},
-        //                       new TransactionsController.Head {Field = "Number", Text = DisplayNames.Account},
-        //                       new TransactionsController.Head {Field = "Balance", Text = DisplayNames.Balance},
-        //                       new TransactionsController.Head {Field = "Currency", Text = DisplayNames.Currency},
-        //                       new TransactionsController.Head {Field = "TypeName", Text = DisplayNames.AccountType},
-        //                   };
-
-        //    return Json(new { items = accounts, headItems = head });
-        //}
-
         [HttpPost]
         public ActionResult GetAccounts()
         {
             var user = CurrentUser;
-            //var accounts = Repository<Account>.GetList(AccountsDataAdapter.GetAccounts, new Dictionary<string, object>(){{"@id_company", user.CurrentCompany.ToDbValue()}}, user.CurrentCompany);
             var accounts = AccountsRepository.GetAccounts(user.CurrentCompany);
             var currencies = CurrenciesDataAdapter.GetCurrencies();
             var accauntTypes = AccountTypesDataAdapter.GetAccountTypes();
+            foreach (var account in accounts)
+            {
+                account.Currency = currencies.Find(c => c.Id == account.CurrencyId).NameShort;
+            }
             return Json(new { items = accounts, currItems = currencies, typesItems = accauntTypes });
         }
 
@@ -57,6 +43,8 @@ namespace Naviam.WebUI.Controllers
             {
                 AccountsRepository.Update(account, user.CurrentCompany);
             }
+            var currencies = CurrenciesDataAdapter.GetCurrencies();
+            account.Currency = currencies.Find(c => c.Id == account.CurrencyId).NameShort;
             return Json(account);
         }
 

@@ -17,6 +17,9 @@
     [failed_password_attempt_count]               INT            NULL,
     [failed_password_attempt_window_start]        DATETIME       NULL,
     [failed_password_answer_attempt_count]        INT            NULL,
-    [failed_password_answer_attempt_window_start] DATETIME       NULL
+    [failed_password_answer_attempt_window_start] DATETIME       NULL,
+    [id_language]                                 INT            NULL
 );
+
+
 

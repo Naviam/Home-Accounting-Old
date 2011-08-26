@@ -27,17 +27,21 @@ namespace Naviam.Data
             Direction = (TransactionDirections)reader["direction"];
             AccountId = reader["id_account"] as int?; 
             CategoryId = reader["id_category"] as int?;
+            CurrencyId = reader["id_currency"] as int?;
+            IncludeInTax = reader["include_in_tax"] as bool?;
         }
 
         public DateTime? Date { get; set; }
         public string Description { get; set; }
         public int? CategoryId { get; set; }
+        public int? CurrencyId { get; set; }
         public decimal? Amount { get; set; }
         public string Merchant { get; set; }
         public string Notes { get; set; }
         public TransactionTypes TransactionType { get; set; }
         public TransactionDirections Direction { get; set; }
         public int? AccountId { get; set; }
+        public bool? IncludeInTax { get; set; }
     }
 
     public static partial class SqlCommandExtensions
@@ -60,6 +64,7 @@ namespace Naviam.Data
             command.Parameters.Add("@notes", SqlDbType.NVarChar).Value = transaction.Notes.ToDbValue();
             command.Parameters.Add("@type", SqlDbType.Int).Value = transaction.TransactionType;
             command.Parameters.Add("@direction", SqlDbType.Int).Value = transaction.Direction;
+            command.Parameters.Add("@include_in_tax", SqlDbType.Bit).Value = transaction.IncludeInTax;
         }
     }
 }

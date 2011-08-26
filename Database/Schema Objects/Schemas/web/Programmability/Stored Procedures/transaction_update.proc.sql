@@ -5,6 +5,7 @@
 -- =============================================
 CREATE PROCEDURE [web].[transaction_update]
 	@id int,
+	@id_company int,
 	@date datetime,
 	@amount money,
 	@merchant nvarchar(50),
@@ -13,10 +14,16 @@ CREATE PROCEDURE [web].[transaction_update]
 	@description nvarchar(100),
 	@notes nvarchar(1000),
 	@type int, --can be: 0-cash, 1-check, 2-pending
-	@direction int --can be: 0-expense, 1-income
-	
+	@direction int, --can be: 0-expense, 1-income
+	@include_in_tax bit
 AS
 BEGIN
+    IF (NOT EXISTS( SELECT TOP 1 t.id FROM transactions t 
+					INNER JOIN accounts a ON t.id =@id AND
+											 a.id = t.id_account AND
+											 a.id_company = @id_company ))
+        RETURN(1);
+        
 	UPDATE [dbo].[transactions] 
 		SET  [date] = @date
 			,[amount] = @amount
@@ -27,5 +34,7 @@ BEGIN
 			,[notes] = @notes
 			,[type] = @type
 			,[direction] = @direction
+			,[include_in_tax] = @include_in_tax
+			
 	WHERE [id]=@id
 END

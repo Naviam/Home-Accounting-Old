@@ -29,103 +29,10 @@
     var addAccountAmountUrl = '@Url.Action("AddAccountAmount", "Accounts")';
     var deleteAccountUrl = '@Url.Action("DeleteAccount", "Accounts")';
     //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
-    function loadAccounts() {
-        $.postErr(getAccountsUrl, transModel.paging, function (res) {
-            var mapping = {
-                'items': {
-                    key: function (data) {
-                        return ko.utils.unwrapObservable(data.Id);
-                    }
-                }
-            }
-
-            accountsModel = ko.mapping.fromJS(res, mapping);
-            accountsModel.selectedItem = ko.observable(null);
-            accountsModel.items.splice(0, 0, { Number: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null) });
-            accountsModel.selectedItem(accountsModel.items()[0]);
-            accountsModel.selectedItem.subscribe(function (newValue) {
-                pageContext.accountId = newValue.Id();
-                transModel.ReloadPage();
-                accountsModel.hideEdit(false);
-                var regExp = new RegExp('(accId)=([^&]*)', 'g');
-                var form = $('#upload_statement').parents('form')[0];
-                form.action = form.action.replace(regExp, '$1=' + pageContext.accountId);
-            });
-            accountsModel.hideEdit = function (show) {
-                var elem = $("#account_edit")[0];
-                var trans_elem = $("#transGrid");
-                $(elem).find('form').validator({ lang: lang.culture }).data("validator").reset();
-                if (!show) {
-                    $(elem).hide();
-                    trans_elem.show();
-                }
-                else {
-                    $(elem).show();
-                    trans_elem.hide();
-                }
-            }
-            accountsModel.passToEdit = function (item, editItem) {
-                var elem = $("#account_edit")[0];
-                var trans_elem = $("#transGrid");
-                item.Save = function () {
-                    if (item === this) {
-                        if ($(elem).find('form').data("validator").checkValidity()) {
-                            if (editItem == null) //add
-                                item.Balance = item.InitialBalance;
-                            else
-                                item.Balance = editItem.Balance() + (item.InitialBalance - editItem.InitialBalance());
-                            $.postErr(updateAccountUrl, this, function (res) {
-                                if (editItem != null)
-                                    ko.mapping.fromJS(item, {}, editItem);
-                                else {
-                                    koNew = ko.mapping.fromJS(res)
-                                    accountsModel.items.splice(1, 0, koNew);
-                                }
-                                accountsModel.hideEdit(false);
-                            });
-                        }
-                    }
-                }
-                ko.cleanNode(elem);
-                ko.applyBindings(item, elem);
-                accountsModel.hideEdit(true);
-            }
-            accountsModel.addItem = function () {
-                var newItem = { Id: null, Number: null, InitialBalance: null, Description: null, CurrencyId: null, TypeId: null };
-                this.passToEdit(newItem, null);
-            }
-            accountsModel.editItem = function (item) {
-                accountsModel.passToEdit(ko.mapping.toJS(item), item);
-            }
-            accountsModel.deleteItem = function (item) {
-                $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
-                    ko.utils.arrayRemoveItem(accountsModel.items, item);
-                    if (accountsModel.selectedItem() == item)
-                        accountsModel.selectedItem(accountsModel.items()[0]);
-                    else
-                        transModel.ReloadPage();
-                });
-            }
-            accountsModel.addAmount = function (id, amount) {
-                if (amount != 0) {
-                    var fItem = ko.utils.arrayFirst(this.items(), function (item) {
-                        return item.Id() == id;
-                    });
-                    if (fItem) {
-                        fItem.Balance(fItem.Balance() + amount);
-                        $.postErr(addAccountAmountUrl, { id: id, amount: amount }, function (res) {
-                        });
-                    }
-                }
-            }
-            ko.applyBindings(accountsModel, $("#accounts")[0]);
-
-            loadTransactions();
-        });
-    }
     $(document).ready(function () {
         $('#upload_statement').html5_upload({ autostart: false, onFinish: function (event, total) {
             transModel.ReloadPage();
+            accountsModel.Refresh();
         }
         });
     });
@@ -138,10 +45,10 @@
 @section LeftColumn {
 <script type="text/html" id="accountsTemplate">
     <li>
-        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
+        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}"></a>
         <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
         <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">@SharedStrings.Delete</a>
-        <span data-bind="amount: Balance"></span>
+        <span data-bind="amount: Balance, visible: $data.Id() != null"></span> <span data-bind="text: Currency, visible: $data.Id() != null"></span>
     </li>
 </script>
 <div id="accounts">
@@ -158,29 +65,30 @@
         <td style="width:12%">
             <div>
             <span data-bind="msDateTime: Date, visible: transModel.selectedItem() != $data" name="Date"></span>
-            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
+            <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
             @*<img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">*@
             </div>
         </td>
         <td style="width:38%">
             <span data-bind="visible: transModel.selectedItem() != $data, text: Description"></span>
-            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
+            <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
         </td>
         <td style="width:35%">
             <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
-            <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'><input class="width100" data-bind="category: Category" name="Category"/>
-            <a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker'></a></div>
+            <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'><input class="width100 enterastab" data-bind="category: Category" name="Category"/>
+            <a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a></div>
         </td>
         <td style="width:10%;white-space:nowrap">
             @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
             <span data-bind="amount: Amount, visible: transModel.selectedItem() != $data"></span>
-            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount"/>        
+            <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount"/>        
+            <span data-bind="text: Currency, visible: transModel.selectedItem() != $data"></span>
         </td>
         <td style="width:5%">
-            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}">Edit</a>
-            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.DeleteItem($data);}">Delete</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}" tabindex='-1'>Edit</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.DeleteItem($data);}" tabindex='-1'>Delete</a>
         </td>
     </tr>
 </script>
@@ -188,7 +96,7 @@
 <script type="text/html" id="transPagingTemplate">
     <span>@DisplayNames.Page:</span>
     {{each(i) ko.utils.range(1, paging.PagesCount)}}
-        <a href="#" data-bind="click: function() { paging.Page(i+1) }, css: { selected: i+1 == paging.Page() }">
+        <a href="#" data-bind="click: function() { paging.Page(i+1) }, css: { selected: i+1 == paging.Page() }" tabindex='-1'>
             ${ i + 1 }
         </a>
     {{/each}}
@@ -239,6 +147,10 @@
                 <label><input data-bind="checked: Direction" name="Direction" type="radio" value='1'/>@DisplayNames.Income</label>
             </td>
         <tr>
+            <td>@DisplayNames.IncludeInTax:</td>
+            <td><input data-bind="checked: IncludeInTax" name="IncludeInTax" type="checkbox"/></td>
+        </tr>
+        <tr>
             <td>@DisplayNames.Merchant:</td>
             <td><input class="width100" data-bind="value: Merchant" name="Merchant"/></td>
         </tr>
@@ -281,10 +193,10 @@
         <td>Account Type:<select data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId", required="required" ></select></td>
     </tr>*@
     <tr>
-        <td>Account Name:<input data-bind="value: Number" name="Number" required="required"/></td>
+        <td>Account Name:<input data-bind="value: Name" name="Name" required="required"/></td>
     </tr>
     <tr>
-        <td>Initial Balance:<input data-bind="value: InitialBalance" name="InitialBalance" required="required"/></td>
+        <td>Initial Balance:<input data-bind="value: InitialBalance, amountOptions: {allowZero: true}" name="InitialBalance" required="required"/></td>
     </tr>
     <tr>
         <td>Description:<textarea data-bind="value: Description" name="Description" rows='1' cols='1'></textarea></td>

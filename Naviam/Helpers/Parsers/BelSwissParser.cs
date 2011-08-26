@@ -30,7 +30,8 @@ namespace Naviam.WebUI.Helpers.Parsers
             string content = GetContent(fileName);
             content = content.Replace("&nbsp;", "");
             CultureInfo ruCulture = new CultureInfo("ru", false);
-            Match header = Regex.Match(content, HEADER_PATTERN, RegexOptions.IgnoreCase  | RegexOptions.Multiline);
+            CultureInfo enCulture = new CultureInfo("en", false);
+            Match header = Regex.Match(content, HEADER_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Multiline);
             if (header.Success)
             {
                 Match table = Regex.Match(content, TABLE_PATTERN, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline);
@@ -88,7 +89,7 @@ namespace Naviam.WebUI.Helpers.Parsers
                                 trans.Currency = scol;
                             if (isTransaction && nColumn == 8)
                             {
-                                if (Decimal.TryParse(scol, out amount))
+                                if (Decimal.TryParse(scol, NumberStyles.Number, enCulture, out amount))
                                     trans.TransactionAmount = amount;
                                 else
                                 {
@@ -98,7 +99,7 @@ namespace Naviam.WebUI.Helpers.Parsers
                             }
                             if (isTransaction && nColumn == 9)
                             {
-                                if (Decimal.TryParse(scol, out amount))
+                                if (Decimal.TryParse(scol, NumberStyles.Number, enCulture, out amount))
                                     trans.AccountAmount = amount;
                                 else
                                 {
@@ -108,7 +109,7 @@ namespace Naviam.WebUI.Helpers.Parsers
                             }
                             if (isTransaction && nColumn == 10)
                             {
-                                if (Decimal.TryParse(scol, out amount))
+                                if (Decimal.TryParse(scol, NumberStyles.Number, enCulture, out amount))
                                     trans.Balance = amount;
                                 else
                                 {

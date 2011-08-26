@@ -142,6 +142,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Include in the tax.
+        /// </summary>
+        public static string IncludeInTax {
+            get {
+                return ResourceManager.GetString("IncludeInTax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Income.
         /// </summary>
         public static string Income {

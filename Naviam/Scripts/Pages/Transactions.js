@@ -7,14 +7,16 @@ var transModel = {
 };
 ko.bindingHandlers.amount = {
     init: function (element, valueAccessor, allBindingsAccessor) {
+        var options = allBindingsAccessor().amountOptions || {};
+        var allowZero = options.allowZero || false;
         //handle the field changing
         ko.utils.registerEventHandler(element, "change", function () {
             var observable = valueAccessor();
-            var parsed = parseFloat($(element).val().replace(/[^\d.]+/g, ""))
-            var correct = !isNaN(parsed) && (parsed > 0);
+            var parsed = parseFloat($(element).val().replace(/[^\d.]+/g, ""));
+            var correct = !isNaN(parsed) && (parsed > 0 || allowZero);
             if (correct)
-                observable(parsed)
-            else 
+                observable(parsed);
+            else
                 $(element).val(observable()); //restore old
         });
     },
@@ -33,10 +35,10 @@ ko.bindingHandlers.category = {
             //find category
             var item = catModel.Search(val);
             if (typeof item != 'undefined' && item != null)
-                observable(item.Name())
+                observable(item.Name());
             else
                 $(element).val(observable()); //restore old
-        }
+        };
         ko.utils.registerEventHandler(element, "change", checkElem);
         ko.utils.registerEventHandler(element, "result", checkElem);
     },
@@ -86,7 +88,8 @@ function loadTransactions() {
             var catItem = catModel.itemById(data.CategoryId);
             var catName = catItem != null ? catItem.Name() : '';
             this.Category = ko.observable(catName);
-        }
+            this.Currency = accountsModel.currencyById(this.CurrencyId());
+        };
         var mapping = {
             'items': {
                 key: function (data) {
@@ -96,7 +99,7 @@ function loadTransactions() {
                     return new childItem(options.data, {}, this);
                 }
             }
-        }
+        };
         transModel = ko.mapping.fromJS(res, mapping);
         transModel.paging.Page.subscribe(function (newValue) {
             transModel.ReloadPage();
@@ -113,19 +116,18 @@ function loadTransactions() {
                 transDlg.close();
                 //$('#edit_row').hide();
             });
-        }
-        //transModel.showCalendar = function (event, item) {
-            //var input = $(event.currentTarget).parent().find('[name="date1"]');
-            //           
-            //            DisableBeforeToday = false;
-            //            if (lang.culture == 'ru') {
-            //                DateSeparator = '.';
-            //                NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow');
-            //            }
-            //            if (lang.culture == 'en') {
-            //                DateSeparator = '/';
-            //                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
-            //            }
+        }; //transModel.showCalendar = function (event, item) {
+        //var input = $(event.currentTarget).parent().find('[name="date1"]');
+        //           
+        //            DisableBeforeToday = false;
+        //            if (lang.culture == 'ru') {
+        //                DateSeparator = '.';
+        //                NewCssCal(input, item.Date, 'ddMMyyyy', 'arrow');
+        //            }
+        //            if (lang.culture == 'en') {
+        //                DateSeparator = '/';
+        //                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
+        //            }
         //}
         transModel.ShowDialog = function () {
             var row = this.selectedRow();
@@ -137,7 +139,7 @@ function loadTransactions() {
             conf.top = row.parents('table')[0].offsetTop + row[0].offsetTop + row.height();
             conf.left = -5;
             frm.overlay().load();
-        }
+        };
         transModel.Add = function () {
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {
                 return item.Id() == null;
@@ -147,19 +149,20 @@ function loadTransactions() {
             this.editObj = null;
             var date = new Date();
             this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
-                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1), Notes: ko.observable(null), Merchant: ko.observable(null), Direction: ko.observable(0)
+                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1), Notes: ko.observable(null), Merchant: ko.observable(null), Direction: ko.observable(0),
+                Currency: '', IncludeInTax: ko.observable(false)
             });
             var row = $('#transGrid table tr:eq(1)');
             ko.applyBindings(this.items()[0], $("#transDlg")[0]);
             this.GoToEdit(null, this.items()[0], row);
             this.ShowDialog();
-        }
+        };
         transModel.CancelAdd = function () {
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {
                 return item.Id() == null;
             });
             ko.utils.arrayRemoveItem(this.items, fItem);
-        }
+        };
         transModel.DescrSub = null;
         transModel.GoToEdit = function (event, item, row) {
             //manual edit row
@@ -183,17 +186,16 @@ function loadTransactions() {
                     transModel.Save(false);
                 });
             }
-            this.selectedItem(item);
+            if (item != this.selectedItem()) this.selectedItem(item);
             if (event != null)
-                row = $(event.currentTarget)
+                row = $(event.currentTarget);
             this.selectedRow(row);
             $(row.find('[name="Category"]')).autocomplete(catModel.Suggest(), {
                 minChars: 1
                 //,matchContains: true //if minChars>1
             , delay: 10
             });
-        }
-        //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
+        }; //obj.date = eval(obj.date.replace(/\//g,'')) -- to convert the download datestring after json to a javascript Date
         //obj.date = "\\/Date(" + obj.date.getTime() + ")\\/" --to convert a javascript date to microsoft json:
         transModel.Save = function (reloadPage) {
             var sItem = transModel.selectedItem();
@@ -208,28 +210,28 @@ function loadTransactions() {
                 //                    }, 'json');
                 $.postErr(updateTransUrl, ko.mapping.toJS(sItem), function (res) {
                     //transModel.selectedItem().Id(res.Id);
-                    var amount = res.Amount;
-                    amount = res.Direction == 0 ? -amount : amount;
-                    accountsModel.addAmount(res.AccountId, amount);
+                    var amount = res.amount;
+                    amount = res.trans.Direction == 0 ? -amount : amount;
+                    accountsModel.addAmount(res.trans.AccountId, amount);
                     if (reloadPage) transModel.ReloadPage();
                 });
                 //console.log(transModel.currentItem.Id());
             }
-        }
+        };
         transModel.ShowEdit = function (event, item) {
             this.selectedRow($(event.currentTarget).parents('tr'));
             this.editObj = ko.mapping.toJS(transModel.selectedItem());
             ko.applyBindings(this.editObj, $("#transDlg")[0]);
             this.ShowDialog();
             //$("#edit_form").overlay().load();
-        }
+        };
         transModel.DeleteItem = function (item) {
             $.postErr(delTransUrl, { id: item.Id() }, function (res) {
                 var amount = item.Direction() == 0 ? item.Amount() : -item.Amount();
                 accountsModel.addAmount(item.AccountId(), amount);
                 ko.utils.arrayRemoveItem(transModel.items, item);
             });
-        }
+        };
         transModel.ShowCategories = function (btn) {
             var menu = $("#cat_menu");
             if (menu.css("display") != "none") {
@@ -241,7 +243,7 @@ function loadTransactions() {
             menu.width(input.width());
             $("#cat_menu ul").width(input.width());
             menu.slideDown();
-        }
+        };
         transModel.Sort = function (val) {
             var currSort = this.paging.SortField();
             if (currSort != null)
@@ -253,9 +255,9 @@ function loadTransactions() {
                 }
                 else
                     this.paging.SortDirection(0);
-            this.paging.SortField(val)
+            this.paging.SortField(val);
             this.ReloadPage();
-        }
+        };
         ko.applyBindings(transModel, $("#transGrid")[0]);
     });
 }
@@ -340,7 +342,7 @@ $(document).ready(function () {
                     $this.assignMenu();
                 });
             }
-        }
+        };
         catModel.Search = function (search) {
             if (!search) {
                 return null;
@@ -362,7 +364,7 @@ $(document).ready(function () {
             $.postErr(updateCatUrl, item, function (res) {
                 catModel.assignMenu();
             });
-        }
+        };
         catModel.deleteItem = function (item) {
             $.postErr(delCatUrl, { id: item.Id() }, function (res) {
                 if (res != null) {
@@ -370,7 +372,7 @@ $(document).ready(function () {
                     catModel.assignMenu();
                 }
             });
-        }
+        };
         catModel.EditCategories = function (item) {
             var hld = $('#cat_edit_area');
             if (item != null)
@@ -385,7 +387,7 @@ $(document).ready(function () {
             }
             else
                 hld.overlay().load();
-        }
+        };
         catModel.AssignCategory = function (item) {
             $("#cat_menu").hide();
             if (item.Id() == null)
@@ -408,8 +410,8 @@ $(document).ready(function () {
             ddsmoothmenu.init({ mainmenuid: "cat_menu", //menu DIV id
                 orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
                 classname: 'ddsmoothmenu-v' //class added to menu's outer DIV
-            })
-        }
+            });
+        };
         ko.applyBindings(catModel, $("#cat_menu")[0]);
         catModel.assignMenu();
         $("#cat_menu").hide();

@@ -34,8 +34,11 @@ namespace Naviam.WebUI.Controllers
                     System.IO.File.Delete(fileNameToSave);
                     if (statRes == null)
                         throw new Exception("Invalid file format");
-                    //TODO: check that user have account, bank...
+                    var companyId = CurrentUser.CurrentCompany;
                     var reps = new TransactionsRepository();
+                    var account = AccountsRepository.GetAccount(accId, companyId);
+                    if (account == null)
+                        throw new Exception("Account not found");
                     foreach (var trans in statRes.Transactions)
                     {
                         //Add to DB
@@ -51,11 +54,14 @@ namespace Naviam.WebUI.Controllers
                                 TransactionType = Transaction.TransactionTypes.Cash,
                                 AccountId = accId,
                                 //TODO: assign null and resolve on db side
-                                CategoryId = 1
+                                CategoryId = 20
                             };
-                            reps.Insert(dbTrans, CurrentUser.CurrentCompany, false);
+                            var res = reps.Insert(dbTrans, companyId);
+                            if (res == 0)
+                                account.Balance += trans.AccountAmount;
                         }
                     }
+                    AccountsRepository.Update(account, companyId);
                     //reset redis
                     //TransactionsDataAdapter.ResetCache(CurrentUser.CurrentCompany);
                     result = "ok";

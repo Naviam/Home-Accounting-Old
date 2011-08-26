@@ -45,12 +45,15 @@ namespace Naviam.Data
 
         public static List<Category> GetTree(List<Category> categories)
         {
+            var res = new List<Category>();
             foreach (Category item in categories.FindAll(x => x.ParentId == null))
             {
+                res.Add(item);
+                item.Subitems.Clear();
                 item.Subitems.AddRange(categories.FindAll(x => x.ParentId == item.Id));
-                categories.RemoveAll(x => x.ParentId == item.Id);
+                //categories.RemoveAll(x => x.ParentId == item.Id);
             }
-            return categories;
+            return res;
         }
     }
 
