@@ -329,7 +329,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CategoriesTr.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\CategoriesTr.ru.resx" />
+    <EmbeddedResource Include="Resources\CategoriesTr.ru.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\DisplayNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DisplayNames.Designer.cs</LastGenOutput>

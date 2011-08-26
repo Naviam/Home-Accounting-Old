@@ -6,29 +6,190 @@ using System.Text.RegularExpressions;
 
 namespace SMSServer
 {
-    public class SMSInfo
+    public abstract class SMSInfo
     {
-        public SMSInfo(){ }
-        public SMSInfo(Match match)
-        {
-            Number = match.Groups["cardnumber"].Success ? match.Groups["cardnumber"].Value : "";
-            Operation = match.Groups["operation"].Success ? match.Groups["operation"].Value : "";
-            Result = match.Groups["result"].Success ? match.Groups["result"].Value : "";
-            DateTime dt;
-            DateTime.TryParse(match.Groups["datetime"].Success ? match.Groups["datetime"].Value : DateTime.MinValue.ToString(), out dt);
-            Date = dt;
-            decimal amount;
-            Decimal.TryParse(match.Groups["amount"].Success ? match.Groups["amount"].Value : "0", out amount);
-            Amount = amount;
-            ShortCurrency = match.Groups["amount_currency"].Success ? match.Groups["amount_currency"].Value : "";
+        protected string _sms;
+        protected string _cardNumber;
+        protected string _operation;
+        protected string _result;
+        protected DateTime _date;
+        protected decimal _amount;
+        protected string _shortCurrency;
+        protected string _merchant;
+        
+        public SMSInfo(string sms)
+        { 
+            _sms = sms;
+            _cardNumber = GetCardNumber();
+            _operation = GetOperation();
+            _result = GetResult();
+            _date = GetDate();
+            _amount = GetAmount();
+            _shortCurrency = GetShortCurrency();
+            _merchant = GetMerchant();
         }
 
-        public string Number { get; set; }
-        public string Operation { get; set; }
-        public string Result { get; set; }
-        public DateTime Date { get; set; }
-        public decimal Amount { get; set; }
-        public string ShortCurrency { get; set; }
+        public string CardNumber
+        {
+            get
+            {
+                return _cardNumber;
+            }
+        }
+        public string Operation
+        {
+            get
+            {
+                return _operation;
+            }
+        }
+        public string Result
+        {
+            get
+            {
+                return _result;
+            }
+        }
+        public DateTime Date
+        {
+            get
+            {
+                return _date;
+            }
+        }
+        public decimal Amount
+        {
+            get
+            {
+                return _amount;
+            }
+        }
+        public string ShortCurrency
+        {
+            get
+            {
+                return _shortCurrency;
+            }
+        }
+        public string Merchant
+        {
+            get
+            {
+                return _merchant;
+            }
+        }
+
+        public virtual string GetCardNumber()
+        {
+            string result = string.Empty;
+            string pattern = @"\d\.\.(?<cardnumber>\d{4}?)";
+            Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+            if (reg.IsMatch(_sms))
+            {
+                Match match = reg.Match(_sms);
+                result = match.Groups["cardnumber"].Success ? match.Groups["cardnumber"].Value : "";
+            }
+            return result;
+        }
+
+        public virtual string GetOperation()
+        {
+            string result = string.Empty;
+            string pattern = @"(?<operation>Retail)";
+            Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+            if (reg.IsMatch(_sms))
+            {
+                Match match = reg.Match(_sms);
+                result = match.Groups["operation"].Success ? match.Groups["operation"].Value : "";
+            }
+            return result;
+        }
+
+        public virtual string GetResult()
+        {
+            string result = string.Empty;
+            string pattern = @"(?<result>Uspeshno)";
+            Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+            if (reg.IsMatch(_sms))
+            {
+                Match match = reg.Match(_sms);
+                result = match.Groups["result"].Success ? match.Groups["result"].Value : "";
+            }
+            return result;
+        }
+
+        public virtual DateTime GetDate()
+        {
+            DateTime result = DateTime.MinValue;
+            string pattern = @"(?<date>(?:\d{4}|\d{2})-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,5})";
+            Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+            if (reg.IsMatch(_sms))
+            {
+                Match match = reg.Match(_sms);
+                DateTime.TryParse(match.Groups["date"].Success ? match.Groups["date"].Value : DateTime.MinValue.ToString(), out result);
+            }
+            return result;
+        }
+
+        public virtual decimal GetAmount()
+        {
+            decimal result = 0;
+            string pattern = @"Summa:\s?(?<amount>[^\x00]*?)\s";
+            Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+            if (reg.IsMatch(_sms))
+            {
+                Match match = reg.Match(_sms);
+                decimal.TryParse(match.Groups["amount"].Success ? match.Groups["amount"].Value : "0", out result);
+            }
+            return result;
+        }
+
+        public virtual string GetShortCurrency()
+        {
+            string result = string.Empty;
+            string pattern = @"Summa:\s[^\x00]*?\s(?<currency>[^\x00]{3})";
+            Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+            if (reg.IsMatch(_sms))
+            {
+                Match match = reg.Match(_sms);
+                result = match.Groups["currency"].Success ? match.Groups["currency"].Value : "";
+            }
+            return result;
+        }
+
+        public virtual string GetMerchant()
+        {
+            string result = string.Empty;
+            string pattern = @"[^\x00]*\r\n(?<merchant>[^\x00]*?\/[^\x00]*?\/[^\x00]*)\r\n";
+            Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+            if (reg.IsMatch(_sms))
+            {
+                Match match = reg.Match(_sms);
+                result = match.Groups["merchant"].Success ? match.Groups["merchant"].Value : "";
+            }
+            return result;
+        }
+    }
+
+    public class SMSInfoBelswiss : SMSInfo
+    {
+        public SMSInfoBelswiss(string sms)
+            : base(sms)
+        {
+            
+        }
+
+        //public override string GetCardNumber()
+        //{
+        //    string result = string.Empty;
+        //    Regex reg = new Regex(_cardNumberRegex, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+        //    if (reg.IsMatch(_sms))
+        //    {
+        //        Match match = reg.Match(_sms);
+        //        result = match.Groups["cardnumber"].Success ? match.Groups["cardnumber"].Value : "";
+        //    }
+        //    return result;
+        //}
     }
 
     class Program
@@ -43,17 +204,13 @@ Ostatok: 141380 BYR
 Na vremya: 09:32:43
 BLR/MINSK/BELCEL I-BANK
 ";
-        
+
         static string regex = @"\d\.\.(?<cardnumber>\d{4})?\r\n(?<operation>[^\x00]*?)\r\n(?<result>[^\x00]*?)\r\n(?<datetime>[^\x00]*?)\r\nSumma\:(?<amount>[^\x00]*?)\s(?<amount_currency>[^\x00]{3})\r\n";
         //[^\x00]*\r\n(?<selector>[^\x00]*?\/[^\x00]*?\/[^\x00]*) merchant
         static void Main(string[] args)
         {
-            Regex reg = new Regex(regex, RegexOptions.Multiline | RegexOptions.CultureInvariant);
-            if (reg.IsMatch(s))
-            {
-                Match m = reg.Match(s);
-                SMSInfo info = new SMSInfo(m);
-            }
+            SMSInfoBelswiss info = new SMSInfoBelswiss("zzz");
+            string str = info.CardNumber;
 
         }
     }
