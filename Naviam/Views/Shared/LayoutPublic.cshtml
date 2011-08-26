@@ -3,10 +3,20 @@
 <html>
 <head>
     <title>@ViewBag.Title</title>
-    @Html.CombresLink("naviamCss")
+        @Html.CombresLink("mintCss")
+    @*@Html.CombresLink("naviamCss")*@
     <!--[if lt IE 8]><link rel="stylesheet" href="@Url.Content("~/Content/blueprint/ie.css")" type="text/css" media="screen, projection"><![endif]-->
     <script type="text/javascript" src="@Url.Content(String.Format("~/Scripts/locale/Naviam.JavaScript.{0}.js", System.Threading.Thread.CurrentThread.CurrentUICulture.Name))"></script> 
     @Html.CombresLink("jquery validate")
+
+    <meta content="IE=EmulateIE7" http-equiv="X-UA-Compatible" />
+    <meta content="Naviam.com" name="title" />
+    <meta content="Free personal finance, online money management, budgeting, and financial planning software." name="description" />
+
+    <link href="../../Content/library.css" media="screen" rel="stylesheet" title="mint product css" type="text/css" />
+    <link href="../../Content/login.css" media="screen" rel="stylesheet" title="mint product css" type="text/css" />
+    <meta content="application/xhtml+xml; charset=utf-8" http-equiv="Content-Type" />
+    <meta content="text/css" http-equiv="Content-Style-Type" />
 
     
     @*intellisense support*@
@@ -16,8 +26,8 @@
     }
 </head>
 
-<body>
-<div class="container">
+<body class="mint login" id="body-mint">
+<div class="wrapper">
     <div id="main">
         @RenderBody()
     </div>
