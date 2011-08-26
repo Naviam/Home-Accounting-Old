@@ -2,6 +2,9 @@
   <output path="..\Scripts\Pages\Transactions.min.js">
     <input path="..\Scripts\Pages\Transactions.js"/>
   </output>
+  <output path="..\Scripts\Pages\Accounts.min.js">
+    <input path="..\Scripts\Pages\Accounts.js"/>
+  </output>
   <output path="..\Scripts\common.min.js">
     <input path="..\Scripts\common.js"/>
   </output>

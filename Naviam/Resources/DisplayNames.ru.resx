@@ -144,6 +144,9 @@
   <data name="Expense" xml:space="preserve">
     <value>Расход</value>
   </data>
+  <data name="IncludeInTax" xml:space="preserve">
+    <value>Включать в налог</value>
+  </data>
   <data name="Income" xml:space="preserve">
     <value>Приход</value>
   </data>

@@ -144,6 +144,9 @@
   <data name="Expense" xml:space="preserve">
     <value>Expense</value>
   </data>
+  <data name="IncludeInTax" xml:space="preserve">
+    <value>Include in the tax</value>
+  </data>
   <data name="Income" xml:space="preserve">
     <value>Income</value>
   </data>
