@@ -65,17 +65,17 @@
         <td style="width:12%">
             <div>
             <span data-bind="msDateTime: Date, visible: transModel.selectedItem() != $data" name="Date"></span>
-            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
+            <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
             @*<img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">*@
             </div>
         </td>
         <td style="width:38%">
             <span data-bind="visible: transModel.selectedItem() != $data, text: Description"></span>
-            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
+            <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
         </td>
         <td style="width:35%">
             <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
-            <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'><input class="width100" data-bind="category: Category" name="Category"/>
+            <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'><input class="width100 enterastab" data-bind="category: Category" name="Category"/>
             <a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a></div>
         </td>
         <td style="width:10%;white-space:nowrap">
@@ -83,7 +83,7 @@
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
             <span data-bind="amount: Amount, visible: transModel.selectedItem() != $data"></span>
-            <input class="width100" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount"/>        
+            <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount"/>        
             <span data-bind="text: Currency, visible: transModel.selectedItem() != $data"></span>
         </td>
         <td style="width:5%">

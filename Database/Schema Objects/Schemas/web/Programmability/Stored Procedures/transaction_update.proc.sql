@@ -14,8 +14,8 @@ CREATE PROCEDURE [web].[transaction_update]
 	@description nvarchar(100),
 	@notes nvarchar(1000),
 	@type int, --can be: 0-cash, 1-check, 2-pending
-	@direction int --can be: 0-expense, 1-income
-	
+	@direction int, --can be: 0-expense, 1-income
+	@include_in_tax bit
 AS
 BEGIN
     IF (NOT EXISTS( SELECT TOP 1 t.id FROM transactions t 
@@ -34,5 +34,7 @@ BEGIN
 			,[notes] = @notes
 			,[type] = @type
 			,[direction] = @direction
+			,[include_in_tax] = @include_in_tax
+			
 	WHERE [id]=@id
 END

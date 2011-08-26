@@ -23,11 +23,20 @@ jQuery.postErr = function (url, data, callback, type) {
         contentType: contentType,
 
         dataType: type,
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            parseSiteError(XMLHttpRequest); 
+        error: function (xmlHttpRequest, textStatus, errorThrown) {
+            parseSiteError(xmlHttpRequest); 
         }
     });
-}
+};
+$('input.enterastab, select.enterastab, textarea.enterastab').live('keydown', function (e) {
+    if (e.keyCode == 13) {
+        var focusable = $('input,select,button,textarea').filter(':visible');
+        $(this).trigger("change");
+        focusable.eq(focusable.index(this) + 1).focus();
+        return false;
+    }
+});
+
 function parseSiteError(request) {
     if (request.status == 500) {
         var errorObj = JSON.parse(request.responseText);

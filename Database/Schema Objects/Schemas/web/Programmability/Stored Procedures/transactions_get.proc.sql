@@ -10,7 +10,7 @@ AS
 BEGIN
 	SELECT trn.id, trn.[date], trn.amount, trn.merchant, trn.[description], trn.notes,
 		   trn.[type] as transaction_type, trn.direction, trn.id_account, 
-		   trn.id_category
+		   trn.id_category, acc.[id_currency] as [id_currency], trn.include_in_tax
 		FROM companies cmp 
 			 inner join accounts acc ON  acc.id_company = cmp.id
 			 inner join transactions trn ON trn.id_account = acc.id
