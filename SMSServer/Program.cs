@@ -44,7 +44,8 @@ Na vremya: 09:32:43
 BLR/MINSK/BELCEL I-BANK
 ";
         
-        static string regex = @"\d\.\.(?<cardnumber>\d{4})?\r\n(?<operation>[^\x00]*?)\r\n(?<result>[^\x00]*?)\r\n(?<datetime>[^\x00]*?)\r\nSumma\:(?<amount>[^\x00]*?)\s(?<amount_currency>[^\x00]{3})\r\n"; 
+        static string regex = @"\d\.\.(?<cardnumber>\d{4})?\r\n(?<operation>[^\x00]*?)\r\n(?<result>[^\x00]*?)\r\n(?<datetime>[^\x00]*?)\r\nSumma\:(?<amount>[^\x00]*?)\s(?<amount_currency>[^\x00]{3})\r\n";
+        //[^\x00]*\r\n(?<selector>[^\x00]*?\/[^\x00]*?\/[^\x00]*) merchant
         static void Main(string[] args)
         {
             Regex reg = new Regex(regex, RegexOptions.Multiline | RegexOptions.CultureInvariant);
