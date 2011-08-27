@@ -121,6 +121,7 @@ namespace Naviam.DAL
                 {
                     try
                     {
+                        command.AddCommonParameters(null);
                         command.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
                         command.Parameters.AddWithValue("@id_account", accountId.ToDbValue());
                         command.Parameters.AddWithValue("@amount_value", value);

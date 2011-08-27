@@ -36,9 +36,7 @@ namespace Naviam.WebUI.Controllers
                         throw new Exception("Invalid file format");
                     var companyId = CurrentUser.CurrentCompany;
                     var reps = new TransactionsRepository();
-                    var account = AccountsRepository.GetAccount(accId, companyId);
-                    if (account == null)
-                        throw new Exception("Account not found");
+                    decimal sumAmount = 0;
                     foreach (var trans in statRes.Transactions)
                     {
                         //Add to DB
@@ -58,10 +56,10 @@ namespace Naviam.WebUI.Controllers
                             };
                             var res = reps.Insert(dbTrans, companyId);
                             if (res == 0)
-                                account.Balance += trans.AccountAmount;
+                                sumAmount += trans.AccountAmount;
                         }
                     }
-                    AccountsRepository.Update(account, companyId);
+                    AccountsRepository.ChangeBalance(accId, companyId, sumAmount);
                     //reset redis
                     //TransactionsDataAdapter.ResetCache(CurrentUser.CurrentCompany);
                     result = "ok";
