@@ -101,8 +101,8 @@ namespace Naviam.WebUI.Controllers
             var rep = new TransactionsRepository();
             //TryUpdateModel(updateTrans);
             var amount = trans.Amount;
-            if (pageContext.AccountId != null)
-                trans.AccountId = pageContext.AccountId;
+            //if (pageContext.AccountId != null)
+            //    trans.AccountId = pageContext.AccountId;
             if (trans.Id != null)
             {
                 var updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, companyId);

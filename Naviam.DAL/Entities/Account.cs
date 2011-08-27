@@ -22,7 +22,7 @@ namespace Naviam.Data
             CurrencyId = reader["id_currency"] as int?;
             TypeId = reader["id_type"] as int?;
             Balance = reader["balance"] as decimal?;
-            FinInstitution = reader["id_financial_institution"] as int?;
+            FinInstitutionId = reader["id_financial_institution"] as int?;
             CardNumber = reader["card_number"] as string;
         }
         
@@ -36,7 +36,7 @@ namespace Naviam.Data
         public int? CurrencyId { get; set; }
         public string Currency { get; set; }
         public int? TypeId { get; set; }
-        public int? FinInstitution { get; set; }
+        public int? FinInstitutionId { get; set; }
     }
 
     public static partial class SqlCommandExtensions
@@ -58,7 +58,7 @@ namespace Naviam.Data
             command.Parameters.Add("@id_type", SqlDbType.Int).Value = account.TypeId.ToDbValue();
             command.Parameters.Add("@description", SqlDbType.NVarChar).Value = account.Description.ToDbValue();
             command.Parameters.Add("@balance", SqlDbType.Decimal).Value = account.Balance;
-            command.Parameters.Add("@id_financial_institution", SqlDbType.Int).Value = account.FinInstitution;
+            command.Parameters.Add("@id_financial_institution", SqlDbType.Int).Value = account.FinInstitutionId.ToDbValue();
             command.Parameters.Add("@card_number", SqlDbType.NVarChar).Value = account.CardNumber.ToDbValue();
         }
     }
