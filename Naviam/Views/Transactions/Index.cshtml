@@ -58,6 +58,17 @@
 </div>
 }
 
+<script type="text/html" id="accounts_moveTemplate">
+    <li>
+        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name"></a>
+        <span data-bind="amount: Balance"></span> <span data-bind="text: Currency"></span>
+    </li>
+</script>
+<div id="accounts_move">
+    <ul data-bind="template: {name:'accounts_moveTemplate', foreach:move_items }">
+    </ul>
+</div>
+
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <a href="#" onclick='return catModel.EditCategories();'>edit cats</a>
 <script type="text/html" id="transRowTemplate">
