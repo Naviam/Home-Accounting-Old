@@ -150,7 +150,7 @@ function loadTransactions() {
             var date = new Date();
             this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
                 Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1), Notes: ko.observable(null), Merchant: ko.observable(null), Direction: ko.observable(0),
-                Currency: '', IncludeInTax: ko.observable(false)
+                Currency: '', IncludeInTax: ko.observable(false), CurrencyId: ko.observable(accountsModel.selectedItem().CurrencyId)
             });
             var row = $('#transGrid table tr:eq(1)');
             ko.applyBindings(this.items()[0], $("#transDlg")[0]);
@@ -206,8 +206,11 @@ function loadTransactions() {
                     if (item != null)
                         sItem.CategoryId(item.Id());
                 }
-                //                    $.postErr(updateTransUrl, ko.toJSON(transModel.currentItem), function (res) {
-                //                    }, 'json');
+                transModel.SaveItem(sItem, reloadPage);
+            }
+        };
+        transModel.SaveItem = function (sItem, reloadPage) {
+            if (sItem) {
                 $.postErr(updateTransUrl, ko.mapping.toJS(sItem), function (res) {
                     //transModel.selectedItem().Id(res.Id);
                     var amount = res.amount;
@@ -215,7 +218,6 @@ function loadTransactions() {
                     accountsModel.addAmount(res.trans.AccountId, amount);
                     if (reloadPage) transModel.ReloadPage();
                 });
-                //console.log(transModel.currentItem.Id());
             }
         };
         transModel.ShowEdit = function (event, item) {
@@ -231,6 +233,26 @@ function loadTransactions() {
                 accountsModel.addAmount(item.AccountId(), amount);
                 ko.utils.arrayRemoveItem(transModel.items, item);
             });
+        };
+        transModel.getById = function (id) {
+            var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+                return item.Id() == id;
+            });
+            return fItem;
+        }
+        transModel.ShowTransfer = function (item) {
+            accountsModel.fillMoveItems(item.AccountId(), item.Id(), 'trans');
+        };
+        transModel.Transfer = function (item) {
+            var fItem = this.getById(item.transId);
+            if (fItem) {
+                var newO = ko.mapping.toJS(fItem);
+                newO.Id = null;
+                newO.AccountId = item.Id();
+                newO.CurrencyId = item.CurrencyId();
+                newO.Direction = newO.Direction == 0 ? 1 : 0;
+                this.SaveItem(newO, true);
+            }
         };
         transModel.ShowCategories = function (btn) {
             var menu = $("#cat_menu");

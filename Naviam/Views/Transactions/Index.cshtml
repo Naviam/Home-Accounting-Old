@@ -60,7 +60,7 @@
 
 <script type="text/html" id="accounts_moveTemplate">
     <li>
-        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name"></a>
+        <a href="#" data-bind="click: function(event) { transModel.Transfer($data); }, text: Name"></a>
         <span data-bind="amount: Balance"></span> <span data-bind="text: Currency"></span>
     </li>
 </script>
@@ -100,6 +100,7 @@
         <td style="width:5%">
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}" tabindex='-1'>Edit</a>
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.DeleteItem($data);}" tabindex='-1'>Delete</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowTransfer($data);}" tabindex='-1'>Transfer</a>
         </td>
     </tr>
 </script>

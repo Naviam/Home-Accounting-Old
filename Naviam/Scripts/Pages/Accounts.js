@@ -30,7 +30,6 @@ function loadAccounts() {
         accountsModel.selectedItem(accountsModel.items()[0]);
         accountsModel.selectedItem.subscribe(function (newValue) {
             pageContext.accountId = newValue.Id();
-            //accountsModel.fillMoveItems(newValue.Id());
             transModel.ReloadPage();
             accountsModel.hideEdit(false);
             var regExp = new RegExp('(accId)=([^&]*)', 'g');
@@ -54,13 +53,17 @@ function loadAccounts() {
             });
             return fItem;
         }
-        accountsModel.fillMoveItems = function (accId) {
+        accountsModel.fillMoveItems = function (accId, transId, op) {
             this.move_items().length = 0;
             var curItem = this.getById(accId);
             for (var i = 0; i < this.items().length; i++) {
                 var fItem = accountsModel.items()[i];
                 if (fItem.Id() != accId && fItem.Id() != null && fItem.CurrencyId == curItem.CurrencyId)
+                {
+                    fItem.transId = transId;
+                    fItem.op = op;
                     this.move_items.push(fItem);
+                }
             }
         }
         accountsModel.hideEdit = function (show) {

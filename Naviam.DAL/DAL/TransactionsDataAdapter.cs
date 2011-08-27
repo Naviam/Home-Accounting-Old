@@ -103,7 +103,7 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static int Delete(Transaction trans, int? companyId)
+        public static int Delete(int? id, int? companyId)
         {
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
@@ -112,7 +112,7 @@ namespace Naviam.DAL
                 {
                     try
                     {
-                        cmd.AddCommonParameters(trans.Id);
+                        cmd.AddCommonParameters(id);
                         cmd.Parameters.AddWithValue("@id_company", companyId);
                         cmd.ExecuteNonQuery();
                         res = cmd.GetReturnParameter();

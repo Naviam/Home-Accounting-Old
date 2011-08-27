@@ -288,6 +288,7 @@
     <Content Include="Scripts\locale\Naviam.JavaScript.ru.js" />
     <Content Include="Scripts\locale\vsdoc\Naviam.JavaScript-vsdoc.js" />
     <Content Include="Scripts\Pages\Accounts.js" />
+    <Content Include="Scripts\Pages\Accounts.min.js" />
     <Content Include="Scripts\Pages\Transactions.js" />
     <Content Include="Scripts\Pages\Transactions.min.js" />
     <Content Include="Scripts\spine.js" />
