@@ -178,18 +178,6 @@ namespace SMSServer
         {
             
         }
-
-        //public override string GetCardNumber()
-        //{
-        //    string result = string.Empty;
-        //    Regex reg = new Regex(_cardNumberRegex, RegexOptions.Multiline | RegexOptions.CultureInvariant);
-        //    if (reg.IsMatch(_sms))
-        //    {
-        //        Match match = reg.Match(_sms);
-        //        result = match.Groups["cardnumber"].Success ? match.Groups["cardnumber"].Value : "";
-        //    }
-        //    return result;
-        //}
     }
 
     class Program
