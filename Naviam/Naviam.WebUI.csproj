@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\AttachmentsController.cs" />
+    <Compile Include="Controllers\SmsController.cs" />
     <Compile Include="Helpers\Cookies\CookieContainer.cs" />
     <Compile Include="Helpers\Cookies\ICookieContainer.cs" />
     <Compile Include="Helpers\CustomModelBinder.cs" />

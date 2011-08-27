@@ -34,10 +34,11 @@ namespace DiafaanMessageServer
         {
             try
             {
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(@"http://localhost:54345/SMS/Post");
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(@"http://localhost:54345/Sms/RecieveMessage");
                 httpWebRequest.ContentType = "application/x-www-form-urlencoded";
                 httpWebRequest.Method = "POST";
-                string queryString = ""; //"username=" + HttpUtility.UrlEncode(userName) + "&password=" + HttpUtility.UrlEncode(password) + "&msisdn=" + HttpUtility.UrlEncode(toAddress.TrimStart('+'));
+                string queryString = "key=" + HttpUtility.UrlEncode("ky1") + "&message=" + HttpUtility.UrlEncode(message) + "&gateway=" + HttpUtility.UrlEncode(gateway) +
+                     "&from=" + HttpUtility.UrlEncode(fromAddress) + "&to=" + HttpUtility.UrlEncode(toAddress);
                 byte[] byteData = UTF8Encoding.UTF8.GetBytes(queryString);
                 httpWebRequest.ContentLength = byteData.Length;
                 using (Stream postStream = httpWebRequest.GetRequestStream())
@@ -47,20 +48,20 @@ namespace DiafaanMessageServer
                 using (HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse())
                 {
                     string responseText = new StreamReader(httpWebResponse.GetResponseStream()).ReadToEnd();
-                    string[] responseList = responseText.Trim(new char[] { ' ', '\r', '\n' }).Split('|');
-                    if (responseList[0].Trim() == "0")
+                    if (httpWebResponse.StatusCode == HttpStatusCode.OK)
                     {
-                        PostSendResult("1", responseList[2], StatusCode.Sent, "Success: message sent", "", "", true);
+                        PostEventLog("Send ok:" + responseText, responseText, EventLog.Information);
+                        //PostEventLog("Send error:"+DateTime.Now.ToString(), httpWebResponse.StatusCode.ToString(), EventLog.Error);
                     }
                     else
                     {
-                        PostSendResult("1", "", StatusCode.SendError, "Error: message rejected", responseList[0], responseList[1].ToLower(), false);
+                        PostEventLog("Send error:" + httpWebResponse.StatusCode.ToString(), httpWebResponse.StatusCode.ToString(), EventLog.Error);
                     }
                 }
             }
             catch (Exception e)
             {
-                PostSendResult("1", "", StatusCode.SendError, "Error: message rejected", "", e.Message, false);
+                //PostSendResult("1", "", StatusCode.SendError, "Error: message rejected", "", e.Message, false);
                 PostEventLog(e.Message, e.ToString(), EventLog.Error);
             }			//
             // TODO: Add code to handle received SMS messages
@@ -68,21 +69,7 @@ namespace DiafaanMessageServer
             // PostSendMessage(fromAddress, "", "We have received your message", "sms.text", "", "", "");
             //
         }
-        private void PostSendResult(string recordId, string messageId, StatusCode status,
-                                    string statusText, string errorCode, string errorText, bool sendStatusRequest)
-        {
-            Hashtable messagePacket = new Hashtable();
 
-            messagePacket.Add("PacketName", "MessageOutResult");
-            messagePacket.Add("RecordId", recordId);
-            messagePacket.Add("MessageId", messageId);
-            messagePacket.Add("StatusCode", ((int)status).ToString());
-            messagePacket.Add("StatusText", statusText);
-            messagePacket.Add("ErrorCode", errorCode);
-            messagePacket.Add("ErrorText", errorText);
-            messagePacket.Add("SendStatusRequest", sendStatusRequest ? "1" : "0");
-            host.PostMessagePacket(messagePacket);
-        }
         private void OnSendMessageResult(string toAddress, string fromAddress, string message, string messageType,
                                          string messageId, string pdu, string gateway, int statusCode,
                                          string statusText, string errorCode, string errorText,
