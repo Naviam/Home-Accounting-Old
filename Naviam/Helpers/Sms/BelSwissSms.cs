@@ -10,9 +10,7 @@ namespace Naviam.WebUI.Helpers.Sms
     {
         public BelSwissSms(string sms)
             : base(sms)
-        {
-
-        }
+        { }
 
         public override string GetCardNumber()
         {

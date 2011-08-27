@@ -7,36 +7,6 @@ namespace Naviam.DAL
     
     public class AccountsDataAdapter
     {
-
-        //public static List<Account> GetAccounts(Dictionary<string, object> parameters)
-        //{
-        //    List<Account> res = new List<Account>();
-        //    using (var holder = SqlConnectionHelper.GetConnection())
-        //    {
-        //        using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
-        //        {
-        //            foreach( var param in parameters)
-        //            {
-        //                cmd.Parameters.AddWithValue(param.Key, param.Value);
-        //            }
-        //            try
-        //            {
-        //                using (var reader = cmd.ExecuteReader())
-        //                {
-        //                    while (reader.Read())
-        //                        res.Add(new Account(reader));
-        //                }
-        //            }
-        //            catch (SqlException e)
-        //            {
-        //                cmd.AddDetailsToException(e);
-        //                throw;
-        //            }
-        //        }
-        //    }
-        //    return res;
-        //}
-
         public static List<Account> GetAccounts(int? companyId)
         {
             List<Account> res = new List<Account>();
@@ -129,6 +99,31 @@ namespace Naviam.DAL
                     {
                         command.AddCommonParameters(entity.Id);
                         command.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
+                        command.ExecuteNonQuery();
+                        res = command.GetReturnParameter();
+                    }
+                    catch (SqlException e)
+                    {
+                        command.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return res;
+        }
+
+        public static int ChangeBalance(int? accountId, int? companyId, decimal value)
+        {
+            var res = -1;
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var command = holder.Connection.CreateSPCommand("account_add_amount"))
+                {
+                    try
+                    {
+                        command.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
+                        command.Parameters.AddWithValue("@id_account", accountId.ToDbValue());
+                        command.Parameters.AddWithValue("@amount_value", value);
                         command.ExecuteNonQuery();
                         res = command.GetReturnParameter();
                     }
