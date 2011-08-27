@@ -24,6 +24,7 @@ function loadAccounts() {
         }
 
         accountsModel = ko.mapping.fromJS(res, mapping);
+        accountsModel.move_items = ko.observableArray();
         accountsModel.selectedItem = ko.observable(null);
         accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
         accountsModel.selectedItem(accountsModel.items()[0]);
@@ -45,6 +46,25 @@ function loadAccounts() {
                 return item.Id() == id;
             });
             return fItem != null ? fItem.NameShort() : '';
+        }
+        accountsModel.getById = function (id) {
+            var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+                return item.Id() == id;
+            });
+            return fItem;
+        }
+        accountsModel.fillMoveItems = function (accId, transId, op) {
+            this.move_items().length = 0;
+            var curItem = this.getById(accId);
+            for (var i = 0; i < this.items().length; i++) {
+                var fItem = accountsModel.items()[i];
+                if (fItem.Id() != accId && fItem.Id() != null && fItem.CurrencyId == curItem.CurrencyId)
+                {
+                    fItem.transId = transId;
+                    fItem.op = op;
+                    this.move_items.push(fItem);
+                }
+            }
         }
         accountsModel.hideEdit = function (show) {
             var elem = $("#account_edit")[0];
@@ -114,6 +134,7 @@ function loadAccounts() {
             }
         }
         ko.applyBindings(accountsModel, $("#accounts")[0]);
+        ko.applyBindings(accountsModel, $("#accounts_move")[0]);
 
         loadTransactions();
     });

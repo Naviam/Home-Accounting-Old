@@ -118,8 +118,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult DeleteTransaction(int? id)
         {
             var user = CurrentUser;
-            var trans = new TransactionsRepository().GetTransaction(id, user.Id);
-            new TransactionsRepository().Delete(trans, user.CurrentCompany);
+            new TransactionsRepository().Delete(id, user.CurrentCompany);
             return Json(id);
         }
 
