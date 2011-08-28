@@ -123,6 +123,9 @@
   <data name="AddCategory" xml:space="preserve">
     <value>Добавить категорию</value>
   </data>
+  <data name="Buy" xml:space="preserve">
+    <value>Покупка</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
@@ -137,6 +140,12 @@
   </data>
   <data name="LogonHeader" xml:space="preserve">
     <value>Введите имя пользователя и пароль</value>
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>Курс</value>
+  </data>
+  <data name="Sell" xml:space="preserve">
+    <value>Продажа</value>
   </data>
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Операции</value>
