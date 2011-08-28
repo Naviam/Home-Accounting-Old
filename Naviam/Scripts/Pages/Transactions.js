@@ -10,7 +10,7 @@ ko.bindingHandlers.amount = {
         var options = allBindingsAccessor().amountOptions || {};
         var allowZero = options.allowZero || false;
         //handle the field changing
-        ko.utils.registerEventHandler(element, "change", function () {
+        var checkElem = function () {
             var observable = valueAccessor();
             var parsed = parseFloat($(element).val().replace(/[^\d.]+/g, ""));
             var correct = !isNaN(parsed) && (parsed > 0 || allowZero);
@@ -18,7 +18,11 @@ ko.bindingHandlers.amount = {
                 observable(parsed);
             else
                 $(element).val(observable()); //restore old
-        });
+        };
+        ko.utils.registerEventHandler(element, "change", checkElem);
+        var requestedEventsToCatch = allBindingsAccessor()["valueUpdate"];
+        if (requestedEventsToCatch)
+            ko.utils.registerEventHandler(element, requestedEventsToCatch, checkElem);
     },
     update: function (element, valueAccessor) {
         var val = addCommas(ko.utils.unwrapObservable(valueAccessor()));
@@ -140,6 +144,13 @@ function loadTransactions() {
             conf.left = -5;
             frm.overlay().load();
         };
+        transModel.GetNewItem = function () {
+            var date = new Date();
+            return { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
+                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(0), Notes: ko.observable(null), Merchant: ko.observable(null), 
+                Currency: '', IncludeInTax: ko.observable(false), CurrencyId: ko.observable(accountsModel.selectedItem().CurrencyId), AccountId: ko.observable(accountsModel.selectedItem().Id)
+            };
+        };
         transModel.Add = function () {
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {
                 return item.Id() == null;
@@ -147,11 +158,7 @@ function loadTransactions() {
             if (fItem != null) return;
             transDlg.close();
             this.editObj = null;
-            var date = new Date();
-            this.items.splice(0, 0, { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
-                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(1), Notes: ko.observable(null), Merchant: ko.observable(null), Direction: ko.observable(0),
-                Currency: '', IncludeInTax: ko.observable(false), CurrencyId: ko.observable(accountsModel.selectedItem().CurrencyId), AccountId: ko.observable(accountsModel.selectedItem().Id)
-            });
+            this.items.splice(0, 0, this.GetNewItem());
             var row = $('#transGrid table tr:eq(1)');
             ko.applyBindings(this.items()[0], $("#transDlg")[0]);
             this.GoToEdit(null, this.items()[0], row);
@@ -300,6 +307,19 @@ function loadTransactions() {
                     this.paging.SortDirection(0);
             this.paging.SortField(val);
             this.ReloadPage();
+        };
+        transModel.ShowExchange = function () {
+            var hld = $('#exchangeDialog');
+            accountsModel.RecalcExchangeItems();
+            if (hld.html() == '') {
+                $.postErr(getExchangeDlg, function (res) {
+                    hld.html(res);
+                    hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
+                    hld.overlay().load();
+                });
+            }
+            else
+                hld.overlay().load();
         };
         ko.applyBindings(transModel, $("#transGrid")[0]);
     });

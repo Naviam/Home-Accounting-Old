@@ -1,0 +1,46 @@
+﻿@using Naviam.WebUI.Resources
+
+<script type='text/javascript'>
+    $(document).ready(function () {
+        var exchangeModel = {
+            Amount: ko.observable(0)
+            , Rate: ko.observable(0)
+            , Account: ko.observable(null)
+            , isInputOk: function () {
+                return this.Amount() > 0 && this.Rate() > 0;
+            }
+            , Exchange: function () {
+                var newT = ko.mapping.toJS(transModel.GetNewItem());
+                //TODO: Category??
+                newT.CategoryId = 1;
+                newT.Description = 'Exchange';
+                newT.Direction = 0;
+                newT.Amount = this.Amount();
+                //TODO: check that first completed
+                transModel.SaveItem(newT, true);
+                newT.Direction = 1;
+                newT.AccountId = this.Account().Id();
+                newT.CurrencyId = this.Account().CurrencyId();
+                newT.Amount = this.FinalAmount();
+                transModel.SaveItem(newT, false);
+                $('#exchangeDialog').overlay().close();
+            }
+        };
+        exchangeModel.FinalAmount = ko.dependentObservable(function () {
+            return this.Amount() * this.Rate();
+        }, exchangeModel);
+        ko.applyBindings(exchangeModel, $('#exchangeDialog')[0]);
+    });
+</script>
+
+<form data-bind="submit: Exchange">
+<table>
+<tr>
+<td>Amount</td><td><input class="enterastab" data-bind="amount: Amount, valueUpdate: 'keyup'" name="Amount"/></td>
+<td>Rate</td><td><input class="enterastab" data-bind="amount: Rate, valueUpdate: 'keyup'" name="Rate"/></td>
+<td>To</td><td><select data-bind="options: accountsModel.ExchangeItems, optionsText: 'Name', value: Account"></select></td>
+<td>Amount</td><td><label data-bind="amount: FinalAmount"/></td>
+</tr>
+</table>
+ <button type="submit" data-bind="enable: isInputOk()">Ok</button>
+</form>

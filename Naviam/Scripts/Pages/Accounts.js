@@ -25,6 +25,7 @@ function loadAccounts() {
 
         accountsModel = ko.mapping.fromJS(res, mapping);
         accountsModel.move_items = ko.observableArray();
+        accountsModel.ExchangeItems = ko.observableArray();
         accountsModel.selectedItem = ko.observable(null);
         accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
         accountsModel.selectedItem(accountsModel.items()[0]);
@@ -35,7 +36,15 @@ function loadAccounts() {
             var regExp = new RegExp('(accId)=([^&]*)', 'g');
             var form = $('#upload_statement').parents('form')[0];
             form.action = form.action.replace(regExp, '$1=' + pageContext.accountId);
+            accountsModel.RecalcExchangeItems();
         });
+        accountsModel.RecalcExchangeItems = function () {
+            var currValue = this.selectedItem();
+            if (currValue.Id() == null) return;
+            accountsModel.ExchangeItems(ko.utils.arrayFilter(accountsModel.items(), function (item) {
+                return item.Id() != currValue.Id() && item.Id() != null && item.CurrencyId() != currValue.CurrencyId();
+            }));
+        }
         accountsModel.Refresh = function () {
             $.postErr(getAccountsUrl, function (res) {
                 ko.mapping.updateFromJS(accountsModel, res);

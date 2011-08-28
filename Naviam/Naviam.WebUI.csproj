@@ -186,6 +186,7 @@
       <DependentUpon>ValidationStrings.ru.resx</DependentUpon>
     </Compile>
     <None Include="SMSConnectorScript.cs" />
+    <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\combres.xml">

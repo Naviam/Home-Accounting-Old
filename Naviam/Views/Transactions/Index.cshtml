@@ -24,6 +24,8 @@
     var updateCatUrl = '@Url.Action("UpdateCategory", "Transactions")';
     var delCatUrl = '@Url.Action("DeleteCategory", "Transactions")';
 
+    var getExchangeDlg = '@Url.Action("GetExchangeDialog", "Transactions")';
+
     var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
     var addAccountAmountUrl = '@Url.Action("AddAccountAmount", "Accounts")';
@@ -135,6 +137,7 @@
             <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
         }
         <a href="#" onclick='return transModel.Add();'>Add</a>
+        <a href="#" onclick='return transModel.ShowExchange();'>Exchange</a>
     </div>
     <table class='grid'>
         <thead data-bind='template: "transHeadTemplate"' >
@@ -236,4 +239,5 @@
 </div>
 
 <div id='cat_edit_area' class="overlay"></div>
+<div id='exchangeDialog' class="overlay"></div>
 

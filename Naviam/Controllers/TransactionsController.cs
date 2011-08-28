@@ -147,6 +147,12 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
+        public ActionResult GetExchangeDialog()
+        {
+            return PartialView("_exchangeDialog");
+        }
+
+        [HttpPost]
         public ActionResult UpdateCategory(Category cat)
         {
             var user = CurrentUser;
