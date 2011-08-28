@@ -48,22 +48,18 @@ function loadAccounts() {
             return fItem != null ? fItem.NameShort() : '';
         }
         accountsModel.getById = function (id) {
-            var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+            return ko.utils.arrayFirst(this.items(), function (item) {
                 return item.Id() == id;
             });
-            return fItem;
         }
         accountsModel.fillMoveItems = function (accId, transId, op) {
-            this.move_items().length = 0;
             var curItem = this.getById(accId);
-            for (var i = 0; i < this.items().length; i++) {
-                var fItem = accountsModel.items()[i];
-                if (fItem.Id() != accId && fItem.Id() != null && fItem.CurrencyId == curItem.CurrencyId) {
-                    fItem.transId = transId;
-                    fItem.op = op;
-                    this.move_items.push(fItem);
-                }
-            }
+            this.move_items(ko.utils.arrayFilter(this.items(), function (item) {
+                return item.Id() != accId && item.Id() != null && item.CurrencyId() == curItem.CurrencyId();
+            }));
+            this.accOp = {};
+            this.accOp.transId = transId;
+            this.accOp.op = op;
         }
         accountsModel.hideEdit = function (show) {
             var elem = $("#account_edit")[0];

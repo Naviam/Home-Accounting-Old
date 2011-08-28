@@ -257,17 +257,17 @@ function loadTransactions() {
         };
         transModel.Transfer = function (item) {
             $("#accounts_move").hide();
-            var fItem = this.getById(item.transId);
+            var fItem = this.getById(accountsModel.accOp.transId);
             if (fItem) {
                 var newO = ko.mapping.toJS(fItem);
                 newO.Id = null;
                 newO.AccountId = item.Id();
                 newO.CurrencyId = item.CurrencyId();
-                if (item.op == 'trans') {
+                if (accountsModel.accOp.op == 'trans') {
                     newO.Direction = newO.Direction == 0 ? 1 : 0;
                     this.SaveItem(newO, true);
                 }
-                if (item.op == 'move') {
+                if (accountsModel.accOp.op == 'move') {
                     this.DeleteItem(fItem, function () {
                         newO.Date = '/Date(' + new Date().getTime() + ')/';
                         transModel.SaveItem(newO, true);
