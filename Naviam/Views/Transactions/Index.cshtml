@@ -103,7 +103,7 @@
         </td>
         <td style="width:5%">
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}" tabindex='-1'>@SharedStrings.Edit</a>
-            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.DeleteItem($data);}" tabindex='-1'>@SharedStrings.Delete</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.Delete($data);}" tabindex='-1'>@SharedStrings.Delete</a>
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowTransfer($data, event, 'trans');}" tabindex='-1'>Transfer</a>
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowTransfer($data, event, 'move');}" tabindex='-1'>Move</a>
         </td>

@@ -58,8 +58,7 @@ function loadAccounts() {
             var curItem = this.getById(accId);
             for (var i = 0; i < this.items().length; i++) {
                 var fItem = accountsModel.items()[i];
-                if (fItem.Id() != accId && fItem.Id() != null && fItem.CurrencyId == curItem.CurrencyId)
-                {
+                if (fItem.Id() != accId && fItem.Id() != null && fItem.CurrencyId == curItem.CurrencyId) {
                     fItem.transId = transId;
                     fItem.op = op;
                     this.move_items.push(fItem);
@@ -113,12 +112,14 @@ function loadAccounts() {
             accountsModel.passToEdit(ko.mapping.toJS(item), item);
         }
         accountsModel.deleteItem = function (item) {
-            $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
-                ko.utils.arrayRemoveItem(accountsModel.items, item);
-                if (accountsModel.selectedItem() == item)
-                    accountsModel.selectedItem(accountsModel.items()[0]);
-                else
-                    transModel.ReloadPage();
+            askToUser(lang.DeleteAccount, function () {
+                $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
+                    ko.utils.arrayRemoveItem(accountsModel.items, item);
+                    if (accountsModel.selectedItem() == item)
+                        accountsModel.selectedItem(accountsModel.items()[0]);
+                    else
+                        transModel.ReloadPage();
+                });
             });
         }
         accountsModel.addAmount = function (id, amount) {

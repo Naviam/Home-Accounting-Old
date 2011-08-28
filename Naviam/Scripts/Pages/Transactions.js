@@ -227,6 +227,11 @@ function loadTransactions() {
             this.ShowDialog();
             //$("#edit_form").overlay().load();
         };
+        transModel.Delete = function (item) {
+            askToUser(lang.DeleteTrans, function () {
+                transModel.DeleteItem(item);
+            });
+        }
         transModel.DeleteItem = function (item, callback) {
             $.postErr(delTransUrl, { id: item.Id() }, function (res) {
                 var amount = item.Direction() == 0 ? item.Amount() : -item.Amount();
