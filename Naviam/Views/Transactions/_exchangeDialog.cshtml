@@ -36,11 +36,12 @@
 <form data-bind="submit: Exchange">
 <table>
 <tr>
-<td>Amount</td><td><input class="enterastab" data-bind="amount: Amount, valueUpdate: 'keyup'" name="Amount"/></td>
-<td>Rate</td><td><input class="enterastab" data-bind="amount: Rate, valueUpdate: 'keyup'" name="Rate"/></td>
+<td>Amount</td><td><input class="enterastab" data-bind="amount: Amount, valueUpdate: 'keyup', amountOptions: {allowZero: true}" name="Amount"/></td>
+<td>Rate</td><td><input class="enterastab" data-bind="amount: Rate, valueUpdate: 'keyup', amountOptions: {allowZero: true}" name="Rate"/></td>
 <td>To</td><td><select data-bind="options: accountsModel.ExchangeItems, optionsText: 'Name', value: Account"></select></td>
 <td>Amount</td><td><label data-bind="amount: FinalAmount"/></td>
 </tr>
 </table>
- <button type="submit" data-bind="enable: isInputOk()">Ok</button>
+<button type="submit" data-bind="enable: isInputOk()">Ok</button>
+<button type="button" class='close'>@SharedStrings.Cancel</button>
 </form>

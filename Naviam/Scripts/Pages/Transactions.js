@@ -314,7 +314,7 @@ function loadTransactions() {
             if (hld.html() == '') {
                 $.postErr(getExchangeDlg, function (res) {
                     hld.html(res);
-                    hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
+                    hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true, closeIcon: true });
                     hld.overlay().load();
                 });
             }

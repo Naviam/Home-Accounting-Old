@@ -20,8 +20,9 @@
 			effects[name] = [loadFn, closeFn];	
 		},
 	
-		conf: {  
-			close: null,	
+		conf: {
+		    close: null,
+			closeIcon: false,
 			closeOnClick: true,
 			closeOnEsc: true,			
 			closeSpeed: 'fast',
@@ -251,12 +252,13 @@
 		});
 		
 		// close button
-		closers = overlay.find(conf.close || ".close");		
-		
-		if (!closers.length && !conf.close) {
+		closers = overlay.find(conf.close || ".close");
+
+		if ((!closers.length && !conf.close) || conf.closeIcon) {
 			closers = $('<a class="close"></a>');
 			overlay.prepend(closers);	
-		}		
+		}
+        closers = overlay.find(conf.close || ".close");
 		
 		closers.click(function(e) { 
 			self.close(e);  
