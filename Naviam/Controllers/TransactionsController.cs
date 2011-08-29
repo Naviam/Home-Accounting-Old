@@ -87,7 +87,7 @@ namespace Naviam.WebUI.Controllers
                            {
                                new Head {Field = "Date", Text = DisplayNames.Date},
                                new Head {Field = "Description", Text = DisplayNames.Description},
-                               new Head {Field = "Category", Text = DisplayNames.Category},
+                               new Head {Field = "CategoryId", Text = DisplayNames.Category},
                                new Head {Field = "Amount", Text = DisplayNames.Amount, Columns = 2}
                            };
 
