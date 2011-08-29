@@ -220,7 +220,8 @@ namespace Naviam
                     {
                         var list = typedRedis.Lists[key];
                         list.Clear();
-                        val.ForEach(list.Add);
+                        if (val != null)
+                            val.ForEach(list.Add);
                     }
                     if (id != null)
                     {

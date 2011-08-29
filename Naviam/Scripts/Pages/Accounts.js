@@ -61,6 +61,16 @@ function loadAccounts() {
                 return item.Id() == id;
             });
         };
+        accountsModel.getFinById = function (id) {
+            return ko.utils.arrayFirst(this.finInst(), function (item) {
+                return item.Id() == id;
+            });
+        };
+        accountsModel.getTypeById = function (id) {
+            return ko.utils.arrayFirst(this.typesItems(), function (item) {
+                return item.Id() == id;
+            });
+        };
         accountsModel.fillMoveItems = function (accId, transId, op) {
             var curItem = this.getById(accId);
             this.move_items(ko.utils.arrayFilter(this.items(), function (item) {
@@ -92,7 +102,7 @@ function loadAccounts() {
                         if (editItem == null) //add
                             item.Balance = item.InitialBalance;
                         else
-                            item.Balance = editItem.Balance() + (item.InitialBalance - editItem.InitialBalance());
+                            item.Balance = editItem.Balance() + (item.InitialBalance() - editItem.InitialBalance());
                         $.postErr(updateAccountUrl, this, function (res) {
                             if (editItem != null)
                                 ko.mapping.fromJS(res, {}, editItem);
@@ -110,11 +120,24 @@ function loadAccounts() {
             accountsModel.hideEdit(true);
         };
         accountsModel.addItem = function () {
-            var newItem = { Id: null, Name: null, InitialBalance: 0, Description: null, CurrencyId: null, TypeId: null };
+            var newItem = { Id: null, Name: null, InitialBalance: ko.observable(0), Description: null, CurrencyId: null, CardNumber: ko.observable(), TypeId: ko.observable(), FinInstitutionId: ko.observable() };
             this.passToEdit(newItem, null);
         };
         accountsModel.editItem = function (item) {
-            accountsModel.passToEdit(ko.mapping.toJS(item), item);
+            //accountsModel.passToEdit(ko.mapping.toJS(item), item);
+            accountsModel.passToEdit(item, item);
+        };
+        accountsModel.getTypes = function (finId) {
+            var finInst = this.getFinById(finId);
+            var $this = this;
+            if (finInst) {
+                var fin_acc_types = ko.utils.arrayFilter(this.finLinks(), function (item) {
+                    return finInst.TypeId() == item.FinanceTypeId();
+                });
+                return ko.utils.arrayMap(fin_acc_types, function (item) {
+                    return $this.getTypeById(item.AccountTypeId());
+                });
+            }
         };
         accountsModel.deleteItem = function (item) {
             askToUser(lang.DeleteAccount, function () {

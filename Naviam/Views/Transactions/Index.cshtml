@@ -208,7 +208,7 @@
 @*TODO: move to partial view*@
 @using (Html.BeginForm("UpdateAccount", "Accounts", FormMethod.Post, new {id = "editAccountFrm" }))
 {
-    <table>
+<table>
 @*    <tr>
         <td>Account Type:<select data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId", required="required" ></select></td>
     </tr>*@
@@ -216,25 +216,27 @@
         <td>Account Name:<input data-bind="value: Name" name="Name" required="required"/></td>
     </tr>
     <tr>
-        <td>Initial Balance:<input data-bind="value: InitialBalance, amountOptions: {allowZero: true}" name="InitialBalance" required="required"/></td>
+        <td>Fin Inst: <select required="required" data-bind="options: accountsModel.finInst, optionsText: 'Name', optionsValue: 'Id', optionsCaption: 'Select an item...', value: FinInstitutionId"></select></td>
     </tr>
-    <tr>
-        <td>Description:<textarea data-bind="value: Description" name="Description" rows='1' cols='1'></textarea></td>
+    <tr data-bind="visible: FinInstitutionId">
+        <td>Account Type: <select required="required" data-bind="options: accountsModel.getTypes(FinInstitutionId()), optionsText: 'TypeName', optionsValue: 'Id', optionsCaption: 'Select an item...', value: TypeId"></select></td>
     </tr>
-    <tr>
-        <td>Account Type: <select required="required" data-bind="options: accountsModel.typesItems, optionsText: 'TypeName', optionsValue: 'Id', optionsCaption: 'Select an item...', value: TypeId"></select></td>
+    <tr data-bind="visible: TypeId() == 2"> @*!!!Hardcoded (Bank card)*@
+        <td>4 last digits:<input data-bind="value: CardNumber" name="CardNumber"/></td>
     </tr>
     <tr>
         <td>Currency: <select required="required" data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId"></select></td>
     </tr>
-@*    <tr>
-    <td>Description:</td>
-    <td><textarea data-bind="value: Description" name="Description" rows='1' cols='1'/></td>
-    </tr>*@
+    <tr>
+        <td>Initial Balance:<input data-bind="amount: InitialBalance, amountOptions: {allowZero: true}" name="InitialBalance" required="required"/></td>
+    </tr>
+    <tr>
+        <td>Description:<textarea data-bind="value: Description" name="Description" rows='1' cols='1'></textarea></td>
+    </tr>
 
-    </table>
-    <button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
-    <button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
+</table>
+<button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
+<button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
 }
 </div>
 
