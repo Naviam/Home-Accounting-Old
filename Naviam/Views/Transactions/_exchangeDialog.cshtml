@@ -1,0 +1,51 @@
+﻿@using Naviam.WebUI.Resources
+
+<script type='text/javascript'>
+    $(document).ready(function () {
+        var exchangeModel = {
+            Amount: ko.observable(0)
+            , Rate: ko.observable(0)
+            , Operation: ko.observable(0)
+            , Account: ko.observable(null)
+            , isInputOk: function () {
+                return this.Amount() > 0 && this.Rate() > 0 && this.Account();
+            }
+            , Exchange: function () {
+                var newT = ko.mapping.toJS(transModel.GetNewItem());
+                //TODO: Category??
+                newT.CategoryId = 1;
+                newT.Description = 'Exchange';
+                newT.Direction = this.Operation();
+                newT.Amount = this.Amount();
+                //TODO: check that first completed
+                transModel.SaveItem(newT, true);
+                newT.Direction = this.Operation() == 0 ? 1 : 0;
+                newT.AccountId = this.Account().Id();
+                newT.CurrencyId = this.Account().CurrencyId();
+                newT.Amount = this.FinalAmount();
+                transModel.SaveItem(newT, false);
+                $('#exchangeDialog').overlay().close();
+            }
+        };
+        exchangeModel.FinalAmount = ko.dependentObservable(function () {
+            return this.Amount() * this.Rate();
+        }, exchangeModel);
+        ko.applyBindings(exchangeModel, $('#exchangeDialog')[0]);
+    });
+</script>
+
+<form data-bind="submit: Exchange">
+<table>
+<tr>
+<td>
+    <select data-bind="value: Operation"><option value="0">@SharedStrings.Sell</option><option value="1">@SharedStrings.Buy</option></select>
+</td>
+<td>@DisplayNames.Amount</td><td><input class="enterastab" data-bind="amount: Amount, valueUpdate: 'keyup', amountOptions: {allowZero: true}" name="Amount"/></td>
+<td>@SharedStrings.Rate</td><td><input class="enterastab" data-bind="amount: Rate, valueUpdate: 'keyup', amountOptions: {allowZero: true}" name="Rate"/></td>
+<td>To</td><td><select data-bind="options: accountsModel.ExchangeItems, optionsText: 'Name', value: Account"></select></td>
+<td>@DisplayNames.Amount</td><td><label data-bind="amount: FinalAmount"/></td>
+</tr>
+</table>
+<button type="submit" data-bind="enable: isInputOk()">Ok</button>
+<button type="button" class='close'>@SharedStrings.Cancel</button>
+</form>

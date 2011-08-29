@@ -14,7 +14,7 @@ namespace Naviam.Data
         public Account(SqlDataReader reader)
         {
             Id = reader["id"] as int?;
-            Number = reader["number"] as string;
+            Name = reader["name"] as string;
             DateCreation = reader["date_creation"] as DateTime?;
             InitialBalance = reader["initial_balance"] as decimal?;
             Description = reader["description"] as string;
@@ -22,9 +22,12 @@ namespace Naviam.Data
             CurrencyId = reader["id_currency"] as int?;
             TypeId = reader["id_type"] as int?;
             Balance = reader["balance"] as decimal?;
+            FinInstitutionId = reader["id_financial_institution"] as int?;
+            CardNumber = reader["card_number"] as string;
         }
-
-        public string Number { get; set; }
+        
+        public string Name { get; set; }
+        public string CardNumber { get; set; }
         public DateTime? DateCreation { get; set; }
         public decimal? InitialBalance { get; set; }
         public decimal? Balance { get; set; }
@@ -33,6 +36,7 @@ namespace Naviam.Data
         public int? CurrencyId { get; set; }
         public string Currency { get; set; }
         public int? TypeId { get; set; }
+        public int? FinInstitutionId { get; set; }
     }
 
     public static partial class SqlCommandExtensions
@@ -47,13 +51,15 @@ namespace Naviam.Data
         {
             command.AddCommonParameters(account.Id, action);
             command.Parameters.Add("@curr_date_utc", SqlDbType.DateTime).Value = DateTime.UtcNow;
-            command.Parameters.Add("@number", SqlDbType.NVarChar).Value = account.Number.ToDbValue();
+            command.Parameters.Add("@name", SqlDbType.NVarChar).Value = account.Name.ToDbValue();
             command.Parameters.Add("@id_company", SqlDbType.Int).Value = account.CompanyId.ToDbValue();
             command.Parameters.Add("@id_currency", SqlDbType.Int).Value = account.CurrencyId.ToDbValue();
             command.Parameters.Add("@initial_balance", SqlDbType.Decimal).Value = account.InitialBalance;
             command.Parameters.Add("@id_type", SqlDbType.Int).Value = account.TypeId.ToDbValue();
             command.Parameters.Add("@description", SqlDbType.NVarChar).Value = account.Description.ToDbValue();
             command.Parameters.Add("@balance", SqlDbType.Decimal).Value = account.Balance;
+            command.Parameters.Add("@id_financial_institution", SqlDbType.Int).Value = account.FinInstitutionId.ToDbValue();
+            command.Parameters.Add("@card_number", SqlDbType.NVarChar).Value = account.CardNumber.ToDbValue();
         }
     }
 }

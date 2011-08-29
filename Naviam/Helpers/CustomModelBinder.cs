@@ -18,10 +18,10 @@ namespace Naviam.WebUI.Helpers
                     if (!String.IsNullOrEmpty(valueProviderResult.AttemptedValue))
                     {
                         decimal dec;
-                        if (Decimal.TryParse(valueProviderResult.AttemptedValue, NumberStyles.AllowDecimalPoint,  Thread.CurrentThread.CurrentUICulture.NumberFormat, out dec))
+                        if (Decimal.TryParse(valueProviderResult.AttemptedValue, NumberStyles.Number, Thread.CurrentThread.CurrentUICulture.NumberFormat, out dec))
                             result = dec;
                         else
-                            if (Decimal.TryParse(valueProviderResult.AttemptedValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture.NumberFormat, out dec))
+                            if (Decimal.TryParse(valueProviderResult.AttemptedValue, NumberStyles.Number, CultureInfo.InvariantCulture.NumberFormat, out dec))
                                 result = dec;
                         //result = Convert.ToDecimal(valueProviderResult.AttemptedValue);
                     }

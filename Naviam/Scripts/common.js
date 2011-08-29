@@ -36,7 +36,9 @@ $('input.enterastab, select.enterastab, textarea.enterastab').live('keydown', fu
         return false;
     }
 });
-
+function askToUser(text, callback) {
+    if (confirm(text)) callback();
+}
 function parseSiteError(request) {
     if (request.status == 500) {
         var errorObj = JSON.parse(request.responseText);

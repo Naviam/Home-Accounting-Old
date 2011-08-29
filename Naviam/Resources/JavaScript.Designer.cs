@@ -115,6 +115,24 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete account?.
+        /// </summary>
+        public static string DeleteAccount {
+            get {
+                return ResourceManager.GetString("DeleteAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete transaction?.
+        /// </summary>
+        public static string DeleteTrans {
+            get {
+                return ResourceManager.GetString("DeleteTrans", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit categories....
         /// </summary>
         public static string EditCategories {

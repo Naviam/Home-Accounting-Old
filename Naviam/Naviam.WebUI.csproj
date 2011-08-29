@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\AttachmentsController.cs" />
+    <Compile Include="Controllers\SmsController.cs" />
     <Compile Include="Helpers\Cookies\CookieContainer.cs" />
     <Compile Include="Helpers\Cookies\ICookieContainer.cs" />
     <Compile Include="Helpers\CustomModelBinder.cs" />
@@ -128,6 +129,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Sms\BelSwissSms.cs" />
+    <Compile Include="Helpers\Sms\SmsBase.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\MenuAppModel.cs" />
     <Compile Include="Models\PageContext.cs" />
@@ -182,6 +185,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ValidationStrings.ru.resx</DependentUpon>
     </Compile>
+    <None Include="SMSConnectorScript.cs" />
+    <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\combres.xml">
@@ -284,6 +289,7 @@
     <Content Include="Scripts\locale\Naviam.JavaScript.ru.js" />
     <Content Include="Scripts\locale\vsdoc\Naviam.JavaScript-vsdoc.js" />
     <Content Include="Scripts\Pages\Accounts.js" />
+    <Content Include="Scripts\Pages\Accounts.min.js" />
     <Content Include="Scripts\Pages\Transactions.js" />
     <Content Include="Scripts\Pages\Transactions.min.js" />
     <Content Include="Scripts\spine.js" />
@@ -329,7 +335,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CategoriesTr.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\CategoriesTr.ru.resx" />
+    <EmbeddedResource Include="Resources\CategoriesTr.ru.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\DisplayNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DisplayNames.Designer.cs</LastGenOutput>

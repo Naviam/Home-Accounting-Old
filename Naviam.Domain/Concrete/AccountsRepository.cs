@@ -7,36 +7,6 @@ using Naviam.DAL;
 
 namespace Naviam.Domain.Concrete
 {
-   
-    //public class Repository<T> where T: class
-    //{
-    //    public delegate List<T> GetListDelegat<T>(Dictionary<string, object> parameters);
-
-    //    public static string CacheKey = typeof(T).ToString();
-        
-    //    public virtual void ResetCache(params int?[] id)
-    //    {
-            
-    //        var cache = new CacheWrapper();
-    //        cache.SetList<T>(CacheKey, null, id);
-    //    }
-
-    //    public static List<T> GetList(GetListDelegat<T> dlgt, Dictionary<string, object> searchParams, params int?[] id) { return GetList(dlgt, searchParams, false, id); }
-    //    public static List<T> GetList(GetListDelegat<T> dlgt, Dictionary<string, object> searchParams, bool forceSqlLoad, params int?[] id)
-    //    {
-    //        var cache = new CacheWrapper();
-    //        var res = cache.GetList<T>(CacheKey, id);
-    //        if (res == null || forceSqlLoad)
-    //        {
-    //            //load from DB
-    //            res = dlgt.Invoke(searchParams);
-    //            //save to cache
-    //            cache.SetList(CacheKey, res, id);
-    //        }
-    //        return res;
-    //    }
-    //}
-
     public class AccountsRepository
     {
         private const string CacheKey = "companyAcc";
@@ -118,6 +88,19 @@ namespace Naviam.Domain.Concrete
             {
                 //if ok - remove from cache
                 new CacheWrapper().RemoveFromList(CacheKey, entity, companyId);
+            }
+            return res;
+        }
+
+        public static int ChangeBalance(int? accountId, int? companyId, decimal value)
+        {
+            var res = AccountsDataAdapter.ChangeBalance(accountId, companyId, value);
+            var cache = new CacheWrapper();
+            if (res == 0)
+            {
+                Account account = cache.GetFromList(CacheKey, new Account() { Id = accountId }, companyId);
+                account.Balance = account.Balance + value;
+                cache.UpdateList(CacheKey, account, companyId);
             }
             return res;
         }

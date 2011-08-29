@@ -123,6 +123,9 @@
   <data name="AddCategory" xml:space="preserve">
     <value>Add Category</value>
   </data>
+  <data name="Buy" xml:space="preserve">
+    <value>Buy</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -137,6 +140,12 @@
   </data>
   <data name="LogonHeader" xml:space="preserve">
     <value>Account Information</value>
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>Rate</value>
+  </data>
+  <data name="Sell" xml:space="preserve">
+    <value>Sell</value>
   </data>
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Transactions</value>

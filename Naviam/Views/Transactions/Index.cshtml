@@ -24,16 +24,22 @@
     var updateCatUrl = '@Url.Action("UpdateCategory", "Transactions")';
     var delCatUrl = '@Url.Action("DeleteCategory", "Transactions")';
 
+    var getExchangeDlg = '@Url.Action("GetExchangeDialog", "Transactions")';
+
     var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
     var addAccountAmountUrl = '@Url.Action("AddAccountAmount", "Accounts")';
     var deleteAccountUrl = '@Url.Action("DeleteAccount", "Accounts")';
     //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
     $(document).ready(function () {
+        $(window).mousedown(function (event) {
+            var check = $(event.target).parents('.tooltip').length;
+            if (check === 0) $("#accounts_move").hide();
+        });
         $('#upload_statement').html5_upload({ autostart: false, onFinish: function (event, total) {
             transModel.ReloadPage();
             accountsModel.Refresh();
-        }
+            }
         });
     });
     function beg_upload_statement() {
@@ -45,7 +51,7 @@
 @section LeftColumn {
 <script type="text/html" id="accountsTemplate">
     <li>
-        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Number, css: {selected: $item.current() == $data}"></a>
+        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}"></a>
         <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
         <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">@SharedStrings.Delete</a>
         <span data-bind="amount: Balance, visible: $data.Id() != null"></span> <span data-bind="text: Currency, visible: $data.Id() != null"></span>
@@ -57,6 +63,17 @@
     </ul>
 </div>
 }
+
+<script type="text/html" id="accounts_moveTemplate">
+    <li>
+        <a href="#" data-bind="click: function(event) { transModel.Transfer($data); }, text: Name"></a>
+        <span data-bind="amount: Balance"></span> <span data-bind="text: Currency"></span>
+    </li>
+</script>
+<div id="accounts_move" class='hidden tooltip' style="position: absolute;background-color:White;border:1px solid;width:200px;z-index:1">
+    <ul data-bind="template: {name:'accounts_moveTemplate', foreach:move_items }">
+    </ul>
+</div>
 
 <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <a href="#" onclick='return catModel.EditCategories();'>edit cats</a>
@@ -87,8 +104,10 @@
             <span data-bind="text: Currency, visible: transModel.selectedItem() != $data"></span>
         </td>
         <td style="width:5%">
-            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}" tabindex='-1'>Edit</a>
-            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.DeleteItem($data);}" tabindex='-1'>Delete</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}" tabindex='-1'>@SharedStrings.Edit</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.Delete($data);}" tabindex='-1'>@SharedStrings.Delete</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowTransfer($data, event, 'trans');}" tabindex='-1'>Transfer</a>
+            <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowTransfer($data, event, 'move');}" tabindex='-1'>Move</a>
         </td>
     </tr>
 </script>
@@ -118,6 +137,7 @@
             <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
         }
         <a href="#" onclick='return transModel.Add();'>Add</a>
+        <a href="#" onclick='return transModel.ShowExchange();'>Exchange</a>
     </div>
     <table class='grid'>
         <thead data-bind='template: "transHeadTemplate"' >
@@ -193,7 +213,7 @@
         <td>Account Type:<select data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId", required="required" ></select></td>
     </tr>*@
     <tr>
-        <td>Account Name:<input data-bind="value: Number" name="Number" required="required"/></td>
+        <td>Account Name:<input data-bind="value: Name" name="Name" required="required"/></td>
     </tr>
     <tr>
         <td>Initial Balance:<input data-bind="value: InitialBalance, amountOptions: {allowZero: true}" name="InitialBalance" required="required"/></td>
@@ -219,4 +239,5 @@
 </div>
 
 <div id='cat_edit_area' class="overlay"></div>
+<div id='exchangeDialog' class="overlay"></div>
 

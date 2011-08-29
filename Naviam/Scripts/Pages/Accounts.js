@@ -24,8 +24,10 @@ function loadAccounts() {
         }
 
         accountsModel = ko.mapping.fromJS(res, mapping);
+        accountsModel.move_items = ko.observableArray();
+        accountsModel.ExchangeItems = ko.observableArray();
         accountsModel.selectedItem = ko.observable(null);
-        accountsModel.items.splice(0, 0, { Number: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
+        accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
         accountsModel.selectedItem(accountsModel.items()[0]);
         accountsModel.selectedItem.subscribe(function (newValue) {
             pageContext.accountId = newValue.Id();
@@ -34,7 +36,15 @@ function loadAccounts() {
             var regExp = new RegExp('(accId)=([^&]*)', 'g');
             var form = $('#upload_statement').parents('form')[0];
             form.action = form.action.replace(regExp, '$1=' + pageContext.accountId);
+            accountsModel.RecalcExchangeItems();
         });
+        accountsModel.RecalcExchangeItems = function () {
+            var currValue = this.selectedItem();
+            if (currValue.Id() == null) return;
+            accountsModel.ExchangeItems(ko.utils.arrayFilter(accountsModel.items(), function (item) {
+                return item.Id() != currValue.Id() && item.Id() != null && item.CurrencyId() != currValue.CurrencyId();
+            }));
+        }
         accountsModel.Refresh = function () {
             $.postErr(getAccountsUrl, function (res) {
                 ko.mapping.updateFromJS(accountsModel, res);
@@ -45,6 +55,20 @@ function loadAccounts() {
                 return item.Id() == id;
             });
             return fItem != null ? fItem.NameShort() : '';
+        }
+        accountsModel.getById = function (id) {
+            return ko.utils.arrayFirst(this.items(), function (item) {
+                return item.Id() == id;
+            });
+        }
+        accountsModel.fillMoveItems = function (accId, transId, op) {
+            var curItem = this.getById(accId);
+            this.move_items(ko.utils.arrayFilter(this.items(), function (item) {
+                return item.Id() != accId && item.Id() != null && item.CurrencyId() == curItem.CurrencyId();
+            }));
+            this.accOp = {};
+            this.accOp.transId = transId;
+            this.accOp.op = op;
         }
         accountsModel.hideEdit = function (show) {
             var elem = $("#account_edit")[0];
@@ -86,19 +110,21 @@ function loadAccounts() {
             accountsModel.hideEdit(true);
         }
         accountsModel.addItem = function () {
-            var newItem = { Id: null, Number: null, InitialBalance: 0, Description: null, CurrencyId: null, TypeId: null };
+            var newItem = { Id: null, Name: null, InitialBalance: 0, Description: null, CurrencyId: null, TypeId: null };
             this.passToEdit(newItem, null);
         }
         accountsModel.editItem = function (item) {
             accountsModel.passToEdit(ko.mapping.toJS(item), item);
         }
         accountsModel.deleteItem = function (item) {
-            $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
-                ko.utils.arrayRemoveItem(accountsModel.items, item);
-                if (accountsModel.selectedItem() == item)
-                    accountsModel.selectedItem(accountsModel.items()[0]);
-                else
-                    transModel.ReloadPage();
+            askToUser(lang.DeleteAccount, function () {
+                $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
+                    ko.utils.arrayRemoveItem(accountsModel.items, item);
+                    if (accountsModel.selectedItem() == item)
+                        accountsModel.selectedItem(accountsModel.items()[0]);
+                    else
+                        transModel.ReloadPage();
+                });
             });
         }
         accountsModel.addAmount = function (id, amount) {
@@ -114,6 +140,7 @@ function loadAccounts() {
             }
         }
         ko.applyBindings(accountsModel, $("#accounts")[0]);
+        ko.applyBindings(accountsModel, $("#accounts_move")[0]);
 
         loadTransactions();
     });

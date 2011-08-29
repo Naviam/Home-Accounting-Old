@@ -52,14 +52,13 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        //we need to provide full object (not only id) to delete from redis (restrict of redis)
-        public int Delete(Transaction trans, int? companyId)
+        public int Delete(int? id, int? companyId)
         {
-            var res = TransactionsDataAdapter.Delete(trans, companyId);
+            var res = TransactionsDataAdapter.Delete(id, companyId);
             if (res == 0)
             {
                 //if ok - remove from cache
-                new CacheWrapper().RemoveFromList(CacheKey, trans, companyId);
+                new CacheWrapper().RemoveFromList2(CacheKey, new Transaction() { Id = id }, companyId);
             }
             return res;
         }

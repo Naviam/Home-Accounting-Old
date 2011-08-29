@@ -101,8 +101,8 @@ namespace Naviam.WebUI.Controllers
             var rep = new TransactionsRepository();
             //TryUpdateModel(updateTrans);
             var amount = trans.Amount;
-            if (pageContext.AccountId != null)
-                trans.AccountId = pageContext.AccountId;
+            //if (pageContext.AccountId != null)
+            //    trans.AccountId = pageContext.AccountId;
             if (trans.Id != null)
             {
                 var updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, companyId);
@@ -118,8 +118,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult DeleteTransaction(int? id)
         {
             var user = CurrentUser;
-            var trans = new TransactionsRepository().GetTransaction(id, user.Id);
-            new TransactionsRepository().Delete(trans, user.CurrentCompany);
+            new TransactionsRepository().Delete(id, user.CurrentCompany);
             return Json(id);
         }
 
@@ -145,6 +144,12 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetCategoriesEditDialog()
         {
             return PartialView("_categoriesEdit");
+        }
+
+        [HttpPost]
+        public ActionResult GetExchangeDialog()
+        {
+            return PartialView("_exchangeDialog");
         }
 
         [HttpPost]

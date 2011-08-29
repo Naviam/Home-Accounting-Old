@@ -79,6 +79,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Buy.
+        /// </summary>
+        public static string Buy {
+            get {
+                return ResourceManager.GetString("Buy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
@@ -120,6 +129,24 @@ namespace Naviam.WebUI.Resources {
         public static string LogonHeader {
             get {
                 return ResourceManager.GetString("LogonHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate.
+        /// </summary>
+        public static string Rate {
+            get {
+                return ResourceManager.GetString("Rate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sell.
+        /// </summary>
+        public static string Sell {
+            get {
+                return ResourceManager.GetString("Sell", resourceCulture);
             }
         }
         

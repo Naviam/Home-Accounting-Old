@@ -186,4 +186,10 @@
   <data name="EditCategories" xml:space="preserve">
     <value>Edit categories...</value>
   </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>Do you really want to delete account?</value>
+  </data>
+  <data name="DeleteTrans" xml:space="preserve">
+    <value>Do you really want to delete transaction?</value>
+  </data>
 </root>
