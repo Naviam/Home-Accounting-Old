@@ -1,6 +1,7 @@
 ﻿/// <reference path="..\jquery-1.6.2.js" />
 /// <reference path="..\knockout-1.2.1.js" />
 /// <reference path="..\common.js" />
+/// <reference path="~/Scripts/Pages/Transactions.js" />
 function loadAccounts() {
     $.postErr(getAccountsUrl, function (res) {
         //var childItem = function (data) {
@@ -21,8 +22,7 @@ function loadAccounts() {
                 //                        return new childItem(options.data, {}, this);
                 //                    }
             }
-        }
-
+        };
         accountsModel = ko.mapping.fromJS(res, mapping);
         accountsModel.move_items = ko.observableArray();
         accountsModel.ExchangeItems = ko.observableArray();
@@ -44,23 +44,23 @@ function loadAccounts() {
             accountsModel.ExchangeItems(ko.utils.arrayFilter(accountsModel.items(), function (item) {
                 return item.Id() != currValue.Id() && item.Id() != null && item.CurrencyId() != currValue.CurrencyId();
             }));
-        }
+        };
         accountsModel.Refresh = function () {
             $.postErr(getAccountsUrl, function (res) {
                 ko.mapping.updateFromJS(accountsModel, res);
             });
-        }
+        };
         accountsModel.currencyById = function (id) {
             var fItem = ko.utils.arrayFirst(this.currItems(), function (item) {
                 return item.Id() == id;
             });
             return fItem != null ? fItem.NameShort() : '';
-        }
+        };
         accountsModel.getById = function (id) {
             return ko.utils.arrayFirst(this.items(), function (item) {
                 return item.Id() == id;
             });
-        }
+        };
         accountsModel.fillMoveItems = function (accId, transId, op) {
             var curItem = this.getById(accId);
             this.move_items(ko.utils.arrayFilter(this.items(), function (item) {
@@ -69,7 +69,7 @@ function loadAccounts() {
             this.accOp = {};
             this.accOp.transId = transId;
             this.accOp.op = op;
-        }
+        };
         accountsModel.hideEdit = function (show) {
             var elem = $("#account_edit")[0];
             var trans_elem = $("#transGrid");
@@ -82,7 +82,7 @@ function loadAccounts() {
                 $(elem).show();
                 trans_elem.hide();
             }
-        }
+        };
         accountsModel.passToEdit = function (item, editItem) {
             var elem = $("#account_edit")[0];
             var trans_elem = $("#transGrid");
@@ -97,25 +97,25 @@ function loadAccounts() {
                             if (editItem != null)
                                 ko.mapping.fromJS(res, {}, editItem);
                             else {
-                                koNew = ko.mapping.fromJS(res)
+                                koNew = ko.mapping.fromJS(res);
                                 accountsModel.items.splice(1, 0, koNew);
                             }
                             accountsModel.hideEdit(false);
                         });
                     }
                 }
-            }
+            };
             ko.cleanNode(elem);
             ko.applyBindings(item, elem);
             accountsModel.hideEdit(true);
-        }
+        };
         accountsModel.addItem = function () {
             var newItem = { Id: null, Name: null, InitialBalance: 0, Description: null, CurrencyId: null, TypeId: null };
             this.passToEdit(newItem, null);
-        }
+        };
         accountsModel.editItem = function (item) {
             accountsModel.passToEdit(ko.mapping.toJS(item), item);
-        }
+        };
         accountsModel.deleteItem = function (item) {
             askToUser(lang.DeleteAccount, function () {
                 $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
@@ -126,7 +126,7 @@ function loadAccounts() {
                         transModel.ReloadPage();
                 });
             });
-        }
+        };
         accountsModel.addAmount = function (id, amount) {
             if (amount != 0) {
                 var fItem = ko.utils.arrayFirst(this.items(), function (item) {
@@ -138,7 +138,7 @@ function loadAccounts() {
                     });
                 }
             }
-        }
+        };
         ko.applyBindings(accountsModel, $("#accounts")[0]);
         ko.applyBindings(accountsModel, $("#accounts_move")[0]);
 
