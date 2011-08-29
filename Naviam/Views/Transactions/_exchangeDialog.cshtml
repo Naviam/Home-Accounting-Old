@@ -40,10 +40,10 @@
 <td>
     <select data-bind="value: Operation"><option value="0">@SharedStrings.Sell</option><option value="1">@SharedStrings.Buy</option></select>
 </td>
-<td>@DisplayNames.Amount</td><td><input class="enterastab" data-bind="amount: Amount, valueUpdate: 'keyup', amountOptions: {allowZero: true}" name="Amount"/></td>
-<td>@SharedStrings.Rate</td><td><input class="enterastab" data-bind="amount: Rate, valueUpdate: 'keyup', amountOptions: {allowZero: true}" name="Rate"/></td>
+<td>@DisplayNames.Amount</td><td><input class="enterastab" style="width:50px" data-bind="amount: Amount, valueUpdate: 'keyup', amountOptions: {allowZero: true}" name="Amount"/><span data-bind="text: accountsModel.selectedItem().Currency"></span></td>
+<td>@SharedStrings.Rate</td><td><input class="enterastab" style="width:50px" data-bind="amount: Rate, valueUpdate: 'keyup', amountOptions: {allowZero: true}" name="Rate"/></td>
 <td>To</td><td><select data-bind="options: accountsModel.ExchangeItems, optionsText: 'Name', value: Account"></select></td>
-<td>@DisplayNames.Amount</td><td><label data-bind="amount: FinalAmount"/></td>
+<td>@DisplayNames.Amount</td><td><label data-bind="amount: FinalAmount"/> <label data-bind="text: Account().Currency"/></td>
 </tr>
 </table>
 <button type="submit" data-bind="enable: isInputOk()">Ok</button>
