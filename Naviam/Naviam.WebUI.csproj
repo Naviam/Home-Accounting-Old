@@ -135,11 +135,6 @@
     <Compile Include="Models\MenuAppModel.cs" />
     <Compile Include="Models\PageContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\CategoriesTr.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CategoriesTr.resx</DependentUpon>
-    </Compile>
     <Compile Include="Resources\DisplayNames.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -149,6 +144,16 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DisplayNames.ru.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Enums.ru.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Enums.ru.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Enums1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Enums.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\JavaScript.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -331,13 +336,6 @@
     <Content Include="Views\MenuApp\TopMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\CategoriesTr.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>CategoriesTr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\CategoriesTr.ru.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\DisplayNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DisplayNames.Designer.cs</LastGenOutput>
@@ -345,6 +343,14 @@
     <EmbeddedResource Include="Resources\DisplayNames.ru.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DisplayNames.ru.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Enums.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Enums1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Enums.ru.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Enums.ru.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\JavaScript.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

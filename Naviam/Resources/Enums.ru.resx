@@ -117,40 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1" xml:space="preserve">
+  <data name="acct_1" xml:space="preserve">
+    <value>Наличные</value>
+  </data>
+  <data name="acct_2" xml:space="preserve">
+    <value>Банковская карточка</value>
+  </data>
+  <data name="acct_3" xml:space="preserve">
+    <value>Электронный бумажник</value>
+  </data>
+  <data name="acct_5" xml:space="preserve">
+    <value>Депозит</value>
+  </data>
+  <data name="c_1" xml:space="preserve">
     <value>Авто&amp;Транспорт</value>
   </data>
-  <data name="11" xml:space="preserve">
+  <data name="c_11" xml:space="preserve">
     <value>Дом</value>
   </data>
-  <data name="13" xml:space="preserve">
+  <data name="c_13" xml:space="preserve">
     <value>Дети</value>
   </data>
-  <data name="15" xml:space="preserve">
+  <data name="c_15" xml:space="preserve">
     <value>Животные</value>
   </data>
-  <data name="16" xml:space="preserve">
+  <data name="c_16" xml:space="preserve">
     <value>Покупки</value>
   </data>
-  <data name="17" xml:space="preserve">
+  <data name="c_17" xml:space="preserve">
     <value>Налоги</value>
   </data>
-  <data name="19" xml:space="preserve">
+  <data name="c_19" xml:space="preserve">
     <value>Путешествия</value>
   </data>
-  <data name="2" xml:space="preserve">
+  <data name="c_2" xml:space="preserve">
     <value>Bills&amp;Utilities</value>
   </data>
-  <data name="20" xml:space="preserve">
+  <data name="c_20" xml:space="preserve">
     <value>Без категории</value>
   </data>
-  <data name="21" xml:space="preserve">
+  <data name="c_21" xml:space="preserve">
     <value>Авто Страхование</value>
   </data>
-  <data name="4" xml:space="preserve">
+  <data name="c_4" xml:space="preserve">
     <value>Образование</value>
   </data>
-  <data name="8" xml:space="preserve">
+  <data name="c_8" xml:space="preserve">
     <value>Обед&amp;Ужин</value>
   </data>
 </root>

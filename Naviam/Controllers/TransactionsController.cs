@@ -127,11 +127,11 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             var cats = CategoriesRepository.GetCategories(user.Id);
-            //Localize
-            var rm = new ResourceManager(typeof(Resources.CategoriesTr));
+            //TODO: move Localize
+            var rm = new ResourceManager(typeof(Resources.Enums));
             foreach (var item in cats)
             {
-                var st = rm.GetString(item.Id.ToString());
+                var st = rm.GetString("c_" + item.Id.ToString());
                 if (!String.IsNullOrEmpty(st))
                     item.Name = st;
             }
