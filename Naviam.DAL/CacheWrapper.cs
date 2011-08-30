@@ -32,12 +32,15 @@ namespace Naviam
         T GetFromList<T>(string key, T val, params int?[] id);
     }
 
+
     public class CacheWrapper : ICacheWrapper
     {
         //Tests:
         //Load of 300000    Save of 300000
         //simple-4900ms     simple-3200ms
         //list-4600ms       list-15300ms
+
+        public static PooledRedisClientManager ClientManager = new PooledRedisClientManager(ConfigurationManager.AppSettings["RedisHost"] + ":" + ConfigurationManager.AppSettings["RedisPort"]);
 
         #region Single obj
 
@@ -48,7 +51,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     res = typedRedis[key];
@@ -70,7 +73,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     res = typedRedis[key];
@@ -119,7 +122,7 @@ namespace Naviam
         {
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var exp = new TimeSpan(0, (int)FormsAuthentication.Timeout.TotalMinutes, 0);
                     redisClient.ExpireEntryIn(key, exp);
@@ -133,7 +136,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     if (id != null || forceExpire)
@@ -188,7 +191,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     var list = typedRedis.Lists[key];
@@ -212,7 +215,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     
@@ -246,7 +249,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     
@@ -279,7 +282,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     
@@ -323,7 +326,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                     
@@ -351,7 +354,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
 
@@ -390,7 +393,7 @@ namespace Naviam
             key = GetKey(key, id);
             if (ConfigurationManager.AppSettings["EnableRedis"].AsBool())
             {
-                using (var redisClient = new RedisClient(ConfigurationManager.AppSettings["RedisHost"], Convert.ToInt32(ConfigurationManager.AppSettings["RedisPort"])))
+                using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
                    
