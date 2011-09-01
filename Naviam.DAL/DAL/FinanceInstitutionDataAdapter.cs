@@ -13,7 +13,7 @@ namespace Naviam.DAL
        
         public static List<FinanceInstitution> Get()
         {
-            List<FinanceInstitution> res = new List<FinanceInstitution>();
+            var res = new List<FinanceInstitution>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateSPCommand("fininst_get"))
@@ -39,7 +39,7 @@ namespace Naviam.DAL
 
         public static List<FinanceInstitutionLinkToAccount> GetLinksToAccount()
         {
-            List<FinanceInstitutionLinkToAccount> res = new List<FinanceInstitutionLinkToAccount>();
+            var res = new List<FinanceInstitutionLinkToAccount>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateSPCommand("mapping_fininst_to_account_get"))

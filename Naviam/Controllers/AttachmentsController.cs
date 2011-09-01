@@ -51,6 +51,7 @@ namespace Naviam.WebUI.Controllers
                                 Merchant = trans.Place,
                                 TransactionType = Transaction.TransactionTypes.Cash,
                                 AccountId = accId,
+                                IncludeInTax = false,
                                 //TODO: assign null and resolve on db side
                                 CategoryId = 20
                             };
@@ -63,7 +64,7 @@ namespace Naviam.WebUI.Controllers
                     //reset redis
                     //TransactionsDataAdapter.ResetCache(CurrentUser.CurrentCompany);
                     result = "ok";
-                    Response.Redirect(Request.UrlReferrer.PathAndQuery);
+                    if (Request.UrlReferrer != null) Response.Redirect(Request.UrlReferrer.PathAndQuery);
                 }
             }
             return result;
