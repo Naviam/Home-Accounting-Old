@@ -25,8 +25,8 @@
                 defaultJSMinifierRef="off"
                >
     <resourceSet name="naviamCss" type="css">
-      <resource path="~/Content/Blueprint/screen.css" />
-      <resource path="~/Content/Naviam.css" />
+        <resource path="~/Content/blueprint/reset.css" />
+        <resource path="~/Content/Naviam.css" />
       <resource path="~/Content/ddsmoothmenu.css" />
       <resource path="~/Content/ddsmoothmenu-v.css" />
     </resourceSet>
