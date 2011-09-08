@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Naviam.com - Online Accounting</title>
+    <!--[if lt IE 9]>
+			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		
+    <style type="text/css">
+/*	Resets	------	*/
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
+p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, 
+img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, hr, 
+dl, dt, dd, ol, ul, li, fieldset, form, label, legend, 
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figure, figcaption, hgroup, 
+menu, footer, header, nav, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+article, aside, canvas, figure, figure img, figcaption, hgroup,
+footer, header, nav, section, audio, video {
+	display: block;
+}
+
+a img {border: 0;}
+
+header nav {float: left;}
+header nav #naviam_accounts {margin: 10px 0 0;float: left;position:relative;}
+header nav #profile_menu {margin: 10px 0 0;float: right;position:relative;}
+header nav ul li {float:left;margin:0 10px 0 0;}
+header nav ul li a {display:block;border-top: 2px solid transparent;padding: 4px 4px;font-weight: 200;text-decoration: none;}
+header nav ul li a:hover {border-top: 2px solid gold;}
+header nav ul.children {position: absolute;}
+header nav ul.children li a {display:block;padding: 3px 8px;font-size: 16px;text-decoration: none;}
+
+section.menu {float: right;}
+section.menu nav {padding-right: 30px}
+section.menu nav ul {margin: 10px 0 0;float: right;position:relative;color:darkgreen;}
+section.menu nav ul li {float:left;margin:0 10px 0 0;}
+section.menu nav ul li a {display:block;background-color: gold;padding: 4px 4px;font-weight: 200;text-decoration: none;}
+section.menu nav ul li a:hover {border-top: 2px solid gold;}
+
+section.main {}
+section.main aside.left {float: left}
+section.main aside.right {float:right}
+section.main article {float:left; background-color: greenyellow;}
+
+footer {float: none; margin-top: 10px; text-align: center}
+
+table {border: 1px solid black}
+
+/*		Wide Mobile Layout: 480px (30em).
+		Gutters: 24px (1.5em).
+		Outer margins: 22px (1.375em).
+		Inherits styles from: Default Layout, Mobile Layout.
+--------------------------------------------------------------
+cols	1     2      3      4      5
+px		68    160    252    344    436						*/
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	
+	body {
+		padding: 24px 0 48px;
+	}
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul id="naviam_accounts">
+                <li><a href="#">Домашняя Бухгалтерия</a></li>
+                <li><a href="#">ИП "Гатальский В.А."</a></li>
+                <li><a href="#">ООО "Илайфлэб"</a></li>
+                <li><a href="#">еще</a></li>
+            </ul>
+            <ul id="profile_menu">
+                <li><a href="#">Виталий Гатальский</a></li>
+                <li><a href="#">Профайл</a></li>
+                <li><a href="#">Выйти</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div style="clear: left"></div>
+    <section class="menu">
+        <nav>
+            <ul>
+                <li><a href="#">Транзакции</a></li>
+                <li><a href="#">Графики</a></li>
+                <li><a href="#">Бюджет</a></li>
+                <li><a href="#">Цели</a></li>
+            </ul>
+        </nav>
+    </section>
+    <div style="clear: left"></div>
+    <section class="main">
+        <aside class="left">
+            Счета:
+            <ul>
+                <li><a href="#">Наличные - Бел. Рубли</a></li>
+                <li><a href="#">Наличные - Рос. Рубли</a></li>
+                <li><a href="#">Наличные - Доллары</a></li>
+                <li><a href="#">Наличные - Евро</a></li>
+                <li><a href="#">Visa Electron - BYR - Belswissbank</a></li>
+                <li><a href="#">Visa Classic - USD - Belswissbank</a></li>
+            </ul>
+            Метки:
+            <ul>
+                <li><a href="#">Аренда</a></li>
+                <li><a href="#">Детские расходы</a></li>
+            </ul>
+        </aside>
+        <article>
+           <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox"/></th>
+                    <th>Описание</th>
+                    <th>Категория</th>
+                    <th>Валюта</th>
+                    <th>Стоимость</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox"/></td>
+                    <td>Пример описания</td>
+                    <td>Категория 1</td>
+                    <td>USD</td>
+                    <td>144,50</td>
+                </tr>
+            </tbody>
+           </table>
+        </article>
+        <aside class="right">
+            статистика по затратам данной категории
+        </aside>
+    </section>
+    <div style="clear: left"></div>
+    <footer>
+        <nav>Naviam.com @2011</nav>
+    </footer>
+</body>
+</html>
