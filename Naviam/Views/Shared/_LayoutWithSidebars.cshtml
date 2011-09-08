@@ -1,16 +1,20 @@
 ﻿@{
     Layout = "~/Views/Shared/LayoutMember.cshtml";
 }
-@*<div class="span-4 first">@if (IsSectionDefined("LeftColumn")) { @RenderSection("LeftColumn", false) }</div> 
-<div class="span-14 colborder">@RenderBody()</div> 
-@if (IsSectionDefined("RightColumn")) {<div class="span-4 last"> @RenderSection("RightColumn", false) </div> }
-
-*@
-
-<table>
+@if (IsSectionDefined("LeftColumn"))
+{
+    <aside>@RenderSection("LeftColumn", false)</aside>
+}
+<article>@RenderBody()</article>
+@if (IsSectionDefined("RightColumn"))
+{
+    <aside>@RenderSection("RightColumn", false)</aside>
+}
+                                                                                   
+@*<table>
 <tr>
 @if (IsSectionDefined("LeftColumn")) {<td>@RenderSection("LeftColumn", false)</td>}
 <td style='width:80%'>@RenderBody()</td>
 @if (IsSectionDefined("RightColumn")){<td>@RenderSection("RightColumn", false)</td>}
 </tr>
-</table>
+</table>*@
