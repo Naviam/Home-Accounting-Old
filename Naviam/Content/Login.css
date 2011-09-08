@@ -1,0 +1,81 @@
+﻿body {
+    font-size: large;    
+}
+
+header, article 
+{
+    width: 900px;
+    margin-top: 50px; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+header h1 {
+    font-size: xx-large;
+    color: #ea4c88;
+}
+
+section {
+    background-color: #e6f9e0;
+}
+
+fieldset 
+{
+    float: left;
+    width: 450px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+section.logon fieldset {
+    float: right;
+}
+
+section.openid 
+{
+    margin-top: 20px;
+    width: 870px;
+    padding-left: 10px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+}
+
+fieldset input[type=text], fieldset input[type=password], fieldset input[type=email] {
+    width: 410px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div.rememberme {
+    float: right;
+    padding-right: 20px;
+    position: relative;
+}
+
+button {
+	display: block;
+	font: normal 1.6em "Helvetica Neue", helvetica, sans-serif;
+	background: #ea4c88 url(/images/signin/glass.png) repeat-x 0 50%;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	border: none;
+	padding: 8px 10px;
+	color: #fff;
+	cursor: pointer;
+	}	
+button:hover,
+button:focus {
+	text-decoration: none;
+	background-color: #df3e7b;
+	}
+button:active {
+	text-decoration: none;
+	background-color: #c22b65;
+	}
+
+input[type=text], input[type=password], input[type=email], input[type=checkbox], select, textarea {font-size: larger;border: 1px solid #b6d7a8; padding: 8px}
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, select:focus, textarea:focus {background-color:#ebf3ff;border: 1px solid #07a3ff;outline: none;}
+input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, select:hover, textarea:hover {border: 1px solid #07a3ff}
