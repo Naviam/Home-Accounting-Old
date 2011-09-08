@@ -17,46 +17,43 @@
     }
 </head>
 <body>
-<script type="text/javascript">
-    var pageContext = {};
-    pageContext.companyId = '@Request.QueryString["cid"]';
-</script>
-    <div class="container">
-    <nav>
+    <script type="text/javascript">
+        var pageContext = {};
+        pageContext.companyId = '@Request.QueryString["cid"]';
+    </script>
+    <header class="container">
+        <nav>
+            @{Html.RenderAction("CompaniesMenu", "MenuApp");}
         
-        @{Html.RenderAction("CompaniesMenu", "MenuApp");}
-        
-        @{var user = ViewBag.CurrentUser as UserProfile;}
+            @{var user = ViewBag.CurrentUser as UserProfile;}
        
-        <ul class="right">
-            <li><a href="Error.cshtml">@user.FirstName @user.LastName</a></li>
-            <li><a href="Error.cshtml">0</a></li>
-            <li><a href="Error.cshtml">?</a></li>
-            <li><a href="@Url.Action("LogOn", "Account")">Выйти</a></li>
-        </ul>
-    </nav>
-        <hr />
-    <header>
-        Logo
-    <nav>
-         @{Html.RenderAction("TopMenu", "MenuApp");}
-    </nav>
+            <ul class="right">
+                <li><a href="Error.cshtml">@user.FirstName @user.LastName</a></li>
+                <li><a href="Error.cshtml">0</a></li>
+                <li><a href="Error.cshtml">?</a></li>
+                <li><a href="@Url.Action("LogOn", "Account")">Выйти</a></li>
+            </ul>
+        </nav>
     </header>
-        <hr />
-        <div id="main">
-            @RenderBody()
-        </div>
-        <hr />
-        @{Assembly assembly = typeof(TransactionsController).Assembly;}
-        <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
-    </div>
-<script type="text/javascript">
-    $(document).ready(function () { 
-    @if (TempData["ErrorContextText"] != null){
-        <text>showSiteError("@Html.Raw(TempData["ErrorContextText"] as string)");</text>
-    }
-    });
-</script>
+    <div style="float: none"></div>
+    <br/>
+    <section class="menu"><nav>@{Html.RenderAction("TopMenu", "MenuApp");}</nav></section>
+    <div style="float: none"></div>
+    <br/>
+    <section id="main">
+        @RenderBody()
+    </section>
+    <hr />
+    @{var assembly = typeof(TransactionsController).Assembly;}
+    <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
+
+    <script type="text/javascript">
+        $(document).ready(function () { 
+        @if (TempData["ErrorContextText"] != null){
+            <text>showSiteError("@Html.Raw(TempData["ErrorContextText"] as string)");</text>
+        }
+        });
+    </script>
    @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
     {
         <script type="text/javascript">
