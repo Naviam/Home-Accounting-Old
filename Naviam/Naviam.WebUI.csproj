@@ -191,6 +191,9 @@
       <DependentUpon>ValidationStrings.ru.resx</DependentUpon>
     </Compile>
     <None Include="SMSConnectorScript.cs" />
+    <Content Include="Content\blueprint\reset.css" />
+    <Content Include="Content\blueprint\typography.css" />
+    <Content Include="Prototype\Login.htm" />
     <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
