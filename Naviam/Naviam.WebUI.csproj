@@ -193,6 +193,7 @@
     <None Include="SMSConnectorScript.cs" />
     <Content Include="Content\blueprint\reset.css" />
     <Content Include="Content\blueprint\typography.css" />
+    <Content Include="Content\Login.css" />
     <Content Include="Prototype\Login.htm" />
     <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
   </ItemGroup>
@@ -418,17 +419,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
-          <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>54345</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

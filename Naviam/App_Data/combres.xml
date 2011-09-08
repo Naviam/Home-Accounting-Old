@@ -24,6 +24,10 @@
                 defaultCssMinifierRef="yui" 
                 defaultJSMinifierRef="off"
                >
+      <resourceSet name="publicCss" type="css">
+          <resource path="~/Content/blueprint/reset.css" />
+          <resource path="~/Content/Login.css" />
+      </resourceSet>
     <resourceSet name="naviamCss" type="css">
         <resource path="~/Content/blueprint/reset.css" />
         <resource path="~/Content/Naviam.css" />

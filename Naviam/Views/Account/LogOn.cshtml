@@ -7,30 +7,32 @@
     Layout = "~/Views/Shared/LayoutPublic.cshtml";
 }
 
-@Html.ActionLink("Login with google", "GoogleLogin")
+
 @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
 
 @using (Html.BeginForm()) {
-    <div>
+    <section id="signup">
         <fieldset>
             <legend>@SharedStrings.LogonHeader</legend>
-
+            <div><input type="email" autocomplete="yes" placeholder="Please enter your email here"/></div>
+            <div><input type="password" placeholder="Please type your password here"/></div>
+            <p>
+                <button type="submit">Sign Up</button>
+            </p>
+        </fieldset>
+    </section>
+    <section class="logon">
+        <fieldset>
+            <legend>Login</legend>
             <div>
-                @Html.LabelFor(m => m.UserName)
-            </div>
-            <div>
-                @Html.TextBoxFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Please enter your email here" })
                 @Html.ValidationMessageFor(m => m.UserName)
             </div>
-
             <div>
-                @Html.LabelFor(m => m.Password)
-            </div>
-            <div>
-                @Html.PasswordFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Please enter your password here" })
                 @Html.ValidationMessageFor(m => m.Password)
             </div>
-            <div>
+            <div class="rememberme">
                 @Html.CheckBoxFor(m => m.RememberMe)
                 @Html.LabelFor(m => m.RememberMe)
             </div>
@@ -39,5 +41,9 @@
                 <button type="submit">@SharedStrings.LogOn</button>
             </p>
         </fieldset>
-    </div>
+    </section>
+    <div style="clear: right"></div>
+    <section class="openid">
+        Or login with: @Html.ActionLink("Google", "GoogleLogin")
+    </section>
 }

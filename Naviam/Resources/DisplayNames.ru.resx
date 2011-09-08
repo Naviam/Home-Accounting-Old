@@ -166,6 +166,6 @@
     <value>Запомнить</value>
   </data>
   <data name="UserName" xml:space="preserve">
-    <value>Имя пользователя</value>
+    <value>Email</value>
   </data>
 </root>

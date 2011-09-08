@@ -166,6 +166,6 @@
     <value>Remember me?</value>
   </data>
   <data name="UserName" xml:space="preserve">
-    <value>User Name</value>
+    <value>Email</value>
   </data>
 </root>

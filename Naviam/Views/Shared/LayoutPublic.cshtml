@@ -3,8 +3,8 @@
 <html>
 <head>
     <title>@ViewBag.Title</title>
-    @Html.CombresLink("naviamCss")
-    <!--[if lt IE 8]><link rel="stylesheet" href="@Url.Content("~/Content/blueprint/ie.css")" type="text/css" media="screen, projection"><![endif]-->
+    @Html.CombresLink("publicCss")
+    <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <script type="text/javascript" src="@Url.Content(String.Format("~/Scripts/locale/Naviam.JavaScript.{0}.js", System.Threading.Thread.CurrentThread.CurrentUICulture.Name))"></script> 
     @Html.CombresLink("jquery validate")
 
@@ -13,8 +13,7 @@
     <meta content="Free personal finance, online money management, budgeting, and financial planning software." name="description" />
     <meta content="application/xhtml+xml; charset=utf-8" http-equiv="Content-Type" />
     <meta content="text/css" http-equiv="Content-Style-Type" />
-
-    
+        
     @*intellisense support*@
     @if (false)
     { 
@@ -23,6 +22,9 @@
 </head>
 
 <body>
+<header>
+    <h1>NAVIAM.COM</h1>
+</header>
 <article>
     @RenderBody()
 </article>
