@@ -41,11 +41,57 @@
             accountsModel.Refresh();
             }
         });
+        var splitModel = {
+            items: ko.observableArray()
+            , initialAmount: 1000
+            , endAmount: 0
+            , addItem: function () {
+                var fItem = { description: "tst", category: "tstCat", amount: ko.observable(0) };
+                this.items.push(fItem);
+            }
+            , deleteItem: function (item) {
+                splitModel.items.remove(item);
+            }
+            , isInputOk: function () {
+                if (this.items().length == 0) return false;
+                var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+                    return item.amount() == 0;
+                });
+                return fItem == null;
+            }
+            , doSplit: function () {
+                alert("Could now transmit to server: " + ko.toJSON(this.items));
+            }
+        };
+        //splitModel.addItem();
+        ko.applyBindings(splitModel, $("#splitTrans")[0]);
     });
     function beg_upload_statement() {
         $('#upload_statement').trigger('html5_upload.start');
         return false;
     }
+</script>
+
+<div id="splitTrans" data-bind="visible: items().length > 0"> 
+<form data-bind="submit: doSplit">
+    <span data-bind='amount: initialAmount'></span>
+    <table data-bind="visible: items().length > 0">
+        <thead>
+        </thead>
+        <tbody data-bind='template: { name: "splitTransTemplate", foreach: items, templateOptions: { delete: deleteItem } }'>
+        </tbody>
+    </table>
+    <span data-bind='amount: endAmount'></span>
+    <button type="submit" data-bind="enable: isInputOk()">Ok</button>
+</form>
+</div>
+<script type="text/html" id="splitTransTemplate">
+    <tr>
+        <td><input data-bind="value: description"/></td>
+        <td><input data-bind="value: category"/></td>
+        <td><input data-bind="value: amount"/></td>
+        <td><a href="#" data-bind="click: function() { $item.delete($data) }">Delete</a></td>
+    </tr>
 </script>
 
 @*@section LeftColumn {*@
@@ -161,11 +207,13 @@
     </div>
     <div class="overlaywoshadow" id="transDlg">
         <table>
+        <tr>
             <td></td>
             <td>
                 <label><input data-bind="checked: Direction" name="Direction" type="radio" value='0'/>@DisplayNames.Expense</label>
                 <label><input data-bind="checked: Direction" name="Direction" type="radio" value='1'/>@DisplayNames.Income</label>
             </td>
+        </tr>
         <tr>
             <td>@DisplayNames.IncludeInTax:</td>
             <td><input data-bind="checked: IncludeInTax" name="IncludeInTax" type="checkbox"/></td>
@@ -176,7 +224,7 @@
         </tr>
         <tr>
             <td>@DisplayNames.Notes:</td>
-            <td><textarea data-bind="value: Notes" name="Notes" rows='1' cols='1'></textarea></td>
+            <td><textarea data-bind="value: Notes" name="Notes" rows='6' cols='30'></textarea></td>
         </tr>
         </table>
         <div>
@@ -231,9 +279,8 @@
         <td>Initial Balance:<input data-bind="amount: InitialBalance, amountOptions: {allowZero: true}" name="InitialBalance" required="required"/></td>
     </tr>
     <tr>
-        <td>Description:<textarea data-bind="value: Description" name="Description" rows='1' cols='1'></textarea></td>
+        <td>Description:<textarea data-bind="value: Description" name="Description" rows='6' cols='30'></textarea></td>
     </tr>
-
 </table>
 <button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
 <button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
