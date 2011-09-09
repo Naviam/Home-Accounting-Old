@@ -76,7 +76,6 @@
     </ul>
 </div>
 
-<a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
 <a href="#" onclick='return catModel.EditCategories();'>edit cats</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedItem() == $data}">
@@ -132,6 +131,7 @@
 <div>
     <div id="transGrid">
         @{var user = ViewBag.CurrentUser as UserProfile;}
+        <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
         <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
             @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany, @accId = 0 }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
             {
@@ -162,7 +162,7 @@
     </div>*@    
     </div>
     <div class="overlaywoshadow" id="transDlg">
-        <button data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {transModel.ShowSplit(Id)}">@SharedStrings.Split</button>
+        @*TODO: error - multiply bindings <button data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {transModel.ShowSplit(Id)}">@SharedStrings.Split</button>*@
         <table>
         <tr>
             <td></td>
@@ -224,7 +224,7 @@
         <td>Fin Inst: <select required="required" data-bind="options: accountsModel.finInst, optionsText: 'Name', optionsValue: 'Id', optionsCaption: 'Select an item...', value: FinInstitutionId"></select></td>
     </tr>
     <tr data-bind="visible: FinInstitutionId">
-        <td>Account Type: <select required="required" data-bind="options: accountsModel.getTypes(FinInstitutionId()), optionsText: 'TypeName', optionsValue: 'Id', optionsCaption: 'Select an item...', value: TypeId"></select></td>
+        <td>Account Type: <select required="required" data-bind="options: accountsModel.getTypes(FinInstitutionId), optionsText: 'TypeName', optionsValue: 'Id', optionsCaption: 'Select an item...', value: TypeId"></select></td>
     </tr>
     <tr data-bind="visible: TypeId() == 2"> @*!!!Hardcoded (Bank card)*@
         <td>4 last digits:<input data-bind="value: CardNumber" name="CardNumber"/></td>
