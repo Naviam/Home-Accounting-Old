@@ -326,17 +326,20 @@ function loadTransactions() {
             var hld = $('#splitDialog');
             id = ko.utils.unwrapObservable(id);
             var fItem = this.getById(id);
-            if (hld.html() == '') {
-                $.postErr(getSplitDlg, function (res) {
-                    hld.html(res);
+            //debug(id);
+            if (fItem) {
+                if (hld.html() == '') {
+                    $.postErr(getSplitDlg, function (res) {
+                        hld.html(res);
+                        splitModel.setInitial(id, fItem.Description(), fItem.Category(), fItem.Amount());
+                        hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true, closeIcon: true });
+                        hld.overlay().load();
+                    });
+                }
+                else {
                     splitModel.setInitial(id, fItem.Description(), fItem.Category(), fItem.Amount());
-                    hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true, closeIcon: true });
                     hld.overlay().load();
-                });
-            }
-            else {
-                splitModel.setInitial(id, fItem.Description(), fItem.Category(), fItem.Amount());
-                hld.overlay().load();
+                }
             }
         }
         ko.applyBindings(transModel, $("#transGrid")[0]);

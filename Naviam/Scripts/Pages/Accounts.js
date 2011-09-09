@@ -2,6 +2,10 @@
 /// <reference path="..\knockout-1.2.1.js" />
 /// <reference path="..\common.js" />
 /// <reference path="~/Scripts/Pages/Transactions.js" />
+var editAccount = {
+    Id: ko.observable()
+    , Name: ko.observable(), InitialBalance: ko.observable(0), Description: ko.observable(), CurrencyId: ko.observable(), CardNumber: ko.observable(), TypeId: ko.observable(), FinInstitutionId: ko.observable()
+};
 function loadAccounts() {
     $.postErr(getAccountsUrl, function (res) {
         //var childItem = function (data) {
@@ -86,27 +90,34 @@ function loadAccounts() {
             var trans_elem = $("#transGrid");
             $(elem).find('form').validator({ lang: lang.culture }).data("validator").reset();
             if (!show) {
-                $(elem).hide();
-                trans_elem.show();
+                trans_elem.slideDown('slow');
+                $(elem).slideUp('slow');
+                //$(elem).hide();
+                //trans_elem.show();
             }
             else {
-                $(elem).show();
-                trans_elem.hide();
+                trans_elem.slideUp('slow');
+                $(elem).slideDown('slow');
+                //$(elem).show();
+                //trans_elem.hide();
             }
         };
-        accountsModel.passToEdit = function (item, editItem) {
+        accountsModel.passToEdit = function (item) {
+            //!!! Fill InstitutionId to populate list of types
+            editAccount.FinInstitutionId(item.FinInstitutionId());
+            //!!! then we can get right type id
+            ko.mapping.fromJS(ko.mapping.toJS(item), {}, editAccount);
             var elem = $("#account_edit")[0];
-            var trans_elem = $("#transGrid");
-            item.Save = function () {
-                if (item === this) {
+            editAccount.Save = function () {
+                if (editAccount === this) {
                     if ($(elem).find('form').data("validator").checkValidity()) {
-                        if (editItem == null) //add
-                            item.Balance = item.InitialBalance;
+                        if (this.Id() == null) //add
+                            this.Balance(this.InitialBalance);
                         else
-                            item.Balance = editItem.Balance() + (item.InitialBalance() - editItem.InitialBalance());
-                        $.postErr(updateAccountUrl, this, function (res) {
-                            if (editItem != null)
-                                ko.mapping.fromJS(res, {}, editItem);
+                            this.Balance(item.Balance() + (this.InitialBalance() - item.InitialBalance()));
+                        $.postErr(updateAccountUrl, ko.mapping.toJS(this), function (res) {
+                            if (editAccount.Id() != null)
+                                ko.mapping.fromJS(res, {}, item);
                             else {
                                 koNew = ko.mapping.fromJS(res);
                                 accountsModel.items.splice(1, 0, koNew);
@@ -116,20 +127,17 @@ function loadAccounts() {
                     }
                 }
             };
-            ko.cleanNode(elem);
-            ko.applyBindings(item, elem);
             accountsModel.hideEdit(true);
         };
         accountsModel.addItem = function () {
-            var newItem = { Id: null, Name: null, InitialBalance: ko.observable(0), Description: null, CurrencyId: null, CardNumber: ko.observable(), TypeId: ko.observable(), FinInstitutionId: ko.observable() };
-            this.passToEdit(newItem, null);
+            var newItem = { Id: null, Name: null, InitialBalance: 0, Balance: 0, Description: null, CurrencyId: null, CardNumber: null, TypeId: null, FinInstitutionId: ko.observable() };
+            this.passToEdit(newItem);
         };
         accountsModel.editItem = function (item) {
-            //accountsModel.passToEdit(ko.mapping.toJS(item), item);
-            accountsModel.passToEdit(item, item);
+            accountsModel.passToEdit(item);
         };
         accountsModel.getTypes = function (finId) {
-            var finInst = this.getFinById(finId);
+            var finInst = this.getFinById(ko.utils.unwrapObservable(finId));
             var $this = this;
             if (finInst) {
                 var fin_acc_types = ko.utils.arrayFilter(this.finLinks(), function (item) {
@@ -165,6 +173,7 @@ function loadAccounts() {
         };
         ko.applyBindings(accountsModel, $("#accounts")[0]);
         ko.applyBindings(accountsModel, $("#accounts_move")[0]);
+        ko.applyBindings(editAccount, $("#account_edit")[0]);
 
         loadTransactions();
     });
