@@ -1,4 +1,5 @@
-$base-color: Gray;
+$base-color: #ea4c88;
+$top-color: #615d5d;
 $error-color: #ff0000;
 
 @mixin rounded ($radius: 5px) {
@@ -12,24 +13,126 @@ $error-color: #ff0000;
 	-webkit-box-shadow: 0 0.1em 0.2em $color;
 }
 
-header {
-  background-color: $base-color * 2;
-  @include rounded(10px);
-  clear:right;
-  float:none;
+body {
+	padding: 0;
+	margin: 0;	
 }
+
+nav {
+	ul {
+		li {
+			float: left;
+			a {
+				font-weight: bold;
+				border-left: 1px solid transparent;
+				border-right: 1px solid transparent;
+				padding: 0 5pt;
+			}
+		}
+	}
+}
+
+ul {
+		list-style-type: none;
+		}
+
+header {
+	background-color: $top-color;
+	height: 26px;
+	padding-top: 1px;
+	nav {
+		ul {
+			li {
+				a {
+					color: white;
+					text-decoration: none;
+					border-top: 2px solid transparent;
+					&:hover {
+						border-top: 2px solid $base-color;
+					}
+					&:active {
+						border-top: 2px solid $base-color;
+					}
+					&.selected {
+						border-top: 2px solid $base-color;
+					}
+				}
+			}
+		}	
+		&.left {
+			float: left;
+			margin-left: 100px;
+		}
+		&.right {
+			float: right;
+			margin-right: 100px;
+		}
+	}
+}
+
 footer {
   @include rounded(2px);
 }
 
-nav {
-  background-color: $base-color;
-  @include rounded(1px);
-  ul { list-style-type: none; }
-  li {
-    float: left;
-    a { font-weight: bold; border-left: 1px solid transparent; border-right: 1px solid transparent; padding: 0 5pt; }
-  }
+section.menu 
+{
+	height: 60px;
+	background-color: #F7F7F7;
+	border-top: 1px solid white;
+	padding-top: 3px;
+	font-size: larger;
+	h1 {
+		float:left;
+		padding-top:4px;
+		padding-left: 100px;
+		font-size: xx-large;
+		color: #ea4c88;
+	}
+	nav {
+		position:relevant;
+		padding-right: 90px;
+		ul {
+			margin: 10px 0 0;
+			float: right;
+			position:relative;
+			li {
+				float:left;
+				margin:0 10px 0 0;
+				a {
+					@include rounded(6px);
+					display:block;
+					padding: 4px 4px;
+					font-weight: 200;
+					color: $base-color;
+					text-decoration: none;
+					&:hover {
+						color: white;
+						background-color: $base-color;
+					}
+					&:active {
+						color: white;
+						background-color: $base-color;
+					}
+					&.selected {
+						color: white;
+						background-color: $base-color;
+					}
+				}
+			}
+		}
+	}
+}
+
+section.main {
+	padding-left: 100px;
+	article {
+	}
+	aside.left {
+		float: left;
+	}
+	aside.right {
+		float: right;
+	}
 }
 
 /* root element for accordion. decorated with rounded borders and gradient background image */
@@ -369,9 +472,11 @@ button {
 	background-color: #0A246A;
 	color: white;
 }
+/*
 .company_menu{
 	.selected {
 		background-color: blue;
 		color: white;
 	}
 }
+*/

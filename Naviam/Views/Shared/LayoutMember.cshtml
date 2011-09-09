@@ -21,13 +21,13 @@
         var pageContext = {};
         pageContext.companyId = '@Request.QueryString["cid"]';
     </script>
-    <header class="container">
-        <nav>
+    <header>
+        <nav class="left">
             @{Html.RenderAction("CompaniesMenu", "MenuApp");}
-        
+        </nav>
+        <nav class="right">
             @{var user = ViewBag.CurrentUser as UserProfile;}
-       
-            <ul class="right">
+            <ul>
                 <li><a href="Error.cshtml">@user.FirstName @user.LastName</a></li>
                 <li><a href="Error.cshtml">0</a></li>
                 <li><a href="Error.cshtml">?</a></li>
@@ -36,14 +36,15 @@
         </nav>
     </header>
     <div style="float: none"></div>
-    <br/>
-    <section class="menu"><nav>@{Html.RenderAction("TopMenu", "MenuApp");}</nav></section>
+    <section class="menu">
+        <h1>NAVIAM.COM</h1>
+        <nav>@{Html.RenderAction("TopMenu", "MenuApp");}</nav>
+    </section>
     <div style="float: none"></div>
-    <br/>
-    <section id="main">
+    <section class="main">
         @RenderBody()
     </section>
-    <hr />
+    <div style="float: none;"></div>
     @{var assembly = typeof(TransactionsController).Assembly;}
     <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
 

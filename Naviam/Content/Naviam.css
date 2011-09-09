@@ -1,44 +1,105 @@
+body {
+  padding: 0;
+  margin: 0; }
+
+nav ul li {
+  float: left; }
+  nav ul li a {
+    font-weight: bold;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    padding: 0 5pt; }
+
+ul {
+  list-style-type: none; }
+
 header {
-  background-color: white;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  clear: right;
-  float: none; }
+  background-color: #615d5d;
+  height: 26px;
+  padding-top: 1px; }
+  header nav ul li a {
+    color: white;
+    text-decoration: none;
+    border-top: 2px solid transparent; }
+    header nav ul li a:hover {
+      border-top: 2px solid #ea4c88; }
+    header nav ul li a:active {
+      border-top: 2px solid #ea4c88; }
+    header nav ul li a.selected {
+      border-top: 2px solid #ea4c88; }
+  header nav.left {
+    float: left;
+    margin-left: 100px; }
+  header nav.right {
+    float: right;
+    margin-right: 100px; }
 
 footer {
   border-radius: 2px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px; }
 
-nav {
-  background-color: gray;
-  border-radius: 1px;
-  -webkit-border-radius: 1px;
-  -moz-border-radius: 1px; }
-  nav ul {
-    list-style-type: none; }
-  nav li {
+section.menu {
+  height: 60px;
+  background-color: #F7F7F7;
+  border-top: 1px solid white;
+  padding-top: 3px;
+  font-size: larger; }
+  section.menu h1 {
+    float: left;
+    padding-top: 4px;
+    padding-left: 100px;
+    font-size: xx-large;
+    color: #ea4c88; }
+  section.menu nav {
+    position: relevant;
+    padding-right: 90px; }
+    section.menu nav ul {
+      margin: 10px 0 0;
+      float: right;
+      position: relative; }
+      section.menu nav ul li {
+        float: left;
+        margin: 0 10px 0 0; }
+        section.menu nav ul li a {
+          border-radius: 6px;
+          -webkit-border-radius: 6px;
+          -moz-border-radius: 6px;
+          display: block;
+          padding: 4px 4px;
+          font-weight: 200;
+          color: #ea4c88;
+          text-decoration: none; }
+          section.menu nav ul li a:hover {
+            color: white;
+            background-color: #ea4c88; }
+          section.menu nav ul li a:active {
+            color: white;
+            background-color: #ea4c88; }
+          section.menu nav ul li a.selected {
+            color: white;
+            background-color: #ea4c88; }
+
+section.main {
+  padding-left: 100px; }
+  section.main aside.left {
     float: left; }
-    nav li a {
-      font-weight: bold;
-      border-left: 1px solid transparent;
-      border-right: 1px solid transparent;
-      padding: 0 5pt; }
+  section.main aside.right {
+    float: right; }
 
 /* root element for accordion. decorated with rounded borders and gradient background image */
 #accordion {
-  background: gray 0 0;
-  border: 1px solid gray;
-  -background: white; }
+  background: #ea4c88 0 0;
+  border: 1px solid #ea4c88;
+  -background: #ff98ff; }
   #accordion h2 {
-    background: gray;
+    background: #ea4c88;
     margin: 0;
     padding: 5px 15px;
     font-size: 14px;
     font-weight: normal;
     border: 1px solid #fff;
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid #ea4c88;
     cursor: pointer; }
     #accordion h2.current {
       cursor: default;
@@ -318,6 +379,11 @@ button {
   background-color: #0A246A;
   color: white; }
 
-.company_menu .selected {
-  background-color: blue;
-  color: white; }
+/*
+.company_menu{
+	.selected {
+		background-color: blue;
+		color: white;
+	}
+}
+*/
