@@ -3,21 +3,14 @@
     Layout = "~/Views/Shared/LayoutPublic.cshtml";
 }
 
-<h2>Create a New Account</h2>
-<p>
-    Use the form below to create a new account. 
-</p>
-<p>
-    Passwords are required to be a minimum of <%:ViewData["PasswordLength"]%> characters in length.
-</p>
 @Html.ValidationSummary()
 
 @using (Html.BeginForm()) {
-    <section id="signup">
+    <section class="signup">
         <fieldset>
-            <legend>Sign up</legend>
-            <div><input type="email" autocomplete="yes" placeholder="Please enter your email here"/></div>
-            <div><input type="password" placeholder="Please type your password here"/></div>
+            <div><input type="email" autocomplete="yes" placeholder="Please enter your email"/></div>
+            <div><input type="password" placeholder="Please type your password"/></div>
+            <div><input type="password" placeholder="Please confirm your password"/></div>
             <p><button type="submit">Sign Up</button></p>
         </fieldset>
     </section>

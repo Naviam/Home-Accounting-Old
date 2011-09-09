@@ -59,8 +59,8 @@ section.menu {
             color: #ea4c88;
             background-color: #F7F7F7; }
 
-section.login {
-    height: 240px;
+section.login, section.signup {
+    height: 270px;
     background-color: #F7F7F7;
     border-radius: 15px;
     -webkit-border-radius: 15px;
