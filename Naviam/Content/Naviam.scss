@@ -1,5 +1,6 @@
 $base-color: #ea4c88;
 $top-color: #615d5d;
+$menu-color: #F7F7F7;
 $error-color: #ff0000;
 
 @mixin rounded ($radius: 5px) {
@@ -33,13 +34,12 @@ nav {
 }
 
 ul {
-		list-style-type: none;
-		}
+	list-style-type: none;
+	}
 
 header {
 	background-color: $top-color;
 	height: 26px;
-	padding-top: 1px;
 	nav {
 		ul {
 			li {
@@ -47,8 +47,9 @@ header {
 					color: white;
 					text-decoration: none;
 					border-top: 2px solid transparent;
+					border-bottom: 5px solid transparent;
 					&:hover {
-						border-top: 2px solid $base-color;
+						background-color: #b5b5b5;
 					}
 					&:active {
 						border-top: 2px solid $base-color;
@@ -77,7 +78,7 @@ footer {
 section.menu 
 {
 	height: 60px;
-	background-color: #F7F7F7;
+	background-color: $menu-color;
 	border-top: 1px solid white;
 	padding-top: 3px;
 	font-size: larger;

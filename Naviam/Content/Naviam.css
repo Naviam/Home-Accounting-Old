@@ -15,14 +15,14 @@ ul {
 
 header {
   background-color: #615d5d;
-  height: 26px;
-  padding-top: 1px; }
+  height: 26px; }
   header nav ul li a {
     color: white;
     text-decoration: none;
-    border-top: 2px solid transparent; }
+    border-top: 2px solid transparent;
+    border-bottom: 5px solid transparent; }
     header nav ul li a:hover {
-      border-top: 2px solid #ea4c88; }
+      background-color: #b5b5b5; }
     header nav ul li a:active {
       border-top: 2px solid #ea4c88; }
     header nav ul li a.selected {
@@ -41,7 +41,7 @@ footer {
 
 section.menu {
   height: 60px;
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
   border-top: 1px solid white;
   padding-top: 3px;
   font-size: larger; }
