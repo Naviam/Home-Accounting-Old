@@ -127,6 +127,7 @@ section.menu
 section.main {
 	padding-left: 100px;
 	article {
+		float: left;
 	}
 	aside.left {
 		float: left;
@@ -228,9 +229,6 @@ section.main {
 
 .hidden{
 	display: none;
-}
-.width100{
-	width:100%;
 }
 a.category_picker {
     background: url("images/btn_categorypicker.png") no-repeat scroll left top transparent;

@@ -125,23 +125,23 @@
 <a href="#" onclick='return catModel.EditCategories();'>edit cats</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedItem() == $data}">
-        <td style="width:12%">
+        <td>
             <div>
             <span data-bind="msDateTime: Date, visible: transModel.selectedItem() != $data" name="Date"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
             @*<img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">*@
             </div>
         </td>
-        <td style="width:38%">
+        <td>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Description"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
         </td>
-        <td style="width:35%">
+        <td>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
             <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'><input class="width100 enterastab" data-bind="category: Category" name="Category"/>
             <a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a></div>
         </td>
-        <td style="width:10%;white-space:nowrap">
+        <td style="white-space:nowrap">
             @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
@@ -149,7 +149,7 @@
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount"/>        
             <span data-bind="text: Currency, visible: transModel.selectedItem() != $data"></span>
         </td>
-        <td style="width:5%">
+        <td>
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowEdit(event, $data);}" tabindex='-1'>@SharedStrings.Edit</a>
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.Delete($data);}" tabindex='-1'>@SharedStrings.Delete</a>
             <a href="#" data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null, click: function(event) {transModel.ShowTransfer($data, event, 'trans');}" tabindex='-1'>Transfer</a>
@@ -188,8 +188,9 @@
         <table class='grid'>
             <thead data-bind='template: "transHeadTemplate"' ></thead>
             <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'></tbody>
-            <tfoot data-bind='template: "transPagingTemplate"' ></tfoot>
+            <tfoot></tfoot>
         </table>
+        <div  data-bind='template: "transPagingTemplate"' ></div>
     @*    <div class='hidden' id='edit_row' style='position:fixed;border:1px solid #000;'>
         <table width="100%">
         <tr>

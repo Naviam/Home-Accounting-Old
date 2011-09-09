@@ -44,7 +44,8 @@
     <section class="main">
         @RenderBody()
     </section>
-    <div style="float: none;"></div>
+    
+    <div style="clear: left;"></div>
     @{var assembly = typeof(TransactionsController).Assembly;}
     <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
 
