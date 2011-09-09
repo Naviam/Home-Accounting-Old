@@ -1,13 +1,14 @@
 ﻿body {
-    font-size: large;    
+    font-size: large;
+    background-color: #615d5d;
 }
 
 ul {
 	list-style-type: none;
-	}
+}
 	
 section.menu, article {
-    width: 550px;
+    width: 570px;
     margin-left: auto;
     margin-right: auto; 
 }
@@ -15,13 +16,14 @@ section.menu, article {
 section.menu {
     height: 60px;
     margin-top: 50px;
-  font-size: larger; }
+    font-size: larger; }
   section.menu h1 {
-    float: left;
-    padding-top: 4px;
+      float: left;
+      padding-top: 4px;
       margin-left: 20px;
-    font-size: xx-large;
-    color: #ea4c88; }
+      font-weight: bolder;
+      font-size: xx-large;
+      color: #F7F7F7; }
   section.menu nav {
     padding-right: 20px; }
     section.menu nav ul {
@@ -30,24 +32,32 @@ section.menu {
       position: relative; }
       section.menu nav ul li {
         float: left;}
-        section.menu nav ul li a {
-          border-radius: 6px;
-          -webkit-border-radius: 6px;
-          -moz-border-radius: 6px;
-          display: block;
-          padding: 4px 4px;
-          font-weight: 200;
-          color: #ea4c88;
-          text-decoration: none; }
+        section.menu nav ul li a 
+        {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            -webkit-border-top-left-radius: 6px;
+            -webkit-border-top-right-radius: 6px;
+            -moz-border-radius-topleft: 6px;
+            -moz-border-radius-topright: 6px;
+            -moz-box-shadow: 0 0.1em 0.4em #F7F7FF;
+	        -webkit-box-shadow: 0 0.1em 0.6em #F7F7FF;
+            display: block;
+            padding: 4px 8px 4px 8px;
+            margin: 9px 10px 0px 6px;
+            font-weight: 800;
+            color: #F7F7F7;
+            text-decoration: none;
+        }
           section.menu nav ul li a:hover {
-            color: white;
-            background-color: #ea4c88; }
+            color: #ea4c88;
+            background-color: #F7F7F7; }
           section.menu nav ul li a:active {
-            color: white;
-            background-color: #ea4c88; }
+            color: #ea4c88;
+            background-color: #F7F7F7; }
           section.menu nav ul li a.selected {
-            color: white;
-            background-color: #ea4c88; }
+            color: #ea4c88;
+            background-color: #F7F7F7; }
 
 section.login {
     height: 240px;
@@ -55,14 +65,17 @@ section.login {
     border-radius: 15px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
+    -moz-box-shadow: 0 0.1em 0.4em #F7F7FF;
+	-webkit-box-shadow: 0 0.1em 0.6em #F7F7FF;
 }
 
 fieldset 
 {
     float: right;
     margin-left: 20px;
+    margin-right: 20px;
     margin-top: 10px;
-    width: 450px;
+    width: 530px;
 }
 
 section.login fieldset {
@@ -85,9 +98,15 @@ section.openid
 }
 
 fieldset input[type=text], fieldset input[type=password], fieldset input[type=email] {
-    width: 410px;
+    width: 510px;
     margin-top: 10px;
+    margin-left: 0px;
     margin-bottom: 10px;
+}
+
+hr {
+    color: #ea4c88;
+    line-height: 2px;
 }
 
 div.rememberme {
@@ -99,7 +118,7 @@ div.rememberme {
 button {
 	display: block;
 	font: normal 1.2em "Helvetica Neue", helvetica, sans-serif;
-	background: #ea4c88 url(/images/signin/glass.png) repeat-x 0 50%;
+	background: #ea4c88;
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
@@ -118,9 +137,18 @@ button:active {
 	background-color: #c22b65;
 	}
 
-input[type=text], input[type=password], input[type=email], input[type=checkbox], select, textarea {font-size: larger;border: 1px solid #b6d7a8; padding: 8px}
-input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, select:focus, textarea:focus {background-color:#fffad9;border: 1px solid #ffd966;outline: none;}
-input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, select:hover, textarea:hover {border: 1px solid #ffd966}
+input[type=text], input[type=password], input[type=email], input[type=checkbox], select, textarea {
+    font-size: larger;border: 1px solid #b6d7a8;padding: 8px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, select:focus, textarea:focus {
+    background-color:#fffad9;border: 1px solid #ffd966;outline: none;
+}
+input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, select:hover, textarea:hover {
+    border: 1px solid #ffd966
+}
 
 .input-validation-error
 {

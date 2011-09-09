@@ -9,6 +9,7 @@
     @Html.CombresLink("naviamCss")
     <!--[if lt IE 8]><link rel="stylesheet" href="@Url.Content("~/Content/blueprint/ie.css")" type="text/css" media="screen, projection"><![endif]-->
     <script type="text/javascript" src="@Url.Content(String.Format("~/Scripts/locale/Naviam.JavaScript.{0}.js", System.Threading.Thread.CurrentThread.CurrentUICulture.Name))"></script>
+    <link href="@Url.Content("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" />
     @Html.CombresLink(ViewBag.CombresScripts as string)
     @*intellisense support*@
     @if (false)
