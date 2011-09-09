@@ -115,20 +115,20 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Log On.
+        ///   Looks up a localized string similar to Log in.
         /// </summary>
-        public static string LogOn {
+        public static string LogIn {
             get {
-                return ResourceManager.GetString("LogOn", resourceCulture);
+                return ResourceManager.GetString("LogIn", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sign up for free.
+        ///   Looks up a localized string similar to Log in.
         /// </summary>
-        public static string LogonHeader {
+        public static string LoginHeader {
             get {
-                return ResourceManager.GetString("LogonHeader", resourceCulture);
+                return ResourceManager.GetString("LoginHeader", resourceCulture);
             }
         }
         

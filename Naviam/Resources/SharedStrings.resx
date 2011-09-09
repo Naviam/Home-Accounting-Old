@@ -135,11 +135,11 @@
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="LogOn" xml:space="preserve">
-    <value>Log On</value>
+  <data name="LogIn" xml:space="preserve">
+    <value>Log in</value>
   </data>
-  <data name="LogonHeader" xml:space="preserve">
-    <value>Sign up for free</value>
+  <data name="LoginHeader" xml:space="preserve">
+    <value>Log in</value>
   </data>
   <data name="Rate" xml:space="preserve">
     <value>Rate</value>

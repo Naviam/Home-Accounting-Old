@@ -52,7 +52,7 @@ section.menu {
     font-size: xx-large;
     color: #ea4c88; }
   section.menu nav {
-    position: relevant;
+    position: relative;
     padding-right: 90px; }
     section.menu nav ul {
       margin: 10px 0 0;

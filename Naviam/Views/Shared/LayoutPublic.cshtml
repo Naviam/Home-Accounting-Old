@@ -22,9 +22,15 @@
 </head>
 
 <body>
-<header>
+<section class="menu">
     <h1>NAVIAM.COM</h1>
-</header>
+    <nav>
+        <ul>
+            <li><a href="@Url.Action("LogOn", "Account")">Log In</a></li>
+            <li><a href="@Url.Action("Register", "Account")">Sign Up</a></li>
+        </ul>
+    </nav>
+</section>
 <article>
     @RenderBody()
 </article>

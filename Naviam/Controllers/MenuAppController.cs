@@ -6,7 +6,7 @@ namespace Naviam.WebUI.Controllers
 
     public class MenuAppController : BaseController
     {
-        public ActionResult TopMenu()
+        public ActionResult TopMenu(string sitemapConfigName)
         {
             return PartialView(new MenuModel(GetController(), GetAction(), Request.QueryString));
         }
