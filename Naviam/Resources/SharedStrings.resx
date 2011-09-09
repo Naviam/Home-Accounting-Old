@@ -147,6 +147,9 @@
   <data name="Sell" xml:space="preserve">
     <value>Sell</value>
   </data>
+  <data name="Split" xml:space="preserve">
+    <value>Split</value>
+  </data>
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Transactions</value>
   </data>

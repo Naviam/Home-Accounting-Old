@@ -1,0 +1,70 @@
+﻿@using Naviam.WebUI.Resources
+
+<script type='text/javascript'>
+    var splitModel = {
+        items: ko.observableArray()
+        , id: 0
+        , initialAmount: ko.observable(0)
+        , initialDesc: ''
+        , initialCat: ''
+        , addItem: function () {
+            var fItem = { description: this.initialDesc, category: this.initialCat, amount: ko.observable(0) };
+            //                fItem.amount.subscribe(function (newValue) {
+            //                    debug(newValue);
+            //                });
+            this.items.push(fItem);
+        }
+        , deleteItem: function (item) {
+            splitModel.items.remove(item);
+        }
+        , isInputOk: function () {
+            if (this.items().length == 0) return false;
+            var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+                return item.amount() == 0;
+            });
+            return fItem == null && this.endAmount() >= 0;
+        }
+        , doSplit: function () {
+            alert("Could now transmit to server: " + ko.toJSON(this));
+        }
+    };
+    splitModel.setInitial = function (id, description, category, amount) {
+        this.items().length = 0;
+        this.items.push({ description: description, category: category, amount: ko.observable(0) });
+        this.initialAmount(amount);
+        this.initialDesc = description;
+        this.initialCat = category;
+        this.id = id;
+    }
+    splitModel.endAmount = ko.dependentObservable(function () {
+        var total = this.initialAmount();
+        for (var i = 0; i < this.items().length; i++)
+            total -= parseInt(this.items()[i].amount());
+        return total;
+    }, splitModel);
+    ko.applyBindings(splitModel, $("#splitTrans")[0]);
+</script>
+
+<div id="splitTrans"> 
+<form data-bind="submit: doSplit">
+    Was:<span data-bind='amount: initialAmount'></span>
+    <table data-bind="visible: items().length > 0">
+        <thead>
+        </thead>
+        <tbody data-bind='template: { name: "splitTransTemplate", foreach: items, templateOptions: { delete: deleteItem } }'>
+        </tbody>
+    </table>
+    Will be:<span data-bind='amount: endAmount'></span>
+    <button data-bind="click: addItem">Add</button>
+    <button type="submit" data-bind="enable: isInputOk()">Ok</button>
+</form>
+</div>
+<script type="text/html" id="splitTransTemplate">
+    <tr>
+        <td><input data-bind="value: description"/></td>
+        <td><input data-bind="value: category"/></td>
+        <td><input data-bind="amount: amount"/></td>
+        <td><a href="#" data-bind="click: function() { $item.delete($data) }">Delete</a></td>
+    </tr>
+</script>
+

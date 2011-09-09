@@ -197,6 +197,7 @@
     <Content Include="Prototype\Login.htm" />
     <Content Include="PublicSitemap.xml" />
     <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
+    <Content Include="Views\Transactions\_splitDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\combres.xml">
