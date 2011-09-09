@@ -138,18 +138,31 @@ section.main {
   color: White; }
 
 .grid {
-  border-collapse: collapse; }
+  border-collapse: collapse;
+  background: #ECECD8; }
   .grid th {
+    color: #FBFBC7;
+    background: #b5451c;
+    border-bottom-width: 0;
     cursor: pointer;
-    border: 1px solid #000; }
+    border: 1px solid #854324;
+    padding: .3em .6em; }
     .grid th:hover {
-      background-color: #ffe79c;
-      border-color: #c98400; }
+      background-color: #c5551c; }
+  .grid tr:nth-child(even) {
+    background: white; }
   .grid tr.selected {
-    border: 1px solid #000; }
-  .grid tr:hover td {
-    background-color: #c0d2ad;
+    background-color: #EA9959;
+    color: white; }
+  .grid tr:hover {
+    background-color: #c5551c;
+    color: white;
     cursor: pointer; }
+  .grid tr td {
+    border-color: #DDD;
+    padding: .25em .6em;
+    border-style: solid;
+    border-right-width: 1px; }
 
 .hidden {
   display: none; }
@@ -380,5 +393,5 @@ button {
   color: white; }
 
 .acc_menu .selected {
-  background-color: blue;
+  background-color: #EA4C88;
   color: white; }
