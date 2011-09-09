@@ -141,7 +141,8 @@ section.main {
 
 .grid {
   border-collapse: collapse;
-  background: #ECECD8; }
+  background: #ECECD8;
+  border: 1px solid #714734; }
   .grid th {
     color: #FBFBC7;
     background: #b5451c;

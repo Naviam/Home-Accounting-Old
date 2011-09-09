@@ -140,14 +140,15 @@ function loadTransactions() {
             var conf = transDlg.getConf();
             //conf.top = row.offset().top + row.height();
             //conf.left = row.offset().left - 5;
-            conf.top = row.parents('table')[0].offsetTop + row[0].offsetTop + row.height();
-            conf.left = -5;
+            var tblOffset = row.parents('table').offset();
+            conf.top = tblOffset.top + row[0].offsetTop + row.height();
+            conf.left = tblOffset.left - 5;
             frm.overlay().load();
         };
         transModel.GetNewItem = function () {
             var date = new Date();
             return { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
-                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(0), Notes: ko.observable(null), Merchant: ko.observable(null), 
+                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(0), Notes: ko.observable(null), Merchant: ko.observable(null),
                 Currency: '', IncludeInTax: ko.observable(false), CurrencyId: ko.observable(accountsModel.selectedItem().CurrencyId), AccountId: ko.observable(accountsModel.selectedItem().Id)
             };
         };
