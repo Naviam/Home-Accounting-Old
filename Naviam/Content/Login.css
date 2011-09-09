@@ -2,34 +2,76 @@
     font-size: large;    
 }
 
-header, article 
-{
-    width: 900px;
-    margin-top: 50px; 
+ul {
+	list-style-type: none;
+	}
+	
+section.menu, article {
+    width: 550px;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: auto; 
 }
 
-header h1 {
+section.menu {
+    height: 60px;
+    margin-top: 50px;
+  font-size: larger; }
+  section.menu h1 {
+    float: left;
+    padding-top: 4px;
+      margin-left: 20px;
     font-size: xx-large;
-    color: #ea4c88;
-}
+    color: #ea4c88; }
+  section.menu nav {
+    padding-right: 20px; }
+    section.menu nav ul {
+      margin: 10px 0 0;
+      float: right;
+      position: relative; }
+      section.menu nav ul li {
+        float: left;}
+        section.menu nav ul li a {
+          border-radius: 6px;
+          -webkit-border-radius: 6px;
+          -moz-border-radius: 6px;
+          display: block;
+          padding: 4px 4px;
+          font-weight: 200;
+          color: #ea4c88;
+          text-decoration: none; }
+          section.menu nav ul li a:hover {
+            color: white;
+            background-color: #ea4c88; }
+          section.menu nav ul li a:active {
+            color: white;
+            background-color: #ea4c88; }
+          section.menu nav ul li a.selected {
+            color: white;
+            background-color: #ea4c88; }
 
-section {
-    background-color: #e6f9e0;
+section.login {
+    height: 240px;
+    background-color: #F7F7F7;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
 }
 
 fieldset 
 {
-    float: left;
+    float: right;
+    margin-left: 20px;
+    margin-top: 10px;
     width: 450px;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
 }
 
-section.logon fieldset {
+section.login fieldset {
     float: right;
+}
+
+section.login fieldset legend {
+    font-size: x-large;
+    color: #ea4c88;
 }
 
 section.openid 
@@ -56,7 +98,7 @@ div.rememberme {
 
 button {
 	display: block;
-	font: normal 1.6em "Helvetica Neue", helvetica, sans-serif;
+	font: normal 1.2em "Helvetica Neue", helvetica, sans-serif;
 	background: #ea4c88 url(/images/signin/glass.png) repeat-x 0 50%;
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
@@ -77,8 +119,8 @@ button:active {
 	}
 
 input[type=text], input[type=password], input[type=email], input[type=checkbox], select, textarea {font-size: larger;border: 1px solid #b6d7a8; padding: 8px}
-input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, select:focus, textarea:focus {background-color:#ebf3ff;border: 1px solid #07a3ff;outline: none;}
-input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, select:hover, textarea:hover {border: 1px solid #07a3ff}
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, select:focus, textarea:focus {background-color:#fffad9;border: 1px solid #ffd966;outline: none;}
+input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, select:hover, textarea:hover {border: 1px solid #ffd966}
 
 .input-validation-error
 {

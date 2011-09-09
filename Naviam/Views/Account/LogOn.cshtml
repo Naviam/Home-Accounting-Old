@@ -3,27 +3,15 @@
 @using Naviam.WebUI.Resources
 
 @{
-    ViewBag.Title = "Naviam";
+    ViewBag.Title = "Naviam - Sign In";
     Layout = "~/Views/Shared/LayoutPublic.cshtml";
 }
-
 
 @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
 
 @using (Html.BeginForm()) {
-    <section id="signup">
+    <section class="login">
         <fieldset>
-            <legend>Sign up</legend>
-            <div><input type="email" autocomplete="yes" required="yes" placeholder="Please enter your email here"/></div>
-            <div><input type="password" required="yes" placeholder="Please type your password here"/></div>
-            <p>
-                <button type="submit">Sign Up</button>
-            </p>
-        </fieldset>
-    </section>
-    <section class="logon">
-        <fieldset>
-            <legend>@SharedStrings.LogonHeader</legend>
             <div>
                 @Html.TextBoxFor(m => m.UserName, new { placeholder = "Please enter your email here", type = "email" })
                 @Html.ValidationMessageFor(m => m.UserName)
@@ -36,14 +24,14 @@
                 @Html.CheckBoxFor(m => m.RememberMe)
                 @Html.LabelFor(m => m.RememberMe)
             </div>
-
-            <p>
-                <button type="submit">@SharedStrings.LogOn</button>
-            </p>
+            <p><button type="submit">@SharedStrings.LogIn</button></p>
+            <div>
+                OR LOGIN WITH: @Html.ActionLink("Google", "GoogleLogin")
+            </div>
         </fieldset>
     </section>
-    <div style="clear: right"></div>
+    <div style="clear: left"></div>
     <section class="openid">
-        OR LOGIN WITH: @Html.ActionLink("Google", "GoogleLogin")
+        
     </section>
 }

@@ -195,6 +195,7 @@
     <Content Include="Content\blueprint\typography.css" />
     <Content Include="Content\Login.css" />
     <Content Include="Prototype\Login.htm" />
+    <Content Include="PublicSitemap.xml" />
     <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
     <Content Include="Views\Transactions\_splitDialog.cshtml" />
   </ItemGroup>
@@ -372,6 +373,7 @@
     <EmbeddedResource Include="Resources\SharedStrings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SharedStrings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SharedStrings.ru.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

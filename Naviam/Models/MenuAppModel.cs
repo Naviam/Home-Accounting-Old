@@ -64,10 +64,10 @@ namespace Naviam.WebUI.Models
         #endregion .ctors
 
         #region .metods
-        private void Initialize()
+        private void Initialize(string sitemapConfigName = "siteMapFile")
         {
             _internalMenuItemsList = new List<MainMenuItem>();
-            string pathAbsolute = HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["siteMapFile"]);
+            string pathAbsolute = HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings[sitemapConfigName]);
             _rootNode = (MainMenuItem)MainMenuItem.FromXml(typeof(MainMenuItem), pathAbsolute);
             GetInternalMenuItemsList(_rootNode);
         }
