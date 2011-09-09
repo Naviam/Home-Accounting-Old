@@ -13,7 +13,7 @@
 @using (Html.BeginForm()) {
     <section id="signup">
         <fieldset>
-            <legend>@SharedStrings.LogonHeader</legend>
+            <legend>Sign up</legend>
             <div><input type="email" autocomplete="yes" placeholder="Please enter your email here"/></div>
             <div><input type="password" placeholder="Please type your password here"/></div>
             <p>
@@ -23,9 +23,9 @@
     </section>
     <section class="logon">
         <fieldset>
-            <legend>Login</legend>
+            <legend>@SharedStrings.LogonHeader</legend>
             <div>
-                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Please enter your email here" })
+                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Please enter your email here", type = "email" })
                 @Html.ValidationMessageFor(m => m.UserName)
             </div>
             <div>

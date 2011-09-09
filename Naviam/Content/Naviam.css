@@ -379,11 +379,6 @@ button {
   background-color: #0A246A;
   color: white; }
 
-/*
-.company_menu{
-	.selected {
-		background-color: blue;
-		color: white;
-	}
-}
-*/
+.acc_menu .selected {
+  background-color: blue;
+  color: white; }

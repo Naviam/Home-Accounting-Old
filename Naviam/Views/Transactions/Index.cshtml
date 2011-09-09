@@ -48,7 +48,7 @@
     }
 </script>
 
-@section LeftColumn {
+@*@section LeftColumn {*@
 <script type="text/html" id="accountsTemplate">
     <li>
         <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}"></a>
@@ -59,10 +59,10 @@
 </script>
 <div id="accounts">
     <a href="#" data-bind="click: function(event) { addItem(); }">Add</a>
-    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem, delete: deleteItem } }" class='company_menu'>
+    <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem, delete: deleteItem } }" class='acc_menu'>
     </ul>
 </div>
-}
+@*}*@
 
 <script type="text/html" id="accounts_moveTemplate">
     <li>
