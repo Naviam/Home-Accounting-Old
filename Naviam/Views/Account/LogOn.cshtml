@@ -14,8 +14,8 @@
     <section id="signup">
         <fieldset>
             <legend>Sign up</legend>
-            <div><input type="email" autocomplete="yes" placeholder="Please enter your email here"/></div>
-            <div><input type="password" placeholder="Please type your password here"/></div>
+            <div><input type="email" autocomplete="yes" required="yes" placeholder="Please enter your email here"/></div>
+            <div><input type="password" required="yes" placeholder="Please type your password here"/></div>
             <p>
                 <button type="submit">Sign Up</button>
             </p>
@@ -44,6 +44,6 @@
     </section>
     <div style="clear: right"></div>
     <section class="openid">
-        Or login with: @Html.ActionLink("Google", "GoogleLogin")
+        OR LOGIN WITH: @Html.ActionLink("Google", "GoogleLogin")
     </section>
 }

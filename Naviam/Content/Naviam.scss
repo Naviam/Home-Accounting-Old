@@ -193,23 +193,38 @@ section.main {
 }
 .grid {
 	border-collapse:collapse;
+	background:#ECECD8;
 	th {
+		color: #FBFBC7;
+		background: #b5451c;
+		border-bottom-width: 0;
 		cursor:pointer;
-		border:1px solid #000;
+		border:1px solid #854324;
+		padding: .3em .6em;
 		&:hover{
-			background-color: #ffe79c;
-			border-color: #c98400;
+			background-color: #c5551c;
 		}
 	}
 	tr {
+		&:nth-child(even) {background: white;}
 		&.selected {
-			border:1px solid #000;
+			background-color: #EA9959;
+			color: white;
 		}
 		&:hover {
-			td{background-color:#c0d2ad;cursor:pointer;}
+			background-color:#c5551c;
+			color: white;
+			cursor: pointer;
+		}
+		td {
+			border-color: #DDD;
+			padding: .25em .6em;
+			border-style: solid;
+			border-right-width: 1px;
 		}
 	}
 }
+
 .hidden{
 	display: none;
 }
@@ -475,7 +490,7 @@ button {
 
 .acc_menu{
 	.selected {
-		background-color: blue;
+		background-color: #EA4C88;
 		color: white;
 	}
 }

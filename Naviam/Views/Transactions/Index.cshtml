@@ -94,7 +94,7 @@
     </tr>
 </script>
 
-@*@section LeftColumn {*@
+@section LeftColumn {
 <script type="text/html" id="accountsTemplate">
     <li>
         <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}"></a>
@@ -108,7 +108,7 @@
     <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem, delete: deleteItem } }" class='acc_menu'>
     </ul>
 </div>
-@*}*@
+}
 
 <script type="text/html" id="accounts_moveTemplate">
     <li>
@@ -173,24 +173,23 @@
     {{/each}}
     </tr>
 </script>
-<div style='position:relative'>
+<div>
     <div id="transGrid">
-    @{UserProfile user = ViewBag.CurrentUser as UserProfile;}
-    <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
-        @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany, @accId = 0 }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
-        {
-            <input type="file" id='upload_statement' name='fileToUpload'/>
-            <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
-        }
-        <a href="#" onclick='return transModel.Add();'>Add</a>
-        <a href="#" onclick='return transModel.ShowExchange();'>Exchange</a>
-    </div>
-    <table class='grid'>
-        <thead data-bind='template: "transHeadTemplate"' >
-        </thead>
-        <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'>
-        </tbody>
-    </table>
+        @{var user = ViewBag.CurrentUser as UserProfile;}
+        <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
+            @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany, @accId = 0 }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
+            {
+                <input type="file" id='upload_statement' name='fileToUpload'/>
+                <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
+            }
+            <a href="#" onclick='return transModel.Add();'>Add</a>
+            <a href="#" onclick='return transModel.ShowExchange();'>Exchange</a>
+        </div>
+        <table class='grid'>
+            <thead data-bind='template: "transHeadTemplate"' ></thead>
+            <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'></tbody>
+            <tfoot data-bind='template: "transPagingTemplate"' ></tfoot>
+        </table>
     @*    <div class='hidden' id='edit_row' style='position:fixed;border:1px solid #000;'>
         <table width="100%">
         <tr>
@@ -201,9 +200,7 @@
         <div class='edit_area hidden'">
             tstst
         </div>
-    </div>*@
-    <div data-bind='template: "transPagingTemplate"' class='paging'>
-    </div>
+    </div>*@    
     </div>
     <div class="overlaywoshadow" id="transDlg">
         <table>
