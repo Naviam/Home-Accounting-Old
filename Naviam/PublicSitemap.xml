@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<tree xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="root">
+    <node url="~/Account/Logon" title="Вход на сайт" enableLocalization="false" style="equipment" controller="Account" action="Logon">
+    </node>
+    <node url="~/Account/Register" title="Регистрация" enableLocalization="false" style="equipment" controller="Account" action="Register">
+    </node>
+</tree>
