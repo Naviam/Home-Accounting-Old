@@ -300,10 +300,11 @@ button {
 	border-width:1px 1px 0.2em;
 	color:#FFFFFF;
 	cursor:pointer;
-	font-size:1em;
+	font-size:12px;
 	line-height:1;
 	padding:0.3em 0.6em;
 	text-shadow:0 0 0.1em #222222;
+	font-family: "Helvetica Neue",Arial,Helvetica,sans-serif;
 	&:disabled {
 		color: black;
 		background-color:gray;
@@ -498,3 +499,9 @@ button {
 .width100 {
 	width:100%;
 }
+
+.error, .alert, .notice, .success, .info {padding:0.8em;margin-bottom:1em;border:2px solid #ddd;}
+.error, .alert {background:#fbe3e4;color:#8a1f11;border-color:#fbc2c4; a{color:#8a1f11;}}
+.notice {background:#fff6bf;color:#514721;border-color:#ffd324; a {color:#514721;}}
+.success {background:#e6efc2;color:#264409;border-color:#c6d880; a {color:#264409;}}
+.info {background:#d5edf8;color:#205791;border-color:#92cae4; a {color:#205791;}}

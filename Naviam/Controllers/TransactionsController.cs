@@ -153,6 +153,12 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
+        public ActionResult GetSplitDialog()
+        {
+            return PartialView("_splitDialog");
+        }
+
+        [HttpPost]
         public ActionResult UpdateCategory(Category cat)
         {
             var user = CurrentUser;

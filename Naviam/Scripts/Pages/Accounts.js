@@ -48,6 +48,7 @@ function loadAccounts() {
         accountsModel.Refresh = function () {
             $.postErr(getAccountsUrl, function (res) {
                 ko.mapping.updateFromJS(accountsModel, res);
+                accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
             });
         };
         accountsModel.currencyById = function (id) {

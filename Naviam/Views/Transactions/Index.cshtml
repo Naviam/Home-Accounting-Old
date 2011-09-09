@@ -25,6 +25,7 @@
     var delCatUrl = '@Url.Action("DeleteCategory", "Transactions")';
 
     var getExchangeDlg = '@Url.Action("GetExchangeDialog", "Transactions")';
+    var getSplitDlg = '@Url.Action("GetSplitDialog", "Transactions")';
 
     var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
@@ -41,76 +42,11 @@
             accountsModel.Refresh();
         }
         });
-        var splitModel = {
-            items: ko.observableArray()
-            , initialAmount: 0
-            , initialDesc: ''
-            , initialCat: ''
-            , addItem: function () {
-                var fItem = { description: this.initialDesc, category: this.initialCat, amount: ko.observable(0) };
-                //                fItem.amount.subscribe(function (newValue) {
-                //                    debug(newValue);
-                //                });
-                this.items.push(fItem);
-            }
-            , deleteItem: function (item) {
-                splitModel.items.remove(item);
-            }
-            , isInputOk: function () {
-                if (this.items().length == 0) return false;
-                var fItem = ko.utils.arrayFirst(this.items(), function (item) {
-                    return item.amount() == 0;
-                });
-                return fItem == null;
-            }
-            , doSplit: function () {
-                alert("Could now transmit to server: " + ko.toJSON(this.items));
-            }
-            , setInitial: function (description, category, amount) {
-                this.items().length = 0;
-                var fItem = { description: description, category: category, amount: ko.observable(0) };
-                this.items.push(fItem);
-                this.initialAmount = amount;
-                this.initialDesc = description;
-                this.initialCat = category;
-            }
-        };
-        splitModel.endAmount = ko.dependentObservable(function () {
-            var total = 0;
-            for (var i = 0; i < this.items().length; i++)
-                total += parseInt(this.items()[i].amount());
-            return total;
-        }, splitModel);
-        //splitModel.setInitial('descr', 'cat', 1000);
-        ko.applyBindings(splitModel, $("#splitTrans")[0]);
     });
     function beg_upload_statement() {
         $('#upload_statement').trigger('html5_upload.start');
         return false;
     }
-</script>
-
-<div id="splitTrans" data-bind="visible: items().length > 0"> 
-<form data-bind="submit: doSplit">
-    <span data-bind='amount: initialAmount'></span>
-    <table data-bind="visible: items().length > 0">
-        <thead>
-        </thead>
-        <tbody data-bind='template: { name: "splitTransTemplate", foreach: items, templateOptions: { delete: deleteItem } }'>
-        </tbody>
-    </table>
-    <span data-bind='amount: endAmount'></span>
-    <button data-bind="click: addItem">Add</button>
-    <button type="submit" data-bind="enable: isInputOk()">Ok</button>
-</form>
-</div>
-<script type="text/html" id="splitTransTemplate">
-    <tr>
-        <td><input data-bind="value: description"/></td>
-        <td><input data-bind="value: category"/></td>
-        <td><input data-bind="amount: amount"/></td>
-        <td><a href="#" data-bind="click: function() { $item.delete($data) }">Delete</a></td>
-    </tr>
 </script>
 
 @section LeftColumn {
@@ -160,7 +96,7 @@
             <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'><input class="width100 enterastab" data-bind="category: Category" name="Category"/>
             <a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a></div>
         </td>
-        <td style="white-space:nowrap">
+        <td style="width:120px;white-space:nowrap">
             @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
@@ -173,6 +109,7 @@
             <a href="#" data-bind="click: function(event) {transModel.Delete($data);}" tabindex='-1'>@SharedStrings.Delete</a>
             <a href="#" data-bind="click: function(event) {transModel.ShowTransfer($data, event, 'trans');}" tabindex='-1'>Transfer</a>
             <a href="#" data-bind="click: function(event) {transModel.ShowTransfer($data, event, 'move');}" tabindex='-1'>Move</a>
+            <a href="#" data-bind="click: function(event) {transModel.ShowSplit($data.Id);}" tabindex='-1'>@SharedStrings.Split</a>
         </td>
     </tr>
 </script>
@@ -225,6 +162,7 @@
     </div>*@    
     </div>
     <div class="overlaywoshadow" id="transDlg">
+        <button data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {transModel.ShowSplit(Id)}">@SharedStrings.Split</button>
         <table>
         <tr>
             <td></td>
@@ -308,4 +246,5 @@
 
 <div id='cat_edit_area' class="overlay"></div>
 <div id='exchangeDialog' class="overlay"></div>
+<div id='splitDialog' class="overlay"></div>
 
