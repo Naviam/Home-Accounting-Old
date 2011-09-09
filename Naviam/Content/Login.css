@@ -79,3 +79,9 @@ button:active {
 input[type=text], input[type=password], input[type=email], input[type=checkbox], select, textarea {font-size: larger;border: 1px solid #b6d7a8; padding: 8px}
 input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, select:focus, textarea:focus {background-color:#ebf3ff;border: 1px solid #07a3ff;outline: none;}
 input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, select:hover, textarea:hover {border: 1px solid #07a3ff}
+
+.input-validation-error
+{
+    border: 1px solid #ff0000 !important;
+    background-color: #ffeeee !important;
+}

@@ -395,3 +395,6 @@ button {
 .acc_menu .selected {
   background-color: #EA4C88;
   color: white; }
+
+.width100 {
+  width: 100%; }

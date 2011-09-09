@@ -39,14 +39,18 @@
         $('#upload_statement').html5_upload({ autostart: false, onFinish: function (event, total) {
             transModel.ReloadPage();
             accountsModel.Refresh();
-            }
+        }
         });
         var splitModel = {
             items: ko.observableArray()
-            , initialAmount: 1000
-            , endAmount: 0
+            , initialAmount: 0
+            , initialDesc: ''
+            , initialCat: ''
             , addItem: function () {
-                var fItem = { description: "tst", category: "tstCat", amount: ko.observable(0) };
+                var fItem = { description: this.initialDesc, category: this.initialCat, amount: ko.observable(0) };
+                //                fItem.amount.subscribe(function (newValue) {
+                //                    debug(newValue);
+                //                });
                 this.items.push(fItem);
             }
             , deleteItem: function (item) {
@@ -62,8 +66,22 @@
             , doSplit: function () {
                 alert("Could now transmit to server: " + ko.toJSON(this.items));
             }
+            , setInitial: function (description, category, amount) {
+                this.items().length = 0;
+                var fItem = { description: description, category: category, amount: ko.observable(0) };
+                this.items.push(fItem);
+                this.initialAmount = amount;
+                this.initialDesc = description;
+                this.initialCat = category;
+            }
         };
-        //splitModel.addItem();
+        splitModel.endAmount = ko.dependentObservable(function () {
+            var total = 0;
+            for (var i = 0; i < this.items().length; i++)
+                total += parseInt(this.items()[i].amount());
+            return total;
+        }, splitModel);
+        //splitModel.setInitial('descr', 'cat', 1000);
         ko.applyBindings(splitModel, $("#splitTrans")[0]);
     });
     function beg_upload_statement() {
@@ -82,6 +100,7 @@
         </tbody>
     </table>
     <span data-bind='amount: endAmount'></span>
+    <button data-bind="click: addItem">Add</button>
     <button type="submit" data-bind="enable: isInputOk()">Ok</button>
 </form>
 </div>
@@ -89,7 +108,7 @@
     <tr>
         <td><input data-bind="value: description"/></td>
         <td><input data-bind="value: category"/></td>
-        <td><input data-bind="value: amount"/></td>
+        <td><input data-bind="amount: amount"/></td>
         <td><a href="#" data-bind="click: function() { $item.delete($data) }">Delete</a></td>
     </tr>
 </script>
@@ -126,17 +145,17 @@
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedItem() == $data}">
         <td>
-            <div>
+            <div style='width:75px'>
             <span data-bind="msDateTime: Date, visible: transModel.selectedItem() != $data" name="Date"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
             @*<img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">*@
             </div>
         </td>
-        <td>
+        <td style='width:275px'>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Description"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
         </td>
-        <td>
+        <td style='width:175px'>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
             <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'><input class="width100 enterastab" data-bind="category: Category" name="Category"/>
             <a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a></div>
