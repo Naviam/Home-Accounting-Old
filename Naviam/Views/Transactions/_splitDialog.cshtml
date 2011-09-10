@@ -8,11 +8,12 @@
         , initialDesc: ''
         , initialCat: ''
         , addItem: function () {
-            var fItem = { description: this.initialDesc, category: this.initialCat, amount: ko.observable(0) };
+            var fItem = { description: this.initialDesc, category: ko.observable(this.initialCat), amount: ko.observable(0) };
             //                fItem.amount.subscribe(function (newValue) {
             //                    debug(newValue);
             //                });
             this.items.push(fItem);
+            $('.suggestCat').autocomplete(catModel.Suggest(), { minChars: 1, delay: 10 });
         }
         , deleteItem: function (item) {
             splitModel.items.remove(item);
@@ -30,11 +31,12 @@
     };
     splitModel.setInitial = function (id, description, category, amount) {
         this.items().length = 0;
-        this.items.push({ description: description, category: category, amount: ko.observable(0) });
+        this.items.push({ description: description, category: ko.observable(category), amount: ko.observable(0) });
         this.initialAmount(amount);
         this.initialDesc = description;
         this.initialCat = category;
         this.id = id;
+        $('.suggestCat').autocomplete(catModel.Suggest(), { minChars: 1, delay: 10 });
     }
     splitModel.endAmount = ko.dependentObservable(function () {
         var total = this.initialAmount();
@@ -55,16 +57,22 @@
         </tbody>
     </table>
     Will be:<span data-bind='amount: endAmount'></span>
-    <button data-bind="click: addItem">Add</button>
     <button type="submit" data-bind="enable: isInputOk()">Ok</button>
+    <button type="button" class='close'>@SharedStrings.Cancel</button>
+    <button data-bind="click: addItem">Add</button>
 </form>
 </div>
 <script type="text/html" id="splitTransTemplate">
     <tr>
         <td><input data-bind="value: description"/></td>
-        <td><input data-bind="value: category"/></td>
+        <td>
+            <div style='position:relative;'>
+                <input class="width100 suggestCat" data-bind="category: category" name="Category"/>
+                <a href="#" onclick='return catModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a>
+            </div>
+        </td>
         <td><input data-bind="amount: amount"/></td>
-        <td><a href="#" data-bind="click: function() { $item.delete($data) }">Delete</a></td>
+        <td><a href="#" data-bind="click: function() { $item.delete($data) }" tabindex='-1'>Delete</a></td>
     </tr>
 </script>
 

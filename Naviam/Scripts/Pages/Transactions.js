@@ -284,18 +284,6 @@ function loadTransactions() {
                 }
             }
         };
-        transModel.ShowCategories = function (btn) {
-            var menu = $("#cat_menu");
-            if (menu.css("display") != "none") {
-                menu.hide();
-                return;
-            }
-            var input = $(btn).parent().find('[name="Category"]');
-            menu.css({ top: input.offset().top + 20, left: input.offset().left });
-            menu.width(input.width());
-            $("#cat_menu ul").width(input.width());
-            menu.slideDown();
-        };
         transModel.Sort = function (val) {
             var currSort = this.paging.SortField();
             if (currSort != null)
@@ -327,7 +315,7 @@ function loadTransactions() {
             var hld = $('#splitDialog');
             id = ko.utils.unwrapObservable(id);
             var fItem = this.getById(id);
-            debug(id);
+            //debug(id);
             if (fItem) {
                 if (hld.html() == '') {
                     $.postErr(getSplitDlg, function (res) {
@@ -360,11 +348,11 @@ $(document).ready(function () {
         cat.removeClass(inputCssError);
         var selItem = transModel.selectedItem();
         //if (transEdit.Id() != null) {
-            //restore inline editing props
-            transEdit.Amount(selItem.Amount());
-            //transEdit.Category(selItem.Category());
-            transEdit.Description(selItem.Description());
-            transEdit.Date(selItem.Date());
+        //restore inline editing props
+        transEdit.Amount(selItem.Amount());
+        //transEdit.Category(selItem.Category());
+        transEdit.Description(selItem.Description());
+        transEdit.Date(selItem.Date());
         //}
         ko.mapping.fromJS(ko.mapping.toJS(transEdit), {}, selItem);
         var item = transModel.selectedItem();
@@ -478,9 +466,10 @@ $(document).ready(function () {
             $("#cat_menu").hide();
             if (item.Id() == null)
                 return this.EditCategories(item.parent);
-            if (transModel.selectedItem() != null) {
-                transModel.selectedItem().Category(item.Name());
-            }
+            this.inputCat.val(item.Name()).change();
+            //            if (transModel.selectedItem() != null) {
+            //                transModel.selectedItem().Category(item.Name());
+            //            }
         };
         catModel.Suggest = function () {
             var res = new Array();
@@ -491,6 +480,19 @@ $(document).ready(function () {
                 });
             });
             return res;
+        };
+        catModel.ShowCategories = function (btn) {
+            var menu = $("#cat_menu");
+            if (menu.css("display") != "none") {
+                menu.hide();
+                return;
+            }
+            var input = $(btn).parent().find('[name="Category"]');
+            this.inputCat = input;
+            menu.css({ top: input.offset().top + 20, left: input.offset().left });
+            menu.width(input.width());
+            $("#cat_menu ul").width(input.width());
+            menu.slideDown();
         };
         catModel.assignMenu = function () {
             ddsmoothmenu.init({ mainmenuid: "cat_menu", //menu DIV id

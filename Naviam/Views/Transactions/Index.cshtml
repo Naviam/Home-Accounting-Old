@@ -92,8 +92,10 @@
         </td>
         <td style='width:175px'>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
-            <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'><input class="width100 enterastab" data-bind="category: Category" name="Category"/>
-            <a href="#" onclick='return transModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a></div>
+            <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'>
+                <input class="width100 enterastab" data-bind="category: Category" name="Category"/>
+                <a href="#" onclick='return catModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a>
+            </div>
         </td>
         <td style="width:120px;white-space:nowrap">
             @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
