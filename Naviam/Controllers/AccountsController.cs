@@ -40,7 +40,7 @@ namespace Naviam.WebUI.Controllers
             {
                 account.Currency = currencies.Find(c => c.Id == account.CurrencyId).NameShort;
             }
-            return Json(new { items = accounts, currItems = currencies, typesItems = accountTypes, finInst, finLinks });
+            return Json(new { items = accounts, currItems = currencies, typesItems = accountTypes, finInst, finLinks, accountTemplate = new Account() });
         }
 
         [HttpPost]

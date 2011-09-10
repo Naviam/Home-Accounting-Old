@@ -91,7 +91,7 @@ namespace Naviam.WebUI.Controllers
                                new Head {Field = "Amount", Text = DisplayNames.Amount, Columns = 2}
                            };
 
-            return Json(new { items = trans, paging, headItems = head });
+            return Json(new { items = trans, paging, headItems = head, transTemplate = new Transaction() });
         }
 
         [HttpPost]

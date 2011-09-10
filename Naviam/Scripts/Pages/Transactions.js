@@ -5,6 +5,7 @@
 var transModel = {
     paging: { Page: 1, SortField: 'Date', SortDirection: 1 }
 };
+var transEdit = {};
 ko.bindingHandlers.amount = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         var options = allBindingsAccessor().amountOptions || {};
@@ -105,12 +106,12 @@ function loadTransactions() {
             }
         };
         transModel = ko.mapping.fromJS(res, mapping);
+        ko.mapping.fromJS(ko.mapping.toJS(res.transTemplate), {}, transEdit);
         transModel.paging.Page.subscribe(function (newValue) {
             transModel.ReloadPage();
         });
         transModel.selectedItem = ko.observable(null);
         transModel.selectedRow = ko.observable(null);
-        transModel.editObj = null;
         transModel.ReloadPage = function () {
             if (this.DescrSub != null)
                 this.DescrSub.dispose();
@@ -147,10 +148,13 @@ function loadTransactions() {
         };
         transModel.GetNewItem = function () {
             var date = new Date();
-            return { Id: ko.observable(null), Description: ko.observable(null), Category: ko.observable(null), CategoryId: ko.observable(null), Amount: ko.observable(0),
-                Date: ko.observable('/Date(' + date.getTime() + ')/'), Direction: ko.observable(0), Notes: ko.observable(null), Merchant: ko.observable(null),
-                Currency: '', IncludeInTax: ko.observable(false), CurrencyId: ko.observable(accountsModel.selectedItem().CurrencyId), AccountId: ko.observable(accountsModel.selectedItem().Id)
-            };
+            var fItem = ko.mapping.fromJS(ko.mapping.toJS(transModel.transTemplate));
+            fItem.Date('/Date(' + date.getTime() + ')/');
+            fItem.Category = ko.observable();
+            fItem.Currency = ko.observable();
+            fItem.CurrencyId = ko.observable(accountsModel.selectedItem().CurrencyId);
+            fItem.AccountId = ko.observable(accountsModel.selectedItem().Id);
+            return fItem;
         };
         transModel.Add = function () {
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {
@@ -158,11 +162,10 @@ function loadTransactions() {
             });
             if (fItem != null) return;
             transDlg.close();
-            this.editObj = null;
             this.items.splice(0, 0, this.GetNewItem());
             var row = $('#transGrid table tr:eq(1)');
-            ko.applyBindings(this.items()[0], $("#transDlg")[0]);
             this.GoToEdit(null, this.items()[0], row);
+            ko.mapping.fromJS(ko.mapping.toJS(transModel.selectedItem()), {}, transEdit);
             this.ShowDialog();
         };
         transModel.CancelAdd = function () {
@@ -182,7 +185,6 @@ function loadTransactions() {
             //                    rowEdit.show();
             //**********
 
-            //console.log();
             if (item != this.selectedItem()) transDlg.close();
             if (this.DescrSub != null)
                 this.DescrSub.dispose();
@@ -230,8 +232,7 @@ function loadTransactions() {
         };
         transModel.ShowEdit = function (event, item) {
             this.selectedRow($(event.currentTarget).parents('tr'));
-            this.editObj = ko.mapping.toJS(transModel.selectedItem());
-            ko.applyBindings(this.editObj, $("#transDlg")[0]);
+            ko.mapping.fromJS(ko.mapping.toJS(transModel.selectedItem()), {}, transEdit);
             this.ShowDialog();
             //$("#edit_form").overlay().load();
         };
@@ -326,7 +327,7 @@ function loadTransactions() {
             var hld = $('#splitDialog');
             id = ko.utils.unwrapObservable(id);
             var fItem = this.getById(id);
-            //debug(id);
+            debug(id);
             if (fItem) {
                 if (hld.html() == '') {
                     $.postErr(getSplitDlg, function (res) {
@@ -343,6 +344,7 @@ function loadTransactions() {
             }
         }
         ko.applyBindings(transModel, $("#transGrid")[0]);
+        ko.applyBindings(transEdit, $("#transDlg")[0]);
     });
 }
 $(document).ready(function () {
@@ -356,15 +358,15 @@ $(document).ready(function () {
         var cat = row.find('[name="Category"]');
         am.removeClass(inputCssError);
         cat.removeClass(inputCssError);
-        if (transModel.editObj != null) {
+        var selItem = transModel.selectedItem();
+        //if (transEdit.Id() != null) {
             //restore inline editing props
-            var selItem = transModel.selectedItem();
-            transModel.editObj.Amount = selItem.Amount();
-            transModel.editObj.Category = selItem.Category();
-            transModel.editObj.Description = selItem.Description();
-            transModel.editObj.Date = selItem.Date();
-            ko.mapping.fromJS(transModel.editObj, {}, selItem);
-        }
+            transEdit.Amount(selItem.Amount());
+            //transEdit.Category(selItem.Category());
+            transEdit.Description(selItem.Description());
+            transEdit.Date(selItem.Date());
+        //}
+        ko.mapping.fromJS(ko.mapping.toJS(transEdit), {}, selItem);
         var item = transModel.selectedItem();
         //console.log(item);
         if (item.Amount() <= 0)
@@ -373,7 +375,7 @@ $(document).ready(function () {
             cat.addClass(inputCssError);
         if (item.Amount() <= 0 || item.Category() == null)
             return e.stopImmediatePropagation();
-        transModel.Save(transModel.editObj == null);
+        transModel.Save(transEdit.Id() == null);
     });
     transDlg = $("#transDlg").overlay({ fixed: false }).data('overlay');
     transDlg.onBeforeClose(function (e) {

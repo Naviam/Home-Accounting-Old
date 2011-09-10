@@ -10,7 +10,10 @@ namespace Naviam.Data
     [Serializable]
     public class Account : DbEntity
     {
-        public Account() { }
+        public Account() 
+        {
+            InitialBalance = 0;
+        }
         public Account(SqlDataReader reader)
         {
             Id = reader["id"] as int?;
