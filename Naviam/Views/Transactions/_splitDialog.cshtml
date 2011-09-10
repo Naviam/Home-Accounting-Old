@@ -50,7 +50,7 @@
 <div id="splitTrans"> 
 <form data-bind="submit: doSplit">
     Was:<span data-bind='amount: initialAmount'></span>
-    <table data-bind="visible: items().length > 0">
+    <table data-bind="visible: items().length > 0" class='table'>
         <thead>
         </thead>
         <tbody data-bind='template: { name: "splitTransTemplate", foreach: items, templateOptions: { delete: deleteItem } }'>

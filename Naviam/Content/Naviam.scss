@@ -267,7 +267,7 @@ a.category_picker {
 
 	padding: 30px 5px 5px 5px;
 	
-	width:740px;	
+	width:640px;	
 	/* for modern browsers use semi-transparent color on the border. nice! */
 	border:1px solid rgba(82, 82, 82, 0.698);
 
@@ -498,6 +498,12 @@ button {
 
 .width100 {
 	width:100%;
+}
+
+.table {
+	td {
+		padding: 5px;
+	}
 }
 
 .error, .alert, .notice, .success, .info {padding:0.8em;margin-bottom:1em;border:2px solid #ddd;}
