@@ -56,6 +56,7 @@ namespace Naviam.WebUI.Controllers
             if (ModelState.IsValid)
             {
                 var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password);
+                //var profile = new Data.UserProfile();
 
                 if (profile != null)
                 {

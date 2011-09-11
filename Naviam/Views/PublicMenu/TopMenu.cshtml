@@ -1,0 +1,8 @@
+﻿@using Naviam.WebUI.Models
+@model MenuModel
+<ul>
+    @foreach (var item in @Model.TopMenu)
+    {
+        <li><a class="@(item.Selected ? "selected" : "")" href="@Url.Content(item.Url)">@item.Title</a></li>
+    }
+</ul>

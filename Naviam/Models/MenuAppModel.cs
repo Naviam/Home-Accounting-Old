@@ -54,17 +54,17 @@ namespace Naviam.WebUI.Models
         public MenuModel(string controller, string action) :
             this(controller, action, null)
         {}
-        public MenuModel(string controller, string action, NameValueCollection queryString)
+        public MenuModel(string controller, string action, NameValueCollection queryString, string sitemapConfigName = "siteMapFile")
         {
             _queryString = queryString;
-            Initialize();
+            Initialize(sitemapConfigName);
             SetActiveMenuItems(controller, action);
         }
 
         #endregion .ctors
 
         #region .metods
-        private void Initialize(string sitemapConfigName = "siteMapFile")
+        private void Initialize(string sitemapConfigName)
         {
             _internalMenuItemsList = new List<MainMenuItem>();
             string pathAbsolute = HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings[sitemapConfigName]);

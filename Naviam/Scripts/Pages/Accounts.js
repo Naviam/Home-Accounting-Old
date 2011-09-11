@@ -2,10 +2,6 @@
 /// <reference path="..\knockout-1.2.1.js" />
 /// <reference path="..\common.js" />
 /// <reference path="~/Scripts/Pages/Transactions.js" />
-var editAccount = {
-    Id: ko.observable()
-    , Name: ko.observable(), InitialBalance: ko.observable(0), Description: ko.observable(), CurrencyId: ko.observable(), CardNumber: ko.observable(), TypeId: ko.observable(), FinInstitutionId: ko.observable()
-};
 function loadAccounts() {
     $.postErr(getAccountsUrl, function (res) {
         //var childItem = function (data) {
@@ -28,6 +24,8 @@ function loadAccounts() {
             }
         };
         accountsModel = ko.mapping.fromJS(res, mapping);
+        var editAccount = {};
+        ko.mapping.fromJS(ko.mapping.toJS(res.accountTemplate), {}, editAccount);
         accountsModel.move_items = ko.observableArray();
         accountsModel.ExchangeItems = ko.observableArray();
         accountsModel.selectedItem = ko.observable(null);
@@ -130,8 +128,7 @@ function loadAccounts() {
             accountsModel.hideEdit(true);
         };
         accountsModel.addItem = function () {
-            var newItem = { Id: null, Name: null, InitialBalance: 0, Balance: 0, Description: null, CurrencyId: null, CardNumber: null, TypeId: null, FinInstitutionId: ko.observable() };
-            this.passToEdit(newItem);
+            this.passToEdit(this.accountTemplate);
         };
         accountsModel.editItem = function (item) {
             accountsModel.passToEdit(item);

@@ -27,10 +27,11 @@
 <section class="menu">
     <h1>NAVIAM.COM</h1>
     <nav>
-        <ul>
+        @{Html.RenderAction("TopMenu", "PublicMenu");}
+@*        <ul>
             <li><a class="selected" href="@Url.Action("LogOn", "Account")">Log In</a></li>
             <li><a href="@Url.Action("Register", "Account")">Sign Up</a></li>
-        </ul>
+        </ul>*@
     </nav>
 </section>
 <article>

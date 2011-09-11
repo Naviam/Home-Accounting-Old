@@ -14,7 +14,12 @@ namespace Naviam.Data
         public enum TransactionTypes { Cash = 0, Check, Pending }
         public enum TransactionDirections { Expense  = 0, Income }
 
-        public Transaction() { }
+        public Transaction() 
+        {
+            //default props for add
+            Amount = 0;
+            IncludeInTax = false;
+        }
         public Transaction(SqlDataReader reader) 
         { 
             Id = reader["id"] as int?; 
