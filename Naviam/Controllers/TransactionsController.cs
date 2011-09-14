@@ -87,6 +87,7 @@ namespace Naviam.WebUI.Controllers
                            {
                                new Head {Field = "Date", Text = DisplayNames.Date},
                                new Head {Field = "Description", Text = DisplayNames.Description},
+                               new Head {Field = "Merchant", Text = DisplayNames.Merchant},
                                new Head {Field = "CategoryId", Text = DisplayNames.Category},
                                new Head {Field = "Amount", Text = DisplayNames.Amount, Columns = 2}
                            };
@@ -156,6 +157,28 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetSplitDialog()
         {
             return PartialView("_splitDialog");
+        }
+
+        [HttpPost]
+        public ActionResult SplitTrans(TransactionsSplit splits)
+        {
+            var companyId = CurrentUser.CurrentCompany;
+            var updateTrans = TransactionsDataAdapter.GetTransaction(splits.Id, companyId);
+            var rep = new TransactionsRepository();
+            if (updateTrans != null)
+            {
+                updateTrans.Amount = splits.EndAmount;
+                rep.Update(updateTrans, companyId);
+                foreach (var item in splits.Items)
+                {
+                    updateTrans.Description = item.Description;
+                    updateTrans.Merchant = item.Merchant;
+                    updateTrans.CategoryId = item.CategoryId;
+                    updateTrans.Amount = item.Amount;
+                    rep.Insert(updateTrans, companyId);
+                }
+            }
+            return Json(updateTrans);
         }
 
         [HttpPost]

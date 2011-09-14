@@ -9,6 +9,14 @@ using System.Data.SqlClient;
 namespace Naviam.Data
 {
     [Serializable]
+    public class TransactionsSplit : DbEntity
+    {
+        public List<Transaction> Items { get; set; }
+
+        public decimal? EndAmount { get; set; }
+    }
+
+    [Serializable]
     public class Transaction : DbEntity
     {
         public enum TransactionTypes { Cash = 0, Check, Pending }
