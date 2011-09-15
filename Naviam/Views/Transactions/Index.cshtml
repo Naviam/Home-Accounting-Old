@@ -51,10 +51,8 @@
 
 @section LeftColumn {
 <script type="text/html" id="accountsTemplate">
-    <li>
-        <a href="#" data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}"></a>
+    <li data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}">
         <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
-        <a href="#" data-bind="click: function(event) { $item.delete($data); }, visible: $data.Id() != null">@SharedStrings.Delete</a>
         <span data-bind="amount: Balance, visible: $data.Id() != null"></span> <span data-bind="text: Currency, visible: $data.Id() != null"></span>
     </li>
 </script>

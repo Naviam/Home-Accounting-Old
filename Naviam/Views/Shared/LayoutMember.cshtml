@@ -23,29 +23,32 @@
         pageContext.companyId = '@Request.QueryString["cid"]';
     </script>
     <header>
-        <nav class="left">
-            @{Html.RenderAction("CompaniesMenu", "MenuApp");}
-        </nav>
-        <nav class="right">
-            @{var user = ViewBag.CurrentUser as UserProfile;}
-            <ul>
-                <li><a href="Error.cshtml">@user.FirstName @user.LastName</a></li>
-                <li><a href="Error.cshtml">0</a></li>
-                <li><a href="Error.cshtml">?</a></li>
-                <li><a href="@Url.Action("LogOn", "Account")">Выйти</a></li>
-            </ul>
-        </nav>
+        <div>
+            <nav class="left">
+                @{Html.RenderAction("CompaniesMenu", "MenuApp");}
+            </nav>
+            <nav class="right">
+                @{var user = ViewBag.CurrentUser as UserProfile;}
+                <ul>
+                    <li><a href="Error.cshtml">@user.FirstName @user.LastName</a></li>
+                    <li><a href="Error.cshtml">0</a></li>
+                    <li><a href="Error.cshtml">?</a></li>
+                    <li><a href="@Url.Action("LogOn", "Account")">Выйти</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
     <div style="float: none"></div>
-    <section class="menu">
-        <h1>NAVIAM.COM</h1>
-        <nav>@{Html.RenderAction("TopMenu", "MenuApp");}</nav>
-    </section>
-    <div style="float: none"></div>
-    <section class="main">
-        @RenderBody()
-    </section>
-    
+    <div class="container">
+        <section class="menu">
+            <h1></h1>
+            <nav>@{Html.RenderAction("TopMenu", "MenuApp");}</nav>
+        </section>
+        <div style="float: none"></div>
+        <section class="main">
+            @RenderBody()
+        </section>
+    </div>
     <div style="clear: left;"></div>
     @{var assembly = typeof(TransactionsController).Assembly;}
     <footer>© @DateTime.Now.Year Naviam Inc. (Ver. @assembly.GetName().Version)</footer>
