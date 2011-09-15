@@ -42,14 +42,38 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = "user_create";
-                var cmd = holder.Connection.CreateSPCommand(commName);
+                var cmd = holder.Connection.CreateSPCommand("user_create");
                 try
                 {
                     cmd.AddEntityParameters(entity, DbActionType.Insert);
                     cmd.ExecuteNonQuery();
                     entity.Id = cmd.GetRowIdParameter();
                     res = cmd.GetReturnParameter();
+                }
+                catch (SqlException e)
+                {
+                    cmd.AddDetailsToException(e);
+                    throw;
+                }
+            }
+            return res;
+        }
+
+        public static UserProfile CreateUser(string email, string password, string default_company_name, string default_account_name)
+        {
+            UserProfile res = new UserProfile(email, password);
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                var cmd = holder.Connection.CreateSPCommand("user_signin");
+                try
+                {
+                    cmd.Parameters.Add("@email", SqlDbType.NVarChar).Value = email;
+                    cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+                    cmd.Parameters.Add("@default_company_name", SqlDbType.NVarChar).Value = default_company_name;
+                    cmd.Parameters.Add("@default_account_name", SqlDbType.NVarChar).Value = default_account_name;
+                    cmd.Parameters.Add("@current_time_utc", SqlDbType.DateTime).Value = DateTime.UtcNow;
+                    cmd.ExecuteNonQuery();
+                    res.Id = cmd.GetRowIdParameter();
                 }
                 catch (SqlException e)
                 {
