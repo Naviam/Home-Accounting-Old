@@ -234,7 +234,6 @@ function loadTransactions() {
             this.selectedRow($(event.currentTarget).parents('tr'));
             ko.mapping.fromJS(ko.mapping.toJS(transModel.selectedItem()), {}, transEdit);
             this.ShowDialog();
-            //$("#edit_form").overlay().load();
         };
         transModel.Delete = function (item) {
             askToUser(lang.DeleteTrans, function () {

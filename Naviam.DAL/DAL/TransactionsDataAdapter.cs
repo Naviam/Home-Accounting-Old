@@ -36,7 +36,13 @@ namespace Naviam.DAL
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
-                                res.Add(new Transaction(reader));
+                            {
+                                var trans = new Transaction(reader);
+                                res.Add(trans);
+                                //TODO: get from db
+                                trans.TagIds = new List<string>();
+                                trans.TagIds.Add("1");
+                            }
                         }
                     }
                     catch (SqlException e)

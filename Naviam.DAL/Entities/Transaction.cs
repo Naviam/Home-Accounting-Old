@@ -51,6 +51,7 @@ namespace Naviam.Data
         public decimal? Amount { get; set; }
         public string Merchant { get; set; }
         public string Notes { get; set; }
+        public List<string> TagIds { get; set; }
         public TransactionTypes TransactionType { get; set; }
         public TransactionDirections Direction { get; set; }
         public int? AccountId { get; set; }

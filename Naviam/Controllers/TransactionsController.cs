@@ -91,7 +91,6 @@ namespace Naviam.WebUI.Controllers
                                new Head {Field = "CategoryId", Text = DisplayNames.Category},
                                new Head {Field = "Amount", Text = DisplayNames.Amount, Columns = 2}
                            };
-
             return Json(new { items = trans, paging, headItems = head, transTemplate = new Transaction() });
         }
 
@@ -100,10 +99,18 @@ namespace Naviam.WebUI.Controllers
         {
             var companyId = CurrentUser.CurrentCompany;
             var rep = new TransactionsRepository();
-            //TryUpdateModel(updateTrans);
+            var tags = Request.Form["TagIds[]"] as string;
+            trans.TagIds = new List<string>();
+            if (tags != null)
+            {
+                string[] tagsA = tags.Split(',');
+                foreach (var item in tagsA)
+                {
+                    trans.TagIds.Add(item);
+                }
+            }
+            //TryUpdateModel(trans);
             var amount = trans.Amount;
-            //if (pageContext.AccountId != null)
-            //    trans.AccountId = pageContext.AccountId;
             if (trans.Id != null)
             {
                 var updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, companyId);

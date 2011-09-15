@@ -62,9 +62,12 @@
             date = eval("new " + this.initialDate().replace(/\//g, ''));
             date = date.format();
         }
-        return "You " + (this.initialDir() == 0 ? "spent " : "got ") + addCommas(this.initialAmount()) + " " + this.currency() + (this.initialMerchant() != null ? " at " + this.initialMerchant() : " ")
-         + (this.initialDesc() != null ? " (" + this.initialDesc() + ") " : " ")
-         + " on " + this.initialCat() + " on " + date + ".";
+        return $.format("You {0} {1} {2} {3} {4} on {5} on {6}.", (this.initialDir() == 0 ? "spent " : "got "), addCommas(this.initialAmount()),
+            this.currency(), 
+            (this.initialMerchant() != null ? " at " + this.initialMerchant() : ""),
+            (this.initialDesc() != null ? " (" + this.initialDesc() + ") " : ""),
+            this.initialCat(),
+            date);
     }, splitModel);
     splitModel.endAmount = ko.dependentObservable(function () {
         var total = this.initialAmount();
