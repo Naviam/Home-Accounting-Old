@@ -221,13 +221,13 @@ function loadTransactions() {
         };
         transModel.SaveItem = function (sItem, reloadPage) {
             if (sItem) {
-                $.postErr(updateTransUrl, ko.mapping.toJS(sItem), function (res) {
+                $.postErr(updateTransUrl, ko.mapping.toJSON(sItem), function (res) {
                     //transModel.selectedItem().Id(res.Id);
                     var amount = res.amount;
                     amount = res.trans.Direction == 0 ? -amount : amount;
                     accountsModel.addAmount(res.trans.AccountId, amount);
                     if (reloadPage) transModel.ReloadPage();
-                });
+                }, "json");
             }
         };
         transModel.ShowEdit = function (event, item) {
