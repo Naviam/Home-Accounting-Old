@@ -27,8 +27,9 @@ namespace Naviam.Data
             //default props for add
             Amount = 0;
             IncludeInTax = false;
+            TagIds = new List<string>();
         }
-        public Transaction(SqlDataReader reader) 
+        public Transaction(SqlDataReader reader) : this()
         { 
             Id = reader["id"] as int?; 
             Date = reader["date"] as DateTime?;

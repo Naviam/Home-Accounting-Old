@@ -40,7 +40,6 @@ namespace Naviam.DAL
                                 var trans = new Transaction(reader);
                                 res.Add(trans);
                                 //TODO: get from db
-                                trans.TagIds = new List<string>();
                                 trans.TagIds.Add("1");
                             }
                         }
