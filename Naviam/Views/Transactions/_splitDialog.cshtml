@@ -35,11 +35,15 @@
                     var catItem = catModel.Search(item.category());
                     item.categoryId = catItem.Id();
                 });
-                $.postErr(splitTransUrl, ko.toJSON(this), function (res) {
+                var mapping = {
+                    'ignore': ["addItem", "deleteItem", "isInputOk", "doSplit", "setInitial", "descriptionText"]
+                }
+                //debug(ko.mapping.toJS(this, mapping));
+                $.postErr(splitTransUrl, ko.mapping.toJS(this, mapping), function (res) {
                     $('#splitDialog').overlay().close();
                     transModel.ReloadPage();
                     //alert("Could now transmit to server: " + ko.toJSON(this));
-                }, "json");
+                });
             }
         }
     };

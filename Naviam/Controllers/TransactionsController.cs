@@ -99,16 +99,16 @@ namespace Naviam.WebUI.Controllers
         {
             var companyId = CurrentUser.CurrentCompany;
             var rep = new TransactionsRepository();
-            //var tags = Request.Form["TagIds[]"] as string;
-            //trans.TagIds = new List<string>();
-            //if (tags != null)
-            //{
-            //    string[] tagsA = tags.Split(',');
-            //    foreach (var item in tagsA)
-            //    {
-            //        trans.TagIds.Add(item);
-            //    }
-            //}
+            var tags = Request.Form["TagIds[]"] as string;
+            trans.TagIds = new List<string>();
+            if (tags != null)
+            {
+                string[] tagsA = tags.Split(',');
+                foreach (var item in tagsA)
+                {
+                    trans.TagIds.Add(item);
+                }
+            }
             //TryUpdateModel(trans);
             var amount = trans.Amount;
             if (trans.Id != null)
