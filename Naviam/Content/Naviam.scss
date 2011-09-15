@@ -1,7 +1,19 @@
-$base-color: #ea4c88;
-$top-color: #615d5d;
-$menu-color: #F7F7F7;
+$base-color: #FF3300;
+$bg-color1: #EBEEF1;
+$bg-color2: #ffffff;
+$bg-color3: #89D6BC;
+$bg-color4: #33CC99;
+$bg-color5: #2CB185;
+$bg-color6: #66CC99;
+$bg-color7: #009966;
+$bg-color8: #FF3300;
 $error-color: #ff0000;
+
+@mixin centered($width: 570px) {
+    width: $width;
+    margin-left: auto;
+    margin-right: auto; 
+}
 
 @mixin rounded ($radius: 5px) {
   border-radius: $radius;
@@ -15,8 +27,8 @@ $error-color: #ff0000;
 }
 
 body {
-	padding: 0;
-	margin: 0;	
+	font-size: large;
+    background-color: $bg-color1;	
 }
 
 nav {
@@ -38,35 +50,38 @@ ul {
 	}
 
 header {
-	background-color: $top-color;
-	height: 26px;
-	nav {
-		ul {
-			li {
-				a {
-					color: white;
-					text-decoration: none;
-					border-top: 2px solid transparent;
-					border-bottom: 5px solid transparent;
-					&:hover {
-						background-color: #b5b5b5;
-					}
-					&:active {
-						border-top: 2px solid $base-color;
-					}
-					&.selected {
-						border-top: 2px solid $base-color;
+	background-color: $bg-color3;
+	height: 28px;
+	div {
+		@include centered(940px);
+		height: 28px;
+		background-color: $bg-color5;
+		nav {
+			ul {
+				li {
+					a {
+						color: white;
+						text-decoration: none;
+						border-top: 4px solid transparent;
+						border-bottom: 4px solid transparent;
+						&:hover {
+							background-color: $bg-color7;
+						}
+						&:active {
+							border-top: 3px solid $base-color;
+						}
+						&.selected {
+							border-top: 3px solid $base-color;
+						}
 					}
 				}
+			}	
+			&.left {
+				float: left;
 			}
-		}	
-		&.left {
-			float: left;
-			margin-left: 100px;
-		}
-		&.right {
-			float: right;
-			margin-right: 100px;
+			&.right {
+				float: right;
+			}
 		}
 	}
 }
@@ -75,23 +90,32 @@ footer {
   @include rounded(2px);
 }
 
+div.container {
+	@include centered(940px);
+	-moz-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
+	-webkit-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
+	background-color: $bg-color2;
+	height: 900px;
+}
+
 section.menu 
 {
-	height: 60px;
-	background-color: $menu-color;
-	border-top: 1px solid white;
-	padding-top: 3px;
-	font-size: larger;
+	height: 70px;
+    font-size: larger;
+	@include centered(940px);
+	background-color: $bg-color2;
 	h1 {
-		float:left;
-		padding-top:4px;
-		padding-left: 100px;
-		font-size: xx-large;
-		color: #ea4c88;
+		float: left;
+		  color: $bg-color2;
+		  background-image: url('../content/logo.png');
+		  padding-top: 4px;
+		  width: 170px;
+		  height: 50px;
+		  margin-left: 20px;
 	}
 	nav {
 		position: relative;
-		padding-right: 90px;
+		padding-right: 10px;
 		ul {
 			margin: 10px 0 0;
 			float: right;
@@ -125,12 +149,13 @@ section.menu
 }
 
 section.main {
-	padding-left: 100px;
 	article {
 		float: left;
 	}
 	aside.left {
 		float: left;
+		background-color: $bg-color3;
+		width: 160px;
 	}
 	aside.right {
 		float: right;
