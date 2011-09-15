@@ -26,6 +26,7 @@
 
     var getExchangeDlg = '@Url.Action("GetExchangeDialog", "Transactions")';
     var getSplitDlg = '@Url.Action("GetSplitDialog", "Transactions")';
+    var splitTransUrl = '@Url.Action("SplitTrans", "Transactions")';
 
     var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
@@ -87,6 +88,10 @@
         <td style='width:275px'>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Description"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
+        </td>
+        <td style='width:250px'>
+            <span data-bind="visible: transModel.selectedItem() != $data, text: Merchant"></span>
+            <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Merchant" />
         </td>
         <td style='width:175px'>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
@@ -176,9 +181,13 @@
             <td><input data-bind="checked: IncludeInTax" name="IncludeInTax" type="checkbox"/></td>
         </tr>
         <tr>
+            <td>@DisplayNames.Tags:</td>
+            <td><div data-bind='template: { name: "transTagsTemplate", foreach: catModel.items, templateOptions: { tagIds: TagIds } }'></div></td>
+        </tr>
+@*        <tr>
             <td>@DisplayNames.Merchant:</td>
             <td><input class="width100" data-bind="value: Merchant" name="Merchant"/></td>
-        </tr>
+        </tr>*@
         <tr>
             <td>@DisplayNames.Notes:</td>
             <td><textarea data-bind="value: Notes" name="Notes" rows='6' cols='30'></textarea></td>
@@ -190,6 +199,9 @@
         </div>     
     </div>
 </div>
+<script type="text/html" id="transTagsTemplate">
+    <label><input type="checkbox" data-bind="checked: $item.tagIds(), value: Id"/><span data-bind="text: Name"></span></label>
+</script>
 
 <script type="text/html" id="catTemplate">
     <li>
@@ -246,5 +258,5 @@
 
 <div id='cat_edit_area' class="overlay"></div>
 <div id='exchangeDialog' class="overlay"></div>
-<div id='splitDialog' class="overlay"></div>
+<div id='splitDialog' class="overlay" style='width:700px'></div>
 

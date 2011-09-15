@@ -93,7 +93,7 @@ function loadTransactions() {
             var catItem = catModel.itemById(data.CategoryId);
             var catName = catItem != null ? catItem.Name() : '';
             this.Category = ko.observable(catName);
-            this.Currency = accountsModel.currencyById(this.CurrencyId());
+            this.Currency = ko.observable(accountsModel.currencyById(this.CurrencyId()));
         };
         var mapping = {
             'items': {
@@ -190,7 +190,7 @@ function loadTransactions() {
                 this.DescrSub.dispose();
             if (item.Id() != null) {
                 item.FullRow = ko.dependentObservable(function () {
-                    return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date();
+                    return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date() + this.Merchant();
                 }, item);
                 this.DescrSub = item.FullRow.subscribe(function (newValue) {
                     transModel.Save(false);
@@ -234,7 +234,6 @@ function loadTransactions() {
             this.selectedRow($(event.currentTarget).parents('tr'));
             ko.mapping.fromJS(ko.mapping.toJS(transModel.selectedItem()), {}, transEdit);
             this.ShowDialog();
-            //$("#edit_form").overlay().load();
         };
         transModel.Delete = function (item) {
             askToUser(lang.DeleteTrans, function () {
@@ -320,13 +319,13 @@ function loadTransactions() {
                 if (hld.html() == '') {
                     $.postErr(getSplitDlg, function (res) {
                         hld.html(res);
-                        splitModel.setInitial(id, fItem.Description(), fItem.Category(), fItem.Amount());
+                        splitModel.setInitial(id, fItem.Description(), fItem.Category(), fItem.Amount(), fItem.Merchant(), fItem.Currency(), fItem.Date(), fItem.Direction());
                         hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true, closeIcon: true });
                         hld.overlay().load();
                     });
                 }
                 else {
-                    splitModel.setInitial(id, fItem.Description(), fItem.Category(), fItem.Amount());
+                    splitModel.setInitial(id, fItem.Description(), fItem.Category(), fItem.Amount(), fItem.Merchant(), fItem.Currency(), fItem.Date(), fItem.Direction());
                     hld.overlay().load();
                 }
             }
@@ -352,6 +351,7 @@ $(document).ready(function () {
         transEdit.Amount(selItem.Amount());
         //transEdit.Category(selItem.Category());
         transEdit.Description(selItem.Description());
+        transEdit.Merchant(selItem.Merchant())
         transEdit.Date(selItem.Date());
         //}
         ko.mapping.fromJS(ko.mapping.toJS(transEdit), {}, selItem);

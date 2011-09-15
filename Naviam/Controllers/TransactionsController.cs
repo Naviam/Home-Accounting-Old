@@ -87,10 +87,10 @@ namespace Naviam.WebUI.Controllers
                            {
                                new Head {Field = "Date", Text = DisplayNames.Date},
                                new Head {Field = "Description", Text = DisplayNames.Description},
+                               new Head {Field = "Merchant", Text = DisplayNames.Merchant},
                                new Head {Field = "CategoryId", Text = DisplayNames.Category},
                                new Head {Field = "Amount", Text = DisplayNames.Amount, Columns = 2}
                            };
-
             return Json(new { items = trans, paging, headItems = head, transTemplate = new Transaction() });
         }
 
@@ -99,10 +99,18 @@ namespace Naviam.WebUI.Controllers
         {
             var companyId = CurrentUser.CurrentCompany;
             var rep = new TransactionsRepository();
-            //TryUpdateModel(updateTrans);
+            var tags = Request.Form["TagIds[]"] as string;
+            trans.TagIds = new List<string>();
+            if (tags != null)
+            {
+                string[] tagsA = tags.Split(',');
+                foreach (var item in tagsA)
+                {
+                    trans.TagIds.Add(item);
+                }
+            }
+            //TryUpdateModel(trans);
             var amount = trans.Amount;
-            //if (pageContext.AccountId != null)
-            //    trans.AccountId = pageContext.AccountId;
             if (trans.Id != null)
             {
                 var updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, companyId);
@@ -156,6 +164,28 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetSplitDialog()
         {
             return PartialView("_splitDialog");
+        }
+
+        [HttpPost]
+        public ActionResult SplitTrans(TransactionsSplit splits)
+        {
+            var companyId = CurrentUser.CurrentCompany;
+            var updateTrans = TransactionsDataAdapter.GetTransaction(splits.Id, companyId);
+            var rep = new TransactionsRepository();
+            if (updateTrans != null)
+            {
+                updateTrans.Amount = splits.EndAmount;
+                rep.Update(updateTrans, companyId);
+                foreach (var item in splits.Items)
+                {
+                    updateTrans.Description = item.Description;
+                    updateTrans.Merchant = item.Merchant;
+                    updateTrans.CategoryId = item.CategoryId;
+                    updateTrans.Amount = item.Amount;
+                    rep.Insert(updateTrans, companyId);
+                }
+            }
+            return Json(updateTrans);
         }
 
         [HttpPost]

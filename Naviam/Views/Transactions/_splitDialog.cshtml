@@ -4,11 +4,15 @@
     var splitModel = {
         items: ko.observableArray()
         , id: 0
+        , currency: ko.observable()
         , initialAmount: ko.observable(0)
-        , initialDesc: ''
-        , initialCat: ''
+        , initialDesc: ko.observable()
+        , initialCat: ko.observable()
+        , initialMerchant: ko.observable()
+        , initialDate: ko.observable()
+        , initialDir: ko.observable()
         , addItem: function () {
-            var fItem = { description: this.initialDesc, category: ko.observable(this.initialCat), amount: ko.observable(0) };
+            var fItem = { description: this.initialDesc, merchant: this.initialMerchant, category: ko.observable(this.initialCat()), amount: ko.observable(0), categoryId: null };
             //                fItem.amount.subscribe(function (newValue) {
             //                    debug(newValue);
             //                });
@@ -23,21 +27,52 @@
             var fItem = ko.utils.arrayFirst(this.items(), function (item) {
                 return item.amount() == 0;
             });
-            return fItem == null && this.endAmount() >= 0;
+            return fItem == null && this.endAmount() > 0;
         }
         , doSplit: function () {
-            alert("Could now transmit to server: " + ko.toJSON(this));
+            if (this.isInputOk()) {
+                ko.utils.arrayForEach(this.items(), function (item) {
+                    var catItem = catModel.Search(item.category());
+                    item.categoryId = catItem.Id();
+                });
+                var mapping = {
+                    'ignore': ["addItem", "deleteItem", "isInputOk", "doSplit", "setInitial", "descriptionText"]
+                }
+                //debug(ko.mapping.toJS(this, mapping));
+                $.postErr(splitTransUrl, ko.mapping.toJS(this, mapping), function (res) {
+                    $('#splitDialog').overlay().close();
+                    transModel.ReloadPage();
+                    //alert("Could now transmit to server: " + ko.toJSON(this));
+                });
+            }
         }
     };
-    splitModel.setInitial = function (id, description, category, amount) {
+    splitModel.setInitial = function (id, description, category, amount, merchant, currency, date, direction) {
         this.items().length = 0;
-        this.items.push({ description: description, category: ko.observable(category), amount: ko.observable(0) });
+        this.items.push({ description: description, merchant: merchant, category: ko.observable(category), amount: ko.observable(0), categoryId: null });
         this.initialAmount(amount);
-        this.initialDesc = description;
-        this.initialCat = category;
+        this.initialDesc(description);
+        this.initialCat(category);
+        this.initialMerchant(merchant);
         this.id = id;
+        this.currency(currency);
+        this.initialDate(date);
+        this.initialDir(direction);
         $('.suggestCat').autocomplete(catModel.Suggest(), { minChars: 1, delay: 10 });
     }
+    splitModel.descriptionText = ko.dependentObservable(function () {
+        var date = "";
+        if (this.initialDate()) {
+            date = eval("new " + this.initialDate().replace(/\//g, ''));
+            date = date.format();
+        }
+        return $.format("You {0} {1} {2} {3} {4} on {5} on {6}.", (this.initialDir() == 0 ? "spent " : "got "), addCommas(this.initialAmount()),
+            this.currency(), 
+            (this.initialMerchant() != null ? " at " + this.initialMerchant() : ""),
+            (this.initialDesc() != null ? " (" + this.initialDesc() + ") " : ""),
+            this.initialCat(),
+            date);
+    }, splitModel);
     splitModel.endAmount = ko.dependentObservable(function () {
         var total = this.initialAmount();
         for (var i = 0; i < this.items().length; i++)
@@ -48,15 +83,31 @@
 </script>
 
 <div id="splitTrans"> 
+<h2>Split Your Transaction</h2>
+<h3>Description</h3>
+<span data-bind='text: descriptionText'></span>
 <form data-bind="submit: doSplit">
-    Was:<span data-bind='amount: initialAmount'></span>
     <table data-bind="visible: items().length > 0" class='table'>
         <thead>
+        <tr>
+            <th><span data-bind='text: initialDesc'></span></th>
+            <th><span data-bind='text: initialMerchant'></span></th>
+            <th><span data-bind='text: initialCat'></span></th>
+            <th><span data-bind='amount: initialAmount'></span></th>
+            <th></th>
+        </tr>
         </thead>
         <tbody data-bind='template: { name: "splitTransTemplate", foreach: items, templateOptions: { delete: deleteItem } }'>
         </tbody>
+        <tfoot>
+        <tr>
+            <td><span data-bind='text: initialDesc'></span></td>
+            <td><span data-bind='text: initialMerchant'></span></td>
+            <td><span data-bind='text: initialCat'></span></td>
+            <td><span data-bind='amount: endAmount'></span></td>
+        </tr>
+        </tfoot>
     </table>
-    Will be:<span data-bind='amount: endAmount'></span>
     <button type="submit" data-bind="enable: isInputOk()">Ok</button>
     <button type="button" class='close'>@SharedStrings.Cancel</button>
     <button data-bind="click: addItem">Add</button>
@@ -65,8 +116,9 @@
 <script type="text/html" id="splitTransTemplate">
     <tr>
         <td><input data-bind="value: description"/></td>
+        <td><input data-bind="value: merchant"/></td>
         <td>
-            <div style='position:relative;'>
+            <div style='position:relative;width:175px'>
                 <input class="width100 suggestCat" data-bind="category: category" name="Category"/>
                 <a href="#" onclick='return catModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a>
             </div>

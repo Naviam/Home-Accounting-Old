@@ -9,6 +9,14 @@ using System.Data.SqlClient;
 namespace Naviam.Data
 {
     [Serializable]
+    public class TransactionsSplit : DbEntity
+    {
+        public List<Transaction> Items { get; set; }
+
+        public decimal? EndAmount { get; set; }
+    }
+
+    [Serializable]
     public class Transaction : DbEntity
     {
         public enum TransactionTypes { Cash = 0, Check, Pending }
@@ -19,8 +27,9 @@ namespace Naviam.Data
             //default props for add
             Amount = 0;
             IncludeInTax = false;
+            TagIds = new List<string>();
         }
-        public Transaction(SqlDataReader reader) 
+        public Transaction(SqlDataReader reader) : this()
         { 
             Id = reader["id"] as int?; 
             Date = reader["date"] as DateTime?;
@@ -43,6 +52,7 @@ namespace Naviam.Data
         public decimal? Amount { get; set; }
         public string Merchant { get; set; }
         public string Notes { get; set; }
+        public List<string> TagIds { get; set; }
         public TransactionTypes TransactionType { get; set; }
         public TransactionDirections Direction { get; set; }
         public int? AccountId { get; set; }
