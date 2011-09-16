@@ -24,19 +24,19 @@
 </head>
 
 <body>
-<section class="menu">
-    <h1>NAVIAM.COM</h1>
-    <nav>
-        @{Html.RenderAction("TopMenu", "PublicMenu");}
-@*        <ul>
-            <li><a class="selected" href="@Url.Action("LogOn", "Account")">Log In</a></li>
-            <li><a href="@Url.Action("Register", "Account")">Sign Up</a></li>
-        </ul>*@
-    </nav>
-</section>
-<article>
-    @RenderBody()
-</article>
+    <header><nav></nav></header>
+    <div style="float: none"></div>
+    <div class="container">
+        <section class="menu">
+            <h1></h1>
+            <nav>
+                @{Html.RenderAction("TopMenu", "PublicMenu");}
+            </nav>
+        </section>
+        <article>
+            @RenderBody()
+        </article>
+    </div>
 @if (System.Configuration.ConfigurationManager.AppSettings["EnableGoogleAnalytics"].AsBool())
 {
 <script type="text/javascript">

@@ -1,6 +1,6 @@
 body {
-  padding: 0;
-  margin: 0; }
+  font-size: large;
+  background-color: #ebeef1; }
 
 nav ul li {
   float: left; }
@@ -14,46 +14,62 @@ ul {
   list-style-type: none; }
 
 header {
-  background-color: #615d5d;
-  height: 26px; }
-  header nav ul li a {
-    color: white;
-    text-decoration: none;
-    border-top: 2px solid transparent;
-    border-bottom: 5px solid transparent; }
-    header nav ul li a:hover {
-      background-color: #b5b5b5; }
-    header nav ul li a:active {
-      border-top: 2px solid #ea4c88; }
-    header nav ul li a.selected {
-      border-top: 2px solid #ea4c88; }
-  header nav.left {
-    float: left;
-    margin-left: 100px; }
-  header nav.right {
-    float: right;
-    margin-right: 100px; }
+  background-color: #89d6bc;
+  height: 28px; }
+  header div {
+    width: 940px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 28px;
+    background-color: #2cb185; }
+    header div nav ul li a {
+      color: white;
+      text-decoration: none;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent; }
+      header div nav ul li a:hover {
+        background-color: #009966; }
+      header div nav ul li a:active {
+        border-top: 3px solid #ff3300; }
+      header div nav ul li a.selected {
+        border-top: 3px solid #ff3300; }
+    header div nav.left {
+      float: left; }
+    header div nav.right {
+      float: right; }
 
 footer {
   border-radius: 2px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px; }
 
+div.container {
+  width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  -moz-box-shadow: 0.1em 1.6em 0.6em white;
+  -webkit-box-shadow: 0.1em 1.6em 0.6em white;
+  background-color: white;
+  height: 900px; }
+
 section.menu {
-  height: 60px;
-  background-color: #f7f7f7;
-  border-top: 1px solid white;
-  padding-top: 3px;
-  font-size: larger; }
+  height: 70px;
+  font-size: larger;
+  width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white; }
   section.menu h1 {
     float: left;
+    color: white;
+    background-image: url("../content/logo.png");
     padding-top: 4px;
-    padding-left: 100px;
-    font-size: xx-large;
-    color: #ea4c88; }
+    width: 170px;
+    height: 50px;
+    margin-left: 20px; }
   section.menu nav {
     position: relative;
-    padding-right: 90px; }
+    padding-right: 10px; }
     section.menu nav ul {
       margin: 10px 0 0;
       float: right;
@@ -68,40 +84,40 @@ section.menu {
           display: block;
           padding: 4px 4px;
           font-weight: 200;
-          color: #ea4c88;
+          color: #ff3300;
           text-decoration: none; }
           section.menu nav ul li a:hover {
             color: white;
-            background-color: #ea4c88; }
+            background-color: #ff3300; }
           section.menu nav ul li a:active {
             color: white;
-            background-color: #ea4c88; }
+            background-color: #ff3300; }
           section.menu nav ul li a.selected {
             color: white;
-            background-color: #ea4c88; }
+            background-color: #ff3300; }
 
-section.main {
-  padding-left: 100px; }
-  section.main article {
-    float: left; }
-  section.main aside.left {
-    float: left; }
-  section.main aside.right {
-    float: right; }
+section.main article {
+  float: left; }
+section.main aside.left {
+  float: left;
+  background-color: #89d6bc;
+  width: 160px; }
+section.main aside.right {
+  float: right; }
 
 /* root element for accordion. decorated with rounded borders and gradient background image */
 #accordion {
-  background: #ea4c88 0 0;
-  border: 1px solid #ea4c88;
-  -background: #ff98ff; }
+  background: #ff3300 0 0;
+  border: 1px solid #ff3300;
+  -background: #ff6600; }
   #accordion h2 {
-    background: #ea4c88;
+    background: #ff3300;
     margin: 0;
     padding: 5px 15px;
     font-size: 14px;
     font-weight: normal;
     border: 1px solid #fff;
-    border-bottom: 1px solid #ea4c88;
+    border-bottom: 1px solid #ff3300;
     cursor: pointer; }
     #accordion h2.current {
       cursor: default;
