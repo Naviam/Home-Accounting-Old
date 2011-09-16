@@ -39,5 +39,10 @@ namespace Naviam.Domain.Concrete
             new CacheWrapper().Set(cId, profile, true, null);
             return cId;
         }
+
+        public virtual UserProfile CreateUser(string email, string password, string default_company_name, string default_account_name)
+        {
+            return MembershipDataAdapter.CreateUser(email, password, default_company_name, default_account_name);
+        }
     }
 }
