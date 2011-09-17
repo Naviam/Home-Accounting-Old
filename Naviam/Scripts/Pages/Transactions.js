@@ -373,7 +373,7 @@ $(document).ready(function () {
     //$("#transDlg").overlay({ fixed: false });
     //loadTransactions();
     //Gategories
-    $.postErr(getCatUrl, function (res) {
+    $.postErr(getDicts, function (res) {
         //        var mapping = {
         //            'items': {
         //                key: function (data) {
