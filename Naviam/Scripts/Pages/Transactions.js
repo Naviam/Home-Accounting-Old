@@ -142,8 +142,8 @@ function loadTransactions() {
             //conf.top = row.offset().top + row.height();
             //conf.left = row.offset().left - 5;
             var tblOffset = row.parents('table').offset();
-            conf.top = tblOffset.top + row[0].offsetTop + row.height();
-            conf.left = tblOffset.left - 5;
+            conf.top = tblOffset.top + row[0].offsetTop + row.height() - pageYOffset;
+            conf.left = tblOffset.left - 5 - pageXOffset;
             frm.overlay().load();
         };
         transModel.GetNewItem = function () {
