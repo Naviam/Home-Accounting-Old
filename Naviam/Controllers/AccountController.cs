@@ -155,8 +155,9 @@ namespace Naviam.WebUI.Controllers
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && model.Password==model.ConfirmPassword)
             {
+                _membershipRepository.CreateUser(model.UserName, model.Password);
                 return RedirectToAction("Index", "Transactions");
             }
             return View(model);
