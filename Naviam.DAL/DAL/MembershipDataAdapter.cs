@@ -14,7 +14,7 @@ namespace Naviam.DAL
                 using (var cmd = holder.Connection.CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "user_get";
+                    cmd.CommandText = "web.user_get";
 
                     cmd.Parameters.AddWithValue("@email", userName);
                     try
@@ -42,7 +42,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var cmd = holder.Connection.CreateSPCommand("user_create");
+                var cmd = holder.Connection.CreateSPCommand("web.user_create");
                 try
                 {
                     cmd.AddEntityParameters(entity, DbActionType.Insert);
@@ -64,7 +64,7 @@ namespace Naviam.DAL
             UserProfile res = new UserProfile(email, password);
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var cmd = holder.Connection.CreateSPCommand("user_signin");
+                var cmd = holder.Connection.CreateSPCommand("web.user_signin");
                 try
                 {
                     cmd.Parameters.Add("@email", SqlDbType.NVarChar).Value = email;
@@ -92,7 +92,7 @@ namespace Naviam.DAL
                 using (var cmd = holder.Connection.CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "procedurename";
+                    cmd.CommandText = "web.procedurename";
 
                     cmd.Parameters.AddWithValue("@ApplicationName", applicationName);
                     cmd.Parameters.AddWithValue("@Email", email);

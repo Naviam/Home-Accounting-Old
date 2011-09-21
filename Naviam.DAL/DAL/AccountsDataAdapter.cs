@@ -12,7 +12,7 @@ namespace Naviam.DAL
             List<Account> res = new List<Account>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("accounts_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("web.accounts_get"))
                 {
                     cmd.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
                     try
@@ -39,7 +39,7 @@ namespace Naviam.DAL
             //TODO: check that account belongs to company
             using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
-                using (SqlCommand cmd = holder.Connection.CreateSPCommand("accounts_get"))
+                using (SqlCommand cmd = holder.Connection.CreateSPCommand("web.accounts_get"))
                 {
                     cmd.Parameters.AddWithValue("@id_account", id);
                     cmd.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
@@ -69,7 +69,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = action == DbActionType.Insert ? "account_create" : "account_update";
+                var commName = action == DbActionType.Insert ? "web.account_create" : "web.account_update";
                 var command = holder.Connection.CreateSPCommand(commName);
                 try
                 {
@@ -93,7 +93,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var command = holder.Connection.CreateSPCommand("accounts_delete"))
+                using (var command = holder.Connection.CreateSPCommand("web.accounts_delete"))
                 {
                     try
                     {
@@ -117,7 +117,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var command = holder.Connection.CreateSPCommand("account_add_amount"))
+                using (var command = holder.Connection.CreateSPCommand("web.account_add_amount"))
                 {
                     try
                     {

@@ -43,6 +43,7 @@ namespace Naviam.Data
             CategoryId = reader["id_category"] as int?;
             CurrencyId = reader["id_currency"] as int?;
             IncludeInTax = reader["include_in_tax"] as bool?;
+            Tags = reader["tags"] as string;
         }
 
         public DateTime? Date { get; set; }
@@ -57,6 +58,7 @@ namespace Naviam.Data
         public TransactionDirections Direction { get; set; }
         public int? AccountId { get; set; }
         public bool? IncludeInTax { get; set; }
+        public string Tags { get; set; }
     }
 
     public static partial class SqlCommandExtensions

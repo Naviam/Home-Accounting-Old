@@ -11,7 +11,7 @@ namespace Naviam.DAL
             var res = new List<Category>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("categories_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("web.categories_get"))
                 {
                     cmd.Parameters.AddWithValue("@id_user", userId);
                     try
@@ -36,7 +36,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = action == DbActionType.Insert ? "category_create" : "category_update";
+                var commName = action == DbActionType.Insert ? "web.category_create" : "web.category_update";
                 var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {
@@ -60,7 +60,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("category_delete"))
+                using (var cmd = holder.Connection.CreateSPCommand("web.category_delete"))
                 {
                     try
                     {
