@@ -67,6 +67,7 @@ namespace Naviam.DAL
                 var cmd = holder.Connection.CreateSPCommand("web.user_signin");
                 try
                 {
+                    cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("@email", SqlDbType.NVarChar).Value = email;
                     cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
                     cmd.Parameters.Add("@default_company_name", SqlDbType.NVarChar).Value = default_company_name;
