@@ -22,6 +22,8 @@ namespace Naviam.Data
         public enum TransactionTypes { Cash = 0, Check, Pending }
         public enum TransactionDirections { Expense  = 0, Income }
 
+        public const string TAG_SEPARATOR = ",";
+
         public Transaction() 
         {
             //default props for add
@@ -43,7 +45,8 @@ namespace Naviam.Data
             CategoryId = reader["id_category"] as int?;
             CurrencyId = reader["id_currency"] as int?;
             IncludeInTax = reader["include_in_tax"] as bool?;
-            Tags = reader["tags"] as string;
+            string tags = reader["tags"] as string;
+            if (!string.IsNullOrEmpty(tags)) TagIds = tags.Split(new string[] { TAG_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
 
         public DateTime? Date { get; set; }
@@ -58,7 +61,6 @@ namespace Naviam.Data
         public TransactionDirections Direction { get; set; }
         public int? AccountId { get; set; }
         public bool? IncludeInTax { get; set; }
-        public string Tags { get; set; }
     }
 
     public static partial class SqlCommandExtensions
@@ -82,6 +84,7 @@ namespace Naviam.Data
             command.Parameters.Add("@type", SqlDbType.Int).Value = transaction.TransactionType;
             command.Parameters.Add("@direction", SqlDbType.Int).Value = transaction.Direction;
             command.Parameters.Add("@include_in_tax", SqlDbType.Bit).Value = transaction.IncludeInTax;
+            command.Parameters.Add("@tags", SqlDbType.NVarChar).Value = string.Join(Transaction.TAG_SEPARATOR, transaction.TagIds);
         }
     }
 }
