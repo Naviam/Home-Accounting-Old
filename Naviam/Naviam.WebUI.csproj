@@ -191,10 +191,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ValidationStrings.ru.resx</DependentUpon>
     </Compile>
+    <None Include="Content\Login.scss">
+      <Generator>ScssGenerator</Generator>
+      <LastGenOutput>Login.css</LastGenOutput>
+    </None>
     <None Include="SMSConnectorScript.cs" />
     <Content Include="Content\blueprint\reset.css" />
     <Content Include="Content\blueprint\typography.css" />
-    <Content Include="Content\Login.css" />
+    <Content Include="Content\Login.css">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Login.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\logo.png" />
     <Content Include="favicon.ico" />
     <Content Include="Prototype\Login.htm" />
     <Content Include="PublicSitemap.xml" />
