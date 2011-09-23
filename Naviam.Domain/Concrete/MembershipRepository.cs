@@ -10,6 +10,9 @@ namespace Naviam.Domain.Concrete
 {
     public class MembershipRepository
     {
+        public const string DEFAULT_COMPANY_NAME = "Домашняя бухгалтерия";
+        public const string DEFAULT_ACCOUNT_NAME = "Кошелёк";
+
         public IEnumerable<Company> GetCompanies(int? userId)
         {
             return CompaniesDataAdapter.GetCompanies(userId).AsEnumerable();
@@ -38,6 +41,17 @@ namespace Naviam.Domain.Concrete
             var cId = Guid.NewGuid().ToString();
             new CacheWrapper().Set(cId, profile, true, null);
             return cId;
+        }
+
+        public virtual UserProfile CreateUser(string email, string password)
+        {
+            return CreateUser(email, password, DEFAULT_COMPANY_NAME, DEFAULT_ACCOUNT_NAME);
+        }
+
+        public virtual UserProfile CreateUser(string email, string password, string default_company_name, string default_account_name)
+        {
+            password = SimpleHash.ComputeHash(email.ToLower() + password + "SCEX", "SHA512", null);
+            return MembershipDataAdapter.CreateUser(email, password, default_company_name, default_account_name);
         }
     }
 }

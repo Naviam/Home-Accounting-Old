@@ -20,6 +20,12 @@ namespace Naviam.Data
 
         public UserProfile()  {}
 
+        public UserProfile(string email, string password)
+        {
+            Name = email;
+            Password = password;
+        }
+
         public UserProfile(IDataRecord record)
         {
             Id = record["id"] as int?;

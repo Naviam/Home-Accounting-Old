@@ -131,42 +131,6 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetCategories()
-        {
-            var user = CurrentUser;
-            var cats = CategoriesRepository.GetCategories(user.Id);
-            //TODO: move Localize
-            var rm = new ResourceManager(typeof(Resources.Enums));
-            foreach (var item in cats)
-            {
-                var st = rm.GetString("c_" + item.Id.ToString());
-                if (!String.IsNullOrEmpty(st))
-                    item.Name = st;
-            }
-            //end Localize
-            var items = Categories.GetTree(cats);
-            return Json(new { items });
-        }
-
-        [HttpPost]
-        public ActionResult GetCategoriesEditDialog()
-        {
-            return PartialView("_categoriesEdit");
-        }
-
-        [HttpPost]
-        public ActionResult GetExchangeDialog()
-        {
-            return PartialView("_exchangeDialog");
-        }
-
-        [HttpPost]
-        public ActionResult GetSplitDialog()
-        {
-            return PartialView("_splitDialog");
-        }
-
-        [HttpPost]
         public ActionResult SplitTrans(TransactionsSplit splits)
         {
             var companyId = CurrentUser.CurrentCompany;
@@ -186,6 +150,49 @@ namespace Naviam.WebUI.Controllers
                 }
             }
             return Json(updateTrans);
+        }
+
+        #region Additional dialogs
+        
+        [HttpPost]
+        public ActionResult GetExchangeDialog()
+        {
+            return PartialView("_exchangeDialog");
+        }
+
+        [HttpPost]
+        public ActionResult GetSplitDialog()
+        {
+            return PartialView("_splitDialog");
+        }
+
+        #endregion 
+
+        #region Categories
+
+        [HttpPost]
+        public ActionResult GetDicts()
+        {
+            var user = CurrentUser;
+            var cats = CategoriesRepository.GetCategories(user.Id);
+            var tags = TagsRepository.GetTags(user.Id);
+            //TODO: move Localize
+            var rm = new ResourceManager(typeof(Resources.Enums));
+            foreach (var item in cats)
+            {
+                var st = rm.GetString("c_" + item.Id.ToString());
+                if (!String.IsNullOrEmpty(st))
+                    item.Name = st;
+            }
+            //end Localize
+            var items = Categories.GetTree(cats);
+            return Json(new { items, tags });
+        }
+
+        [HttpPost]
+        public ActionResult GetCategoriesEditDialog()
+        {
+            return PartialView("_categoriesEdit");
         }
 
         [HttpPost]
@@ -209,6 +216,8 @@ namespace Naviam.WebUI.Controllers
             CategoriesRepository.Delete(id, user.Id);
             return Json(id);
         }
+
+        #endregion
 
     }
 }

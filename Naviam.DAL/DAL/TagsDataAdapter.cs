@@ -1,24 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Naviam.Data;
 using System.Data.SqlClient;
 
 namespace Naviam.DAL
 {
-    public class CategoriesDataAdapter
+    public class TagsDataAdapter
     {
-        public static List<Category> GetCategories(int? userId)
+        public static List<Tag> GetTags(int? userId)
         {
-            var res = new List<Category>();
+            List<Tag> res = new List<Tag>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.categories_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("web.tags_get"))
                 {
-                    cmd.Parameters.AddWithValue("@id_user", userId);
+                    cmd.Parameters.AddWithValue("@id_user", userId.ToDbValue());
                     try
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
-                            res = new Categories(reader);
+                            while (reader.Read())
+                                res.Add(new Tag(reader));
                         }
                     }
                     catch (SqlException e)
@@ -31,12 +35,12 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static int InsertUpdate(Category entity, int? userId, DbActionType action)
+        public static int InsertUpdate(Tag entity, int? userId, DbActionType action)
         {
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = action == DbActionType.Insert ? "web.category_create" : "web.category_update";
+                var commName = action == DbActionType.Insert ? "web.tag_create" : "web.tag_update";
                 var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {
@@ -60,7 +64,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.category_delete"))
+                using (var cmd = holder.Connection.CreateSPCommand("web.tag_delete"))
                 {
                     try
                     {
@@ -78,7 +82,5 @@ namespace Naviam.DAL
             return res;
         }
     }
-
-
 
 }

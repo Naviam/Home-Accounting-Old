@@ -8,8 +8,13 @@ jQuery.postErr = function (url, data, callback, type) {
     }
     if (data == null)
         data = {};
-    if (typeof pageContext != 'undefined' && pageContext != null)
-        data.pageContext = pageContext;
+    if (typeof pageContext != 'undefined' && pageContext != null) {
+        if (type == 'json' && typeof data === "string") {
+            var ins = ',"pageContext":' + JSON.stringify(pageContext) + '}';
+            data = data.substr(0, data.length - 1) + ins;
+        }
+        else data.pageContext = pageContext;
+    }
     var contentType = type == 'json' ? "application/json; charset=utf-8" : "application/x-www-form-urlencoded";
     $.ajax({
         type: "POST",
@@ -24,7 +29,7 @@ jQuery.postErr = function (url, data, callback, type) {
 
         dataType: type,
         error: function (xmlHttpRequest, textStatus, errorThrown) {
-            parseSiteError(xmlHttpRequest); 
+            parseSiteError(xmlHttpRequest);
         }
     });
 };

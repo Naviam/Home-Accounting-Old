@@ -14,7 +14,7 @@ namespace Naviam.DAL
                 using (var cmd = holder.Connection.CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "user_get";
+                    cmd.CommandText = "web.user_get";
 
                     cmd.Parameters.AddWithValue("@email", userName);
                     try
@@ -42,14 +42,39 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = "user_create";
-                var cmd = holder.Connection.CreateSPCommand(commName);
+                var cmd = holder.Connection.CreateSPCommand("web.user_create");
                 try
                 {
                     cmd.AddEntityParameters(entity, DbActionType.Insert);
                     cmd.ExecuteNonQuery();
                     entity.Id = cmd.GetRowIdParameter();
                     res = cmd.GetReturnParameter();
+                }
+                catch (SqlException e)
+                {
+                    cmd.AddDetailsToException(e);
+                    throw;
+                }
+            }
+            return res;
+        }
+
+        public static UserProfile CreateUser(string email, string password, string default_company_name, string default_account_name)
+        {
+            UserProfile res = new UserProfile(email, password);
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                var cmd = holder.Connection.CreateSPCommand("web.user_signin");
+                try
+                {
+                    cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("@email", SqlDbType.NVarChar).Value = email;
+                    cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+                    cmd.Parameters.Add("@default_company_name", SqlDbType.NVarChar).Value = default_company_name;
+                    cmd.Parameters.Add("@default_account_name", SqlDbType.NVarChar).Value = default_account_name;
+                    cmd.Parameters.Add("@current_time_utc", SqlDbType.DateTime).Value = DateTime.UtcNow;
+                    cmd.ExecuteNonQuery();
+                    res.Id = cmd.GetRowIdParameter();
                 }
                 catch (SqlException e)
                 {
@@ -68,7 +93,7 @@ namespace Naviam.DAL
                 using (var cmd = holder.Connection.CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "procedurename";
+                    cmd.CommandText = "web.procedurename";
 
                     cmd.Parameters.AddWithValue("@ApplicationName", applicationName);
                     cmd.Parameters.AddWithValue("@Email", email);

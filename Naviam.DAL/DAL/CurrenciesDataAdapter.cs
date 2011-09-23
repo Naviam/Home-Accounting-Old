@@ -17,7 +17,7 @@ namespace Naviam.DAL
             res = new List<Currency>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("currencies_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("web.currencies_get"))
                 {
                     try
                     {
