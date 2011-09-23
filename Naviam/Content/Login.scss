@@ -1,0 +1,222 @@
+﻿$menu-color: #6699CC;
+$base-color: #006699;
+$bg-color1: #EBEEF1;
+$bg-color2: #ffffff;
+$bg-color3: #89D6BC;
+$bg-color4: #33CC99;
+$bg-color5: #2CB185;
+$bg-color6: #66CC99;
+
+$link-color1: #FF3300;
+
+$error-color: #ff0000;
+$error-bg-color: #ffeeee;
+$button-focus-color: #df3e7b;
+$button-active-color: #c22b65; 
+$input-bg-color: #fff4e0;
+$input-border-color: #fff;
+$input-highlight-border-color: #fff4e0;
+
+@mixin rounded ($radius: 5px) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+}
+
+@mixin centered($width: 570px) {
+    width: $width;
+    margin-left: auto;
+    margin-right: auto; 
+}
+
+@mixin shadow () {
+	-moz-box-shadow: 0 0.1em 0.4em $menu-color;
+	-webkit-box-shadow: 0 0.1em 0.6em $menu-color;
+}
+
+body {
+    font-size: large;
+    background-color: $bg-color1;
+}
+
+header {
+	height: 26px;
+	background-color: $bg-color3;
+	nav {
+		height: 26px;
+		background-color: $bg-color5;
+		@include centered(940px);
+	}
+}
+
+.container {
+	@include centered(940px);
+	-moz-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
+	-webkit-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
+	background-color: $bg-color2;
+	height: 900px;
+}
+
+section.menu-top {
+	height: 60px;
+    font-size: larger;
+	nav {
+		background-color: $bg-color2;
+		@include centered(940px);
+	}
+}
+
+ul {
+	list-style-type: none;
+}
+
+article {
+	@include centered();
+}
+
+div.container {
+	@include centered(940px);
+	-moz-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
+	-webkit-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
+	background-color: $bg-color2;
+	height: 900px;
+}
+
+section.menu {
+    height: 70px;
+    font-size: larger;
+	background-color: $bg-color2;
+    h1 {
+      float: left;
+	  color: $bg-color2;
+	  background-image: url('../content/logo.png');
+      padding-top: 4px;
+	  width: 170px;
+	  height: 50px;
+      margin-left: 200px;
+	}	
+    nav {
+		padding-right: 20px;
+		@include centered();
+		ul {
+			margin: 10px 0 0;
+			float: right;
+			position: relative;
+			li {
+				float: left;
+				a {
+					border-top-left-radius: 6px;
+					border-top-right-radius: 6px;
+					-webkit-border-top-left-radius: 6px;
+					-webkit-border-top-right-radius: 6px;
+					-moz-border-radius-topleft: 6px;
+					-moz-border-radius-topright: 6px;
+					@include shadow();
+					display: block;
+					padding: 4px 8px 4px 8px;
+					margin: 19px 10px 0px 6px;
+					font-weight: 800;
+					color: $bg-color1 / 1.5;
+					background-color: $bg-color1;
+					text-decoration: none;
+					&:hover {
+						color: $bg-color1;
+						background-color: $menu-color;
+					}
+					&:active {
+						color: $bg-color1;
+						background-color: $menu-color;
+					}
+					&.selected {
+						color: $bg-color2;
+						background-color: $menu-color;
+					}
+				}
+			}
+		}
+	}
+}
+
+section.login, section.signup {
+    height: 270px;
+    background-color: $menu-color;
+    @include rounded(15px);
+	@include shadow();
+}
+
+fieldset 
+{
+    float: right;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    width: 530px;
+}
+
+section.login fieldset {
+    float: right;
+}
+
+section.login fieldset legend {
+    font-size: x-large;
+    color: $base-color;
+}
+
+fieldset input[type=text], fieldset input[type=password], fieldset input[type=email] {
+    width: 510px;
+    margin-top: 10px;
+    margin-left: 0px;
+    margin-bottom: 10px;
+}
+
+hr {
+    color: $base-color;
+    line-height: 2px;
+}
+
+div.rememberme {
+    float: right;
+    padding-right: 20px;
+    position: relative;
+}
+
+button {
+	display: block;
+	font-size: larger;
+	background: $base-color;
+	@include rounded(6px);
+	border: none;
+	padding: 8px 10px;
+	color: #fff;
+	cursor: pointer;
+}	
+button:hover,
+button:focus {
+	text-decoration: none;
+	background-color: $base-color / 1.2;
+}
+button:active {
+	text-decoration: none;
+	background-color: $button-active-color;
+}
+
+input[type=text], input[type=password], input[type=email], input[type=checkbox], select, textarea {
+    font-size: larger;
+	border: 2px solid $input-border-color;
+	padding: 8px;
+    @include rounded(5px);
+	&:focus {
+		border: 2px solid $input-highlight-border-color;
+		background-color: $input-bg-color;
+		outline: none;
+	}
+	&:hover {
+		border: 2px solid $input-highlight-border-color;
+	}
+}
+
+.input-validation-error
+{
+    border: 1px solid $error-color !important;
+    background-color: $error-bg-color !important;
+}
