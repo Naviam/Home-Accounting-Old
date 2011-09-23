@@ -39,8 +39,6 @@ namespace Naviam.DAL
                             {
                                 var trans = new Transaction(reader);
                                 res.Add(trans);
-                                //TODO: get from db
-                                trans.TagIds.Add("1");
                             }
                         }
                     }
