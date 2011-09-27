@@ -66,6 +66,15 @@ namespace Naviam.Domain.Concrete.Providers
                 throw new ArgumentNullException("username");
             }
             username = username.Trim();
+            if (roleName == null)
+            {
+                throw new ArgumentNullException("roleName");
+            }
+            roleName = roleName.Trim();
+            if (username.Length < 1)
+            {
+                return false;
+            }
             //TODO: implement on db side
             return true;
         }
