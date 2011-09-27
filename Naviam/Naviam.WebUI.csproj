@@ -198,6 +198,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Prototype\Login.htm" />
     <Content Include="PublicSitemap.xml" />
+    <Content Include="Views\Shared\AccessDenied.aspx" />
     <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
     <Content Include="Views\Transactions\_splitDialog.cshtml" />
     <Content Include="Views\PublicMenu\TopMenu.cshtml" />

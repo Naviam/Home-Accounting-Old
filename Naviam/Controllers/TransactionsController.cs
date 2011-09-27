@@ -13,6 +13,7 @@ using System.Resources;
 
 namespace Naviam.WebUI.Controllers
 {
+    //[Authorize(Roles="admin")]
     public class TransactionsController : BaseController
     {
 

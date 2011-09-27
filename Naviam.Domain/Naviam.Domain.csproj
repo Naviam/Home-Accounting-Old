@@ -51,6 +51,7 @@
     <Compile Include="Concrete\CurrenciesRepository.cs" />
     <Compile Include="Concrete\FinanceInstitutionRepository.cs" />
     <Compile Include="Concrete\MembershipRepository.cs" />
+    <Compile Include="Concrete\Providers\NaviamRoleProvider.cs" />
     <Compile Include="Concrete\RoleRepository.cs" />
     <Compile Include="Concrete\TagsRepository.cs" />
     <Compile Include="Concrete\TransactionsRepository.cs" />
