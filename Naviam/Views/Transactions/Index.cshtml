@@ -134,6 +134,7 @@
     </tr>
 </script>
 <div>
+    <button onclick="$.postErr('@Url.Action("RecieveMessage", "Sms", new { key = "", gateway = "", from = "", to = "", message = "" })')" type="button">Test</button>
     <div id="transGrid">
         @{var user = ViewBag.CurrentUser as UserProfile;}
         <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>

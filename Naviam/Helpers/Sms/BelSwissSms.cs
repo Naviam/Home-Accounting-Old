@@ -28,7 +28,7 @@ namespace Naviam.WebUI.Helpers.Sms
         public override string GetOperation()
         {
             string result = string.Empty;
-            string pattern = @"(?<operation>Retail)";
+            string pattern = @"(?<operation>Retail|Service payment from card|Service payment to card|ATM)";
             Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
             if (reg.IsMatch(_sms))
             {
