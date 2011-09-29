@@ -130,8 +130,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Sms\BelSwissSms.cs" />
-    <Compile Include="Helpers\Sms\SmsBase.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\MenuAppModel.cs" />
     <Compile Include="Models\PageContext.cs" />

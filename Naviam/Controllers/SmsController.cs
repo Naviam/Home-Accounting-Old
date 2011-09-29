@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Naviam.WebUI.Helpers.Sms;
 using Naviam.Domain.Concrete;
 using Naviam.Data;
 
@@ -48,6 +47,7 @@ Na vremya: 16:26:28
             try
             {
                 BelSwissSms sms = new BelSwissSms(message);
+                
                 TransactionsRepository rep = new TransactionsRepository();
                 Transaction tran = new Transaction();
                 //tran.AccountId AccountId = 

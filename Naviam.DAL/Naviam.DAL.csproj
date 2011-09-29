@@ -61,6 +61,7 @@
     <Compile Include="DAL\Dynamic.cs" />
     <Compile Include="DAL\FinanceInstitutionDataAdapter.cs" />
     <Compile Include="DAL\RoleDataAdapter.cs" />
+    <Compile Include="DAL\SmsDataAdapter.cs" />
     <Compile Include="DAL\TagsDataAdapter.cs" />
     <Compile Include="DAL\TransactionsDataAdapter.cs" />
     <Compile Include="DAL\SqlConnectionHelper.cs" />
@@ -74,6 +75,8 @@
     <Compile Include="Entities\DbEntity.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Entities\FinanceInstitution.cs" />
+    <Compile Include="Entities\Sms\BelSwissSms.cs" />
+    <Compile Include="Entities\Sms\SmsBase.cs" />
     <Compile Include="Entities\Tag.cs" />
     <Compile Include="Entities\Transaction.cs" />
     <Compile Include="Entities\User\UserProfile.cs" />
