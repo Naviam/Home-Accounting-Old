@@ -141,11 +141,17 @@
   <data name="LoginHeader" xml:space="preserve">
     <value>Вход на сайт</value>
   </data>
+  <data name="NaviamLogIn" xml:space="preserve">
+    <value>Naviam - Вход</value>
+  </data>
   <data name="Rate" xml:space="preserve">
     <value>Курс</value>
   </data>
   <data name="Sell" xml:space="preserve">
     <value>Продажа</value>
+  </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>Зарегистрироваться</value>
   </data>
   <data name="Split" xml:space="preserve">
     <value>Разделить</value>
