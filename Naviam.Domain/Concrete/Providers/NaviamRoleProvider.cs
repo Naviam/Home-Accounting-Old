@@ -55,8 +55,8 @@ namespace Naviam.Domain.Concrete.Providers
                 throw new ArgumentNullException("username");
             }
             username = username.Trim();
-            //TODO: implement on db side
-            return new string[1] { "admin" };
+            var res = RoleRepository.GetInstance().GetRolesForUser(username);
+            return res != null ? res.ToArray() : new string[0];
         }
 
         public override bool IsUserInRole(string username, string roleName)
@@ -75,8 +75,7 @@ namespace Naviam.Domain.Concrete.Providers
             {
                 return false;
             }
-            //TODO: implement on db side
-            return true;
+            return RoleRepository.GetInstance().IsUserInRole(username, roleName);
         }
 
         public override string[] GetUsersInRole(string roleName)
