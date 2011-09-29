@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Naviam.WebUI.Helpers.Sms;
+using Naviam.Domain.Concrete;
+using Naviam.Data;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -39,6 +42,23 @@ Na vremya: 16:26:28
         [HttpPost]
         public ActionResult RecieveMessage(string key, string gateway, string from, string to, string message)
         {
+            string internalKey = "";
+            if (key != internalKey) return Json("ok");
+
+            try
+            {
+                BelSwissSms sms = new BelSwissSms(message);
+                TransactionsRepository rep = new TransactionsRepository();
+                Transaction tran = new Transaction();
+                //tran.AccountId AccountId = 
+                //rep.Insert(
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            
+
             //throw new Exception("ddd");
             return Json("ok");
         }
