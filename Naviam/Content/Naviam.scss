@@ -1,4 +1,4 @@
-$base-color: #FF3300;
+$base-color: #b5451c;
 $bg-color1: #EBEEF1;
 $bg-color2: #ffffff;
 $bg-color3: #89D6BC;
@@ -8,6 +8,10 @@ $bg-color6: #66CC99;
 $bg-color7: #009966;
 $bg-color8: #FF3300;
 $error-color: #ff0000;
+
+$left-side-width: 200px;
+$page-width: 1000px;
+$center-width: 700px;
 
 @mixin centered($width: 570px) {
     width: $width;
@@ -27,7 +31,7 @@ $error-color: #ff0000;
 }
 
 body {
-	font-size: large;
+	//font-size: large;
     background-color: $bg-color1;	
 }
 
@@ -53,7 +57,7 @@ header {
 	background-color: $bg-color3;
 	height: 28px;
 	div {
-		@include centered(940px);
+		@include centered($page-width);
 		height: 28px;
 		background-color: $bg-color5;
 		nav {
@@ -91,7 +95,7 @@ footer {
 }
 
 div.container {
-	//@include centered(940px);
+	//@include centered($page-width);
 	-moz-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
 	-webkit-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
 	background-color: $bg-color2;
@@ -102,7 +106,7 @@ section.menu
 {
 	height: 70px;
     font-size: larger;
-	@include centered(940px);
+	@include centered($page-width);
 	background-color: $bg-color2;
 	h1 {
 		float: left;
@@ -516,8 +520,11 @@ button {
 
 .acc_menu{
 	.selected {
-		background-color: #EA4C88;
+		background-color: $base-color;
 		color: white;
+	}
+	&:hover {
+		cursor: pointer;
 	}
 }
 
@@ -529,6 +536,21 @@ button {
 	td {
 		padding: 5px;
 	}
+}
+
+.sidebar {
+	float: left;
+	width: $left-side-width;
+}
+#page {
+	width: $page-width;
+	margin: 0 auto;
+	padding: 20px 0;
+}
+#content {
+	float: left;
+	width: $center-width;
+	padding: 0 0 0 20px;
 }
 
 .error, .alert, .notice, .success, .info {padding:0.8em;margin-bottom:1em;border:2px solid #ddd;}

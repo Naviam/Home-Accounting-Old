@@ -1,5 +1,4 @@
 body {
-  font-size: large;
   background-color: #ebeef1; }
 
 nav ul li {
@@ -17,7 +16,7 @@ header {
   background-color: #89d6bc;
   height: 28px; }
   header div {
-    width: 940px;
+    width: 1000px;
     margin-left: auto;
     margin-right: auto;
     height: 28px;
@@ -30,9 +29,9 @@ header {
       header div nav ul li a:hover {
         background-color: #009966; }
       header div nav ul li a:active {
-        border-top: 3px solid #ff3300; }
+        border-top: 3px solid #b5451c; }
       header div nav ul li a.selected {
-        border-top: 3px solid #ff3300; }
+        border-top: 3px solid #b5451c; }
     header div nav.left {
       float: left; }
     header div nav.right {
@@ -52,7 +51,7 @@ div.container {
 section.menu {
   height: 70px;
   font-size: larger;
-  width: 940px;
+  width: 1000px;
   margin-left: auto;
   margin-right: auto;
   background-color: white; }
@@ -81,17 +80,17 @@ section.menu {
           display: block;
           padding: 4px 4px;
           font-weight: 200;
-          color: #ff3300;
+          color: #b5451c;
           text-decoration: none; }
           section.menu nav ul li a:hover {
             color: white;
-            background-color: #ff3300; }
+            background-color: #b5451c; }
           section.menu nav ul li a:active {
             color: white;
-            background-color: #ff3300; }
+            background-color: #b5451c; }
           section.menu nav ul li a.selected {
             color: white;
-            background-color: #ff3300; }
+            background-color: #b5451c; }
 
 section.main article {
   float: left; }
@@ -104,17 +103,17 @@ section.main aside.right {
 
 /* root element for accordion. decorated with rounded borders and gradient background image */
 #accordion {
-  background: #ff3300 0 0;
-  border: 1px solid #ff3300;
-  -background: #ff6600; }
+  background: #b5451c 0 0;
+  border: 1px solid #b5451c;
+  -background: #ff8a38; }
   #accordion h2 {
-    background: #ff3300;
+    background: #b5451c;
     margin: 0;
     padding: 5px 15px;
     font-size: 14px;
     font-weight: normal;
     border: 1px solid #fff;
-    border-bottom: 1px solid #ff3300;
+    border-bottom: 1px solid #b5451c;
     cursor: pointer; }
     #accordion h2.current {
       cursor: default;
@@ -407,14 +406,30 @@ button {
   color: white; }
 
 .acc_menu .selected {
-  background-color: #EA4C88;
+  background-color: #b5451c;
   color: white; }
+.acc_menu:hover {
+  cursor: pointer; }
 
 .width100 {
   width: 100%; }
 
 .table td {
   padding: 5px; }
+
+.sidebar {
+  float: left;
+  width: 200px; }
+
+#page {
+  width: 1000px;
+  margin: 0 auto;
+  padding: 20px 0; }
+
+#content {
+  float: left;
+  width: 700px;
+  padding: 0 0 0 20px; }
 
 .error, .alert, .notice, .success, .info {
   padding: 0.8em;

@@ -3,12 +3,12 @@
 }
 @if (IsSectionDefined("LeftColumn"))
 {
-    <aside class="left">@RenderSection("LeftColumn", false)</aside>
+    <aside class="sidebar">@RenderSection("LeftColumn", false)</aside>
 }
-<article>@RenderBody()</article>
+<article id='content'>@RenderBody()</article>
 @if (IsSectionDefined("RightColumn"))
 {
-    <aside class="right">@RenderSection("RightColumn", false)</aside>
+    <aside class="sidebar">@RenderSection("RightColumn", false)</aside>
 }
                                                                                    
 @*<table>
