@@ -2,6 +2,7 @@
 using System.Configuration.Provider;
 using Naviam.DAL;
 using Naviam.Domain.Entities;
+using System.Collections.Generic;
 
 namespace Naviam.Domain.Concrete
 {
@@ -50,26 +51,23 @@ namespace Naviam.Domain.Concrete
             return RoleDataAdapter.GetAllRoles();
         }
 
-        public string[] GetRolesForUser(string username)
+        public List<string> GetRolesForUser(string username) { return GetRolesForUser(username, false); }
+        public List<string> GetRolesForUser(string username, bool forceSqlLoad)
         {
-            SecUtility.CheckParameter(ref username, true, false, true, 0x100, "username");
             if (username.Length < 1)
             {
-                return new string[0];
+                return null;
             }
-            int returnValue;
-            var roles = RoleDataAdapter.GetRolesForUser(username, out returnValue);
-
-            if (roles.Length > 0)
+            var cache = new CacheWrapper();
+            var res = cache.GetList<string>("user_roles_" + username);
+            if (res == null || forceSqlLoad)
             {
-                return roles;
+                //load from DB
+                res = RoleDataAdapter.GetRolesForUser(username);
+                //save to cache
+                cache.SetList("user_roles_" + username, res);
             }
-            switch (returnValue)
-            {
-                case 0: return new string[0];
-                case 1: return new string[0];
-            }
-            throw new ProviderException("Unknown Failure");
+            return res;
         }
 
         public string[] GetUsersInRole(string roleName)

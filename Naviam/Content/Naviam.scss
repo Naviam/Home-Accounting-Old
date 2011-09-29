@@ -91,7 +91,7 @@ footer {
 }
 
 div.container {
-	@include centered(940px);
+	//@include centered(940px);
 	-moz-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
 	-webkit-box-shadow: 0.1em 1.6em 0.6em $bg-color2;
 	background-color: $bg-color2;
