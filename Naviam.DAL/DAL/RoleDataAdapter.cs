@@ -202,8 +202,9 @@ namespace Naviam.DAL
             }
         }
 
-        public static string[] GetRolesForUser(string userName, out int resultValue)
+        public static List<string> GetRolesForUser(string userName)
         {
+            var roles = new List<string>();
             using (var connection = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = connection.Connection.CreateCommand())
@@ -213,13 +214,7 @@ namespace Naviam.DAL
                     cmd.CommandText = "web.users_in_roles_get_roles_for_user";
 
                     cmd.Parameters.AddWithValue("@email", userName);
-                    var returnParam = new SqlParameter("ReturnValue", SqlDbType.Int, 4)
-                    {
-                        Direction = ParameterDirection.ReturnValue
-                    };
-                    cmd.Parameters.Add(returnParam);
 
-                    var roles = new List<string>();
                     try
                     {
                         var reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess);
@@ -227,8 +222,7 @@ namespace Naviam.DAL
                         {
                             roles.Add(reader.GetString(0));
                         }
-                        resultValue = (int)returnParam.Value;
-                        return roles.ToArray();
+                        return roles;
                     }
                     catch (SqlException e)
                     {
