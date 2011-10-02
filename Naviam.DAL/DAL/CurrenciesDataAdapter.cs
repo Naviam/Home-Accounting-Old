@@ -10,11 +10,9 @@ namespace Naviam.DAL
     public class CurrenciesDataAdapter
     {
 
-        public static List<Currency> GetCurrencies() { return GetCurrencies(false); }
-        public static List<Currency> GetCurrencies(bool forceSqlLoad)
+        public static List<Currency> GetCurrencies()
         {
             List<Currency> res = new List<Currency>();
-            res = new List<Currency>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateSPCommand("web.currencies_get"))
@@ -25,6 +23,32 @@ namespace Naviam.DAL
                         {
                             while (reader.Read())
                                 res.Add(new Currency(reader));
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return res;
+        }
+
+        public static Currency GetCurrencyByShortName(string shortName)
+        {
+            Currency res = new Currency();
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("web.currencies_get"))
+                {
+                    cmd.Parameters.AddWithValue("@name_short", shortName.ToDbValue());
+                    try
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                                res = new Currency(reader);
                         }
                     }
                     catch (SqlException e)

@@ -11,8 +11,14 @@ namespace Naviam.Domain.Concrete
     {
         private const string CacheKey = "currensies";
 
-        public static List<Currency> GetCurrencies() { return GetCurrencies(false); }
-        public static List<Currency> GetCurrencies(bool forceSqlLoad)
+        public void ResetCache()
+        {
+            var cache = new CacheWrapper();
+            cache.SetList<Currency>(CacheKey, null);
+        }
+
+        public List<Currency> GetCurrencies() { return GetCurrencies(false); }
+        public List<Currency> GetCurrencies(bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetList<Currency>(CacheKey);
@@ -23,6 +29,20 @@ namespace Naviam.Domain.Concrete
                 cache.SetList(CacheKey, res);
             }
             return res;
+        }
+
+        public Currency GetCurrencyByShortName(string shortName) { return GetCurrencyByShortName(shortName,false); }
+        public Currency GetCurrencyByShortName(string shortName, bool forceSqlLoad)
+        {
+            var cache = new CacheWrapper();
+            var list = cache.GetList<Currency>(CacheKey);
+            if (list == null || forceSqlLoad)
+            {
+                list = CurrenciesDataAdapter.GetCurrencies();
+                //save to cache
+                cache.SetList(CacheKey, list);
+            }
+            return list.FirstOrDefault(x=>x.NameShort == shortName);
         }
     }
 }

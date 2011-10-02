@@ -102,5 +102,13 @@ namespace Naviam.Data
             }
             return result;
         }
+
+        public override TransactionDirections GetDirection()
+        {
+            TransactionDirections res = TransactionDirections.Expense;
+            if (Operation == "Service payment to card")
+                res = TransactionDirections.Income;
+            return res;
+        }
     }
 }

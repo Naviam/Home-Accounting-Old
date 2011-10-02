@@ -8,6 +8,9 @@ using System.Data.SqlClient;
 
 namespace Naviam.Data
 {
+    public enum TransactionTypes { Cash = 0, Check, Pending }
+    public enum TransactionDirections { Expense = 0, Income }
+
     [Serializable]
     public class TransactionsSplit : DbEntity
     {
@@ -19,9 +22,6 @@ namespace Naviam.Data
     [Serializable]
     public class Transaction : DbEntity
     {
-        public enum TransactionTypes { Cash = 0, Check, Pending }
-        public enum TransactionDirections { Expense  = 0, Income }
-
         public const string TAG_SEPARATOR = ",";
 
         public Transaction() 
