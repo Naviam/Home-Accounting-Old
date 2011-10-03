@@ -440,7 +440,7 @@ $(document).ready(function () {
             });
         };
         catModel.deleteItem = function (item) {
-            askToUser(lang.DeleteTrans, function () {
+            askToUser(lang.DeleteCategory, function () {
                 $.postErr(delCatUrl, { id: item.Id() }, function (res) {
                     if (res != null) {
                         ko.utils.arrayRemoveItem(catModel.editItem().Subitems, item);
@@ -503,6 +503,7 @@ $(document).ready(function () {
             });
         };
         ko.applyBindings(catModel, $("#cat_menu")[0]);
+        ko.applyBindings(catModel, $("#tags")[0]);
         catModel.assignMenu();
         $("#cat_menu").hide();
     });
