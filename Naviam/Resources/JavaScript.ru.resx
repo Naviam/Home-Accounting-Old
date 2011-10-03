@@ -192,4 +192,7 @@
   <data name="DeleteTrans" xml:space="preserve">
     <value>Вы действительно хотите удалить операцию?</value>
   </data>
+  <data name="DeleteCategory" xml:space="preserve">
+    <value>Вы действительно хотите удалить категорию?</value>
+  </data>
 </root>

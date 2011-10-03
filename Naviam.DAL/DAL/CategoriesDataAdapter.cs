@@ -77,6 +77,30 @@ namespace Naviam.DAL
             }
             return res;
         }
+
+        public static int? FindCategoryForMerchant(int? id_account, string merchant)
+        {
+            int? res = -1;
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                var commName = "web.merchant_find_category";
+                var cmd = holder.Connection.CreateSPCommand(commName);
+                try
+                {
+                    cmd.Parameters.AddWithValue("@id_account", id_account);
+                    cmd.Parameters.AddWithValue("@merchant", merchant);
+                    cmd.ExecuteNonQuery();
+                    res = cmd.GetRowIdParameter("@id_category");
+                }
+                catch (SqlException e)
+                {
+                    cmd.AddDetailsToException(e);
+                    throw;
+                }
+            }
+            return res;
+        
+        }
     }
 
 

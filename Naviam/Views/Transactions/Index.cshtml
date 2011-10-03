@@ -62,6 +62,16 @@
     <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem, delete: deleteItem } }" class='acc_menu'>
     </ul>
 </div>
+
+<br />
+<script type="text/html" id="tagsTemplate">
+    <li data-bind="text: Name"></li>
+</script>
+<div id="tags">
+    <a href="#" data-bind="click: function(event) { editTags(); }">Edit</a>
+    <ul data-bind="template: {name:'tagsTemplate', foreach:tags }" class='acc_menu'>
+    </ul>
+</div>
 }
 
 <script type="text/html" id="accounts_moveTemplate">

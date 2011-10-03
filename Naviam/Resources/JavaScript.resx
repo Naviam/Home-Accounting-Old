@@ -192,4 +192,7 @@
   <data name="DeleteTrans" xml:space="preserve">
     <value>Do you really want to delete transaction?</value>
   </data>
+  <data name="DeleteCategory" xml:space="preserve">
+    <value>Do you really want to delete category?</value>
+  </data>
 </root>
