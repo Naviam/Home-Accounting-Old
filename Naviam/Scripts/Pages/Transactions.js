@@ -440,11 +440,13 @@ $(document).ready(function () {
             });
         };
         catModel.deleteItem = function (item) {
-            $.postErr(delCatUrl, { id: item.Id() }, function (res) {
-                if (res != null) {
-                    ko.utils.arrayRemoveItem(catModel.editItem().Subitems, item);
-                    catModel.assignMenu();
-                }
+            askToUser(lang.DeleteTrans, function () {
+                $.postErr(delCatUrl, { id: item.Id() }, function (res) {
+                    if (res != null) {
+                        ko.utils.arrayRemoveItem(catModel.editItem().Subitems, item);
+                        catModel.assignMenu();
+                    }
+                });
             });
         };
         catModel.EditCategories = function (item) {
