@@ -136,11 +136,13 @@ namespace Naviam.WebUI.Controllers
         {
             var companyId = CurrentUser.CurrentCompany;
             var updateTrans = TransactionsDataAdapter.GetTransaction(splits.Id, companyId);
+
             var rep = new TransactionsRepository();
             if (updateTrans != null)
             {
                 updateTrans.Amount = splits.EndAmount;
                 rep.Update(updateTrans, companyId);
+                updateTrans = updateTrans.Clone();
                 foreach (var item in splits.Items)
                 {
                     updateTrans.Description = item.Description;

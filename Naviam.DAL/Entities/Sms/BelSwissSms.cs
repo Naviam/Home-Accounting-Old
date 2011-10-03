@@ -4,33 +4,15 @@ using System.Linq;
 using System.Web;
 using System.Text.RegularExpressions;
 
-namespace Naviam.WebUI.Helpers.Sms
+namespace Naviam.Data
 {
-    public abstract class SmsBase
+    public class BelSwissSms : SmsBase
     {
-        protected string _sms;
+        public BelSwissSms(string sms)
+            : base(sms)
+        { }
 
-        public SmsBase(string sms)
-        {
-            _sms = sms;
-            CardNumber = GetCardNumber();
-            Operation = GetOperation();
-            Result = GetResult();
-            Date = GetDate();
-            Amount = GetAmount();
-            ShortCurrency = GetShortCurrency();
-            Merchant = GetMerchant();
-        }
-
-        public string CardNumber { get; set; }
-        public string Operation { get; set; }
-        public string Result { get; set; }
-        public DateTime Date { get; set; }
-        public decimal Amount { get; set; }
-        public string ShortCurrency { get; set; }
-        public string Merchant { get; set; }
-
-        public virtual string GetCardNumber()
+        public override string GetCardNumber()
         {
             string result = string.Empty;
             string pattern = @"\d\.\.(?<cardnumber>\d{4}?)";
@@ -43,10 +25,10 @@ namespace Naviam.WebUI.Helpers.Sms
             return result;
         }
 
-        public virtual string GetOperation()
+        public override string GetOperation()
         {
             string result = string.Empty;
-            string pattern = @"(?<operation>Retail)";
+            string pattern = @"(?<operation>Retail|Service payment from card|Service payment to card|ATM)";
             Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
             if (reg.IsMatch(_sms))
             {
@@ -56,7 +38,7 @@ namespace Naviam.WebUI.Helpers.Sms
             return result;
         }
 
-        public virtual string GetResult()
+        public override string GetResult()
         {
             string result = string.Empty;
             string pattern = @"(?<result>Uspeshno)";
@@ -69,7 +51,7 @@ namespace Naviam.WebUI.Helpers.Sms
             return result;
         }
 
-        public virtual DateTime GetDate()
+        public override DateTime GetDate()
         {
             DateTime result = DateTime.MinValue;
             string pattern = @"(?<date>(?:\d{4}|\d{2})-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,5})";
@@ -82,7 +64,7 @@ namespace Naviam.WebUI.Helpers.Sms
             return result;
         }
 
-        public virtual decimal GetAmount()
+        public override decimal GetAmount()
         {
             decimal result = 0;
             string pattern = @"Summa:\s?(?<amount>[^\x00]*?)\s";
@@ -95,7 +77,7 @@ namespace Naviam.WebUI.Helpers.Sms
             return result;
         }
 
-        public virtual string GetShortCurrency()
+        public override string GetShortCurrency()
         {
             string result = string.Empty;
             string pattern = @"Summa:\s[^\x00]*?\s(?<currency>[^\x00]{3})";
@@ -108,7 +90,7 @@ namespace Naviam.WebUI.Helpers.Sms
             return result;
         }
 
-        public virtual string GetMerchant()
+        public override string GetMerchant()
         {
             string result = string.Empty;
             string pattern = @"[^\x00]*\r\n(?<merchant>[^\x00]*?\/[^\x00]*?\/[^\x00]*)\r\n";
@@ -119,6 +101,14 @@ namespace Naviam.WebUI.Helpers.Sms
                 result = match.Groups["merchant"].Success ? match.Groups["merchant"].Value : "";
             }
             return result;
+        }
+
+        public override TransactionDirections GetDirection()
+        {
+            TransactionDirections res = TransactionDirections.Expense;
+            if (Operation == "Service payment to card")
+                res = TransactionDirections.Income;
+            return res;
         }
     }
 }

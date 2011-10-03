@@ -2,8 +2,6 @@
 <tree xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="root">
   <node url="~/Transactions/Index" title="Транзакции" enableLocalization="false" style="equipment" controller="Transactions" action="Index">
   </node>
-  <node url="~/Accounts/Index" title="Счета" enableLocalization="false" style="equipment" controller="Accounts" action="Index">
-  </node>
   <node url="~/Transactions/Index" title="Отчеты" enableLocalization="false" style="equipment" controller="Locations" action="Services">
   </node>
   <node url="~/Transactions/Index" title="Цели" enableLocalization="false" style="equipment" controller="Locations" action="Services">

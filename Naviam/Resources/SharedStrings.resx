@@ -136,10 +136,13 @@
     <value>Edit</value>
   </data>
   <data name="LogIn" xml:space="preserve">
-    <value>Log in</value>
+    <value>Log In</value>
   </data>
   <data name="LoginHeader" xml:space="preserve">
     <value>Log in</value>
+  </data>
+  <data name="NaviamLogIn" xml:space="preserve">
+    <value>Naviam - Log In</value>
   </data>
   <data name="Rate" xml:space="preserve">
     <value>Rate</value>
@@ -147,8 +150,8 @@
   <data name="Sell" xml:space="preserve">
     <value>Sell</value>
   </data>
-  <data name="SignIn" xml:space="preserve">
-    <value>Sign in</value>
+  <data name="SignUp" xml:space="preserve">
+    <value>Sign Up</value>
   </data>
   <data name="Split" xml:space="preserve">
     <value>Split</value>

@@ -7,22 +7,21 @@ using System.Data.SqlClient;
 
 namespace Naviam.DAL
 {
-    public class CurrenciesDataAdapter
+    public class ModemsDataAdapter
     {
-
-        public static List<Currency> GetCurrencies()
+        public static List<Modem> GetModems(int? companyId)
         {
-            List<Currency> res = new List<Currency>();
+            List<Modem> res = new List<Modem>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.currencies_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("web.modems_get"))
                 {
                     try
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
-                                res.Add(new Currency(reader));
+                                res.Add(new Modem(reader));
                         }
                     }
                     catch (SqlException e)
@@ -35,20 +34,20 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static Currency GetCurrencyByShortName(string shortName)
+        public static Modem GetModemByGateway(string gateway)
         {
-            Currency res = new Currency();
+            Modem res = new Modem();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.currencies_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("web.modems_get"))
                 {
-                    cmd.Parameters.AddWithValue("@name_short", shortName.ToDbValue());
+                    cmd.Parameters.AddWithValue("@gateway", gateway.ToDbValue());
                     try
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
-                                res = new Currency(reader);
+                                res=new Modem(reader);
                         }
                     }
                     catch (SqlException e)
@@ -60,6 +59,5 @@ namespace Naviam.DAL
             }
             return res;
         }
-
     }
 }

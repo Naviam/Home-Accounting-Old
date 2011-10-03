@@ -8,6 +8,9 @@ using System.Data.SqlClient;
 
 namespace Naviam.Data
 {
+    public enum TransactionTypes { Cash = 0, Check, Pending }
+    public enum TransactionDirections { Expense = 0, Income }
+
     [Serializable]
     public class TransactionsSplit : DbEntity
     {
@@ -19,9 +22,6 @@ namespace Naviam.Data
     [Serializable]
     public class Transaction : DbEntity
     {
-        public enum TransactionTypes { Cash = 0, Check, Pending }
-        public enum TransactionDirections { Expense  = 0, Income }
-
         public const string TAG_SEPARATOR = ",";
 
         public Transaction() 
@@ -61,6 +61,28 @@ namespace Naviam.Data
         public TransactionDirections Direction { get; set; }
         public int? AccountId { get; set; }
         public bool? IncludeInTax { get; set; }
+
+        #region ICloneable Members
+
+        public Transaction Clone()
+        {
+            var res = new Transaction();
+            res.Date = Date;
+            res.Description = Description;
+            res.CategoryId = CategoryId;
+            res.CurrencyId = CurrencyId;
+            res.Amount = Amount;
+            res.Merchant = Merchant;
+            res.Notes = Notes;
+            res.TagIds = TagIds;
+            res.TransactionType = TransactionType;
+            res.Direction = Direction;
+            res.AccountId = AccountId;
+            res.IncludeInTax = IncludeInTax;
+            return res;
+        }
+
+        #endregion
     }
 
     public static partial class SqlCommandExtensions

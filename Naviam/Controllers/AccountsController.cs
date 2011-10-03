@@ -21,9 +21,10 @@ namespace Naviam.WebUI.Controllers
         [HttpPost]
         public ActionResult GetAccounts()
         {
+            CurrenciesRepository curRepository = new CurrenciesRepository();
             var user = CurrentUser;
             var accounts = AccountsRepository.GetAccounts(user.CurrentCompany);
-            var currencies = CurrenciesRepository.GetCurrencies();
+            var currencies = curRepository.GetCurrencies();
             var accountTypes = AccountTypesRepository.GetAccountTypes();
             //TODO: move Localize
             var rm = new ResourceManager(typeof(Resources.Enums));

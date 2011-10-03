@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Naviam.Domain.Concrete;
+using Naviam.Data;
+using Naviam.DAL;
+using Naviam.WebUI.Resources;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -39,6 +43,45 @@ Na vremya: 16:26:28
         [HttpPost]
         public ActionResult RecieveMessage(string key, string gateway, string from, string to, string message)
         {
+            message = testMessage;
+            
+            //string internalKey = "";
+            //if (key != internalKey) return Json("ok");
+
+            gateway = "GETWAY2";
+            Modem modem = ModemsDataAdapter.GetModemByGateway(gateway);
+            //TODO: get bank_id by "from" param
+            int id_bank = 15; //BelSwissBank
+            
+            try
+            {
+                SmsBase sms = new BelSwissSms(message);
+                
+                //TODO: check sms.Result????
+                
+                TransactionsRepository transactions = new TransactionsRepository();
+                CurrenciesRepository curencies = new CurrenciesRepository();
+
+                Transaction tran = new Transaction();
+                Account account = SmsDataAdapter.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
+                tran.Amount = sms.Amount;
+                //TODO: autosearch category by merchant
+                tran.CategoryId = 20; //Uncategorized
+                tran.CurrencyId = curencies.GetCurrencyByShortName(sms.ShortCurrency).Id;
+                tran.Date = DateTime.UtcNow;
+                tran.Description = DisplayNames.SMSAlertServiceBank;
+                tran.Direction = sms.Direction;
+                tran.IncludeInTax = false;
+                tran.Notes = "";
+                tran.TransactionType = TransactionTypes.Cash;
+                tran.Merchant = sms.Merchant;
+                tran.AccountId = account.Id;
+                transactions.Insert(tran, account.CompanyId);
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
             //throw new Exception("ddd");
             return Json("ok");
         }

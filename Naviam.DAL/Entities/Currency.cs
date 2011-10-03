@@ -13,9 +13,13 @@ namespace Naviam.Data
         public Currency(SqlDataReader reader)
         {
             Id = reader["id"] as int?;
+            Code = reader["code"] as int?;
             NameShort = reader["name_short"] as string;
+            Name = reader["name"] as string;
         }
 
         public string NameShort { get; set; }
+        public int? Code { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -114,6 +114,13 @@ namespace Naviam.Data
         public static object ToDbValue(this long? valueToConvert)
         { return valueToConvert.HasValue && (default(long) != valueToConvert.Value) ? (object)valueToConvert : DBNull.Value; }
 
+        /// <summary>
+        /// If not null and does not equal default value, returns a boxed value; otherwise, returns DbNull value.
+        /// </summary>
+        /// <param name="valueToConvert"></param>
+        /// <returns>Boxed value or DbNull.</returns>
+        public static object ToDbValue(this DateTime? valueToConvert)
+        { return valueToConvert.HasValue && (default(DateTime) != valueToConvert.Value) ? (object)valueToConvert : DBNull.Value; }
         #endregion
 
         #region Conversions from DbValues to C#
@@ -335,6 +342,13 @@ namespace Naviam.Data
         {
             return (executedCommand.Parameters.Contains("@id") && (ParameterDirection.Input != executedCommand.Parameters["@id"].Direction))
                 ? executedCommand.Parameters["@id"].Value as int?
+                : null;
+        }
+
+        public static int? GetRowIdParameter(this SqlCommand executedCommand, string param)
+        {
+            return (executedCommand.Parameters.Contains(param) && (ParameterDirection.Input != executedCommand.Parameters[param].Direction))
+                ? executedCommand.Parameters[param].Value as int?
                 : null;
         }
 

@@ -47,9 +47,9 @@ namespace Naviam.WebUI.Controllers
                                 Amount = Math.Abs(trans.AccountAmount),
                                 Date = trans.TransactionDate,
                                 Description = trans.OperationDescription,
-                                Direction = trans.AccountAmount > 0 ? Transaction.TransactionDirections.Income : Transaction.TransactionDirections.Expense,
+                                Direction = trans.AccountAmount > 0 ? TransactionDirections.Income : TransactionDirections.Expense,
                                 Merchant = trans.Place,
-                                TransactionType = Transaction.TransactionTypes.Cash,
+                                TransactionType = TransactionTypes.Cash,
                                 AccountId = accId,
                                 IncludeInTax = false,
                                 //TODO: assign null and resolve on db side
