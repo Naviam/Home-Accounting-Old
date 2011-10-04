@@ -464,6 +464,19 @@ $(document).ready(function () {
             else
                 hld.overlay().load();
         };
+        catModel.EditTags = function () {
+            var hld = $('#tag_edit_area');
+            if (hld.html() == '') {
+                $.postErr(getTagsEditDlg, function (res) {
+                    hld.html(res);
+                    hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
+                    //ko.applyBindings(catModel, hld[0]);
+                    hld.overlay().load();
+                });
+            }
+            else
+                hld.overlay().load();
+        };
         catModel.AssignCategory = function (item) {
             $("#cat_menu").hide();
             if (item.Id() == null)

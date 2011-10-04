@@ -23,6 +23,8 @@
     var getCatEditDlg = '@Url.Action("GetCategoriesEditDialog", "Transactions")';
     var updateCatUrl = '@Url.Action("UpdateCategory", "Transactions")';
     var delCatUrl = '@Url.Action("DeleteCategory", "Transactions")';
+    
+    var getTagsEditDlg = '@Url.Action("GetTagsEditDialog", "Transactions")';
 
     var getExchangeDlg = '@Url.Action("GetExchangeDialog", "Transactions")';
     var getSplitDlg = '@Url.Action("GetSplitDialog", "Transactions")';
@@ -68,7 +70,7 @@
     <li data-bind="text: Name"></li>
 </script>
 <div id="tags">
-    <a href="#" data-bind="click: function(event) { editTags(); }">Edit</a>
+    <a href="#" data-bind="click: function(event) { EditTags(); }">Edit</a>
     <ul data-bind="template: {name:'tagsTemplate', foreach:tags }" class='acc_menu'>
     </ul>
 </div>
@@ -268,6 +270,7 @@
 </div>
 
 <div id='cat_edit_area' class="overlay"></div>
+<div id='tag_edit_area' class="overlay"></div>
 <div id='exchangeDialog' class="overlay"></div>
 <div id='splitDialog' class="overlay" style='width:700px'></div>
 

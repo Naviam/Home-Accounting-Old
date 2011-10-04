@@ -199,6 +199,12 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
+        public ActionResult GetTagsEditDialog()
+        {
+            return PartialView("_tagsEdit");
+        }
+
+        [HttpPost]
         public ActionResult UpdateCategory(Category cat)
         {
             var user = CurrentUser;
