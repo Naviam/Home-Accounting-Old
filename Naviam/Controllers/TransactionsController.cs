@@ -10,12 +10,18 @@ using Naviam.WebUI.Resources;
 using Naviam.WebUI.Models;
 using Naviam.Domain.Concrete;
 using System.Resources;
+using System.Web.Script.Serialization;
 
 namespace Naviam.WebUI.Controllers
 {
     //[Authorize(Roles="admin")]
     public class TransactionsController : BaseController
     {
+        public class FilterHolder
+        {
+            public string Name { get; set; }
+            public string Value { get; set; }
+        }
 
         public class Head
         {
@@ -75,6 +81,14 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             var trans = new TransactionsRepository().GetTransactions(user.CurrentCompany);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            if (!String.IsNullOrEmpty(paging.Filter))
+            {
+                List<FilterHolder> flt = js.Deserialize<List<FilterHolder>>(paging.Filter);
+                var byTag = flt.FirstOrDefault(m => m.Name == "TagId");
+                if (byTag != null)
+                    trans = trans.Where(q => q.TagIds.Contains(byTag.Value));
+            }
             paging.Filter = "";
             if (pageContext.AccountId != null)
             {

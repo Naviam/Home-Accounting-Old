@@ -34,6 +34,7 @@ function loadAccounts() {
         accountsModel.selectedItem.subscribe(function (newValue) {
             if (newValue != null) {
                 catModel.selectedTag(null);
+                filterModel.items = [];
                 pageContext.accountId = newValue.Id();
                 transModel.ReloadPage();
                 accountsModel.hideEdit(false);
@@ -91,14 +92,18 @@ function loadAccounts() {
             var trans_elem = $("#transGrid");
             $(elem).find('form').validator({ lang: lang.culture }).data("validator").reset();
             if (!show) {
-                trans_elem.slideDown('slow');
-                $(elem).slideUp('slow');
+                $("#account_edit").overlay().close();
+                //trans_elem.slideDown('slow');
+                //$(elem).slideUp('slow');
+
                 //$(elem).hide();
                 //trans_elem.show();
             }
             else {
-                trans_elem.slideUp('slow');
-                $(elem).slideDown('slow');
+                $("#account_edit").overlay().load();
+                //trans_elem.slideUp('slow');
+                //$(elem).slideDown('slow');
+
                 //$(elem).show();
                 //trans_elem.hide();
             }
@@ -174,6 +179,7 @@ function loadAccounts() {
         ko.applyBindings(accountsModel, $("#accounts")[0]);
         ko.applyBindings(accountsModel, $("#accounts_move")[0]);
         ko.applyBindings(editAccount, $("#account_edit")[0]);
+        $("#account_edit").overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true, closeIcon: true });
 
         loadTransactions();
     });

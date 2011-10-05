@@ -100,7 +100,7 @@
     </ul>
 </div>
 
-<a href="#" onclick='return catModel.EditCategories();'>edit cats</a>
+<a href="#" onclick='return catModel.EditCategories();'>@SharedStrings.EditCategories</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedItem() == $data}">
         <td>
@@ -247,7 +247,7 @@
 </div>
 
 
-<div id='account_edit' class='hidden'>
+<div id='account_edit' class='overlay'>
 @*TODO: move to partial view*@
 @using (Html.BeginForm("UpdateAccount", "Accounts", FormMethod.Post, new {id = "editAccountFrm" }))
 {
@@ -278,7 +278,7 @@
     </tr>
 </table>
 <button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
-<button type="button" data-bind="click: function(event) { accountsModel.hideEdit(false); }">@SharedStrings.Cancel</button>
+<button type="button" class='close'>@SharedStrings.Cancel</button>
 }
 </div>
 

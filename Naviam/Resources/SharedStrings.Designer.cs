@@ -124,6 +124,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Categories.
+        /// </summary>
+        public static string EditCategories {
+            get {
+                return ResourceManager.GetString("EditCategories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log In.
         /// </summary>
         public static string LogIn {

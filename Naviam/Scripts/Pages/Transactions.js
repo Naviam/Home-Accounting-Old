@@ -3,7 +3,7 @@
 /// <reference path="..\common.js" />
 //JSON.stringify
 var transModel = {
-    paging: { Page: 1, SortField: 'Date', SortDirection: 1 }
+    paging: { Page: 1, SortField: 'Date', SortDirection: 1, Filter: '' }
 };
 var transEdit = {};
 ko.bindingHandlers.amount = {
@@ -115,6 +115,7 @@ function loadTransactions() {
         transModel.ReloadPage = function () {
             if (this.DescrSub != null)
                 this.DescrSub.dispose();
+            transModel.paging.Filter = filterModel.toString();
             $.postErr(getTransUrl, transModel.paging, function (res) {
                 ko.mapping.updateFromJS(transModel, res);
                 transModel.selectedItem(null);
@@ -381,6 +382,11 @@ $(document).ready(function () {
         //                }
         //            }
         //        }
+        filterModel = {};
+        filterModel.items = ko.observableArray();
+        filterModel.toString = function () {
+            return ko.toJSON(filterModel.items);
+        };
         catModel = ko.mapping.fromJS(res);
         for (var i = 0, j = catModel.items().length; i < j; i++) {
             var item = catModel.items()[i];
@@ -466,11 +472,18 @@ $(document).ready(function () {
                 hld.overlay().load();
         };
         catModel.selectedTag = ko.observable(null);
+        catModel.prevSelectedTag = null;
         catModel.editedTag = ko.observable(null);
         catModel.selectedTag.subscribe(function (newValue) {
-            if (newValue != null) {
+            if (newValue != null && newValue != catModel.prevSelectedTag) {
+                filterModel.items = [];
+                filterModel.items.push({ Name: 'TagId', Value: newValue.Id() });
                 accountsModel.selectedItem(null);
+                catModel.editedTag(null);
+                pageContext.accountId = null;
+                transModel.ReloadPage();
             }
+            catModel.prevSelectedTag = newValue;
         });
         catModel.EditTags = function () {
             var hld = $('#tag_edit_area');
