@@ -209,6 +209,7 @@
     <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
     <Content Include="Views\Transactions\_splitDialog.cshtml" />
     <Content Include="Views\PublicMenu\TopMenu.cshtml" />
+    <Content Include="Views\Transactions\_tagsEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\combres.xml">

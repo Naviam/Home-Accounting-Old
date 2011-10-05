@@ -195,4 +195,7 @@
   <data name="DeleteCategory" xml:space="preserve">
     <value>Вы действительно хотите удалить категорию?</value>
   </data>
+  <data name="DeleteTag" xml:space="preserve">
+    <value>Вы действительно хотите удалить метку?</value>
+  </data>
 </root>

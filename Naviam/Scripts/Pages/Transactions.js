@@ -405,6 +405,7 @@ $(document).ready(function () {
             }
         };
         catModel.catNameToAdd = ko.observable("");
+        catModel.tagNameToAdd = ko.observable("");
         catModel.AddSubitem = function () {
             if (this.catNameToAdd() && this.editItem()) {
                 var v = { Name: this.catNameToAdd(), ParentId: this.editItem().Id() };
@@ -463,6 +464,43 @@ $(document).ready(function () {
             }
             else
                 hld.overlay().load();
+        };
+        catModel.EditTags = function () {
+            var hld = $('#tag_edit_area');
+            if (hld.html() == '') {
+                $.postErr(getTagsEditDlg, function (res) {
+                    hld.html(res);
+                    hld.overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
+                    ko.applyBindings(catModel, hld[0]);
+                    hld.overlay().load();
+                });
+            }
+            else
+                hld.overlay().load();
+        };
+        catModel.editTag = function (item) {
+            $.postErr(updateTagUrl, item, function (res) {
+            });
+        };
+        catModel.deleteTag = function (item) {
+            askToUser(lang.DeleteTag, function () {
+                $.postErr(delTagUrl, { id: item.Id() }, function (res) {
+                    if (res != null) {
+                        ko.utils.arrayRemoveItem(catModel.tags, item);
+                    }
+                });
+            });
+        };
+        catModel.AddTag = function () {
+            if (this.tagNameToAdd()) {
+                var v = { Name: this.tagNameToAdd() };
+                var $this = this;
+                $.postErr(updateTagUrl, v, function (res) {
+                    var koNew = ko.mapping.fromJS(res);
+                    $this.tags.push(koNew);
+                    $this.tagNameToAdd("");
+                });
+            }
         };
         catModel.AssignCategory = function (item) {
             $("#cat_menu").hide();
