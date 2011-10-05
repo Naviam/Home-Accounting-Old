@@ -199,12 +199,6 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetTagsEditDialog()
-        {
-            return PartialView("_tagsEdit");
-        }
-
-        [HttpPost]
         public ActionResult UpdateCategory(Category cat)
         {
             var user = CurrentUser;
@@ -226,6 +220,36 @@ namespace Naviam.WebUI.Controllers
             return Json(id);
         }
 
+        #endregion
+
+        #region Tags
+
+        [HttpPost]
+        public ActionResult GetTagsEditDialog()
+        {
+            return PartialView("_tagsEdit");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateTag(Tag tag)
+        {
+            var user = CurrentUser;
+            tag.UserId = user.Id;
+            if (tag.Id != null)
+                TagsRepository.Update(tag, tag.UserId);
+            else
+                TagsRepository.Insert(tag, tag.UserId);
+            return Json(tag);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteTag(int? id)
+        {
+            var user = CurrentUser;
+            TagsRepository.Delete(id, user.Id);
+            return Json(id);
+        }
+        
         #endregion
 
     }

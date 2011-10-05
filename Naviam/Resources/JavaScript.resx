@@ -195,4 +195,7 @@
   <data name="DeleteCategory" xml:space="preserve">
     <value>Do you really want to delete category?</value>
   </data>
+  <data name="DeleteTag" xml:space="preserve">
+    <value>Do you really want to delete tag?</value>
+  </data>
 </root>

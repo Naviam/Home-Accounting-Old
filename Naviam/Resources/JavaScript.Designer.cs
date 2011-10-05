@@ -133,6 +133,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete tag?.
+        /// </summary>
+        public static string DeleteTag {
+            get {
+                return ResourceManager.GetString("DeleteTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do you really want to delete transaction?.
         /// </summary>
         public static string DeleteTrans {

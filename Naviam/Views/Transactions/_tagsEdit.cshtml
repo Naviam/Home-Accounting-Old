@@ -1,1 +1,18 @@
 ﻿@using Naviam.WebUI.Resources
+
+<script type="text/html" id="tagEditSubTemplate">
+<li>
+    <span data-bind="text: Name(), visible: UserId() == null"></span>
+    <div data-bind="visible: UserId() != null">
+        <input data-bind="value: Name, event: {change: function() {$item.edit($data);} }"/>
+        <a href="#" data-bind="click: function(event) {$item.delete($data);}">@SharedStrings.Delete</a>
+    </div>
+</li>
+</script>
+
+
+<ul data-bind="template: { name: 'tagEditSubTemplate', foreach:tags, templateOptions: { delete: deleteTag, edit: editTag } }"></ul>
+<form data-bind="submit: AddTag">
+    <input data-bind='value: tagNameToAdd, valueUpdate: "keyup"' />
+    <button type="submit" data-bind="enable: tagNameToAdd() != ''">@SharedStrings.Add</button>
+</form>
