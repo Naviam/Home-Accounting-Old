@@ -74,16 +74,17 @@
 
 <script type="text/html" id="tagsTemplate">
     <li data-bind="click: function(event) { $item.current($data); }, css: {selected: $item.current() == $data}">
-        <span data-bind="text: Name"></span>
-        <ul class="actions">
-            <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.edit($data);}" ></a></li>
+        <span data-bind="text: Name, visible: $item.currentEdit() != $data"></span>
+        <input data-bind="value: Name, event: {change: function() {$item.edit($data);} }, visible: $item.currentEdit() == $data"/>
+        <ul class="actions" data-bind="visible: $data.UserId() != null">
+            <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.currentEdit($data);}" ></a></li>
         </ul>
     </li>
 </script>
 <div id="tags" class='left_side_pnl'>
     <h5>@SharedStrings.Tags</h5>
     <a href="#" data-bind="click: function(event) { EditTags(); }" class='edit'>@SharedStrings.Edit</a>
-    <ul data-bind="template: {name:'tagsTemplate', foreach:tags, templateOptions: { current: selectedTag, edit: inlaneEditTag } }" class='acc_menu'>
+    <ul data-bind="template: {name:'tagsTemplate', foreach:tags, templateOptions: { current: selectedTag, edit: editTag, currentEdit: editedTag } }" class='acc_menu'>
     </ul>
 </div>
 }
@@ -177,7 +178,7 @@
                 <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'></tbody>
                 <tfoot></tfoot>
             </table>
-            <div data-bind='template: "transPagingTemplate"' ></div>
+            <div data-bind='template: "transPagingTemplate"' class='paging'></div>
         </div>
     @*    <div class='hidden' id='edit_row' style='position:fixed;border:1px solid #000;'>
         <table width="100%">

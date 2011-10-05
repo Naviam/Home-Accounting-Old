@@ -1,4 +1,5 @@
 body {
+  font-size: 14px;
   background-color: #ebeef1; }
 
 nav ul li {
@@ -149,17 +150,19 @@ section.main aside.right {
 
 /*Paging----------*/
 .paging a {
-  padding: 0.5em; }
+  padding: 2px;
+  text-decoration: none; }
 .paging a.selected {
   background-color: Black;
   color: White; }
 
+/*Grid----------*/
 .grid {
   border-collapse: collapse;
-  background: #ECECD8;
+  background: #ececd8;
   border: 1px solid #714734; }
   .grid th {
-    color: #FBFBC7;
+    color: #fbfbc7;
     background: #b5451c;
     border-bottom-width: 0;
     cursor: pointer;
@@ -170,14 +173,14 @@ section.main aside.right {
   .grid tr:nth-child(even) {
     background: white; }
   .grid tr.selected {
-    background-color: #EA9959;
+    background-color: #ea9959;
     color: white; }
   .grid tr:hover {
     background-color: #c5551c;
     color: white;
     cursor: pointer; }
   .grid tr td {
-    border-color: #DDD;
+    border-color: #dddddd;
     padding: .25em .6em;
     border-style: solid;
     border-right-width: 1px; }
@@ -441,6 +444,10 @@ button {
     .left_side_pnl .acc_menu .selected {
       background-color: #b5451c;
       color: white; }
+      .left_side_pnl .acc_menu .selected .amount {
+        color: white; }
+      .left_side_pnl .acc_menu .selected:hover {
+        background-color: #c5551c; }
     .left_side_pnl .acc_menu li {
       border-top: 1px solid #FEFFFD;
       padding: 1px 5px 0 21px;

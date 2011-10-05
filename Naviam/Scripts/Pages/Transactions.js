@@ -466,6 +466,7 @@ $(document).ready(function () {
                 hld.overlay().load();
         };
         catModel.selectedTag = ko.observable(null);
+        catModel.editedTag = ko.observable(null);
         catModel.selectedTag.subscribe(function (newValue) {
             if (newValue != null) {
                 accountsModel.selectedItem(null);
@@ -487,6 +488,7 @@ $(document).ready(function () {
         catModel.inlaneEditTag = function (item) {
         };
         catModel.editTag = function (item) {
+            catModel.editedTag(null);
             $.postErr(updateTagUrl, item, function (res) {
             });
         };
