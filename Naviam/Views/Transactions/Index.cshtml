@@ -56,24 +56,34 @@
 
 @section LeftColumn {
 <script type="text/html" id="accountsTemplate">
-    <li data-bind="click: function(event) { $item.current($data); }, text: Name, css: {selected: $item.current() == $data}">
-        <a href="#" data-bind="click: function(event) { $item.edit($data); }, visible: $data.Id() != null">@SharedStrings.Edit</a>
-        <span data-bind="amount: Balance, visible: $data.Id() != null"></span> <span data-bind="text: Currency, visible: $data.Id() != null"></span>
+    <li data-bind="click: function(event) { $item.current($data); }, css: {selected: $item.current() == $data}">
+        <div class='amount'><span data-bind="amount: Balance, visible: $data.Id() != null"></span>&nbsp;<span data-bind="text: Currency, visible: $data.Id() != null"></span></div>
+        <div data-bind="text: Name" style='width:120px;' class='text_ellipsis'></div> 
+        <ul class="actions" data-bind="visible: $data.Id() != null">
+            <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.edit($data);}" ></a></li>
+            <!--<li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")"></a></li>-->
+        </ul>
     </li>
 </script>
-<div id="accounts">
-    <a href="#" data-bind="click: function(event) { addItem(); }">Add</a>
+<div id="accounts" class='left_side_pnl'>
+    <h5>@SharedStrings.Accounts</h5>
+    <a href="#" data-bind="click: function(event) { addItem(); }" class='edit'>@SharedStrings.Add</a>
     <ul data-bind="template: {name:'accountsTemplate', foreach:items, templateOptions: { current: selectedItem, edit: editItem, delete: deleteItem } }" class='acc_menu'>
     </ul>
 </div>
 
-<br />
 <script type="text/html" id="tagsTemplate">
-    <li data-bind="text: Name"></li>
+    <li data-bind="click: function(event) { $item.current($data); }, css: {selected: $item.current() == $data}">
+        <span data-bind="text: Name"></span>
+        <ul class="actions">
+            <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.edit($data);}" ></a></li>
+        </ul>
+    </li>
 </script>
-<div id="tags">
-    <a href="#" data-bind="click: function(event) { EditTags(); }">Edit</a>
-    <ul data-bind="template: {name:'tagsTemplate', foreach:tags }" class='acc_menu'>
+<div id="tags" class='left_side_pnl'>
+    <h5>@SharedStrings.Tags</h5>
+    <a href="#" data-bind="click: function(event) { EditTags(); }" class='edit'>@SharedStrings.Edit</a>
+    <ul data-bind="template: {name:'tagsTemplate', foreach:tags, templateOptions: { current: selectedTag, edit: inlaneEditTag } }" class='acc_menu'>
     </ul>
 </div>
 }

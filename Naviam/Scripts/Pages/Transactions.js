@@ -465,6 +465,12 @@ $(document).ready(function () {
             else
                 hld.overlay().load();
         };
+        catModel.selectedTag = ko.observable(null);
+        catModel.selectedTag.subscribe(function (newValue) {
+            if (newValue != null) {
+                accountsModel.selectedItem(null);
+            }
+        });
         catModel.EditTags = function () {
             var hld = $('#tag_edit_area');
             if (hld.html() == '') {
@@ -477,6 +483,8 @@ $(document).ready(function () {
             }
             else
                 hld.overlay().load();
+        };
+        catModel.inlaneEditTag = function (item) {
         };
         catModel.editTag = function (item) {
             $.postErr(updateTagUrl, item, function (res) {

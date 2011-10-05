@@ -196,6 +196,11 @@
     <None Include="SMSConnectorScript.cs" />
     <Content Include="Content\blueprint\reset.css" />
     <Content Include="Content\blueprint\typography.css" />
+    <Content Include="Content\images\bg.png" />
+    <Content Include="Content\images\delete.png" />
+    <Content Include="Content\images\edit.png" />
+    <Content Include="Content\images\top-bg-green.png" />
+    <Content Include="Content\images\top-bg.png" />
     <Content Include="Content\Login.css">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

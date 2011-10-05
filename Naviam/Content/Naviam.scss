@@ -9,8 +9,10 @@ $bg-color7: #009966;
 $bg-color8: #FF3300;
 $error-color: #ff0000;
 
-$left-side-width: 200px;
-$page-width: 1100px;
+$account-hover: #f3f3f3;
+
+$left-side-width: 250px;
+$page-width: 1200px;
 $center-width: 800px;
 
 @mixin centered($width: 570px) {
@@ -311,8 +313,8 @@ a.category_picker {
 		cursor:pointer;
 		height:35px;
 		position:absolute;
-		right:5px;
-		top:2px;
+		right:-12px;
+		top:-12px;
 		width:35px;
 	}
 }
@@ -518,16 +520,6 @@ button {
 	color: white;
 }
 
-.acc_menu{
-	.selected {
-		background-color: $base-color;
-		color: white;
-	}
-	&:hover {
-		cursor: pointer;
-	}
-}
-
 .width100 {
 	width:100%;
 }
@@ -541,7 +533,70 @@ button {
 .sidebar {
 	float: left;
 	width: $left-side-width;
+	//font-family: "Lucida Grande",Tahoma,Verdana,Arial,sans-serif;
+	min-height: 700px;
+	background-color: #fdfdfd;
 }
+.left_side_pnl {
+	font-size: 14px;
+	margin-bottom: 30px;
+	font-weight: bold;
+	h5 {color: #A7A7A8;text-transform: uppercase;margin-left: 10px;float: left;}
+	a.edit {color: #5572BC;float: right;font-size: 12px; margin-right: 10px;}
+
+	.acc_menu{
+		border-top: 1px solid #D7D2CB;
+		clear: both;
+		margin-top: 2px;
+		//white-space: nowrap;
+		.selected {
+			background-color: $base-color;
+			color: white;
+		}
+		li {
+			border-top: 1px solid #FEFFFD;
+			padding: 1px 5px 0 21px;
+			border-bottom: 1px solid #E1E6DD;
+			color: #626560;
+			position: relative;
+			&:hover {
+				cursor: pointer;
+				background-color: $account-hover;
+				ul { li { a { display: block;}}}
+			}
+			.amount {
+				color: #0000e5;
+				float: right;
+				font-size: 12px;
+			}
+			.actions {
+			    //height: 16px;
+				margin-top: 3px;
+				overflow: hidden;
+				position: absolute;
+				left: 0;
+				top: 0;
+				li {
+					padding: 0;
+					border: 0;
+					display: block;
+					float: left;
+					margin-left: 5px;
+					a {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+}
+
+.text_ellipsis {
+	text-overflow:ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
 #page {
 	width: $page-width;
 	margin: 0 auto;

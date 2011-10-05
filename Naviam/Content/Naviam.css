@@ -16,7 +16,7 @@ header {
   background-color: #89d6bc;
   height: 28px; }
   header div {
-    width: 1100px;
+    width: 1200px;
     margin-left: auto;
     margin-right: auto;
     height: 28px;
@@ -43,7 +43,7 @@ footer {
   -moz-border-radius: 2px; }
 
 div.container {
-  width: 1100px;
+  width: 1200px;
   margin-left: auto;
   margin-right: auto;
   -moz-box-shadow: 0.1em 1.6em 0.6em white;
@@ -54,7 +54,7 @@ div.container {
 section.menu {
   height: 70px;
   font-size: larger;
-  width: 1100px;
+  width: 1200px;
   margin-left: auto;
   margin-right: auto;
   background-color: white; }
@@ -229,8 +229,8 @@ a.category_picker {
     cursor: pointer;
     height: 35px;
     position: absolute;
-    right: 5px;
-    top: 2px;
+    right: -12px;
+    top: -12px;
     width: 35px; }
 
 .overlaywoshadow {
@@ -408,12 +408,6 @@ button {
   background-color: #0A246A;
   color: white; }
 
-.acc_menu .selected {
-  background-color: #b5451c;
-  color: white; }
-.acc_menu:hover {
-  cursor: pointer; }
-
 .width100 {
   width: 100%; }
 
@@ -422,10 +416,68 @@ button {
 
 .sidebar {
   float: left;
-  width: 200px; }
+  width: 250px;
+  min-height: 700px;
+  background-color: #fdfdfd; }
+
+.left_side_pnl {
+  font-size: 14px;
+  margin-bottom: 30px;
+  font-weight: bold; }
+  .left_side_pnl h5 {
+    color: #A7A7A8;
+    text-transform: uppercase;
+    margin-left: 10px;
+    float: left; }
+  .left_side_pnl a.edit {
+    color: #5572BC;
+    float: right;
+    font-size: 12px;
+    margin-right: 10px; }
+  .left_side_pnl .acc_menu {
+    border-top: 1px solid #D7D2CB;
+    clear: both;
+    margin-top: 2px; }
+    .left_side_pnl .acc_menu .selected {
+      background-color: #b5451c;
+      color: white; }
+    .left_side_pnl .acc_menu li {
+      border-top: 1px solid #FEFFFD;
+      padding: 1px 5px 0 21px;
+      border-bottom: 1px solid #E1E6DD;
+      color: #626560;
+      position: relative; }
+      .left_side_pnl .acc_menu li:hover {
+        cursor: pointer;
+        background-color: #f3f3f3; }
+        .left_side_pnl .acc_menu li:hover ul li a {
+          display: block; }
+      .left_side_pnl .acc_menu li .amount {
+        color: #0000e5;
+        float: right;
+        font-size: 12px; }
+      .left_side_pnl .acc_menu li .actions {
+        margin-top: 3px;
+        overflow: hidden;
+        position: absolute;
+        left: 0;
+        top: 0; }
+        .left_side_pnl .acc_menu li .actions li {
+          padding: 0;
+          border: 0;
+          display: block;
+          float: left;
+          margin-left: 5px; }
+          .left_side_pnl .acc_menu li .actions li a {
+            display: none; }
+
+.text_ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap; }
 
 #page {
-  width: 1100px;
+  width: 1200px;
   margin: 0 auto;
   padding: 20px 0; }
 

@@ -32,13 +32,16 @@ function loadAccounts() {
         accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
         accountsModel.selectedItem(accountsModel.items()[0]);
         accountsModel.selectedItem.subscribe(function (newValue) {
-            pageContext.accountId = newValue.Id();
-            transModel.ReloadPage();
-            accountsModel.hideEdit(false);
-            var regExp = new RegExp('(accId)=([^&]*)', 'g');
-            var form = $('#upload_statement').parents('form')[0];
-            form.action = form.action.replace(regExp, '$1=' + pageContext.accountId);
-            accountsModel.RecalcExchangeItems();
+            if (newValue != null) {
+                catModel.selectedTag(null);
+                pageContext.accountId = newValue.Id();
+                transModel.ReloadPage();
+                accountsModel.hideEdit(false);
+                var regExp = new RegExp('(accId)=([^&]*)', 'g');
+                var form = $('#upload_statement').parents('form')[0];
+                form.action = form.action.replace(regExp, '$1=' + pageContext.accountId);
+                accountsModel.RecalcExchangeItems();
+            }
         });
         accountsModel.RecalcExchangeItems = function () {
             var currValue = this.selectedItem();
