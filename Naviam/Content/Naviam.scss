@@ -264,7 +264,7 @@ section.main {
 		border-bottom-width: 0;
 		cursor:pointer;
 		border:$header-border;
-		padding: .3em .6em;
+		padding: 5px 10px;
 		&:hover{
 			background-color: $header-hover-bg;
 		}
@@ -282,7 +282,7 @@ section.main {
 		}
 		td {
 			border-color: $cell-border;
-			padding: .25em .6em;
+			padding: 3px 5px;
 			border-style: solid;
 			border-right-width: 1px;
 		}

@@ -167,7 +167,7 @@ section.main aside.right {
     border-bottom-width: 0;
     cursor: pointer;
     border: 1px solid #854324;
-    padding: .3em .6em; }
+    padding: 5px 10px; }
     .grid th:hover {
       background-color: #c5551c; }
   .grid tr:nth-child(even) {
@@ -181,7 +181,7 @@ section.main aside.right {
     cursor: pointer; }
   .grid tr td {
     border-color: #dddddd;
-    padding: .25em .6em;
+    padding: 3px 5px;
     border-style: solid;
     border-right-width: 1px; }
 
