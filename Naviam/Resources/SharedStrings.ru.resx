@@ -144,6 +144,12 @@
   <data name="EditCategories" xml:space="preserve">
     <value>Редактировать категории</value>
   </data>
+  <data name="EnterNewTag" xml:space="preserve">
+    <value>Введите имя тэга</value>
+  </data>
+  <data name="Exchange" xml:space="preserve">
+    <value>Обмен</value>
+  </data>
   <data name="LogIn" xml:space="preserve">
     <value>Войти</value>
   </data>

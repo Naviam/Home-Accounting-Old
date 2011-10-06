@@ -144,6 +144,12 @@
   <data name="EditCategories" xml:space="preserve">
     <value>Edit Categories</value>
   </data>
+  <data name="EnterNewTag" xml:space="preserve">
+    <value>enter name of tag</value>
+  </data>
+  <data name="Exchange" xml:space="preserve">
+    <value>Exchange</value>
+  </data>
   <data name="LogIn" xml:space="preserve">
     <value>Log In</value>
   </data>

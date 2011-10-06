@@ -142,6 +142,24 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to enter name of tag.
+        /// </summary>
+        public static string EnterNewTag {
+            get {
+                return ResourceManager.GetString("EnterNewTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exchange.
+        /// </summary>
+        public static string Exchange {
+            get {
+                return ResourceManager.GetString("Exchange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log In.
         /// </summary>
         public static string LogIn {
