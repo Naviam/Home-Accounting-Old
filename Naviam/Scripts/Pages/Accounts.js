@@ -4,23 +4,23 @@
 /// <reference path="~/Scripts/Pages/Transactions.js" />
 function loadAccounts() {
     $.postErr(getAccountsUrl, function (res) {
-//        var childItem = function (data) {
-//            ko.mapping.fromJS(data, {}, this);
-//            /*var fItem = ko.utils.arrayFirst(item.Subitems(), function (item) {
-//                return item.Id() == data.CurrencyId;
-//            });
-//            //var catItem = catModel.itemById(data.CategoryId);
-//            var name = fItem != null ? fItem.NameShort() : '';
-//            this.Currency = ko.observable(name);*/
-//        }
+        //        var childItem = function (data) {
+        //            ko.mapping.fromJS(data, {}, this);
+        //            /*var fItem = ko.utils.arrayFirst(item.Subitems(), function (item) {
+        //                return item.Id() == data.CurrencyId;
+        //            });
+        //            //var catItem = catModel.itemById(data.CategoryId);
+        //            var name = fItem != null ? fItem.NameShort() : '';
+        //            this.Currency = ko.observable(name);*/
+        //        }
         var mapping = {
             'items': {
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.Id);
                 }
-//                , create: function (options) {
-//                    return new childItem(options.data, {}, this);
-//                }
+                //                , create: function (options) {
+                //                    return new childItem(options.data, {}, this);
+                //                }
             }
         };
         accountsModel = ko.mapping.fromJS(res, mapping);
@@ -125,9 +125,10 @@ function loadAccounts() {
                             if (editAccount.Id() != null)
                                 ko.mapping.fromJS(res, {}, item);
                             else {
-                                koNew = ko.mapping.fromJS(res);
-                                accountsModel.items.splice(1, 0, koNew);
+                                item = ko.mapping.fromJS(res);
+                                accountsModel.items.splice(1, 0, item);
                             }
+                            item.FinInstitutionName(accountsModel.getFinById(item.FinInstitutionId()).Name());
                             accountsModel.hideEdit(false);
                         });
                     }
@@ -161,7 +162,7 @@ function loadAccounts() {
         accountsModel.deleteItem = function (item) {
             askToUser(lang.DeleteAccount, function () {
                 $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
-                    this.hideEdit(false);
+                    accountsModel.hideEdit(false);
                     ko.utils.arrayRemoveItem(accountsModel.items, item);
                     if (accountsModel.selectedItem() == item)
                         accountsModel.selectedItem(accountsModel.items()[0]);
