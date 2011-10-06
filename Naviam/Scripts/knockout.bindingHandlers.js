@@ -34,3 +34,21 @@ ko.bindingHandlers.datepicker = {
         }
     }
 };
+ko.bindingHandlers.notEmpty = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+        //handle the field changing
+        var checkElem = function () {
+            var observable = valueAccessor();
+            var val = $(element).val();
+            var correct = val != null && val != '';
+            if (correct)
+                observable(val);
+            else
+                $(element).val(observable()); //restore old
+        };
+        ko.utils.registerEventHandler(element, "change", checkElem);
+    },
+    update: function (element, valueAccessor) {
+        $(element).val(ko.utils.unwrapObservable(valueAccessor()));
+    }
+};

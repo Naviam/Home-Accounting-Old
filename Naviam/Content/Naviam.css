@@ -446,8 +446,6 @@ button {
       color: white; }
       .left_side_pnl .acc_menu .selected .amount {
         color: white; }
-      .left_side_pnl .acc_menu .selected:hover {
-        background-color: #c5551c; }
     .left_side_pnl .acc_menu li {
       border-top: 1px solid #FEFFFD;
       padding: 1px 5px 0 21px;
@@ -459,12 +457,16 @@ button {
         background-color: #f3f3f3; }
         .left_side_pnl .acc_menu li:hover ul li a {
           display: block; }
+        .left_side_pnl .acc_menu li:hover.selected {
+          background-color: #c5551c; }
+          .left_side_pnl .acc_menu li:hover.selected ul li a {
+            background-color: #c5551c; }
       .left_side_pnl .acc_menu li .amount {
         color: #0000e5;
         float: right;
         font-size: 12px; }
       .left_side_pnl .acc_menu li .actions {
-        margin-top: 3px;
+        margin-top: 1px;
         overflow: hidden;
         position: absolute;
         left: 0;

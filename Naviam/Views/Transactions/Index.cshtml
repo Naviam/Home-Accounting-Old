@@ -75,7 +75,7 @@
 <script type="text/html" id="tagsTemplate">
     <li data-bind="click: function(event) { $item.current($data); }, css: {selected: $item.current() == $data}">
         <span data-bind="text: Name, visible: $item.currentEdit() != $data"></span>
-        <input data-bind="value: Name, event: {change: function() {$item.edit($data);} }, visible: $item.currentEdit() == $data"/>
+        <input data-bind="notEmpty: Name, event: {change: function() {$item.edit($data);} }, visible: $item.currentEdit() == $data"/>
         <ul class="actions" data-bind="visible: $data.UserId() != null">
             <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.currentEdit($data);}" ></a></li>
         </ul>
