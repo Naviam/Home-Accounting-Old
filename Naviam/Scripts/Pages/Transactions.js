@@ -145,7 +145,10 @@ function loadTransactions() {
             var tblOffset = row.parents('table').offset();
             conf.top = tblOffset.top + row[0].offsetTop + row.height() - pageYOffset;
             conf.left = tblOffset.left - 5 - pageXOffset;
+            var dd = conf.top + frm.height() - $(window).height();
             frm.overlay().load();
+            if (dd >0 )
+                $(window).scrollTop(dd + pageYOffset + 50);
         };
         transModel.GetNewItem = function () {
             var date = new Date();
