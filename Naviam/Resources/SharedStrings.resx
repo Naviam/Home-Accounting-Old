@@ -126,6 +126,9 @@
   <data name="AddCategory" xml:space="preserve">
     <value>Add Category</value>
   </data>
+  <data name="Budget" xml:space="preserve">
+    <value>Budget</value>
+  </data>
   <data name="BudgetTitle" xml:space="preserve">
     <value>Budget</value>
   </data>
@@ -162,8 +165,14 @@
   <data name="NaviamLogIn" xml:space="preserve">
     <value>Naviam - Log In</value>
   </data>
+  <data name="Objectives" xml:space="preserve">
+    <value>Objectives</value>
+  </data>
   <data name="Rate" xml:space="preserve">
     <value>Rate</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Reports</value>
   </data>
   <data name="ReportsTitle" xml:space="preserve">
     <value>Reports</value>
@@ -185,6 +194,9 @@
   </data>
   <data name="TargetsTitle" xml:space="preserve">
     <value>Targets</value>
+  </data>
+  <data name="Transactions" xml:space="preserve">
+    <value>Transactions</value>
   </data>
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Transactions</value>

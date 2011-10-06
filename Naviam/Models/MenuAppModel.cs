@@ -50,10 +50,10 @@ namespace Naviam.WebUI.Models
 
         public MenuModel() :
             this(string.Empty, string.Empty, null)
-        {}
+        { }
         public MenuModel(string controller, string action) :
             this(controller, action, null)
-        {}
+        { }
         public MenuModel(string controller, string action, NameValueCollection queryString, string sitemapConfigName = "siteMapFile")
         {
             _queryString = queryString;
@@ -74,13 +74,13 @@ namespace Naviam.WebUI.Models
 
         private string ToQueryString(NameValueCollection nvc)
         {
-            return (nvc.Count>0?"?":"") + string.Join("&", Array.ConvertAll(nvc.AllKeys, key => string.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(nvc[key]))));
+            return (nvc.Count > 0 ? "?" : "") + string.Join("&", Array.ConvertAll(nvc.AllKeys, key => string.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(nvc[key]))));
         }
 
         private void GetInternalMenuItemsList(MainMenuItem mainMenuItem)
         {
             _internalMenuItemsList.Add(mainMenuItem);
-            if (mainMenuItem.Url != null && _queryString!=null)
+            if (mainMenuItem.Url != null && _queryString != null)
                 mainMenuItem.Url = mainMenuItem.Url + ToQueryString(_queryString);
             foreach (MainMenuItem itm in mainMenuItem)
             {
@@ -225,13 +225,13 @@ namespace Naviam.WebUI.Models
             CultureInfo ci;
             try
             {
-                ci = CultureInfo.CreateSpecificCulture("en");
+                ci = CultureInfo.CurrentCulture;// CreateSpecificCulture("en");
             }
             catch (Exception)
             {
                 ci = CultureInfo.InvariantCulture;
             }
-            result = NaviamResources.ResourceManager.GetString(resourceName, ci);
+            result = SharedStrings.ResourceManager.GetString(resourceName, ci);
             return string.IsNullOrEmpty(result) ? resourceName : result;
         }
         /// <summary>

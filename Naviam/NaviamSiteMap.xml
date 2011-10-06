@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <tree xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="root">
-  <node url="~/Transactions/Index" title="Транзакции" enableLocalization="false" style="equipment" controller="Transactions" action="Index">
+  <node url="~/Transactions/Index" title="Transactions" enableLocalization="true" style="equipment" controller="Transactions" action="Index">
   </node>
-  <node url="~/Reports/Reports" title="Отчеты" enableLocalization="false" style="equipment" controller="Reports" action="Reports">
+  <node url="~/Reports/Reports" title="Отчеты" enableLocalization="true" style="equipment" controller="Reports" action="Reports">
   </node>
-  <node url="~/Targets/Targets" title="Цели" enableLocalization="false" style="equipment" controller="Targets" action="Targets">
+  <node url="~/Targets/Targets" title="Цели" enableLocalization="true" style="equipment" controller="Targets" action="Targets">
   </node>
-  <node url="~/Budget/Budget" title="Бюджет" enableLocalization="false" style="equipment" controller="Budget" action="Budget">
+  <node url="~/Budget/Budget" title="Бюджет" enableLocalization="true" style="equipment" controller="Budget" action="Budget">
   </node>
 </tree>

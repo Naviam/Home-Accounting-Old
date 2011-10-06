@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <tree xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="root">
-    <node url="~/Account/Logon" title="Log In" enableLocalization="false" controller="Account" action="Logon">
+    <node url="~/Account/Logon" title="LogIn" enableLocalization="true" controller="Account" action="Logon">
     </node>
-    <node url="~/Account/Register" title="Sign Up" enableLocalization="false" controller="Account" action="Register">
+    <node url="~/Account/Register" title="SignUp" enableLocalization="true" controller="Account" action="Register">
     </node>
 </tree>
