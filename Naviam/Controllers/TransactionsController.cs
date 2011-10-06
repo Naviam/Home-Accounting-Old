@@ -21,6 +21,7 @@ namespace Naviam.WebUI.Controllers
         {
             public string Name { get; set; }
             public string Value { get; set; }
+            public string Type { get; set; }
         }
 
         public class Head
@@ -85,11 +86,21 @@ namespace Naviam.WebUI.Controllers
             if (!String.IsNullOrEmpty(paging.Filter))
             {
                 List<FilterHolder> flt = js.Deserialize<List<FilterHolder>>(paging.Filter);
+                paging.Filter = "";
                 var byTag = flt.FirstOrDefault(m => m.Name == "TagId");
                 if (byTag != null)
                     trans = trans.Where(q => q.TagIds.Contains(byTag.Value));
+                else //others filters
+                {
+                    foreach (var item in flt)
+                    {
+                        if (item.Type == "int")
+                            paging.Filter += item.Name + "==" + item.Value;
+                        else
+                            paging.Filter += item.Name + "==\"" + item.Value + "\"";
+                    }
+                }
             }
-            paging.Filter = "";
             if (pageContext.AccountId != null)
             {
                 paging.Filter = String.Format("AccountId={0}", pageContext.AccountId);

@@ -156,6 +156,9 @@
   <data name="Rate" xml:space="preserve">
     <value>Курс</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
   <data name="Sell" xml:space="preserve">
     <value>Продажа</value>
   </data>

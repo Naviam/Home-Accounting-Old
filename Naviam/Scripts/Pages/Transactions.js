@@ -269,6 +269,17 @@ function loadTransactions() {
             });
             return fItem;
         }
+        transModel.searchByKey = function (key, val, type) {
+            var currItem = transModel.selectedItem();
+            if (currItem != null) {
+                accountsModel.selectedItem(null);
+                catModel.selectedTag(null);
+                filterModel.items = [];
+                filterModel.Add(key, val, type);
+                pageContext.accountId = null;
+                transModel.ReloadPage();
+            }
+        }
         transModel.ShowTransfer = function (id, event, op) {
             id = ko.utils.unwrapObservable(id);
             var fItem = this.getById(id);
@@ -350,6 +361,7 @@ function loadTransactions() {
             }
         }
         ko.applyBindings(transModel, $("#transGrid")[0]);
+        ko.applyBindings(transModel, $("#search_area")[0]);
         ko.applyBindings(transEdit, $("#transDlg")[0]);
     });
 }
@@ -404,6 +416,9 @@ $(document).ready(function () {
         filterModel.items = ko.observableArray();
         filterModel.toString = function () {
             return ko.toJSON(filterModel.items);
+        };
+        filterModel.Add = function (key, value, type) {
+            this.items.push({ Name: key, Value: value, Type: type });
         };
         catModel = ko.mapping.fromJS(res);
         for (var i = 0, j = catModel.items().length; i < j; i++) {
@@ -495,7 +510,7 @@ $(document).ready(function () {
         catModel.selectedTag.subscribe(function (newValue) {
             if (newValue != null && newValue != catModel.prevSelectedTag) {
                 filterModel.items = [];
-                filterModel.items.push({ Name: 'TagId', Value: newValue.Id() });
+                filterModel.Add('TagId', newValue.Id());
                 accountsModel.selectedItem(null);
                 catModel.editedTag(null);
                 pageContext.accountId = null;

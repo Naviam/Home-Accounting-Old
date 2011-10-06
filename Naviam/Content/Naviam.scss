@@ -14,6 +14,7 @@ $account-select: #b5451c;
 $account-hover: #f3f3f3;
 $account-hover-select: #c5551c;
 $amount-color: #0000e5;
+$sidebar-bg: #fdfdfd;
 
 //Grid
 $grid-background:#ECECD8;
@@ -37,7 +38,8 @@ $menu-text:#b5451c;
 
 
 $left-side-width: 250px;
-$page-width: 1200px;
+$right-side-width: 150px;
+$page-width: 1250px;
 $center-width: 800px;
 
 @mixin centered($width: 570px) {
@@ -561,8 +563,17 @@ button {
 	width: $left-side-width;
 	//font-family: "Lucida Grande",Tahoma,Verdana,Arial,sans-serif;
 	min-height: 700px;
-	background-color: #fdfdfd;
+	background-color: $sidebar-bg;
 }
+
+.sidebar_right {
+	float: left;
+	width: $right-side-width;
+	//font-family: "Lucida Grande",Tahoma,Verdana,Arial,sans-serif;
+	min-height: 700px;
+	background-color: $sidebar-bg;
+}
+
 .left_side_pnl {
 	font-size: 14px;
 	margin-bottom: 30px;
@@ -588,6 +599,7 @@ button {
 			border-bottom: 1px solid #E1E6DD;
 			color: #626560;
 			position: relative;
+			height: 21px;
 			&:hover {
 				cursor: pointer;
 				background-color: $account-hover;
@@ -628,6 +640,7 @@ button {
 	text-overflow:ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
+	display:block;
 }
 
 #page {
@@ -638,7 +651,7 @@ button {
 #content {
 	float: left;
 	width: $center-width;
-	padding: 0 0 0 10px;
+	padding: 0 10px 0 10px;
 }
 
 .error, .alert, .notice, .success, .info {padding:1px;margin-bottom:5px;border:2px solid #ddd;z-index:10000;}

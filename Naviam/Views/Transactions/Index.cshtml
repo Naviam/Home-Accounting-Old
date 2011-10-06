@@ -92,6 +92,17 @@
 </div>
 }
 
+@section RightColumn {
+<div id="search_area" class='left_side_pnl'>
+    <h5>@SharedStrings.Search</h5>
+    <ul class='acc_menu' data-bind='visible: selectedItem() != null && selectedItem().Id() != null'>
+        <li><a href="#" data-bind="click: function(event) {searchByKey('Merchant', selectedItem() != null ? selectedItem().Merchant : ''); }, text: selectedItem() != null ? selectedItem().Merchant : ''" class='text_ellipsis'></a></li>
+        <li><a href="#" data-bind="click: function(event) {searchByKey('CategoryId', selectedItem() != null ? selectedItem().CategoryId : '', 'int'); }, text: selectedItem() != null ? selectedItem().Category : ''" class='text_ellipsis'></a></li>
+    </ul>
+</div>
+}
+
+
 <script type="text/html" id="accounts_moveTemplate">
     <li>
         <a href="#" data-bind="click: function(event) { transModel.Transfer($data); }, text: Name"></a>
@@ -158,7 +169,7 @@
     <div id="transGrid">
         @{var user = ViewBag.CurrentUser as UserProfile;}
         
-        <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
+        <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null" style="display: none;">
             @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany, @accId = 0 }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
             {
                 <input type="file" id='upload_statement' name='fileToUpload'/>
