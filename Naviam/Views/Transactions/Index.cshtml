@@ -77,16 +77,19 @@
     <li data-bind="click: function(event) { $item.current($data); }, css: {selected: $item.current() == $data}">
         <span data-bind="text: Name, visible: $item.currentEdit() != $data"></span>
         <input data-bind="notEmpty: Name, event: {change: function() {$item.edit($data);} }, visible: $item.currentEdit() == $data" placeholder='@SharedStrings.EnterNewTag'/>
-        <ul class="actions" data-bind="visible: $data.UserId() != null">
+        <ul class="actions" data-bind="visible: $data.UserId() != null && $item.currentEdit() != $data">
             <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.currentEdit($data);}" ></a></li>
             <li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")" data-bind="click: function(event) { event.stopPropagation();$item.delete($data);}"/></a></li>
+        </ul>
+        <ul class="actions" data-bind="visible: $item.currentEdit() == $data">
+            <li><a title="@SharedStrings.Cancel" href="#"><img src="@Url.Content("~/Content/images/cancel.png")" data-bind="click: function(event) { event.stopPropagation();$item.cancelAdd();}" ></a></li>
         </ul>
     </li>
 </script>
 <div id="tags" class='left_side_pnl'>
     <h5>@SharedStrings.Tags</h5>
     <a href="#" data-bind="click: function(event) { addTag(); }" class='edit'>@SharedStrings.Add</a>
-    <ul data-bind="template: {name:'tagsTemplate', foreach:tags, templateOptions: { current: selectedTag, edit: editTag, currentEdit: editedTag, delete: deleteTag } }" class='acc_menu'>
+    <ul data-bind="template: {name:'tagsTemplate', foreach:tags, templateOptions: { current: selectedTag, edit: editTag, currentEdit: editedTag, cancelAdd: cancelAddTag, delete: deleteTag } }" class='acc_menu'>
     </ul>
 </div>
 <div class='left_side_pnl'>

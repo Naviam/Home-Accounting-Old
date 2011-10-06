@@ -504,6 +504,7 @@ $(document).ready(function () {
             else
                 hld.overlay().load();
         };
+        //Tags
         catModel.selectedTag = ko.observable(null);
         catModel.prevSelectedTag = null;
         catModel.editedTag = ko.observable(null);
@@ -555,6 +556,13 @@ $(document).ready(function () {
                 });
             });
         };
+        catModel.cancelAddTag = function () {
+            var fItem = ko.utils.arrayFirst(catModel.tags(), function (item) {
+                return item.Id() == null;
+            });
+            ko.utils.arrayRemoveItem(catModel.tags, fItem);
+            catModel.editedTag(null);
+        };
         catModel.AddTag = function () {
             if (this.tagNameToAdd()) {
                 var v = { Name: this.tagNameToAdd() };
@@ -566,6 +574,7 @@ $(document).ready(function () {
                 });
             }
         };
+        //End tags
         catModel.AssignCategory = function (item) {
             $("#cat_menu").hide();
             if (item.Id() == null)
