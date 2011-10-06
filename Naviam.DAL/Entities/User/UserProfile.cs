@@ -40,6 +40,7 @@ namespace Naviam.Data
             LanguageNameShort = record["language_name_short"] as string;
             IsApproved = record["is_approved"] as bool?;
             CreationDate = record["creation_date"] as DateTime?;
+            DefaultCompany = record["id_company"] as int?;
         }
 
         public string Name { get; set; }

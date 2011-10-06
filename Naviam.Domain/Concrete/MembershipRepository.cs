@@ -24,13 +24,11 @@ namespace Naviam.Domain.Concrete
             var profile = MembershipDataAdapter.GetUser(userName, password);
             if (!extAuth && profile !=null && !SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", profile.Password))
                 profile = null;
-
             if (profile != null)
             {
-
                 //TODO: read companies and attach to user, also assign default company
                 profile.Companies = GetCompanies(profile.Id);
-                profile.DefaultCompany = 1;
+                //profile.DefaultCompany = profile.DefaultCompanyId;
             }
             return profile;
         }
