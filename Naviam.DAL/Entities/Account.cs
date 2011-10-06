@@ -40,6 +40,7 @@ namespace Naviam.Data
         public string Currency { get; set; }
         public int? TypeId { get; set; }
         public int? FinInstitutionId { get; set; }
+        public string FinInstitutionName { get; set; }
     }
 
     public static partial class SqlCommandExtensions

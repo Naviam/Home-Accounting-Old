@@ -508,7 +508,7 @@ $(document).ready(function () {
         catModel.prevSelectedTag = null;
         catModel.editedTag = ko.observable(null);
         catModel.selectedTag.subscribe(function (newValue) {
-            if (newValue != null && newValue != catModel.prevSelectedTag) {
+            if (newValue != null && newValue != catModel.prevSelectedTag && newValue.Id() != null) {
                 filterModel.items = [];
                 filterModel.Add('TagId', newValue.Id());
                 accountsModel.selectedItem(null);
@@ -531,9 +531,19 @@ $(document).ready(function () {
             else
                 hld.overlay().load();
         };
+        catModel.addTag = function () {
+            var fItem = ko.utils.arrayFirst(catModel.tags(), function (item) {
+                return item.Id() == null;
+            });
+            if (fItem != null) { catModel.editedTag(fItem); return; }
+            catModel.tags.splice(0, 0, { Name: ko.observable(), Id: ko.observable(), UserId: ko.observable() });
+            catModel.editedTag(catModel.tags()[0]);
+        };
         catModel.editTag = function (item) {
             catModel.editedTag(null);
             $.postErr(updateTagUrl, item, function (res) {
+                item.Id(res.Id);
+                item.UserId(res.UserId);
             });
         };
         catModel.deleteTag = function (item) {

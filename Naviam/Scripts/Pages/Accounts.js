@@ -4,23 +4,23 @@
 /// <reference path="~/Scripts/Pages/Transactions.js" />
 function loadAccounts() {
     $.postErr(getAccountsUrl, function (res) {
-        //var childItem = function (data) {
-        //ko.mapping.fromJS(data, {}, this);
-        //                var fItem = ko.utils.arrayFirst(item.Subitems(), function (item) {
-        //                    return item.Id() == data.CurrencyId;
-        //                });
-        //                //var catItem = catModel.itemById(data.CategoryId);
-        //                var name = fItem != null ? fItem.NameShort() : '';
-        //                this.Currency = ko.observable(name);
-        //}
+//        var childItem = function (data) {
+//            ko.mapping.fromJS(data, {}, this);
+//            /*var fItem = ko.utils.arrayFirst(item.Subitems(), function (item) {
+//                return item.Id() == data.CurrencyId;
+//            });
+//            //var catItem = catModel.itemById(data.CategoryId);
+//            var name = fItem != null ? fItem.NameShort() : '';
+//            this.Currency = ko.observable(name);*/
+//        }
         var mapping = {
             'items': {
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.Id);
                 }
-                //                    , create: function (options) {
-                //                        return new childItem(options.data, {}, this);
-                //                    }
+//                , create: function (options) {
+//                    return new childItem(options.data, {}, this);
+//                }
             }
         };
         accountsModel = ko.mapping.fromJS(res, mapping);
@@ -29,7 +29,7 @@ function loadAccounts() {
         accountsModel.move_items = ko.observableArray();
         accountsModel.ExchangeItems = ko.observableArray();
         accountsModel.selectedItem = ko.observable(null);
-        accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
+        accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null), FinInstitutionName: ko.observable(null) });
         accountsModel.selectedItem(accountsModel.items()[0]);
         accountsModel.selectedItem.subscribe(function (newValue) {
             if (newValue != null) {
@@ -54,7 +54,7 @@ function loadAccounts() {
         accountsModel.Refresh = function () {
             $.postErr(getAccountsUrl, function (res) {
                 ko.mapping.updateFromJS(accountsModel, res);
-                accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null) });
+                accountsModel.items.splice(0, 0, { Name: ko.observable(lang.All), Id: ko.observable(null), Balance: ko.observable(null), Currency: ko.observable(null), FinInstitutionName: ko.observable(null) });
             });
         };
         accountsModel.currencyById = function (id) {

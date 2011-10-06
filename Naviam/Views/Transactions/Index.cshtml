@@ -57,11 +57,12 @@
 @section LeftColumn {
 <script type="text/html" id="accountsTemplate">
     <li data-bind="click: function(event) { $item.current($data); }, css: {selected: $item.current() == $data}">
+        <div data-bind="text: Name, attr: {title: Name}" style='width:190px;' class='text_ellipsis'></div> 
         <div class='amount'><span data-bind="amount: Balance, visible: $data.Id() != null"></span>&nbsp;<span data-bind="text: Currency, visible: $data.Id() != null"></span></div>
-        <div data-bind="text: Name, attr: {title: Name}" style='width:120px;' class='text_ellipsis'></div> 
+        <div data-bind="text: FinInstitutionName, attr: {title: FinInstitutionName}" style='width:120px;' class='text_ellipsis small'></div> 
         <ul class="actions" data-bind="visible: $data.Id() != null">
             <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.edit($data);}" /></a></li>
-            <!--<li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")"/></a></li>-->
+            <li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")" data-bind="click: function(event) { event.stopPropagation();$item.delete($data);}"/></a></li>
         </ul>
     </li>
 </script>
@@ -78,13 +79,14 @@
         <input data-bind="notEmpty: Name, event: {change: function() {$item.edit($data);} }, visible: $item.currentEdit() == $data"/>
         <ul class="actions" data-bind="visible: $data.UserId() != null">
             <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.currentEdit($data);}" ></a></li>
+            <li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")" data-bind="click: function(event) { event.stopPropagation();$item.delete($data);}"/></a></li>
         </ul>
     </li>
 </script>
 <div id="tags" class='left_side_pnl'>
     <h5>@SharedStrings.Tags</h5>
-    <a href="#" data-bind="click: function(event) { EditTags(); }" class='edit'>@SharedStrings.Edit</a>
-    <ul data-bind="template: {name:'tagsTemplate', foreach:tags, templateOptions: { current: selectedTag, edit: editTag, currentEdit: editedTag } }" class='acc_menu'>
+    <a href="#" data-bind="click: function(event) { addTag(); }" class='edit'>@SharedStrings.Add</a>
+    <ul data-bind="template: {name:'tagsTemplate', foreach:tags, templateOptions: { current: selectedTag, edit: editTag, currentEdit: editedTag, delete: deleteTag } }" class='acc_menu'>
     </ul>
 </div>
 <div class='left_side_pnl'>
@@ -299,7 +301,7 @@
 </div>
 
 <div id='cat_edit_area' class="overlay"></div>
-<div id='tag_edit_area' class="overlay"></div>
+@*<div id='tag_edit_area' class="overlay"></div>*@
 <div id='exchangeDialog' class="overlay"></div>
 <div id='splitDialog' class="overlay" style='width:700px'></div>
 

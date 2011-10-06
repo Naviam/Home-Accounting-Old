@@ -13,6 +13,7 @@ $error-color: #ff0000;
 $account-select: #b5451c;
 $account-hover: #f3f3f3;
 $account-hover-select: #c5551c;
+$account-text: #626560;
 $amount-color: #0000e5;
 $sidebar-bg: #fdfdfd;
 
@@ -594,12 +595,15 @@ button {
 			}
 		}
 		li {
+			.small {
+				font-size: 12px;
+			}
 			border-top: 1px solid #FEFFFD;
 			padding: 1px 5px 0 21px;
 			border-bottom: 1px solid #E1E6DD;
-			color: #626560;
+			color: $account-text;
 			position: relative;
-			height: 21px;
+			//height: 42px;
 			&:hover {
 				cursor: pointer;
 				background-color: $account-hover;
@@ -619,7 +623,7 @@ button {
 				margin-top: 1px;
 				overflow: hidden;
 				position: absolute;
-				left: 0;
+				right: 0;
 				top: 0;
 				li {
 					padding: 0;

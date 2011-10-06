@@ -40,6 +40,7 @@ namespace Naviam.WebUI.Controllers
             foreach (var account in accounts)
             {
                 account.Currency = currencies.Find(c => c.Id == account.CurrencyId).NameShort;
+                account.FinInstitutionName = finInst.Find(c => c.Id == account.FinInstitutionId).Name;
             }
             return Json(new { items = accounts, currItems = currencies, typesItems = accountTypes, finInst, finLinks, accountTemplate = new Account() });
         }

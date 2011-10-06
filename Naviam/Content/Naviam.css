@@ -457,8 +457,9 @@ button {
       padding: 1px 5px 0 21px;
       border-bottom: 1px solid #E1E6DD;
       color: #626560;
-      position: relative;
-      height: 21px; }
+      position: relative; }
+      .left_side_pnl .acc_menu li .small {
+        font-size: 12px; }
       .left_side_pnl .acc_menu li:hover {
         cursor: pointer;
         background-color: #f3f3f3; }
@@ -476,7 +477,7 @@ button {
         margin-top: 1px;
         overflow: hidden;
         position: absolute;
-        left: 0;
+        right: 0;
         top: 0; }
         .left_side_pnl .acc_menu li .actions li {
           padding: 0;
