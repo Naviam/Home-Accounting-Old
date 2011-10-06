@@ -18,7 +18,7 @@ $amount-color: #0000e5;
 $sidebar-bg: #fdfdfd;
 
 //Grid
-$grid-background:#ECECD8;
+$grid-background: #ECECD8;
 $grid-border:1px solid #714734;
 $header-text: #FBFBC7;
 $header-bg: #b5451c;
@@ -26,16 +26,17 @@ $header-hover-bg: #c5551c;
 $header-border: 1px solid #854324;
 $row-selected-bg: #EA9959;
 $row-hover-bg: #c5551c;
-$cell-border:#DDD;
+$row-even-bg: #FFFFFF;
+$cell-border: #DDD;
 
 //Button
-$button-bg:#5D689A;
-$button-text:#FFFFFF;
+$button-bg: #5D689A;
+$button-text: #FFFFFF;
 
 //pages menu
-$menu-selected:#b5451c;
-$menu-hover:#b5451c;
-$menu-text:#b5451c;
+$menu-selected: #b5451c;
+$menu-hover: #b5451c;
+$menu-text: #b5451c;
 
 
 $left-side-width: 250px;
@@ -269,7 +270,7 @@ section.main {
 		}
 	}
 	tr {
-		&:nth-child(even) {background: white;}
+		&:nth-child(even) {background: $row-even-bg;}
 		&.selected {
 			background-color: $row-selected-bg;
 			color: white;

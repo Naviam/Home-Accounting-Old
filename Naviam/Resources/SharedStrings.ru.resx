@@ -145,7 +145,7 @@
     <value>Редактировать категории</value>
   </data>
   <data name="EnterNewTag" xml:space="preserve">
-    <value>Введите имя тэга</value>
+    <value>Введите имя метки</value>
   </data>
   <data name="Exchange" xml:space="preserve">
     <value>Обмен</value>

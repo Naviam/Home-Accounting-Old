@@ -95,9 +95,9 @@
 }
 
 @section RightColumn {
-<div id="search_area" class='left_side_pnl'>
+<div id="search_area" class='left_side_pnl' data-bind='visible: selectedItem() != null && selectedItem().Id() != null'>
     <h5>@SharedStrings.Search</h5>
-    <ul class='acc_menu' data-bind='visible: selectedItem() != null && selectedItem().Id() != null'>
+    <ul class='acc_menu'>
         <li><a href="#" data-bind="click: function(event) {searchByKey('Merchant', selectedItem() != null ? selectedItem().Merchant : ''); }, text: selectedItem() != null ? selectedItem().Merchant : ''" class='text_ellipsis'></a></li>
         <li><a href="#" data-bind="click: function(event) {searchByKey('CategoryId', selectedItem() != null ? selectedItem().CategoryId : '', 'int'); }, text: selectedItem() != null ? selectedItem().Category : ''" class='text_ellipsis'></a></li>
     </ul>
@@ -167,7 +167,6 @@
     </tr>
 </script>
 <div>
-    <button onclick="$.postErr('@Url.Action("RecieveMessage", "Sms", new { key = "", gateway = "", from = "", to = "", message = "" })')" type="button">Test</button>
     <div id="transGrid">
         @{var user = ViewBag.CurrentUser as UserProfile;}
         
