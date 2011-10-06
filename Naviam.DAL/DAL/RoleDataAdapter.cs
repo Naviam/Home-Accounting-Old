@@ -17,7 +17,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.role_create";
+                    cmd.CommandText = "role_create";
 
                     cmd.Parameters.AddWithValue("@role_name", roleName);
                     var returnParam = new SqlParameter("ReturnValue", SqlDbType.Int, 4)
@@ -48,7 +48,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.role_del";
+                    cmd.CommandText = "role_del";
 
                     cmd.Parameters.AddWithValue("@role_name", roleName);
                     cmd.Parameters.AddWithValue("@delete_only_if_role_is_empty", throwOnPopulatedRole);
@@ -80,7 +80,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.roles_get";
+                    cmd.CommandText = "roles_get";
                     
                     var roles = new List<string>();
 
@@ -110,7 +110,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.role_exists";
+                    cmd.CommandText = "role_exists";
 
                     cmd.Parameters.AddWithValue("@role_name", roleName);
                     var returnParam = new SqlParameter("ReturnValue", SqlDbType.Int, 4)
@@ -141,7 +141,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.is_user_in_role";
+                    cmd.CommandText = "is_user_in_role";
 
                     cmd.Parameters.AddWithValue("@email", userName);
                     cmd.Parameters.AddWithValue("@role_name", roleName);
@@ -173,7 +173,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.users_in_roles_get_users_in_role";
+                    cmd.CommandText = "users_in_roles_get_users_in_role";
 
                     cmd.Parameters.AddWithValue("@role_name", roleName);
                     var returnParam = new SqlParameter("ReturnValue", SqlDbType.Int, 4)
@@ -211,7 +211,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.users_in_roles_get_roles_for_user";
+                    cmd.CommandText = "users_in_roles_get_roles_for_user";
 
                     cmd.Parameters.AddWithValue("@email", userName);
 
@@ -241,7 +241,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.users_in_roles_find_users_in_role";
+                    cmd.CommandText = "users_in_roles_find_users_in_role";
 
                     cmd.Parameters.AddWithValue("@role_name", roleName);
                     cmd.Parameters.AddWithValue("@user_name_to_match", usernameToMatch);
@@ -279,7 +279,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.users_in_roles_add_users_to_roles";
+                    cmd.CommandText = "users_in_roles_add_users_to_roles";
 
                     cmd.Parameters.AddWithValue("@emails", userNames);
                     cmd.Parameters.AddWithValue("@roles", roleNames);
@@ -318,7 +318,7 @@ namespace Naviam.DAL
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = CommandTimeout;
-                    cmd.CommandText = "web.users_in_roles_add_users_to_roles";
+                    cmd.CommandText = "users_in_roles_add_users_to_roles";
 
                     cmd.Parameters.AddWithValue("@emails", userNames);
                     cmd.Parameters.AddWithValue("@roles", roleNames);

@@ -28,7 +28,7 @@ namespace Naviam.DAL
             var res = new List<Transaction>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.transactions_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("transactions_get"))
                 {
                     cmd.Parameters.AddWithValue("@id_company", companyId);
                     try
@@ -58,7 +58,7 @@ namespace Naviam.DAL
             //TODO: check that trans belongs to company
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.transactions_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("transactions_get"))
                 {
                     cmd.Parameters.AddWithValue("@id_company", companyId);
                     cmd.Parameters.AddWithValue("@id_transaction", id);
@@ -85,7 +85,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = action == DbActionType.Insert ? "web.transaction_create" : "web.transaction_update";
+                var commName = action == DbActionType.Insert ? "transaction_create" : "web.transaction_update";
                 var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {
@@ -109,7 +109,7 @@ namespace Naviam.DAL
         public static int BatchInsert(List<Transaction> list, int? companyId, DbActionType action)
         {
             var res = -1;
-            var commName = action == DbActionType.Insert ? "web.transaction_create" : "web.transaction_update";
+            var commName = action == DbActionType.Insert ? "transaction_create" : "web.transaction_update";
             using (var scope = new System.Transactions.TransactionScope())
             {
                 using (var holder = SqlConnectionHelper.GetConnection())
@@ -152,7 +152,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.transaction_delete"))
+                using (var cmd = holder.Connection.CreateSPCommand("transaction_delete"))
                 {
                     try
                     {

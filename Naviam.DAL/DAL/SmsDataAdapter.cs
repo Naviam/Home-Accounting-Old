@@ -13,7 +13,7 @@ namespace Naviam.DAL
             Account res = null;
             using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
-                using (SqlCommand cmd = holder.Connection.CreateSPCommand("web.sms_account_get"))
+                using (SqlCommand cmd = holder.Connection.CreateSPCommand("sms_account_get"))
                 {
                     cmd.Parameters.AddWithValue("@card_number", cardNumber.ToDbValue());
                     cmd.Parameters.AddWithValue("@id_modem", id_modem.ToDbValue());
@@ -44,7 +44,7 @@ namespace Naviam.DAL
             int? res = null;
             using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
-                using (SqlCommand cmd = holder.Connection.CreateSPCommand("web.sms_subscribe"))
+                using (SqlCommand cmd = holder.Connection.CreateSPCommand("sms_subscribe"))
                 {
                     cmd.Parameters.AddWithValue("@id_account", id_account.ToDbValue());
                     cmd.Parameters.AddWithValue("@date_start", date_start.ToDbValue());

@@ -16,7 +16,7 @@ namespace Naviam.DAL
             var res = new List<FinanceInstitution>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.fininst_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("fininst_get"))
                 {
                     try
                     {
@@ -42,7 +42,7 @@ namespace Naviam.DAL
             var res = new List<FinanceInstitutionLinkToAccount>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.mapping_fininst_to_account_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("mapping_fininst_to_account_get"))
                 {
                     try
                     {

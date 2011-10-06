@@ -16,7 +16,7 @@ namespace Naviam.DAL
             List<AccountType> res = new List<AccountType>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.account_types_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("account_types_get"))
                 {
                     try
                     {

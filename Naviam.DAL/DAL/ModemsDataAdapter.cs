@@ -14,7 +14,7 @@ namespace Naviam.DAL
             List<Modem> res = new List<Modem>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.modems_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("modems_get"))
                 {
                     try
                     {
@@ -39,7 +39,7 @@ namespace Naviam.DAL
             Modem res = new Modem();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.modems_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("modems_get"))
                 {
                     cmd.Parameters.AddWithValue("@gateway", gateway.ToDbValue());
                     try

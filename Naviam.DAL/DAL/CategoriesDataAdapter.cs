@@ -83,7 +83,7 @@ namespace Naviam.DAL
             int? res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = "web.merchant_find_category";
+                var commName = "merchant_find_category";
                 var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {

@@ -14,7 +14,7 @@ namespace Naviam.DAL
             List<Tag> res = new List<Tag>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.tags_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("tags_get"))
                 {
                     cmd.Parameters.AddWithValue("@id_user", userId.ToDbValue());
                     try
@@ -40,7 +40,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = action == DbActionType.Insert ? "web.tag_create" : "web.tag_update";
+                var commName = action == DbActionType.Insert ? "tag_create" : "web.tag_update";
                 var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {
@@ -64,7 +64,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.tag_delete"))
+                using (var cmd = holder.Connection.CreateSPCommand("tag_delete"))
                 {
                     try
                     {
