@@ -126,6 +126,9 @@
   <data name="AddCategory" xml:space="preserve">
     <value>Add Category</value>
   </data>
+  <data name="BudgetTitle" xml:space="preserve">
+    <value>Budget</value>
+  </data>
   <data name="Buy" xml:space="preserve">
     <value>Buy</value>
   </data>
@@ -156,6 +159,9 @@
   <data name="Rate" xml:space="preserve">
     <value>Rate</value>
   </data>
+  <data name="ReportsTitle" xml:space="preserve">
+    <value>Reports</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
@@ -170,6 +176,9 @@
   </data>
   <data name="Tags" xml:space="preserve">
     <value>Tags</value>
+  </data>
+  <data name="TargetsTitle" xml:space="preserve">
+    <value>Targets</value>
   </data>
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Transactions</value>

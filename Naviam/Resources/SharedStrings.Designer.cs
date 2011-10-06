@@ -88,6 +88,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Budget.
+        /// </summary>
+        public static string BudgetTitle {
+            get {
+                return ResourceManager.GetString("BudgetTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Buy.
         /// </summary>
         public static string Buy {
@@ -178,6 +187,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reports.
+        /// </summary>
+        public static string ReportsTitle {
+            get {
+                return ResourceManager.GetString("ReportsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         public static string Search {
@@ -219,6 +237,15 @@ namespace Naviam.WebUI.Resources {
         public static string Tags {
             get {
                 return ResourceManager.GetString("Tags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Targets.
+        /// </summary>
+        public static string TargetsTitle {
+            get {
+                return ResourceManager.GetString("TargetsTitle", resourceCulture);
             }
         }
         

@@ -512,10 +512,10 @@ $(document).ready(function () {
                 filterModel.items = [];
                 filterModel.Add('TagId', newValue.Id());
                 accountsModel.selectedItem(null);
-                catModel.editedTag(null);
                 pageContext.accountId = null;
                 transModel.ReloadPage();
             }
+            catModel.editedTag(null);
             catModel.prevSelectedTag = newValue;
         });
         catModel.EditTags = function () {

@@ -109,12 +109,18 @@
       <resource reference="autocomplete" />
       <resource reference="upload_html5" />
       <resource reference="validate_tools" />
-      <resource path="~/Scripts/Pages/Transactions.js" />
+      <resource path="~/Scripts/Pages/Transactions.min.js" />
       <resource path="~/Scripts/Pages/Accounts.min.js" />
     </resourceSet>
-    <resourceSet name="accounts" type="js">
+    <resourceSet name="reports" type="js">
       <resource reference="knockout map" />
-      <!--<resource path="~/Scripts/Pages/Accounts.js" />-->
+      <resource path="~/Scripts/Pages/Reports.min.js" />
+    </resourceSet>
+    <resourceSet name="targets" type="js">
+      <resource reference="knockout map" />
+    </resourceSet>
+    <resourceSet name="budget" type="js">
+      <resource reference="knockout map" />
     </resourceSet>
     <!--End Pages -->
     <resourceSet name="spine" type="js">

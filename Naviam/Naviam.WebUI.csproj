@@ -110,8 +110,11 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\AttachmentsController.cs" />
+    <Compile Include="Controllers\BudgetController.cs" />
     <Compile Include="Controllers\PublicMenuController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SmsController.cs" />
+    <Compile Include="Controllers\TargetsController.cs" />
     <Compile Include="Helpers\Cookies\CookieContainer.cs" />
     <Compile Include="Helpers\Cookies\ICookieContainer.cs" />
     <Compile Include="Helpers\CustomModelBinder.cs" />
@@ -211,11 +214,16 @@
     <Content Include="favicon.ico" />
     <Content Include="Prototype\Login.htm" />
     <Content Include="PublicSitemap.xml" />
+    <Content Include="Scripts\Pages\Reports.js" />
+    <Content Include="Scripts\Pages\Reports.min.js" />
     <Content Include="Views\Shared\AccessDenied.aspx" />
     <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
     <Content Include="Views\Transactions\_splitDialog.cshtml" />
     <Content Include="Views\PublicMenu\TopMenu.cshtml" />
     <Content Include="Views\Transactions\_tagsEdit.cshtml" />
+    <Content Include="Views\Targets\Targets.cshtml" />
+    <Content Include="Views\Budget\Budget.cshtml" />
+    <Content Include="Views\Reports\Reports.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\combres.xml">
