@@ -26,6 +26,11 @@ $row-selected-bg: #EA9959;
 $row-hover-bg: #c5551c;
 $cell-border:#DDD;
 
+//Button
+$button-bg:#5D689A;
+$button-text:#FFFFFF;
+
+
 $left-side-width: 250px;
 $page-width: 1200px;
 $center-width: 800px;
@@ -307,7 +312,7 @@ a.category_picker {
 	display:none;
 	
 	/* place overlay on top of other elements */
-	z-index:10000;
+	z-index:200;
 	
 	/* styling */
 	background-color:white;
@@ -342,10 +347,10 @@ a.category_picker {
 button {
 	 @include rounded();
 	 @include shadow();
-	background-color:#5D689A;
+	background-color:$button-bg;
 	border-bottom:0.2em solid #666666;
 	border-width:1px 1px 0.2em;
-	color:#FFFFFF;
+	color:$button-text;
 	cursor:pointer;
 	font-size:12px;
 	line-height:1;
@@ -631,7 +636,7 @@ button {
 	padding: 0 0 0 10px;
 }
 
-.error, .alert, .notice, .success, .info {padding:0.8em;margin-bottom:1em;border:2px solid #ddd;}
+.error, .alert, .notice, .success, .info {padding:1px;margin-bottom:5px;border:2px solid #ddd;z-index:10000;}
 .error, .alert {background:#fbe3e4;color:#8a1f11;border-color:#fbc2c4; a{color:#8a1f11;}}
 .notice {background:#fff6bf;color:#514721;border-color:#ffd324; a {color:#514721;}}
 .success {background:#e6efc2;color:#264409;border-color:#c6d880; a {color:#264409;}}

@@ -92,6 +92,25 @@ namespace Naviam.Domain.Concrete
             return InsertUpdate(entity, companyId, DbActionType.Update, true);
         }
 
+        public int BatchInsert(List<Transaction> list, int? companyId) { return BatchInsert(list, companyId, true); }
+        public int BatchInsert(List<Transaction> list, int? companyId, bool intoCache)
+        {
+            var cache = new CacheWrapper();
+            var res = TransactionsDataAdapter.BatchInsert(list, companyId, DbActionType.Insert);
+            if (res == 0)
+            {
+                //if ok - update cache
+                if (intoCache)
+                {
+                    foreach (var entity in list)
+                    {
+                        cache.AddToList(CacheKey, entity, companyId);
+                    }
+                }
+            }
+            return res;
+        }
+
 
 
     }

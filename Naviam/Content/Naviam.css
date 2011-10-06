@@ -214,7 +214,7 @@ a.category_picker {
   /* must be initially hidden */
   display: none;
   /* place overlay on top of other elements */
-  z-index: 10000;
+  z-index: 200;
   /* styling */
   background-color: white;
   padding: 30px 5px 5px 5px;
@@ -246,10 +246,10 @@ button {
   -moz-border-radius: 5px;
   -moz-box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.5);
-  background-color: #5D689A;
+  background-color: #5d689a;
   border-bottom: 0.2em solid #666666;
   border-width: 1px 1px 0.2em;
-  color: #FFFFFF;
+  color: white;
   cursor: pointer;
   font-size: 12px;
   line-height: 1;
@@ -496,9 +496,10 @@ button {
   padding: 0 0 0 10px; }
 
 .error, .alert, .notice, .success, .info {
-  padding: 0.8em;
-  margin-bottom: 1em;
-  border: 2px solid #ddd; }
+  padding: 1px;
+  margin-bottom: 5px;
+  border: 2px solid #ddd;
+  z-index: 10000; }
 
 .error, .alert {
   background: #fbe3e4;

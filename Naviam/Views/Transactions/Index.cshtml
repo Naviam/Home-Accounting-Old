@@ -58,7 +58,7 @@
 <script type="text/html" id="accountsTemplate">
     <li data-bind="click: function(event) { $item.current($data); }, css: {selected: $item.current() == $data}">
         <div class='amount'><span data-bind="amount: Balance, visible: $data.Id() != null"></span>&nbsp;<span data-bind="text: Currency, visible: $data.Id() != null"></span></div>
-        <div data-bind="text: Name" style='width:120px;' class='text_ellipsis'></div> 
+        <div data-bind="text: Name, attr: {title: Name}" style='width:120px;' class='text_ellipsis'></div> 
         <ul class="actions" data-bind="visible: $data.Id() != null">
             <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.edit($data);}" /></a></li>
             <!--<li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")"/></a></li>-->
@@ -285,6 +285,7 @@
 </table>
 <button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
 <button type="button" class='close'>@SharedStrings.Cancel</button>
+<button type="button" data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {accountsModel.deleteItemById(Id)}" style='float:right'>@SharedStrings.Delete</button>
 }
 </div>
 

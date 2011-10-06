@@ -153,9 +153,15 @@ function loadAccounts() {
                 });
             }
         };
+        accountsModel.deleteItemById = function (id) {
+            id = ko.utils.unwrapObservable(id);
+            var curItem = this.getById(id);
+            if (curItem) this.deleteItem(curItem);
+        }
         accountsModel.deleteItem = function (item) {
             askToUser(lang.DeleteAccount, function () {
                 $.postErr(deleteAccountUrl, { id: item.Id() }, function (res) {
+                    this.hideEdit(false);
                     ko.utils.arrayRemoveItem(accountsModel.items, item);
                     if (accountsModel.selectedItem() == item)
                         accountsModel.selectedItem(accountsModel.items()[0]);
@@ -179,7 +185,7 @@ function loadAccounts() {
         ko.applyBindings(accountsModel, $("#accounts")[0]);
         ko.applyBindings(accountsModel, $("#accounts_move")[0]);
         ko.applyBindings(editAccount, $("#account_edit")[0]);
-        $("#account_edit").overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true, closeIcon: true });
+        $("#account_edit").overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true, closeIcon: true, 'onClose': function () { accountsModel.hideEdit(false); } });
 
         loadTransactions();
     });

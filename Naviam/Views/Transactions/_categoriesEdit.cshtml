@@ -6,7 +6,7 @@
     <li>
         <span data-bind="text: Name(), visible: UserId() == null"></span>
         <div data-bind="visible: UserId() != null">
-            <input data-bind="value: Name, event: {change: function() {$item.edit($value);} }"/>
+            <input data-bind="notEmpty: Name, event: {change: function() {$item.edit($value);} }"/>
             <a href="#" data-bind="click: function(event) {$item.delete($value);}">@SharedStrings.Delete</a>
         </div>
     </li>

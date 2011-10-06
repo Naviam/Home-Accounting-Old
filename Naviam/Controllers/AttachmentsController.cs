@@ -37,9 +37,9 @@ namespace Naviam.WebUI.Controllers
                     var companyId = CurrentUser.CurrentCompany;
                     var reps = new TransactionsRepository();
                     decimal sumAmount = 0;
+                    var dbTransList = new List<Transaction>();
                     foreach (var trans in statRes.Transactions)
                     {
-                        //Add to DB
                         if (trans.AccountAmount != 0)
                         {
                             var dbTrans = new Transaction()
@@ -55,15 +55,19 @@ namespace Naviam.WebUI.Controllers
                                 //TODO: assign null and resolve on db side
                                 CategoryId = 20
                             };
-                            var res = reps.Insert(dbTrans, companyId);
-                            if (res == 0)
-                                sumAmount += trans.AccountAmount;
+                            dbTransList.Add(dbTrans);
+                            sumAmount += trans.AccountAmount;
                         }
                     }
-                    AccountsRepository.ChangeBalance(accId, companyId, sumAmount);
-                    //reset redis
-                    //TransactionsDataAdapter.ResetCache(CurrentUser.CurrentCompany);
-                    result = "ok";
+                    //Add to DB
+                    var res = reps.BatchInsert(dbTransList, companyId);
+                    if (res == 0)
+                    {
+                        AccountsRepository.ChangeBalance(accId, companyId, sumAmount);
+                        //reset redis
+                        reps.ResetCache(companyId);
+                        result = "ok";
+                    }
                     if (Request.UrlReferrer != null) Response.Redirect(Request.UrlReferrer.PathAndQuery);
                 }
             }

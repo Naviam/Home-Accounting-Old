@@ -503,8 +503,6 @@ $(document).ready(function () {
             else
                 hld.overlay().load();
         };
-        catModel.inlaneEditTag = function (item) {
-        };
         catModel.editTag = function (item) {
             catModel.editedTag(null);
             $.postErr(updateTagUrl, item, function (res) {

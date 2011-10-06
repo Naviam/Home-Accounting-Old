@@ -106,6 +106,47 @@ namespace Naviam.DAL
             return res;
         }
 
+        public static int BatchInsert(List<Transaction> list, int? companyId, DbActionType action)
+        {
+            var res = -1;
+            var commName = action == DbActionType.Insert ? "web.transaction_create" : "web.transaction_update";
+            using (var scope = new System.Transactions.TransactionScope())
+            {
+                using (var holder = SqlConnectionHelper.GetConnection())
+                {
+                    var cmd = holder.Connection.CreateSPCommand(commName);
+                    //SqlTransaction transaction = holder.Connection.BeginTransaction("BatchInsertTransactions");
+                    //cmd.Transaction = transaction;
+                    try
+                    {
+                        foreach (var entity in list)
+                        {
+                            cmd.Parameters.Clear();
+                            cmd.AddEntityParameters(entity, action);
+                            if (action == DbActionType.Update)
+                                cmd.Parameters.AddWithValue("@id_company", companyId);
+                            cmd.ExecuteNonQuery();
+                            if (action == DbActionType.Insert)
+                                entity.Id = cmd.GetRowIdParameter();
+                            int l_res = cmd.GetReturnParameter();
+                            if (l_res != 0)
+                                return l_res;
+                        }
+                        //transaction.Commit();
+                        scope.Complete();
+                        res = 0;
+                    }
+                    catch (SqlException e)
+                    {
+                        //transaction.Rollback();
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return res;
+        }
+
         public static int Delete(int? id, int? companyId)
         {
             var res = -1;
