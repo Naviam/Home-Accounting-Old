@@ -122,28 +122,28 @@
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedItem() == $data}">
         <td>
-            <div style='width:75px'>
+            <div>
             <span data-bind="msDateTime: Date, visible: transModel.selectedItem() != $data" name="Date"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, datepicker: Date, datepickerOptions: {format: dateFormat.masks['default'], lang: lang.culture, selectors: true, firstDay: lang.firstDay}" />
             @*<img data-bind="visible: transModel.selectedRow() == Id(), click: function(event) {transModel.showCalendar(event, $data);}" style="cursor:pointer;" alt="" src="@Url.Content("~/Content/images/dpicker/cal.gif")">*@
             </div>
         </td>
-        <td style='width:275px'>
+        <td>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Description"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
         </td>
-        <td style='width:250px'>
+        <td>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Merchant"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Merchant" />
         </td>
-        <td style='width:175px'>
+        <td>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
             <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'>
                 <input class="width100 enterastab" data-bind="category: Category" name="Category"/>
                 <a href="#" onclick='return catModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a>
             </div>
         </td>
-        <td style="width:120px;white-space:nowrap">
+        <td style="white-space:nowrap">
             @*<span data-bind="text: Amount, visible: transModel.selectedRow() != Id() || (transModel.currentItem != null && transModel.currentItem.Id() != null)"></span>
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
@@ -165,7 +165,7 @@
 <script type="text/html" id="transHeadTemplate">
     <tr>
     {{each(i, head) headItems()}}
-        <th data-bind="attr: {colspan: Columns}, text: Text()+(paging.SortField()==head.Field() ? (paging.SortDirection() == 0 ? ' ▲' : ' ▼') : ''), click: function() { Sort(head.Field()) }"></th>
+        <th data-bind="attr: {colspan: Columns}, style: {width: Size()+'px'}, text: Text()+(paging.SortField()==head.Field() ? (paging.SortDirection() == 0 ? ' ▲' : ' ▼') : ''), click: function() { Sort(head.Field()) }"></th>
     {{/each}}
     </tr>
 </script>

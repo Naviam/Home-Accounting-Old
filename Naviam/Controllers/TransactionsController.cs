@@ -29,6 +29,7 @@ namespace Naviam.WebUI.Controllers
             public string Field { get; set; }
             public string Text { get; set; }
             public int Columns = 1;
+            public int Size = 1;
         }
 
         public class Paging
@@ -111,11 +112,11 @@ namespace Naviam.WebUI.Controllers
 
             var head = new List<Head>
                            {
-                               new Head {Field = "Date", Text = DisplayNames.Date},
-                               new Head {Field = "Description", Text = DisplayNames.Description},
-                               new Head {Field = "Merchant", Text = DisplayNames.Merchant},
-                               new Head {Field = "CategoryId", Text = DisplayNames.Category},
-                               new Head {Field = "Amount", Text = DisplayNames.Amount, Columns = 2}
+                               new Head {Field = "Date", Text = DisplayNames.Date, Size = 75},
+                               new Head {Field = "Description", Text = DisplayNames.Description, Size = 275},
+                               new Head {Field = "Merchant", Text = DisplayNames.Merchant, Size = 250},
+                               new Head {Field = "CategoryId", Text = DisplayNames.Category, Size = 175},
+                               new Head {Field = "Amount", Text = DisplayNames.Amount, Size = 120}
                            };
             return Json(new { items = trans, paging, headItems = head, transTemplate = new Transaction() });
         }
