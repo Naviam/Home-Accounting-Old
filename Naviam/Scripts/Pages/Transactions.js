@@ -198,8 +198,13 @@ function loadTransactions() {
                 });
             }
             if (item != this.selectedItem()) this.selectedItem(item);
-            if (event != null)
+            if (event != null) {
                 row = $(event.currentTarget);
+                /*var tblOffset = row.parents('table').offset();
+                var area = $("#trans_actions");
+                area.css({ left: tblOffset.left - 5 - pageXOffset, top: tblOffset.top + row[0].offsetTop + row.height() - pageYOffset });
+                area.show();*/
+            }
             this.selectedRow(row);
             $(row.find('[name="Category"]')).autocomplete(catModel.Suggest(), {
                 minChars: 1

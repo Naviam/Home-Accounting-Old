@@ -60,8 +60,8 @@
         <div class='amount'><span data-bind="amount: Balance, visible: $data.Id() != null"></span>&nbsp;<span data-bind="text: Currency, visible: $data.Id() != null"></span></div>
         <div data-bind="text: Name" style='width:120px;' class='text_ellipsis'></div> 
         <ul class="actions" data-bind="visible: $data.Id() != null">
-            <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.edit($data);}" ></a></li>
-            <!--<li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")"></a></li>-->
+            <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.edit($data);}" /></a></li>
+            <!--<li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")"/></a></li>-->
         </ul>
     </li>
 </script>
@@ -87,6 +87,9 @@
     <ul data-bind="template: {name:'tagsTemplate', foreach:tags, templateOptions: { current: selectedTag, edit: editTag, currentEdit: editedTag } }" class='acc_menu'>
     </ul>
 </div>
+<div class='left_side_pnl'>
+    <a href="#" onclick='return catModel.EditCategories();' class='edit'>@SharedStrings.EditCategories</a>
+</div>
 }
 
 <script type="text/html" id="accounts_moveTemplate">
@@ -100,7 +103,6 @@
     </ul>
 </div>
 
-<a href="#" onclick='return catModel.EditCategories();'>@SharedStrings.EditCategories</a>
 <script type="text/html" id="transRowTemplate">
     <tr data-bind="click: function(event) { transModel.GoToEdit(event, $data); }, css: {selected: transModel.selectedItem() == $data}">
         <td>
@@ -162,7 +164,7 @@
     <button onclick="$.postErr('@Url.Action("RecieveMessage", "Sms", new { key = "", gateway = "", from = "", to = "", message = "" })')" type="button">Test</button>
     <div id="transGrid">
         @{var user = ViewBag.CurrentUser as UserProfile;}
-        <a href="#" onclick='return transModel.ReloadPage();'>Refresh</a>
+        
         <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null">
             @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany, @accId = 0 }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
             {
@@ -178,6 +180,10 @@
                 <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'></tbody>
                 <tfoot></tfoot>
             </table>
+        <div class='hidden' style='position:absolute;background-color:White;' id='trans_actions'>
+        sdsdsd
+        </div>
+            <img src='@Url.Content("~/Content/images/refresh.png")' onclick='return transModel.ReloadPage();' style='float: right;cursor: pointer;margin-top: 3px;'/>
             <div data-bind='template: "transPagingTemplate"' class='paging'></div>
         </div>
     @*    <div class='hidden' id='edit_row' style='position:fixed;border:1px solid #000;'>

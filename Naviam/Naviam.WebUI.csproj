@@ -199,6 +199,7 @@
     <Content Include="Content\images\bg.png" />
     <Content Include="Content\images\delete.png" />
     <Content Include="Content\images\edit.png" />
+    <Content Include="Content\images\refresh.png" />
     <Content Include="Content\images\top-bg-green.png" />
     <Content Include="Content\images\top-bg.png" />
     <Content Include="Content\Login.css">
