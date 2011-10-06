@@ -43,8 +43,10 @@
             if (check === 0) $("#accounts_move").hide();
         });
         $('#upload_statement').html5_upload({ autostart: false, onFinish: function (event, total) {
-            transModel.ReloadPage();
-            accountsModel.Refresh();
+            if (total > 0) {
+                transModel.ReloadPage();
+                accountsModel.Refresh();
+            }
         }
         });
     });
@@ -114,7 +116,7 @@
         <span data-bind="amount: Balance"></span> <span data-bind="text: Currency"></span>
     </li>
 </script>
-<div id="accounts_move" class='hidden tooltip' style="position: absolute;background-color:White;border:1px solid;width:200px;z-index:10000">
+<div id="accounts_move" class='hidden tooltip' style="position: absolute;background-color:White;border:1px solid;width:300px;z-index:10000">
     <ul data-bind="template: {name:'accounts_moveTemplate', foreach:move_items }">
     </ul>
 </div>
@@ -148,7 +150,7 @@
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
             <span data-bind="amount: Amount, visible: transModel.selectedItem() != $data"></span>
-            <input class="enterastab" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount" style="width:80%"/>        
+            <input class="enterastab" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount" style="width:85%"/>        
             <span data-bind="text: Currency, visible: transModel.selectedItem() != $data"></span>
         </td>
     </tr>
@@ -174,11 +176,14 @@
         @{var user = ViewBag.CurrentUser as UserProfile;}
         
         <div data-bind="visible: accountsModel.selectedItem() != null && accountsModel.selectedItem().Id() != null" style="display: none;">
+            <div class='upload_area'>
+            <span>@SharedStrings.UploadDescription</span>
             @using (Html.BeginForm("UploadStatement", "Attachments", new { @cid = user.CurrentCompany, @accId = 0 }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
             {
                 <input type="file" id='upload_statement' name='fileToUpload'/>
                 <button onclick='beg_upload_statement();' type="button">@SharedStrings.Upload</button>
             }
+            </div>
             <a href="#" onclick='return transModel.Add();'>@SharedStrings.Add</a>
             <a href="#" onclick='return transModel.ShowExchange();'>@SharedStrings.Exchange</a>
         </div>

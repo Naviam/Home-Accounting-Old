@@ -207,4 +207,7 @@
   <data name="Upload" xml:space="preserve">
     <value>Upload</value>
   </data>
+  <data name="UploadDescription" xml:space="preserve">
+    <value>Here you can upload your statements into current account.</value>
+  </data>
 </root>

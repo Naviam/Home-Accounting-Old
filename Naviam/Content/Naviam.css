@@ -504,6 +504,11 @@ button {
   width: 800px;
   padding: 0 10px 0 10px; }
 
+.upload_area {
+  border: 1px solid #714734;
+  margin: 0 10px 20px 10px;
+  padding: 10px; }
+
 .error, .alert, .notice, .success, .info {
   padding: 1px;
   margin-bottom: 5px;

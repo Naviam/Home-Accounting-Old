@@ -207,4 +207,7 @@
   <data name="Upload" xml:space="preserve">
     <value>Загрузить</value>
   </data>
+  <data name="UploadDescription" xml:space="preserve">
+    <value>Здесь вы можете загрузить свои выписки по счету в текущий счет.</value>
+  </data>
 </root>
