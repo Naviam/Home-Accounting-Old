@@ -98,7 +98,7 @@
         <span data-bind="amount: Balance"></span> <span data-bind="text: Currency"></span>
     </li>
 </script>
-<div id="accounts_move" class='hidden tooltip' style="position: absolute;background-color:White;border:1px solid;width:200px;z-index:1">
+<div id="accounts_move" class='hidden tooltip' style="position: absolute;background-color:White;border:1px solid;width:200px;z-index:10000">
     <ul data-bind="template: {name:'accounts_moveTemplate', foreach:move_items }">
     </ul>
 </div>
@@ -132,15 +132,8 @@
             <input class="width100" data-bind="visible: transModel.selectedRow() == Id() && transModel.currentItem.Id() == null, value: Amount" />*@
             <span data-bind="text: Direction() == 0 ? '-' : ''"></span>
             <span data-bind="amount: Amount, visible: transModel.selectedItem() != $data"></span>
-            <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount"/>        
+            <input class="enterastab" data-bind="visible: transModel.selectedItem() == $data, amount: Amount" name="Amount" style="width:90%"/>        
             <span data-bind="text: Currency, visible: transModel.selectedItem() != $data"></span>
-        </td>
-        <td data-bind="visible: transModel.selectedItem() == $data && $data.Id() != null">
-            <a href="#" data-bind="click: function(event) {transModel.ShowEdit(event, $data);}" tabindex='-1'>@SharedStrings.Edit</a>
-            <a href="#" data-bind="click: function(event) {transModel.Delete($data);}" tabindex='-1'>@SharedStrings.Delete</a>
-            <a href="#" data-bind="click: function(event) {transModel.ShowTransfer($data, event, 'trans');}" tabindex='-1'>Transfer</a>
-            <a href="#" data-bind="click: function(event) {transModel.ShowTransfer($data, event, 'move');}" tabindex='-1'>Move</a>
-            <a href="#" data-bind="click: function(event) {transModel.ShowSplit($data.Id);}" tabindex='-1'>@SharedStrings.Split</a>
         </td>
     </tr>
 </script>
@@ -180,9 +173,9 @@
                 <tbody data-bind='template: { name: "transRowTemplate", foreach: items }'></tbody>
                 <tfoot></tfoot>
             </table>
-        <div class='hidden' style='position:absolute;background-color:White;' id='trans_actions'>
-        sdsdsd
-        </div>
+            <div class='hidden' style='position:absolute;background-color:White;' id='trans_actions' data-bind='visible: selectedItem() != null && selectedItem().Id() != null'>
+                <a href="#" data-bind="click: function(event) {transModel.ShowEdit(event);}" tabindex='-1'>@SharedStrings.Edit</a>
+            </div>
             <img src='@Url.Content("~/Content/images/refresh.png")' onclick='return transModel.ReloadPage();' style='float: right;cursor: pointer;margin-top: 3px;'/>
             <div data-bind='template: "transPagingTemplate"' class='paging'></div>
         </div>
@@ -199,7 +192,12 @@
     </div>*@    
     </div>
     <div class="overlaywoshadow" id="transDlg">
-        <button data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {transModel.ShowSplit(Id)}">@SharedStrings.Split</button>
+        <div>
+            <button data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {transModel.ShowSplit(Id)}">@SharedStrings.Split</button>
+            <button data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {transModel.DeleteById(Id)}">@SharedStrings.Delete</button>
+            <button data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {transModel.ShowTransfer(Id, event, 'trans')}">@SharedStrings.Transfer</button>
+            <button data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {transModel.ShowTransfer(Id, event, 'move')}">@SharedStrings.Move</button>
+        </div>
         <table>
         <tr>
             <td></td>

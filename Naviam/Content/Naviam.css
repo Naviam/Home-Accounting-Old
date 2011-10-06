@@ -217,7 +217,7 @@ a.category_picker {
   z-index: 200;
   /* styling */
   background-color: white;
-  padding: 30px 5px 5px 5px;
+  padding: 5px 5px 5px 5px;
   width: 640px;
   /* for modern browsers use semi-transparent color on the border. nice! */
   border: 1px solid rgba(82, 82, 82, 0.698);

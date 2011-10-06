@@ -147,6 +147,9 @@
   <data name="LoginHeader" xml:space="preserve">
     <value>Log in</value>
   </data>
+  <data name="Move" xml:space="preserve">
+    <value>Move</value>
+  </data>
   <data name="NaviamLogIn" xml:space="preserve">
     <value>Naviam - Log In</value>
   </data>
@@ -167,6 +170,9 @@
   </data>
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Transactions</value>
+  </data>
+  <data name="Transfer" xml:space="preserve">
+    <value>Transfer</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Upload</value>

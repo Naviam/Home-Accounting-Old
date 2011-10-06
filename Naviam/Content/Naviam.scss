@@ -30,6 +30,11 @@ $cell-border:#DDD;
 $button-bg:#5D689A;
 $button-text:#FFFFFF;
 
+//pages menu
+$menu-selected:#b5451c;
+$menu-hover:#b5451c;
+$menu-text:#b5451c;
+
 
 $left-side-width: 250px;
 $page-width: 1200px;
@@ -154,19 +159,19 @@ section.menu
 					display:block;
 					padding: 4px 4px;
 					font-weight: 200;
-					color: $base-color;
+					color: $menu-text;
 					text-decoration: none;
 					&:hover {
 						color: white;
-						background-color: $base-color;
+						background-color: $menu-hover;
 					}
 					&:active {
 						color: white;
-						background-color: $base-color;
+						background-color: $menu-selected;
 					}
 					&.selected {
 						color: white;
-						background-color: $base-color;
+						background-color: $menu-selected;
 					}
 				}
 			}
@@ -317,7 +322,7 @@ a.category_picker {
 	/* styling */
 	background-color:white;
 
-	padding: 30px 5px 5px 5px;
+	padding: 5px 5px 5px 5px;
 	
 	width:640px;	
 	/* for modern browsers use semi-transparent color on the border. nice! */

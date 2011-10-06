@@ -158,7 +158,11 @@ namespace Naviam.WebUI.Controllers
             if (ModelState.IsValid && model.Password==model.ConfirmPassword)
             {
                 _membershipRepository.CreateUser(model.UserName, model.Password);
-                return RedirectToAction("Index", "Transactions");
+                var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
+
+                LogOnModel lModel = new LogOnModel() { UserName = model.UserName};
+                if (profile != null)
+                    return AuthSuccess(profile, lModel, null);
             }
             return View(model);
         }

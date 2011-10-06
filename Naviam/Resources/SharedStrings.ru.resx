@@ -147,6 +147,9 @@
   <data name="LoginHeader" xml:space="preserve">
     <value>Вход на сайт</value>
   </data>
+  <data name="Move" xml:space="preserve">
+    <value>Переместить</value>
+  </data>
   <data name="NaviamLogIn" xml:space="preserve">
     <value>Naviam - Вход</value>
   </data>
@@ -167,6 +170,9 @@
   </data>
   <data name="TransactionsTitle" xml:space="preserve">
     <value>Операции</value>
+  </data>
+  <data name="Transfer" xml:space="preserve">
+    <value>Перевод</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Загрузить</value>

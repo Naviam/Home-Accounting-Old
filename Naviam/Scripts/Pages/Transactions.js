@@ -200,10 +200,12 @@ function loadTransactions() {
             if (item != this.selectedItem()) this.selectedItem(item);
             if (event != null) {
                 row = $(event.currentTarget);
-                /*var tblOffset = row.parents('table').offset();
+                var tblOffset = row.parents('table').offset();
                 var area = $("#trans_actions");
-                area.css({ left: tblOffset.left - 5 - pageXOffset, top: tblOffset.top + row[0].offsetTop + row.height() - pageYOffset });
-                area.show();*/
+                //center align
+                var x = tblOffset.left + row.width() / 2 - area.width() / 2;
+                area.css({ left: x, top: tblOffset.top + row[0].offsetTop + row.height() });
+                area.show();
             }
             this.selectedRow(row);
             $(row.find('[name="Category"]')).autocomplete(catModel.Suggest(), {
@@ -236,8 +238,8 @@ function loadTransactions() {
                 });
             }
         };
-        transModel.ShowEdit = function (event, item) {
-            this.selectedRow($(event.currentTarget).parents('tr'));
+        transModel.ShowEdit = function (event) {
+            //this.selectedRow($(event.currentTarget).parents('tr'));
             ko.mapping.fromJS(ko.mapping.toJS(transModel.selectedItem()), {}, transEdit);
             this.ShowDialog();
         };
@@ -246,11 +248,18 @@ function loadTransactions() {
                 transModel.DeleteItem(item);
             });
         }
+        transModel.DeleteById = function (id) {
+            id = ko.utils.unwrapObservable(id);
+            var fItem = this.getById(id);
+            if (fItem) this.Delete(fItem);
+        }
         transModel.DeleteItem = function (item, callback) {
             $.postErr(delTransUrl, { id: item.Id() }, function (res) {
                 var amount = item.Direction() == 0 ? item.Amount() : -item.Amount();
                 accountsModel.addAmount(item.AccountId(), amount);
                 ko.utils.arrayRemoveItem(transModel.items, item);
+                transModel.selectedItem(null);
+                transDlg.close();
                 if (callback) callback();
             });
         };
@@ -260,13 +269,17 @@ function loadTransactions() {
             });
             return fItem;
         }
-        transModel.ShowTransfer = function (item, event, op) {
-            accountsModel.fillMoveItems(item.AccountId(), item.Id(), op);
-            if (accountsModel.move_items().length > 0) {
-                var offset = $(event.currentTarget).offset();
-                var area = $("#accounts_move");
-                area.css({ left: offset.left + 15, top: offset.top + 15 });
-                area.show();
+        transModel.ShowTransfer = function (id, event, op) {
+            id = ko.utils.unwrapObservable(id);
+            var fItem = this.getById(id);
+            if (fItem) {
+                accountsModel.fillMoveItems(fItem.AccountId(), fItem.Id(), op);
+                if (accountsModel.move_items().length > 0) {
+                    var offset = $(event.currentTarget).offset();
+                    var area = $("#accounts_move");
+                    area.css({ left: offset.left + $(event.currentTarget).width() - 5, top: offset.top + 15 });
+                    area.show();
+                }
             }
         };
         transModel.Transfer = function (item) {
