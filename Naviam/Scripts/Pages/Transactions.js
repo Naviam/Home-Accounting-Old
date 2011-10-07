@@ -147,7 +147,7 @@ function loadTransactions() {
             conf.left = tblOffset.left - 5 - pageXOffset;
             var dd = conf.top + frm.height() - $(window).height();
             frm.overlay().load();
-            if (dd >0 )
+            if (dd > 0)
                 $(window).scrollTop(dd + pageYOffset + 50);
         };
         transModel.GetNewItem = function () {
@@ -272,17 +272,6 @@ function loadTransactions() {
             });
             return fItem;
         }
-        transModel.searchByKey = function (key, val, type) {
-            var currItem = transModel.selectedItem();
-            if (currItem != null) {
-                accountsModel.selectedItem(null);
-                catModel.selectedTag(null);
-                filterModel.items = [];
-                filterModel.Add(key, val, type);
-                pageContext.accountId = null;
-                transModel.ReloadPage();
-            }
-        }
         transModel.ShowTransfer = function (id, event, op) {
             id = ko.utils.unwrapObservable(id);
             var fItem = this.getById(id);
@@ -343,6 +332,30 @@ function loadTransactions() {
             else
                 hld.overlay().load();
         };
+        transModel.searchByKey = function (key, val, type) {
+            var currItem = transModel.selectedItem();
+            if (currItem != null) {
+                filterModel.items = [];
+                filterModel.Add(key, val, type);
+                accountsModel.selectedItem(null);
+                catModel.selectedTag(null);
+                catModel.editedTag(null);
+                pageContext.accountId = null;
+                transModel.ReloadPage();
+            }
+        }
+        transModel.Search = function () {
+            var val = $('#search_box').val();
+            if (val && val != '') {
+                filterModel.items = [];
+                filterModel.Add('Match', val);
+                accountsModel.selectedItem(null);
+                catModel.selectedTag(null);
+                catModel.editedTag(null);
+                pageContext.accountId = null;
+                transModel.ReloadPage();
+            }
+        };
         transModel.ShowSplit = function (id) {
             var hld = $('#splitDialog');
             id = ko.utils.unwrapObservable(id);
@@ -364,7 +377,7 @@ function loadTransactions() {
             }
         }
         ko.applyBindings(transModel, $("#transGrid")[0]);
-        ko.applyBindings(transModel, $("#search_area")[0]);
+        ko.applyBindings(transModel, $("#filter_area")[0]);
         ko.applyBindings(transEdit, $("#transDlg")[0]);
     });
 }

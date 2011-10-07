@@ -19,7 +19,7 @@ $sidebar-bg: #fdfdfd;
 
 //Grid
 $grid-background: #ECECD8;
-$grid-border:1px solid #714734;
+$grid-border:1px solid #e3e3e3;
 $header-text: #FBFBC7;
 $header-bg: #b5451c;
 $header-hover-bg: #c5551c;
@@ -37,6 +37,11 @@ $button-text: #FFFFFF;
 $menu-selected: #b5451c;
 $menu-hover: #b5451c;
 $menu-text: #b5451c;
+
+//input
+$input-focus-bg: #fff4e0;
+$input-border: 1px solid #9EBCB1;
+$input-hover-border: 1px solid #3399cc;
 
 
 $left-side-width: 250px;
@@ -64,6 +69,20 @@ $center-width: 800px;
 body {
 	font-size: 14px;
     background-color: $bg-color1;	
+}
+
+input[type=text], textarea {
+	border: $input-border;
+	padding: 4px;
+    @include rounded();
+	&:focus {
+		border: $input-hover-border;
+		background-color: $input-focus-bg;
+		//outline: none;
+	}
+	&:hover {
+		border: $input-hover-border;
+	}
 }
 
 nav {
@@ -274,6 +293,7 @@ section.main {
 		&.selected {
 			background-color: $row-selected-bg;
 			color: white;
+			td {border-right-width: 0;}
 		}
 		&:hover {
 			background-color:$row-hover-bg;
@@ -285,6 +305,10 @@ section.main {
 			padding: 3px 5px;
 			border-style: solid;
 			border-right-width: 1px;
+			input {
+				padding: 0;
+				border: 0;
+			}
 		}
 	}
 }
@@ -663,6 +687,15 @@ button {
 	border: 1px solid #714734;
 	margin: 0 10px 20px 10px;
 	padding: 10px;
+}
+
+.search_area {
+	margin: 0 10px 20px 10px;
+	float: right;
+	input {
+		&:focus {box-shadow: 0 0 4px #006699;}
+		width: 300px;
+	}
 }
 
 .error, .alert, .notice, .success, .info {padding:1px;margin-bottom:5px;border:2px solid #ddd;z-index:10000;}

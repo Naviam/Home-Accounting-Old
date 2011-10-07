@@ -153,7 +153,7 @@ button:focus {
 
 button:active {
   text-decoration: none;
-  background-color: #c22b65; }
+  background-color: #006699; }
 
 input[type=text], input[type=password], input[type=email], input[type=checkbox], select, textarea {
   font-size: larger;

@@ -95,11 +95,20 @@ namespace Naviam.WebUI.Controllers
                 {
                     foreach (var item in flt)
                     {
-                        if (item.Type == "int")
-                            paging.Filter += item.Name + "==" + item.Value;
+                        if (item.Name == "Match")
+                        {
+                            paging.Filter += String.Format("(Merchant != null and Merchant.Contains(\"{0}\")) and ", item.Value);
+                        }
                         else
-                            paging.Filter += item.Name + "==\"" + item.Value + "\"";
+                        {
+                            if (item.Type == "int")
+                                paging.Filter += String.Format("{0}=={1} and ", item.Name, item.Value);
+                            else
+                                paging.Filter += String.Format("{0}==\"{1}\" and ", item.Name, item.Value);
+                        }
                     }
+                    if (!String.IsNullOrEmpty(paging.Filter))
+                        paging.Filter = paging.Filter.Substring(0, paging.Filter.Length - 5);
                 }
             }
             if (pageContext.AccountId != null)
@@ -182,7 +191,7 @@ namespace Naviam.WebUI.Controllers
         }
 
         #region Additional dialogs
-        
+
         [HttpPost]
         public ActionResult GetExchangeDialog()
         {
@@ -195,7 +204,7 @@ namespace Naviam.WebUI.Controllers
             return PartialView("_splitDialog");
         }
 
-        #endregion 
+        #endregion
 
         #region Categories
 
@@ -237,7 +246,7 @@ namespace Naviam.WebUI.Controllers
                 CategoriesRepository.Insert(cat, cat.UserId);
             return Json(cat);
         }
-        
+
         [HttpPost]
         public ActionResult DeleteCategory(int? id)
         {
@@ -275,7 +284,7 @@ namespace Naviam.WebUI.Controllers
             TagsRepository.Delete(id, user.Id);
             return Json(id);
         }
-        
+
         #endregion
 
     }

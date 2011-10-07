@@ -30,7 +30,7 @@
             <nav class="right">
                 @{var user = ViewBag.CurrentUser as UserProfile;}
                 <ul>
-                    <li><a href="@Url.Action("LogOn", "Account")">@user.FirstName @user.LastName</a></li>
+                    <li><a href="@Url.Action("LogOn", "Account")">@(!String.IsNullOrEmpty(user.FirstName) ? user.FirstName + " " +user.LastName : user.Name)</a></li>
                     <li><a href="@Url.Action("LogOn", "Account")">0</a></li>
                     <li><a href="@Url.Action("LogOn", "Account")">?</a></li>
                     <li><a href="@Url.Action("LogOn", "Account")">Выйти</a></li>

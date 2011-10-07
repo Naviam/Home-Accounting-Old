@@ -78,7 +78,7 @@
 <script type="text/html" id="tagsTemplate">
     <li data-bind="click: function(event) { $item.current($data); }, css: {selected: $item.current() == $data}">
         <span data-bind="text: Name, visible: $item.currentEdit() != $data"></span>
-        <input data-bind="notEmpty: Name, event: {change: function() {$item.edit($data);} }, visible: $item.currentEdit() == $data" placeholder='@SharedStrings.EnterNewTag'/>
+        <input data-bind="notEmpty: Name, event: {change: function() {$item.edit($data);} }, visible: $item.currentEdit() == $data" placeholder='@SharedStrings.EnterNewTag' type="text"/>
         <ul class="actions" data-bind="visible: $data.UserId() != null && $item.currentEdit() != $data">
             <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.currentEdit($data);}" ></a></li>
             <li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")" data-bind="click: function(event) { event.stopPropagation();$item.delete($data);}"/></a></li>
@@ -100,7 +100,7 @@
 }
 
 @section RightColumn {
-<div id="search_area" class='left_side_pnl' data-bind='visible: selectedItem() != null && selectedItem().Id() != null'>
+<div id="filter_area" class='left_side_pnl' data-bind='visible: selectedItem() != null && selectedItem().Id() != null' style="display: none;">
     <h5>@SharedStrings.Search</h5>
     <ul class='acc_menu'>
         <li><a href="#" data-bind="click: function(event) {searchByKey('Merchant', selectedItem() != null ? selectedItem().Merchant : ''); }, text: selectedItem() != null ? selectedItem().Merchant : ''" class='text_ellipsis'></a></li>
@@ -172,6 +172,10 @@
     </tr>
 </script>
 <div>
+    <div class='search_area'>
+        <input type="text" id='search_box' onkeypress="if (event.keyCode==13) transModel.Search();"/> <button onclick='transModel.Search();' type="button">@SharedStrings.Search</button>
+    </div>
+    <div style='clear:both'></div>
     <div id="transGrid">
         @{var user = ViewBag.CurrentUser as UserProfile;}
         

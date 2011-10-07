@@ -2,6 +2,18 @@ body {
   font-size: 14px;
   background-color: #ebeef1; }
 
+input[type=text], textarea {
+  border: 1px solid #9ebcb1;
+  padding: 4px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px; }
+  input[type=text]:focus, textarea:focus {
+    border: 1px solid #3399cc;
+    background-color: #fff4e0; }
+  input[type=text]:hover, textarea:hover {
+    border: 1px solid #3399cc; }
+
 nav ul li {
   float: left; }
   nav ul li a {
@@ -160,7 +172,7 @@ section.main aside.right {
 .grid {
   border-collapse: collapse;
   background: #ececd8;
-  border: 1px solid #714734; }
+  border: 1px solid #e3e3e3; }
   .grid th {
     color: #fbfbc7;
     background: #b5451c;
@@ -175,6 +187,8 @@ section.main aside.right {
   .grid tr.selected {
     background-color: #ea9959;
     color: white; }
+    .grid tr.selected td {
+      border-right-width: 0; }
   .grid tr:hover {
     background-color: #c5551c;
     color: white;
@@ -184,6 +198,9 @@ section.main aside.right {
     padding: 3px 5px;
     border-style: solid;
     border-right-width: 1px; }
+    .grid tr td input {
+      padding: 0;
+      border: 0; }
 
 .hidden {
   display: none; }
@@ -508,6 +525,14 @@ button {
   border: 1px solid #714734;
   margin: 0 10px 20px 10px;
   padding: 10px; }
+
+.search_area {
+  margin: 0 10px 20px 10px;
+  float: right; }
+  .search_area input {
+    width: 300px; }
+    .search_area input:focus {
+      box-shadow: 0 0 4px #006699; }
 
 .error, .alert, .notice, .success, .info {
   padding: 1px;
