@@ -158,6 +158,35 @@ namespace Naviam.UnitTests.Controllers
             Assert.IsNotNull(trans.FirstOrDefault(s => s.CategoryId == 200));
         }
 
+        [TestMethod]
+        public void TransactionsFilterByStringCategoryMerchant()
+        {
+            // arrange
+            var controller = GetController();
+            TransactionsController.Paging paging = new TransactionsController.Paging();
+            PageContext pageContext = new PageContext();
+            var fltrs = new List<TransactionsController.FilterHolder>();
+            fltrs.Add(new TransactionsController.FilterHolder() { Name = "ByString", Value = "test1" });
+            fltrs.Add(new TransactionsController.FilterHolder() { Name = "Merchant", Value = "test1 Merchant" });
+            fltrs.Add(new TransactionsController.FilterHolder() { Name = "CategoryId", Value = "1", Type = "int" });
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            paging.Filter = js.Serialize(fltrs);
+
+            // act
+            var result = controller.GetTransactions(paging, pageContext) as JsonResult;
+            dynamic data = result.Data;
+            List<Transaction> trans = data.items;
+            var tr = trans.FirstOrDefault();
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Data);
+            Assert.AreEqual(1, trans.Count);
+            Assert.IsNotNull(trans.FirstOrDefault(s => s.Merchant == "test1 Merchant"));
+            Assert.IsNotNull(trans.FirstOrDefault(s => s.CategoryId == 1));
+        }
+
+
         private static IEnumerable<Transaction> GetTestTrans(int? companyId)
         {
             var res = new List<Transaction>();
