@@ -12,14 +12,14 @@ namespace Naviam.Domain.Concrete
     {
         private const string CacheKey = "transCategory";
 
-        public void ResetCache(int? userId)
+        public virtual void ResetCache(int? userId)
         {
             var cache = new CacheWrapper();
             cache.SetList<Category>(CacheKey, null, userId);
         }
 
-        public static List<Category> GetCategories(int? userId) { return GetCategories(userId, false); }
-        public static List<Category> GetCategories(int? userId, bool forceSqlLoad)
+        public virtual List<Category> GetCategories(int? userId) { return GetCategories(userId, false); }
+        public virtual List<Category> GetCategories(int? userId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetList<Category>(CacheKey, userId);
@@ -33,7 +33,7 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        private static int InsertUpdate(Category entity, int? userId, DbActionType action, bool intoCache)
+        private int InsertUpdate(Category entity, int? userId, DbActionType action, bool intoCache)
         {
             var cache = new CacheWrapper();
             var res = CategoriesDataAdapter.InsertUpdate(entity, userId, action);
@@ -51,18 +51,18 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public static int Insert(Category entity, int? userId) { return Insert(entity, userId, true); }
-        public static int Insert(Category entity, int? userId, bool intoCache)
+        public virtual int Insert(Category entity, int? userId) { return Insert(entity, userId, true); }
+        public virtual int Insert(Category entity, int? userId, bool intoCache)
         {
             return InsertUpdate(entity, userId, DbActionType.Insert, intoCache);
         }
 
-        public static int Update(Category entity, int? userId)
+        public virtual int Update(Category entity, int? userId)
         {
             return InsertUpdate(entity, userId, DbActionType.Update, true);
         }
 
-        public static int Delete(int? id, int? userId)
+        public virtual int Delete(int? id, int? userId)
         {
             var res = CategoriesDataAdapter.Delete(id, userId);
             if (res == 0)

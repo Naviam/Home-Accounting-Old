@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Threading;
 using Naviam.WebUI;
 using Naviam.WebUI.Helpers;
+using log4net;
 
 namespace Naviam.WebUI
 {
@@ -36,6 +37,7 @@ namespace Naviam.WebUI
         protected void Application_Start()
 // ReSharper restore InconsistentNaming
         {
+            
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
@@ -48,6 +50,9 @@ namespace Naviam.WebUI
             ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
 
             ValueProviderFactories.Factories.Add(new MyFormValueProviderFactory());
+            
+            ILog log = LogManager.GetLogger("navSite");
+            log.Debug("app started");
         }
 
 // ReSharper disable InconsistentNaming
@@ -73,6 +78,13 @@ namespace Naviam.WebUI
                 Thread.CurrentThread.CurrentUICulture = ci;
                 Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(ci.Name);
             }
+        }
+        
+        protected void Application_Error()
+        {
+            Exception error = Server.GetLastError();
+            ILog log = LogManager.GetLogger("navSite");
+            log.Fatal(error);
         }
     }
 }

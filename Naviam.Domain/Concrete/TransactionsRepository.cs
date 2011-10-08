@@ -18,8 +18,8 @@ namespace Naviam.Domain.Concrete
             cache.SetList<Transaction>(CacheKey, null, companyId);
         }
 
-        public IEnumerable<Transaction> GetTransactions(int? companyId) { return GetTransactions(companyId, false); }
-        public IEnumerable<Transaction> GetTransactions(int? companyId, bool forceSqlLoad)
+        public virtual IEnumerable<Transaction> GetTransactions(int? companyId) { return GetTransactions(companyId, false); }
+        public virtual IEnumerable<Transaction> GetTransactions(int? companyId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetList<Transaction>(CacheKey, companyId);
@@ -33,8 +33,8 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public Transaction GetTransaction(int? id, int? companyId) { return GetTransaction(id, companyId, false); }
-        public Transaction GetTransaction(int? id, int? companyId, bool forceSqlLoad)
+        public virtual Transaction GetTransaction(int? id, int? companyId) { return GetTransaction(id, companyId, false); }
+        public virtual Transaction GetTransaction(int? id, int? companyId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetFromList(CacheKey, new Transaction { Id = id }, companyId);
@@ -52,7 +52,7 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public int Delete(int? id, int? companyId)
+        public virtual int Delete(int? id, int? companyId)
         {
             var res = TransactionsDataAdapter.Delete(id, companyId);
             if (res == 0)
@@ -81,19 +81,19 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public int Insert(Transaction entity, int? companyId) { return Insert(entity, companyId, true); }
-        public int Insert(Transaction entity, int? companyId, bool intoCache)
+        public virtual int Insert(Transaction entity, int? companyId) { return Insert(entity, companyId, true); }
+        public virtual int Insert(Transaction entity, int? companyId, bool intoCache)
         {
             return InsertUpdate(entity, companyId, DbActionType.Insert, intoCache);
         }
 
-        public int Update(Transaction entity, int? companyId)
+        public virtual int Update(Transaction entity, int? companyId)
         {
             return InsertUpdate(entity, companyId, DbActionType.Update, true);
         }
 
-        public int BatchInsert(List<Transaction> list, int? companyId) { return BatchInsert(list, companyId, true); }
-        public int BatchInsert(List<Transaction> list, int? companyId, bool intoCache)
+        public virtual int BatchInsert(List<Transaction> list, int? companyId) { return BatchInsert(list, companyId, true); }
+        public virtual int BatchInsert(List<Transaction> list, int? companyId, bool intoCache)
         {
             var cache = new CacheWrapper();
             var res = TransactionsDataAdapter.BatchInsert(list, companyId, DbActionType.Insert);

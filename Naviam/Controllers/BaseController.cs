@@ -13,7 +13,7 @@ namespace Naviam.WebUI.Controllers
         /// <summary>
         /// Get current user from session or redis
         /// </summary>
-        protected UserProfile CurrentUser { get; set; }
+        public UserProfile CurrentUser { get; set; }
 
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {

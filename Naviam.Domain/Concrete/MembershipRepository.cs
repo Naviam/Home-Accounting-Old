@@ -26,9 +26,7 @@ namespace Naviam.Domain.Concrete
                 profile = null;
             if (profile != null)
             {
-                //TODO: read companies and attach to user, also assign default company
                 profile.Companies = GetCompanies(profile.Id);
-                //profile.DefaultCompany = profile.DefaultCompanyId;
             }
             return profile;
         }

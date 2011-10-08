@@ -348,7 +348,7 @@ function loadTransactions() {
             var val = $('#search_box').val();
             if (val && val != '') {
                 filterModel.items = [];
-                filterModel.Add('Match', val);
+                filterModel.Add('ByString', val);
                 accountsModel.selectedItem(null);
                 catModel.selectedTag(null);
                 catModel.editedTag(null);

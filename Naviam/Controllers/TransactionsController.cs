@@ -17,6 +17,19 @@ namespace Naviam.WebUI.Controllers
     //[Authorize(Roles="admin")]
     public class TransactionsController : BaseController
     {
+        private readonly TransactionsRepository _transRepository;
+        private readonly CategoriesRepository _categoriesRepository;
+        
+        public TransactionsController(): this(null, null)
+        {
+        }
+
+        public TransactionsController(TransactionsRepository transRepository, CategoriesRepository categoriesRepository)
+        {
+            _transRepository = transRepository ?? new TransactionsRepository();
+            _categoriesRepository = categoriesRepository ?? new CategoriesRepository();
+        }
+        
         public class FilterHolder
         {
             public string Name { get; set; }
@@ -82,7 +95,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetTransactions(Paging paging, PageContext pageContext)
         {
             var user = CurrentUser;
-            var trans = new TransactionsRepository().GetTransactions(user.CurrentCompany);
+            var trans = _transRepository.GetTransactions(user.CurrentCompany);
             JavaScriptSerializer js = new JavaScriptSerializer();
             if (!String.IsNullOrEmpty(paging.Filter))
             {
@@ -95,9 +108,13 @@ namespace Naviam.WebUI.Controllers
                 {
                     foreach (var item in flt)
                     {
-                        if (item.Name == "Match")
+                        if (item.Name == "ByString")
                         {
-                            paging.Filter += String.Format("(Merchant != null and Merchant.Contains(\"{0}\")) and ", item.Value);
+                            var cats = GetCategories(user.Id);
+                            var catsIds = cats.Where(m => m.Name.Contains(item.Value));
+                            //!
+                            trans = trans.Where(s => s.Merchant != null && s.Merchant.Contains(item.Value)).Union(from t in trans join c in catsIds on t.CategoryId equals c.Id select t);
+                            //trans = from t in trans join c in catsIds on t.CategoryId equals c.Id into tmp from tr in tmp.DefaultIfEmpty() select t;
                         }
                         else
                         {
@@ -134,7 +151,6 @@ namespace Naviam.WebUI.Controllers
         public ActionResult UpdateTransaction(Transaction trans, PageContext pageContext)
         {
             var companyId = CurrentUser.CurrentCompany;
-            var rep = new TransactionsRepository();
             var tags = Request.Form["TagIds[]"] as string;
             trans.TagIds = new List<string>();
             if (tags != null)
@@ -151,10 +167,10 @@ namespace Naviam.WebUI.Controllers
             {
                 var updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, companyId);
                 amount = (trans.Direction == updateTrans.Direction) ? -(updateTrans.Amount - trans.Amount) : trans.Amount * 2;
-                rep.Update(trans, companyId);
+                _transRepository.Update(trans, companyId);
             }
             else
-                rep.Insert(trans, companyId);
+                _transRepository.Insert(trans, companyId);
             return Json(new { trans, amount });
         }
 
@@ -162,7 +178,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult DeleteTransaction(int? id)
         {
             var user = CurrentUser;
-            new TransactionsRepository().Delete(id, user.CurrentCompany);
+            _transRepository.Delete(id, user.CurrentCompany);
             return Json(id);
         }
 
@@ -172,11 +188,10 @@ namespace Naviam.WebUI.Controllers
             var companyId = CurrentUser.CurrentCompany;
             var updateTrans = TransactionsDataAdapter.GetTransaction(splits.Id, companyId);
 
-            var rep = new TransactionsRepository();
             if (updateTrans != null)
             {
                 updateTrans.Amount = splits.EndAmount;
-                rep.Update(updateTrans, companyId);
+                _transRepository.Update(updateTrans, companyId);
                 updateTrans = updateTrans.Clone();
                 foreach (var item in splits.Items)
                 {
@@ -184,7 +199,7 @@ namespace Naviam.WebUI.Controllers
                     updateTrans.Merchant = item.Merchant;
                     updateTrans.CategoryId = item.CategoryId;
                     updateTrans.Amount = item.Amount;
-                    rep.Insert(updateTrans, companyId);
+                    _transRepository.Insert(updateTrans, companyId);
                 }
             }
             return Json(updateTrans);
@@ -208,12 +223,9 @@ namespace Naviam.WebUI.Controllers
 
         #region Categories
 
-        [HttpPost]
-        public ActionResult GetDicts()
+        private List<Category> GetCategories(int? userId)
         {
-            var user = CurrentUser;
-            var cats = CategoriesRepository.GetCategories(user.Id);
-            var tags = TagsRepository.GetTags(user.Id);
+            var cats = _categoriesRepository.GetCategories(userId);
             //TODO: move Localize
             var rm = new ResourceManager(typeof(Resources.Enums));
             foreach (var item in cats)
@@ -223,6 +235,15 @@ namespace Naviam.WebUI.Controllers
                     item.Name = st;
             }
             //end Localize
+            return cats;
+        }
+
+        [HttpPost]
+        public ActionResult GetDicts()
+        {
+            var user = CurrentUser;
+            var cats = GetCategories(user.Id);
+            var tags = TagsRepository.GetTags(user.Id);
             var items = Categories.GetTree(cats);
             return Json(new { items, tags });
         }
@@ -241,9 +262,9 @@ namespace Naviam.WebUI.Controllers
             if (cat.Subitems.Count == 1 && cat.Subitems[0] == null)
                 cat.Subitems.Clear();
             if (cat.Id != null)
-                CategoriesRepository.Update(cat, cat.UserId);
+                _categoriesRepository.Update(cat, cat.UserId);
             else
-                CategoriesRepository.Insert(cat, cat.UserId);
+                _categoriesRepository.Insert(cat, cat.UserId);
             return Json(cat);
         }
 
@@ -251,7 +272,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult DeleteCategory(int? id)
         {
             var user = CurrentUser;
-            CategoriesRepository.Delete(id, user.Id);
+            _categoriesRepository.Delete(id, user.Id);
             return Json(id);
         }
 

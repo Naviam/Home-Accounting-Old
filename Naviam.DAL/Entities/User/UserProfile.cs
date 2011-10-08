@@ -76,10 +76,10 @@ namespace Naviam.Data
                     var frmReq = context.Request.Form["pageContext[companyId]"];
                     if (res == null)
                         res = !String.IsNullOrEmpty(frmReq) ? (int?)Convert.ToInt32(frmReq) : null;
-                    if (res == null)
-                        res = DefaultCompany;
                 }
                 bool found = false;
+                if (res == null)
+                    res = DefaultCompany;
                 foreach (var company in Companies)
                 {
                     if (company.Id == res)
