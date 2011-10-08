@@ -13,7 +13,7 @@
     <section class="login">
         <fieldset>
             <div>
-                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Please enter your email here", type = "email" })
+                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Please enter your email here", type = "email", autofocus="" })
                 @Html.ValidationMessageFor(m => m.UserName)
             </div>
             <div>

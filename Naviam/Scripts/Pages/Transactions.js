@@ -6,6 +6,17 @@ var transModel = {
     paging: { Page: 1, SortField: 'Date', SortDirection: 1, Filter: '' }
 };
 var transEdit = {};
+var filterModel = {};
+filterModel.items = ko.observableArray();
+filterModel.toString = function () {
+    return ko.toJSON(this.items);
+};
+filterModel.Add = function (key, value, type) {
+    this.items.push({ Name: key, Value: value, Type: type });
+};
+filterModel.Clear = function () {
+    this.items([]);
+}
 ko.bindingHandlers.amount = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         var options = allBindingsAccessor().amountOptions || {};
@@ -119,7 +130,7 @@ function loadTransactions() {
             $.postErr(getTransUrl, transModel.paging, function (res) {
                 ko.mapping.updateFromJS(transModel, res);
                 transModel.selectedItem(null);
-                transDlg.close();
+                if (transDlg) transDlg.close();
                 //$('#edit_row').hide();
             });
         }; //transModel.showCalendar = function (event, item) {
@@ -335,7 +346,7 @@ function loadTransactions() {
         transModel.searchByKey = function (key, val, type) {
             var currItem = transModel.selectedItem();
             if (currItem != null) {
-                filterModel.items = [];
+                filterModel.Clear();
                 filterModel.Add(key, val, type);
                 accountsModel.selectedItem(null);
                 catModel.selectedTag(null);
@@ -347,7 +358,7 @@ function loadTransactions() {
         transModel.Search = function () {
             var val = $('#search_box').val();
             if (val && val != '') {
-                filterModel.items = [];
+                filterModel.Clear();
                 filterModel.Add('ByString', val);
                 accountsModel.selectedItem(null);
                 catModel.selectedTag(null);
@@ -413,10 +424,10 @@ $(document).ready(function () {
         transModel.Save(transEdit.Id() == null);
     });
     transDlg = $("#transDlg").overlay({ fixed: false }).data('overlay');
-    transDlg.onBeforeClose(function (e) {
-        //console.log(e);
-        transModel.CancelAdd();
-    });
+    if (transDlg)
+        transDlg.onBeforeClose(function (e) {
+            transModel.CancelAdd();
+        });
     //$("#transDlg").overlay({ fixed: false });
     //loadTransactions();
     //Gategories
@@ -428,20 +439,11 @@ $(document).ready(function () {
         //                }
         //            }
         //        }
-        filterModel = {};
-        filterModel.items = ko.observableArray();
-        filterModel.toString = function () {
-            return ko.toJSON(filterModel.items);
-        };
-        filterModel.Add = function (key, value, type) {
-            this.items.push({ Name: key, Value: value, Type: type });
-        };
         catModel = ko.mapping.fromJS(res);
         for (var i = 0, j = catModel.items().length; i < j; i++) {
             var item = catModel.items()[i];
             item.Subitems.push({ Name: ko.observable(lang.EditCategories), Id: ko.observable(null), parent: item });
         }
-        loadAccounts();
         catModel.editItem = ko.observable(null);
         catModel.itemById = function (id) {
             if (!id) {
@@ -526,7 +528,7 @@ $(document).ready(function () {
         catModel.editedTag = ko.observable(null);
         catModel.selectedTag.subscribe(function (newValue) {
             if (newValue != null && newValue != catModel.prevSelectedTag && newValue.Id() != null) {
-                filterModel.items = [];
+                filterModel.Clear();
                 filterModel.Add('TagId', newValue.Id());
                 accountsModel.selectedItem(null);
                 catModel.editedTag(null);
@@ -553,14 +555,14 @@ $(document).ready(function () {
                 return item.Id() == null;
             });
             if (fItem != null) { catModel.editedTag(fItem); return; }
-            catModel.tags.splice(0, 0, { Name: ko.observable(), Id: ko.observable(), UserId: ko.observable() });
+            catModel.tags.splice(0, 0, { Name: ko.observable(null), Id: ko.observable(null), UserId: ko.observable(null) });
             catModel.editedTag(catModel.tags()[0]);
         };
         catModel.editTag = function (item) {
-            catModel.editedTag(null);
             $.postErr(updateTagUrl, item, function (res) {
                 item.Id(res.Id);
                 item.UserId(res.UserId);
+                catModel.editedTag(null);
             });
         };
         catModel.deleteTag = function (item) {
@@ -631,8 +633,9 @@ $(document).ready(function () {
         };
         ko.applyBindings(catModel, $("#cat_menu")[0]);
         ko.applyBindings(catModel, $("#tags")[0]);
-        catModel.assignMenu();
+        if (!unitTest) catModel.assignMenu();
         $("#cat_menu").hide();
+        loadAccounts();
     });
     $("#cat_menu").hover(function () {
     }, function () {

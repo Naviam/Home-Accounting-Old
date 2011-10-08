@@ -34,7 +34,7 @@ function loadAccounts() {
         accountsModel.selectedItem.subscribe(function (newValue) {
             if (newValue != null) {
                 catModel.selectedTag(null);
-                filterModel.items = [];
+                filterModel.Clear();
                 pageContext.accountId = newValue.Id();
                 transModel.ReloadPage();
                 accountsModel.hideEdit(false);

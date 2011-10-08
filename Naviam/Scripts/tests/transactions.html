@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>JSSpec results</title>
+<link rel="stylesheet" type="text/css" href="JSSpec.css" />
+<script type="text/javascript" src="diff_match_patch.js"></script>
+<script type="text/javascript" src="JSSpec.js"></script>
+<script type="text/javascript" src="../jquery-1.4.2.js"></script>
+<script type="text/javascript" src="../jquery.tmpl.js"></script>
+<script type="text/javascript" src="../knockout-1.2.1.js"></script>
+<script type="text/javascript" src="../knockout.mapping.js"></script>
+<script type="text/javascript" src="../knockout.bindingHandlers.js"></script>
+<!--<script type="text/javascript" src="../ddsmoothmenu.js"></script>-->
+<script type="text/javascript" src="../jquery.tools/overlay/overlay.js"></script>
+<script type="text/javascript" src="../locale/Naviam.JavaScript.en.js"></script>
+<script type="text/javascript" src="initData.js"></script>
+<script type="text/javascript" src="mockup.js"></script>
+<script type="text/javascript" src="../Pages/Transactions.js"></script>
+<script type="text/javascript" src="../Pages/Accounts.js"></script>
+<script type="text/javascript">// <![CDATA[
+ 
+    describe('tests of filterModel', {
+        'clear': function () {
+            filterModel.Add("key", "val", "type");
+            value_of(filterModel.items()).should_have(1, "items");
+            filterModel.Clear();
+            value_of(filterModel.items()).should_have(0, "items");
+        },
+        'add item': function () {
+            filterModel.Clear();
+            filterModel.Add("key", "val", "type");
+            value_of(filterModel.items()[0]).should_be({ "Name": "key", "Value": "val", "Type": "type" });
+            value_of(filterModel.items()).should_have(1, "items");
+        },
+        'toString': function () {
+            value_of(filterModel.toString()).should_be('[{"Name":"key","Value":"val","Type":"type"}]');
+        }
+    })
+
+    describe('tests of Tags model', {
+        'is loaded': function () {
+            value_of(catModel.tags()).should_have(2, "items");
+        }
+        , 'add tag': function () {
+            catModel.addTag();
+            value_of(catModel.tags()).should_have(3, "items");
+            catModel.addTag(); //don't allow to add empty second time
+            value_of(catModel.tags()).should_have(3, "items");
+            //inserted from begin
+            value_of(catModel.tags()[0].Id()).should_be(null);
+            value_of(catModel.tags()[0]).should_be(catModel.editedTag());
+        }
+        , 'cancel add': function () {
+            catModel.cancelAddTag();
+            value_of(catModel.tags()).should_have(2, "items");
+            value_of(catModel.editedTag()).should_be(null);
+        }
+        , 'edit': function () {
+            var item = catModel.tags()[0];
+            item.Name('new name');
+            catModel.editTag(item);
+            value_of(catModel.tags()[0].Name()).should_be('new name');
+            value_of(catModel.tags()[0].UserId()).should_be(20);
+            value_of(catModel.tags()[0].Id()).should_be(10);
+        }
+        , 'delete': function () {
+            catModel.deleteTag(catModel.tags()[0]);
+            value_of(catModel.tags()).should_have(1, "items");
+            value_of(catModel.editedTag()).should_be(null);
+        }
+        , 'select': function () {
+            catModel.selectedTag(catModel.tags()[0]);
+            value_of(catModel.selectedTag()).should_be(catModel.tags()[0]);
+            value_of(filterModel.items()).should_have(1, "items");
+            debug(filterModel.items()[0]);
+            value_of(filterModel.items()[0].Name).should_be('TagId');
+            value_of(filterModel.items()[0].Value).should_be(2); //we have deleted 1 tag
+            value_of(accountsModel.selectedItem()).should_be(null);
+            value_of(catModel.editedTag()).should_be(null);
+            value_of(pageContext.accountId).should_be(null);
+        }
+    })
+
+// ]]>
+</script>
+</head>
+<body><div style="display:none;"><p>A</p><p>B</p></div></body>
+</html>

@@ -71,7 +71,7 @@ body {
     background-color: $bg-color1;	
 }
 
-input[type=text], textarea {
+input[type=text], input[type=search], textarea {
 	border: $input-border;
 	padding: 4px;
     @include rounded();
