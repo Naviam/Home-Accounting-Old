@@ -148,7 +148,6 @@ namespace Naviam.UnitTests.Controllers
             var result = controller.GetTransactions(paging, pageContext) as JsonResult;
             dynamic data = result.Data;
             List<Transaction> trans = data.items;
-            var tr = trans.FirstOrDefault();
 
             // Assert
             Assert.IsNotNull(result);
@@ -156,6 +155,20 @@ namespace Naviam.UnitTests.Controllers
             Assert.AreEqual(2, trans.Count);
             Assert.IsNotNull(trans.FirstOrDefault(s => s.Merchant == "test1 Merchant"));
             Assert.IsNotNull(trans.FirstOrDefault(s => s.CategoryId == 200));
+
+            // arrange again
+            fltrs.Clear();
+            fltrs.Add(new TransactionsController.FilterHolder() { Name = "ByString", Value = "test2" });
+            js = new JavaScriptSerializer();
+            paging.Filter = js.Serialize(fltrs);
+            // act
+            result = controller.GetTransactions(paging, pageContext) as JsonResult;
+            data = result.Data;
+            trans = data.items;
+            // Assert
+            Assert.AreEqual(1, trans.Count);
+            Assert.IsNotNull(trans.FirstOrDefault(s => s.Merchant == "test2 Merchant"));
+            Assert.IsNotNull(trans.FirstOrDefault(s => s.CategoryId == 210));
         }
 
         [TestMethod]
@@ -176,7 +189,6 @@ namespace Naviam.UnitTests.Controllers
             var result = controller.GetTransactions(paging, pageContext) as JsonResult;
             dynamic data = result.Data;
             List<Transaction> trans = data.items;
-            var tr = trans.FirstOrDefault();
 
             // Assert
             Assert.IsNotNull(result);
@@ -208,23 +220,29 @@ namespace Naviam.UnitTests.Controllers
             res.Add(trans);
             
             trans = trans.Clone();
+            trans.Id = 2;
             trans.Merchant = "find Merchant";
             res.Add(trans);
             
             trans = trans.Clone();
+            trans.Id = 3;
             trans.CategoryId = 200;
             trans.Description = "find Category";
             trans.Merchant = "new Merchant";
             res.Add(trans);
             
             trans = trans.Clone();
+            trans.Id = 4;
             trans.AccountId = 2;
-            trans.CategoryId = 1;
+            trans.CategoryId = 210;
+            trans.Merchant = "test2 Merchant";
             trans.Description = "find Account";
             res.Add(trans);
 
             trans = trans.Clone();
+            trans.Id = 5;
             trans.AccountId = 3;
+            trans.CategoryId = 1;
             trans.Description = "find Tag";
             trans.TagIds = new List<string>();
             trans.Merchant = null;
@@ -238,7 +256,7 @@ namespace Naviam.UnitTests.Controllers
         {
             var res = new List<Category>();
             res.Add(new Category() { Id = 200, Name = "test1 Cat" });
-            res.Add(new Category() { Id = 210, Name = "test1 Cat2" });
+            res.Add(new Category() { Id = 210, Name = "test2 Cat2" });
             return res;
         }
 
