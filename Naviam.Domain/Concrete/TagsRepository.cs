@@ -17,8 +17,8 @@ namespace Naviam.Domain.Concrete
             cache.SetList<Tag>(CacheKey, null, userId);
         }
 
-        public static List<Tag> GetTags(int? userId) { return GetTags(userId, false); }
-        public static List<Tag> GetTags(int? userId, bool forceSqlLoad)
+        public virtual List<Tag> GetAll(int? userId) { return GetAll(userId, false); }
+        public virtual List<Tag> GetAll(int? userId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetList<Tag>(CacheKey, userId);
@@ -32,7 +32,7 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        private static int InsertUpdate(Tag entity, int? userId, DbActionType action, bool intoCache)
+        private int InsertUpdate(Tag entity, int? userId, DbActionType action, bool intoCache)
         {
             var cache = new CacheWrapper();
             var res = TagsDataAdapter.InsertUpdate(entity, userId, action);
@@ -50,18 +50,18 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public static int Insert(Tag entity, int? userId) { return Insert(entity, userId, true); }
-        public static int Insert(Tag entity, int? userId, bool intoCache)
+        public virtual int Insert(Tag entity, int? userId) { return Insert(entity, userId, true); }
+        public virtual int Insert(Tag entity, int? userId, bool intoCache)
         {
             return InsertUpdate(entity, userId, DbActionType.Insert, intoCache);
         }
 
-        public static int Update(Tag entity, int? userId)
+        public virtual int Update(Tag entity, int? userId)
         {
             return InsertUpdate(entity, userId, DbActionType.Update, true);
         }
 
-        public static int Delete(int? id, int? userId)
+        public virtual int Delete(int? id, int? userId)
         {
             var res = TagsDataAdapter.Delete(id, userId);
             if (res == 0)

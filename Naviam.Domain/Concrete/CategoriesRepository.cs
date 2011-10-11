@@ -18,8 +18,8 @@ namespace Naviam.Domain.Concrete
             cache.SetList<Category>(CacheKey, null, userId);
         }
 
-        public virtual List<Category> GetCategories(int? userId) { return GetCategories(userId, false); }
-        public virtual List<Category> GetCategories(int? userId, bool forceSqlLoad)
+        public virtual List<Category> GetAll(int? userId) { return GetAll(userId, false); }
+        public virtual List<Category> GetAll(int? userId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var res = cache.GetList<Category>(CacheKey, userId);

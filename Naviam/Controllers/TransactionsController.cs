@@ -19,15 +19,17 @@ namespace Naviam.WebUI.Controllers
     {
         private readonly TransactionsRepository _transRepository;
         private readonly CategoriesRepository _categoriesRepository;
+        private readonly TagsRepository _tagsRepository;
         
-        public TransactionsController(): this(null, null)
+        public TransactionsController(): this(null, null, null)
         {
         }
 
-        public TransactionsController(TransactionsRepository transRepository, CategoriesRepository categoriesRepository)
+        public TransactionsController(TransactionsRepository transRepository, CategoriesRepository categoriesRepository, TagsRepository tagsRepository)
         {
             _transRepository = transRepository ?? new TransactionsRepository();
             _categoriesRepository = categoriesRepository ?? new CategoriesRepository();
+            _tagsRepository = tagsRepository ?? new TagsRepository();
         }
         
         public class FilterHolder
@@ -124,10 +126,12 @@ namespace Naviam.WebUI.Controllers
                         {
                             if (item.Name == "TagName")
                             {
-                                //TODO: enable search by tags
-                                var tags = TagsRepository.GetTags(user.Id);
-                                var tagIds = tags.Where(m => m.Name.ToLower().Contains(item.Value.ToLower()));
-                                //trans = (from t in trans join c in tagIds on t.t equals c.Id select t).ToList();
+                                var tags = _tagsRepository.GetAll(user.Id);
+                                var selTags = tags.Where(m => m.Name.ToLower().Contains(item.Value.ToLower()));
+                                trans = (from t in trans
+                                        from tg in selTags
+                                        where t.TagIds.Contains(tg.Id.ToString())
+                                         select t).ToList();
                             }
                             else
                             {
@@ -239,7 +243,7 @@ namespace Naviam.WebUI.Controllers
 
         private List<Category> GetCategories(int? userId)
         {
-            var cats = _categoriesRepository.GetCategories(userId);
+            var cats = _categoriesRepository.GetAll(userId);
             //TODO: move Localize
             var rm = new ResourceManager(typeof(Resources.Enums));
             foreach (var item in cats)
@@ -257,7 +261,7 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             var cats = GetCategories(user.Id);
-            var tags = TagsRepository.GetTags(user.Id);
+            var tags = _tagsRepository.GetAll(user.Id);
             var items = Categories.GetTree(cats);
             return Json(new { items, tags });
         }
@@ -306,9 +310,9 @@ namespace Naviam.WebUI.Controllers
             var user = CurrentUser;
             tag.UserId = user.Id;
             if (tag.Id != null)
-                TagsRepository.Update(tag, tag.UserId);
+                _tagsRepository.Update(tag, tag.UserId);
             else
-                TagsRepository.Insert(tag, tag.UserId);
+                _tagsRepository.Insert(tag, tag.UserId);
             return Json(tag);
         }
 
@@ -316,7 +320,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult DeleteTag(int? id)
         {
             var user = CurrentUser;
-            TagsRepository.Delete(id, user.Id);
+            _tagsRepository.Delete(id, user.Id);
             return Json(id);
         }
 
@@ -329,8 +333,8 @@ namespace Naviam.WebUI.Controllers
             q = q.ToLower();
             var user = CurrentUser;
             var cats = GetCategories(user.Id);
-            var tags = TagsRepository.GetTags(user.Id);
-            string res = "";
+            var tags = _tagsRepository.GetAll(user.Id);
+            string res = " ";
             //categories
             foreach (var item in cats)
             {
@@ -338,12 +342,11 @@ namespace Naviam.WebUI.Controllers
                     res += Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name + "|" + item.Id.ToString() + "\n";
             }
             //tags
-            //TODO: enable search by tags
-            /*foreach (var item in tags)
+            foreach (var item in tags)
             {
                 if (item.Name.ToLower().Contains(q))
                     res += Naviam.WebUI.Resources.JavaScript.Tag + ": " + item.Name + "|" + item.Id.ToString() + "\n";
-            }*/
+            }
             var trans = _transRepository.GetTransactions(user.CurrentCompany);
             //merchant and description
             foreach (var item in trans)
