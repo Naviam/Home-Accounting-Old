@@ -198,4 +198,13 @@
   <data name="DeleteTag" xml:space="preserve">
     <value>Вы действительно хотите удалить метку?</value>
   </data>
+  <data name="Category" xml:space="preserve">
+    <value>Категория</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Merchant" xml:space="preserve">
+    <value>Место</value>
+  </data>
 </root>

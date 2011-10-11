@@ -357,15 +357,16 @@ function loadTransactions() {
         }
         transModel.Search = function () {
             var val = $('#search_box').val();
-            if (val && val != '') {
-                filterModel.Clear();
+            filterModel.Clear();
+            if (val && val != '')
                 filterModel.Add('ByString', val);
-                accountsModel.selectedItem(null);
-                catModel.selectedTag(null);
-                catModel.editedTag(null);
-                pageContext.accountId = null;
-                transModel.ReloadPage();
-            }
+            //if (val != '')// && val.substr(0, 10) == lang.Merchant + ': ')
+                //filterModel.Add('Merchant', val.substr(10, val.length));
+            accountsModel.selectedItem(null);
+            catModel.selectedTag(null);
+            catModel.editedTag(null);
+            pageContext.accountId = null;
+            transModel.ReloadPage();
         };
         transModel.ShowSplit = function (id) {
             var hld = $('#splitDialog');

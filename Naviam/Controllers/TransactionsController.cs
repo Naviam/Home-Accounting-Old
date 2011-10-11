@@ -111,9 +111,10 @@ namespace Naviam.WebUI.Controllers
                         if (item.Name == "ByString")
                         {
                             var cats = GetCategories(user.Id);
-                            var catsIds = cats.Where(m => m.Name.Contains(item.Value));
+                            var catsIds = cats.Where(m => m.Name.ToLower().Contains(item.Value.ToLower()));
                             //!
-                            trans = trans.Where(s => s.Merchant != null && s.Merchant.Contains(item.Value)).Union(from t in trans join c in catsIds on t.CategoryId equals c.Id select t);
+                            trans = trans.Where(s => (s.Merchant != null && s.Merchant.ToLower().Contains(item.Value.ToLower())) || (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
+                                Union(from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
                             //trans = from t in trans join c in catsIds on t.CategoryId equals c.Id into tmp from tr in tmp.DefaultIfEmpty() select t;
                         }
                         else

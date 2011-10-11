@@ -1,4 +1,5 @@
 ﻿/// <reference path="jquery-1.6.2.js" />
+var unitTest = false;
 jQuery.postErr = function (url, data, callback, type) {
     // shift arguments if data argument was omited
     if ($.isFunction(data)) {

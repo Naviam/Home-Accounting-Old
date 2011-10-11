@@ -198,4 +198,13 @@
   <data name="DeleteTag" xml:space="preserve">
     <value>Do you really want to delete tag?</value>
   </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Merchant" xml:space="preserve">
+    <value>Merchant</value>
+  </data>
 </root>

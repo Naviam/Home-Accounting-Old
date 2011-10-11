@@ -97,6 +97,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        public static string Category {
+            get {
+                return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to en.
         /// </summary>
         public static string culture {
@@ -147,6 +156,15 @@ namespace Naviam.WebUI.Resources {
         public static string DeleteTrans {
             get {
                 return ResourceManager.GetString("DeleteTrans", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
             }
         }
         
@@ -219,6 +237,15 @@ namespace Naviam.WebUI.Resources {
         public static string May {
             get {
                 return ResourceManager.GetString("May", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merchant.
+        /// </summary>
+        public static string Merchant {
+            get {
+                return ResourceManager.GetString("Merchant", resourceCulture);
             }
         }
         
