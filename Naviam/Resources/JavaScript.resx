@@ -207,7 +207,7 @@
   <data name="Merchant" xml:space="preserve">
     <value>Merchant</value>
   </data>
-  <data name="FindCatgory" xml:space="preserve">
+  <data name="FindCategory" xml:space="preserve">
     <value>categorized under</value>
   </data>
   <data name="FindDescription" xml:space="preserve">
@@ -221,5 +221,8 @@
   </data>
   <data name="FindText" xml:space="preserve">
     <value>matching</value>
+  </data>
+  <data name="Tag" xml:space="preserve">
+    <value>Tag</value>
   </data>
 </root>

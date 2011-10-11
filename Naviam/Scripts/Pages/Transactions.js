@@ -404,7 +404,10 @@ function loadTransactions() {
                         if (val.substr(0, lang.Category.length + 2) == lang.Category + ': ')
                             filterModel.Add('Category', val.substr(lang.Category.length + 2, val.length), lang.FindCategory, val.substr(lang.Category.length + 2, val.length));
                         else
-                            filterModel.Add('ByString', val, lang.FindText, val);
+                            if (val.substr(0, lang.Tag.length + 2) == lang.Tag + ': ')
+                                filterModel.Add('TagName', val.substr(lang.Tag.length + 2, val.length), lang.FindTag, val.substr(lang.Tag.length + 2, val.length));
+                            else
+                                filterModel.Add('ByString', val, lang.FindText, val);
             accountsModel.selectedItem(null);
             pageContext.accountId = null;
             transModel.ReloadPage();
@@ -433,6 +436,11 @@ function loadTransactions() {
         ko.applyBindings(transModel, $("#filter_area")[0]);
         ko.applyBindings(filterModel, $("#display_filter")[0]);
         ko.applyBindings(transEdit, $("#transDlg")[0]);
+        $('#search_box').autocomplete(findSuggestUrl, {
+            minChars: 3
+            , delay: 10
+            , maxItemsToShow: 10
+        });
     });
 }
 $(document).ready(function () {

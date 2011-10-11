@@ -189,9 +189,9 @@ namespace Naviam.WebUI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to categorized under.
         /// </summary>
-        public static string FindCatgory {
+        public static string FindCategory {
             get {
-                return ResourceManager.GetString("FindCatgory", resourceCulture);
+                return ResourceManager.GetString("FindCategory", resourceCulture);
             }
         }
         
@@ -345,6 +345,15 @@ namespace Naviam.WebUI.Resources {
         public static string SundayS {
             get {
                 return ResourceManager.GetString("SundayS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tag.
+        /// </summary>
+        public static string Tag {
+            get {
+                return ResourceManager.GetString("Tag", resourceCulture);
             }
         }
         

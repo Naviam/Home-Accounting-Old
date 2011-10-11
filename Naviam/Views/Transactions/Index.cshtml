@@ -32,6 +32,8 @@
     var getSplitDlg = '@Url.Action("GetSplitDialog", "Transactions")';
     var splitTransUrl = '@Url.Action("SplitTrans", "Transactions")';
 
+    var findSuggestUrl = '@Url.Action("FindSuggest", "Transactions")';
+
     var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
     var addAccountAmountUrl = '@Url.Action("AddAccountAmount", "Accounts")';
@@ -104,7 +106,7 @@
     <h5>@SharedStrings.Search</h5>
     <ul class='acc_menu'>
         <li><a href="#" data-bind="click: function(event) {searchByKey('Merchant', selectedItem() != null ? selectedItem().Merchant : '', '@JavaScript.FindMerchant', selectedItem() != null ? selectedItem().Merchant() : ''); }, text: selectedItem() != null ? selectedItem().Merchant : ''" class='text_ellipsis'></a></li>
-        <li><a href="#" data-bind="click: function(event) {searchByKey('CategoryId', selectedItem() != null ? selectedItem().CategoryId : '', '@JavaScript.FindCatgory', selectedItem() != null ? selectedItem().Category() : '' ,'int'); }, text: selectedItem() != null ? selectedItem().Category : ''" class='text_ellipsis'></a></li>
+        <li><a href="#" data-bind="click: function(event) {searchByKey('CategoryId', selectedItem() != null ? selectedItem().CategoryId : '', '@JavaScript.FindCategory', selectedItem() != null ? selectedItem().Category() : '' ,'int'); }, text: selectedItem() != null ? selectedItem().Category : ''" class='text_ellipsis'></a></li>
     </ul>
 </div>
 }

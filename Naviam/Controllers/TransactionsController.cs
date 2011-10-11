@@ -108,21 +108,34 @@ namespace Naviam.WebUI.Controllers
                 {
                     foreach (var item in flt)
                     {
-                        if (item.Name == "ByString")
+                        if (item.Name == "ByString" || item.Name == "Category")
                         {
                             var cats = GetCategories(user.Id);
                             var catsIds = cats.Where(m => m.Name.ToLower().Contains(item.Value.ToLower()));
                             //!
-                            trans = trans.Where(s => (s.Merchant != null && s.Merchant.ToLower().Contains(item.Value.ToLower())) || (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
-                                Union(from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
+                            if (item.Name == "ByString")
+                                trans = trans.Where(s => (s.Merchant != null && s.Merchant.ToLower().Contains(item.Value.ToLower())) || (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
+                                    Union(from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
+                            else
+                                trans = (from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
                             //trans = from t in trans join c in catsIds on t.CategoryId equals c.Id into tmp from tr in tmp.DefaultIfEmpty() select t;
                         }
                         else
                         {
-                            if (item.Type == "int")
-                                paging.Filter += String.Format("{0}=={1} and ", item.Name, item.Value);
+                            if (item.Name == "TagName")
+                            {
+                                //TODO: enable search by tags
+                                var tags = TagsRepository.GetTags(user.Id);
+                                var tagIds = tags.Where(m => m.Name.ToLower().Contains(item.Value.ToLower()));
+                                //trans = (from t in trans join c in tagIds on t.t equals c.Id select t).ToList();
+                            }
                             else
-                                paging.Filter += String.Format("{0}==\"{1}\" and ", item.Name, item.Value);
+                            {
+                                if (item.Type == "int")
+                                    paging.Filter += String.Format("{0}=={1} and ", item.Name, item.Value);
+                                else
+                                    paging.Filter += String.Format("{0}==\"{1}\" and ", item.Name, item.Value);
+                            }
                         }
                     }
                     if (!String.IsNullOrEmpty(paging.Filter))
@@ -309,5 +322,38 @@ namespace Naviam.WebUI.Controllers
 
         #endregion
 
+        [HttpGet]
+        public string FindSuggest(string q)
+        {
+            if (String.IsNullOrEmpty(q)) return "";
+            q = q.ToLower();
+            var user = CurrentUser;
+            var cats = GetCategories(user.Id);
+            var tags = TagsRepository.GetTags(user.Id);
+            string res = "";
+            //categories
+            foreach (var item in cats)
+            {
+                if (item.Name.ToLower().Contains(q))
+                    res += Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name + "|" + item.Id.ToString() + "\n";
+            }
+            //tags
+            //TODO: enable search by tags
+            /*foreach (var item in tags)
+            {
+                if (item.Name.ToLower().Contains(q))
+                    res += Naviam.WebUI.Resources.JavaScript.Tag + ": " + item.Name + "|" + item.Id.ToString() + "\n";
+            }*/
+            var trans = _transRepository.GetTransactions(user.CurrentCompany);
+            //merchant and description
+            foreach (var item in trans)
+            {
+                if (item.Merchant != null && item.Merchant.ToLower().Contains(q))
+                    res += Naviam.WebUI.Resources.JavaScript.Merchant + ": " + item.Merchant + "|" + item.Id.ToString() + "\n";
+                if (item.Description != null && item.Description.ToLower().Contains(q))
+                    res += Naviam.WebUI.Resources.JavaScript.Description + ": " + item.Description + "|" + item.Id.ToString() + "\n";
+            }
+            return res;
+        }
     }
 }
