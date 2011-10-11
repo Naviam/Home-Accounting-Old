@@ -11,11 +11,42 @@ filterModel.items = ko.observableArray();
 filterModel.toString = function () {
     return ko.toJSON(this.items);
 };
-filterModel.Add = function (key, value, type) {
-    this.items.push({ Name: key, Value: value, Type: type });
+filterModel.Add = function (key, value, showName, showValue, type) {
+    var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+        return item.Name == key;
+    });
+    if (!fItem)
+        this.items.push({ Name: key, Value: ko.observable(value), Type: type, ShowName: showName, ShowValue: ko.observable(showValue) });
+    else {
+        fItem.Value(value);
+        fItem.Type = type;
+        fItem.ShowName = showName;
+        fItem.ShowValue(showValue);
+    }
 };
 filterModel.Clear = function () {
     this.items([]);
+}
+filterModel.removeItem = function (item) {
+    if (item) {
+        ko.utils.arrayRemoveItem(filterModel.items, item);
+        if (item.Name == 'TagId') {
+            catModel.selectedTag(null);
+            catModel.editedTag(null);
+        }
+        transModel.ReloadPage();
+    }
+}
+filterModel.removeAll = function () {
+    filterModel.Clear();
+    transModel.ReloadPage();
+}
+filterModel.deleteByKey = function (key) {
+    var fItem = ko.utils.arrayFirst(this.items(), function (item) {
+        return item.Name == key;
+    });
+    if (fItem)
+        ko.utils.arrayRemoveItem(this.items, fItem);
 }
 ko.bindingHandlers.amount = {
     init: function (element, valueAccessor, allBindingsAccessor) {
@@ -343,11 +374,11 @@ function loadTransactions() {
             else
                 hld.overlay().load();
         };
-        transModel.searchByKey = function (key, val, type) {
+        transModel.searchByKey = function (key, val, dKey, dVal, type) {
             var currItem = transModel.selectedItem();
             if (currItem != null) {
                 filterModel.Clear();
-                filterModel.Add(key, val, type);
+                filterModel.Add(key, val, dKey, dVal, type);
                 accountsModel.selectedItem(null);
                 catModel.selectedTag(null);
                 catModel.editedTag(null);
@@ -357,14 +388,24 @@ function loadTransactions() {
         }
         transModel.Search = function () {
             var val = $('#search_box').val();
-            filterModel.Clear();
-            if (val && val != '')
-                filterModel.Add('ByString', val);
-            //if (val != '')// && val.substr(0, 10) == lang.Merchant + ': ')
-                //filterModel.Add('Merchant', val.substr(10, val.length));
+            if (val)
+                val = val.trim();
+            //remove no need
+            filterModel.deleteByKey('CategoryId');
+            if (val == '')
+                filterModel.Clear()
+            else
+                if (val.substr(0, lang.Merchant.length + 2) == lang.Merchant + ': ')
+                    filterModel.Add('Merchant', val.substr(lang.Merchant.length + 2, val.length), lang.FindMerchant, val.substr(lang.Merchant.length + 2, val.length));
+                else
+                    if (val.substr(0, lang.Description.length + 2) == lang.Description + ': ')
+                        filterModel.Add('Description', val.substr(lang.Description.length + 2, val.length), lang.FindDescription, val.substr(lang.Description.length + 2, val.length));
+                    else
+                        if (val.substr(0, lang.Category.length + 2) == lang.Category + ': ')
+                            filterModel.Add('Category', val.substr(lang.Category.length + 2, val.length), lang.FindCategory, val.substr(lang.Category.length + 2, val.length));
+                        else
+                            filterModel.Add('ByString', val, lang.FindText, val);
             accountsModel.selectedItem(null);
-            catModel.selectedTag(null);
-            catModel.editedTag(null);
             pageContext.accountId = null;
             transModel.ReloadPage();
         };
@@ -390,6 +431,7 @@ function loadTransactions() {
         }
         ko.applyBindings(transModel, $("#transGrid")[0]);
         ko.applyBindings(transModel, $("#filter_area")[0]);
+        ko.applyBindings(filterModel, $("#display_filter")[0]);
         ko.applyBindings(transEdit, $("#transDlg")[0]);
     });
 }
@@ -530,7 +572,7 @@ $(document).ready(function () {
         catModel.selectedTag.subscribe(function (newValue) {
             if (newValue != null && newValue != catModel.prevSelectedTag && newValue.Id() != null) {
                 filterModel.Clear();
-                filterModel.Add('TagId', newValue.Id());
+                filterModel.Add('TagId', newValue.Id(), lang.FindTag, newValue.Name());
                 accountsModel.selectedItem(null);
                 catModel.editedTag(null);
                 pageContext.accountId = null;

@@ -207,4 +207,19 @@
   <data name="Merchant" xml:space="preserve">
     <value>Место</value>
   </data>
+  <data name="FindCatgory" xml:space="preserve">
+    <value>категория</value>
+  </data>
+  <data name="FindDescription" xml:space="preserve">
+    <value>описание</value>
+  </data>
+  <data name="FindMerchant" xml:space="preserve">
+    <value>от</value>
+  </data>
+  <data name="FindTag" xml:space="preserve">
+    <value>содержит метку</value>
+  </data>
+  <data name="FindText" xml:space="preserve">
+    <value>содержит</value>
+  </data>
 </root>

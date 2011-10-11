@@ -52,8 +52,8 @@ namespace Naviam.WebUI.Controllers
                                 TransactionType = TransactionTypes.Cash,
                                 AccountId = accId,
                                 IncludeInTax = false,
-                                //TODO: assign null and resolve on db side
-                                CategoryId = 20
+                                //CategoryId = 20
+                                CategoryId = null
                             };
                             dbTransList.Add(dbTrans);
                             sumAmount += trans.AccountAmount;

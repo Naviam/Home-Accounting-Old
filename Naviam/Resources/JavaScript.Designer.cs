@@ -187,6 +187,51 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to categorized under.
+        /// </summary>
+        public static string FindCatgory {
+            get {
+                return ResourceManager.GetString("FindCatgory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to description.
+        /// </summary>
+        public static string FindDescription {
+            get {
+                return ResourceManager.GetString("FindDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to from.
+        /// </summary>
+        public static string FindMerchant {
+            get {
+                return ResourceManager.GetString("FindMerchant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to tagged as.
+        /// </summary>
+        public static string FindTag {
+            get {
+                return ResourceManager.GetString("FindTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to matching.
+        /// </summary>
+        public static string FindText {
+            get {
+                return ResourceManager.GetString("FindText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fr.
         /// </summary>
         public static string FridayS {

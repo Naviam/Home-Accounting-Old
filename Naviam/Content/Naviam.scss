@@ -16,6 +16,7 @@ $account-hover-select: #c5551c;
 $account-text: #626560;
 $amount-color: #0000e5;
 $sidebar-bg: #fdfdfd;
+$link-color: #5572BC;
 
 //Grid
 $grid-background: #ECECD8;
@@ -43,6 +44,8 @@ $input-focus-bg: #fff4e0;
 $input-border: 1px solid #9EBCB1;
 $input-hover-border: 1px solid #3399cc;
 
+//search
+$search-element: #3399CC;
 
 $left-side-width: 250px;
 $right-side-width: 150px;
@@ -69,6 +72,11 @@ $center-width: 800px;
 body {
 	font-size: 14px;
     background-color: $bg-color1;	
+}
+
+a {
+		color: $link-color;
+		text-decoration: none;
 }
 
 input[type=text], input[type=search], textarea {
@@ -695,6 +703,20 @@ button {
 	input {
 		&:focus {box-shadow: 0 0 4px #006699;}
 		width: 300px;
+	}
+}
+
+.filter_view {
+	margin: 5px 4px;
+	a  {
+		color: #FFFFFF;
+		background-color: $search-element;
+		@include rounded(4px);
+		padding: 4px 8px;
+		margin: 4px 4px;
+		.remove {
+			cursor: pointer;
+		}
 	}
 }
 

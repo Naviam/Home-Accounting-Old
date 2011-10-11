@@ -207,4 +207,19 @@
   <data name="Merchant" xml:space="preserve">
     <value>Merchant</value>
   </data>
+  <data name="FindCatgory" xml:space="preserve">
+    <value>categorized under</value>
+  </data>
+  <data name="FindDescription" xml:space="preserve">
+    <value>description</value>
+  </data>
+  <data name="FindMerchant" xml:space="preserve">
+    <value>from</value>
+  </data>
+  <data name="FindTag" xml:space="preserve">
+    <value>tagged as</value>
+  </data>
+  <data name="FindText" xml:space="preserve">
+    <value>matching</value>
+  </data>
 </root>

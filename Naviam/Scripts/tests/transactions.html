@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-<title>JSSpec results</title>
+<title>JSSpec tarnsactions models tests</title>
 <link rel="stylesheet" type="text/css" href="JSSpec.css" />
 <script type="text/javascript" src="diff_match_patch.js"></script>
 <script type="text/javascript" src="JSSpec.js"></script>
@@ -19,22 +19,41 @@
 <script type="text/javascript" src="../Pages/Transactions.js"></script>
 <script type="text/javascript" src="../Pages/Accounts.js"></script>
 <script type="text/javascript">// <![CDATA[
- 
+
     describe('tests of filterModel', {
         'clear': function () {
-            filterModel.Add("key", "val", "type");
+            filterModel.Add("key", "val", "showName", "showValue", "type");
             value_of(filterModel.items()).should_have(1, "items");
             filterModel.Clear();
             value_of(filterModel.items()).should_have(0, "items");
         },
         'add item': function () {
             filterModel.Clear();
-            filterModel.Add("key", "val", "type");
-            value_of(filterModel.items()[0]).should_be({ "Name": "key", "Value": "val", "Type": "type" });
+            filterModel.Add("key", "val", "showName", "showValue", "type");
+            value_of(filterModel.items()[0].Name).should_be("key");
             value_of(filterModel.items()).should_have(1, "items");
         },
         'toString': function () {
-            value_of(filterModel.toString()).should_be('[{"Name":"key","Value":"val","Type":"type"}]');
+            filterModel.Clear();
+            filterModel.Add("key", "val", "showName", "showValue", "type");
+            value_of(filterModel.toString()).should_be('[{"Name":"key","Value":"val","Type":"type","ShowName":"showName","ShowValue":"showValue"}]');
+        },
+        'add duplicate item': function () {
+            filterModel.Clear();
+            filterModel.Add("key", "val", "showName");
+            value_of(filterModel.items()[0].Name).should_be("key");
+            value_of(filterModel.items()).should_have(1, "items");
+            filterModel.Add("key", "val2", "showName");
+            value_of(filterModel.items()[0].Value()).should_be("val2");
+            value_of(filterModel.items()).should_have(1, "items");
+        },
+        'delete by key': function () {
+            filterModel.Clear();
+            filterModel.Add("key", "val", "showName");
+            filterModel.deleteByKey('key1');
+            value_of(filterModel.items()).should_have(1, "items");
+            filterModel.deleteByKey('key');
+            value_of(filterModel.items()).should_have(0, "items");
         }
     })
 
@@ -73,9 +92,8 @@
             catModel.selectedTag(catModel.tags()[0]);
             value_of(catModel.selectedTag()).should_be(catModel.tags()[0]);
             value_of(filterModel.items()).should_have(1, "items");
-            debug(filterModel.items()[0]);
             value_of(filterModel.items()[0].Name).should_be('TagId');
-            value_of(filterModel.items()[0].Value).should_be(2); //we have deleted 1 tag
+            value_of(filterModel.items()[0].Value()).should_be(2); //we have deleted 1 tag
             value_of(accountsModel.selectedItem()).should_be(null);
             value_of(catModel.editedTag()).should_be(null);
             value_of(pageContext.accountId).should_be(null);

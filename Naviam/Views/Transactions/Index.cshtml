@@ -103,8 +103,8 @@
 <div id="filter_area" class='left_side_pnl' data-bind='visible: selectedItem() != null && selectedItem().Id() != null' style="display: none;">
     <h5>@SharedStrings.Search</h5>
     <ul class='acc_menu'>
-        <li><a href="#" data-bind="click: function(event) {searchByKey('Merchant', selectedItem() != null ? selectedItem().Merchant : ''); }, text: selectedItem() != null ? selectedItem().Merchant : ''" class='text_ellipsis'></a></li>
-        <li><a href="#" data-bind="click: function(event) {searchByKey('CategoryId', selectedItem() != null ? selectedItem().CategoryId : '', 'int'); }, text: selectedItem() != null ? selectedItem().Category : ''" class='text_ellipsis'></a></li>
+        <li><a href="#" data-bind="click: function(event) {searchByKey('Merchant', selectedItem() != null ? selectedItem().Merchant : '', '@JavaScript.FindMerchant', selectedItem() != null ? selectedItem().Merchant() : ''); }, text: selectedItem() != null ? selectedItem().Merchant : ''" class='text_ellipsis'></a></li>
+        <li><a href="#" data-bind="click: function(event) {searchByKey('CategoryId', selectedItem() != null ? selectedItem().CategoryId : '', '@JavaScript.FindCatgory', selectedItem() != null ? selectedItem().Category() : '' ,'int'); }, text: selectedItem() != null ? selectedItem().Category : ''" class='text_ellipsis'></a></li>
     </ul>
 </div>
 }
@@ -171,11 +171,23 @@
     {{/each}}
     </tr>
 </script>
+
+<script type="text/html" id="filterTemplate">
+    <a>
+        <label data-bind="text: ShowName"></label> <b><label data-bind="text: ShowValue"></label></b>
+        <span class='remove' data-bind="click: function(event) { $item.remove($data); }">x</span>
+    </a>
+</script>
+
 <div>
     <div class='search_area'>
         <input type="search" id='search_box' onkeypress="if (event.keyCode==13) transModel.Search();"/> <button onclick='transModel.Search();' type="button">@SharedStrings.Search</button>
     </div>
     <div style='clear:both'></div>
+    <div id='display_filter' class='filter_view'>
+        <ul data-bind="template: {name:'filterTemplate', foreach:items, templateOptions: { remove: removeItem } }">
+        </ul>
+    </div>
     <div id="transGrid">
         @{var user = ViewBag.CurrentUser as UserProfile;}
         

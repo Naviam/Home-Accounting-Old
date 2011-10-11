@@ -214,9 +214,11 @@
     <Content Include="favicon.ico" />
     <Content Include="Prototype\Login.htm" />
     <Content Include="PublicSitemap.xml" />
-    <Content Include="Scripts\Pages\Reports.js" />
+    <None Include="Scripts\Pages\Reports.js" />
     <Content Include="Scripts\Pages\Reports.min.js" />
-    <Content Include="Scripts\tests\transactions.html" />
+    <None Include="Scripts\tests\initData.js" />
+    <None Include="Scripts\tests\mockup.js" />
+    <None Include="Scripts\tests\transactions.html" />
     <Content Include="Views\Shared\AccessDenied.aspx" />
     <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
     <Content Include="Views\Transactions\_splitDialog.cshtml" />
@@ -271,7 +273,7 @@
     </Content>
     <Content Include="Scripts\backbone-min.js" />
     <Content Include="Scripts\backbone.js" />
-    <Content Include="Scripts\common.js" />
+    <None Include="Scripts\common.js" />
     <Content Include="Scripts\common.min.js" />
     <Content Include="Scripts\datetimepicker_css.js" />
     <Content Include="Scripts\ddsmoothmenu.js" />
@@ -319,16 +321,16 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-1.2.1.js" />
     <Content Include="Scripts\knockout-1.2.1.min.js" />
-    <Content Include="Scripts\knockout.bindingHandlers.js" />
+    <None Include="Scripts\knockout.bindingHandlers.js" />
     <Content Include="Scripts\knockout.bindingHandlers.min.js" />
     <Content Include="Scripts\knockout.mapping.js" />
     <Content Include="Scripts\knockout.mapping.min.js" />
     <Content Include="Scripts\locale\Naviam.JavaScript.en.js" />
     <Content Include="Scripts\locale\Naviam.JavaScript.ru.js" />
     <Content Include="Scripts\locale\vsdoc\Naviam.JavaScript-vsdoc.js" />
-    <Content Include="Scripts\Pages\Accounts.js" />
+    <None Include="Scripts\Pages\Accounts.js" />
     <Content Include="Scripts\Pages\Accounts.min.js" />
-    <Content Include="Scripts\Pages\Transactions.js" />
+    <None Include="Scripts\Pages\Transactions.js" />
     <Content Include="Scripts\Pages\Transactions.min.js" />
     <Content Include="Scripts\spine.js" />
     <Content Include="Scripts\spine.min.js" />

@@ -2,6 +2,10 @@ body {
   font-size: 14px;
   background-color: #ebeef1; }
 
+a {
+  color: #5572bc;
+  text-decoration: none; }
+
 input[type=text], input[type=search], textarea {
   border: 1px solid #9ebcb1;
   padding: 4px;
@@ -533,6 +537,19 @@ button {
     width: 300px; }
     .search_area input:focus {
       box-shadow: 0 0 4px #006699; }
+
+.filter_view {
+  margin: 5px 4px; }
+  .filter_view a {
+    color: #FFFFFF;
+    background-color: #3399cc;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    padding: 4px 8px;
+    margin: 4px 4px; }
+    .filter_view a .remove {
+      cursor: pointer; }
 
 .error, .alert, .notice, .success, .info {
   padding: 1px;
