@@ -720,6 +720,13 @@ button {
 	}
 }
 
+.win_blocker {
+	zIndex: 999998;
+	background-color: #fff;
+	opacity: 0.3;
+	position: absolute;
+}
+
 .error, .alert, .notice, .success, .info {padding:1px;margin-bottom:5px;border:2px solid #ddd;z-index:10000;}
 .error, .alert {background:#fbe3e4;color:#8a1f11;border-color:#fbc2c4; a{color:#8a1f11;}}
 .notice {background:#fff6bf;color:#514721;border-color:#ffd324; a {color:#514721;}}

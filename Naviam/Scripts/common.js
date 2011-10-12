@@ -60,6 +60,28 @@ function showSiteError(errorText) {
 function debug(s) {
     console.log(s);
 }
+function viewport() {
+	return [$(document).width(), $(document).height()]; 
+}
+function blockWindow() {
+    // get the div
+    hld = $(".win_blocker");
+    if (!hld.length) {
+        hld = $('<div/>').attr("class", 'win_blocker');
+        $("body").append(hld);
+    }
+	var size = viewport();
+    hld.css({
+        top: 0,
+        left: 0,
+        width: size[0],
+        height: size[1]
+    });
+    hld.show();
+}
+function unblockWindow() {
+    $('.win_blocker').hide();
+}
 function addCommas(nStr) {
     nStr += '';
     x = nStr.split('.');

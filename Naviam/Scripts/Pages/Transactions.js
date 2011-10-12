@@ -441,9 +441,11 @@ function loadTransactions() {
             , delay: 10
             , maxItemsToShow: 10
         });
+        if (!unitTest) unblockWindow();
     });
 }
 $(document).ready(function () {
+    if (!unitTest) blockWindow();
     //$("#edit_form").overlay({ mask: { color: '#fff', opacity: 0.5, loadSpeed: 200 }, closeOnClick: true });
     //$("#transDlg #cancel").click(function (e) { transModel.CancelAdd(); });
     $("#transDlg #ok").click(function (e) {

@@ -551,6 +551,12 @@ button {
     .filter_view a .remove {
       cursor: pointer; }
 
+.win_blocker {
+  zIndex: 999998;
+  background-color: #fff;
+  opacity: 0.3;
+  position: absolute; }
+
 .error, .alert, .notice, .success, .info {
   padding: 1px;
   margin-bottom: 5px;

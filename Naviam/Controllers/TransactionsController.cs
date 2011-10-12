@@ -334,29 +334,31 @@ namespace Naviam.WebUI.Controllers
             var user = CurrentUser;
             var cats = GetCategories(user.Id);
             var tags = _tagsRepository.GetAll(user.Id);
+            var vals = new HashSet<string>();
             string res = " ";
             //categories
             foreach (var item in cats)
             {
                 if (item.Name.ToLower().Contains(q))
-                    res += Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name + "|" + item.Id.ToString() + "\n";
+                    vals.Add(Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name);
+                    //res += Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name + "|" + item.Id.ToString() + "\n";
             }
             //tags
             foreach (var item in tags)
             {
                 if (item.Name.ToLower().Contains(q))
-                    res += Naviam.WebUI.Resources.JavaScript.Tag + ": " + item.Name + "|" + item.Id.ToString() + "\n";
+                    vals.Add(Naviam.WebUI.Resources.JavaScript.Tag + ": " + item.Name);
             }
             var trans = _transRepository.GetTransactions(user.CurrentCompany);
             //merchant and description
             foreach (var item in trans)
             {
                 if (item.Merchant != null && item.Merchant.ToLower().Contains(q))
-                    res += Naviam.WebUI.Resources.JavaScript.Merchant + ": " + item.Merchant + "|" + item.Id.ToString() + "\n";
+                    vals.Add(Naviam.WebUI.Resources.JavaScript.Merchant + ": " + item.Merchant);
                 if (item.Description != null && item.Description.ToLower().Contains(q))
-                    res += Naviam.WebUI.Resources.JavaScript.Description + ": " + item.Description + "|" + item.Id.ToString() + "\n";
+                    vals.Add(Naviam.WebUI.Resources.JavaScript.Description + ": " + item.Description);
             }
-            return res;
+            return vals.ToText(item => item, '\n') ?? " ";
         }
     }
 }
