@@ -132,11 +132,53 @@
   <data name="c_1" xml:space="preserve">
     <value>Авто&amp;Транспорт</value>
   </data>
+  <data name="c_10" xml:space="preserve">
+    <value>Здоровье</value>
+  </data>
+  <data name="c_100" xml:space="preserve">
+    <value>Налог с продаж</value>
+  </data>
+  <data name="c_101" xml:space="preserve">
+    <value>Подоходный налог</value>
+  </data>
+  <data name="c_102" xml:space="preserve">
+    <value>Оплата кредитной картой</value>
+  </data>
+  <data name="c_103" xml:space="preserve">
+    <value>Трансфер для наличных расходов</value>
+  </data>
+  <data name="c_104" xml:space="preserve">
+    <value>Авиаперелеты</value>
+  </data>
+  <data name="c_105" xml:space="preserve">
+    <value>Гостиница</value>
+  </data>
+  <data name="c_106" xml:space="preserve">
+    <value>Такси, прокат автомобилей</value>
+  </data>
+  <data name="c_107" xml:space="preserve">
+    <value>Отпуск</value>
+  </data>
+  <data name="c_108" xml:space="preserve">
+    <value>Наличные и банкомат</value>
+  </data>
+  <data name="c_109" xml:space="preserve">
+    <value>Чек</value>
+  </data>
   <data name="c_11" xml:space="preserve">
     <value>Дом</value>
   </data>
+  <data name="c_114" xml:space="preserve">
+    <value>Обмен валюты</value>
+  </data>
+  <data name="c_12" xml:space="preserve">
+    <value>Доход</value>
+  </data>
   <data name="c_13" xml:space="preserve">
     <value>Дети</value>
+  </data>
+  <data name="c_14" xml:space="preserve">
+    <value>Личная гигиена</value>
   </data>
   <data name="c_15" xml:space="preserve">
     <value>Животные</value>
@@ -147,11 +189,14 @@
   <data name="c_17" xml:space="preserve">
     <value>Налоги</value>
   </data>
+  <data name="c_18" xml:space="preserve">
+    <value>Переводы</value>
+  </data>
   <data name="c_19" xml:space="preserve">
     <value>Путешествия</value>
   </data>
   <data name="c_2" xml:space="preserve">
-    <value>Bills&amp;Utilities</value>
+    <value>Оплата услуг</value>
   </data>
   <data name="c_20" xml:space="preserve">
     <value>Без категории</value>
@@ -159,10 +204,259 @@
   <data name="c_21" xml:space="preserve">
     <value>Авто Страхование</value>
   </data>
+  <data name="c_22" xml:space="preserve">
+    <value>Налог на машину</value>
+  </data>
+  <data name="c_23" xml:space="preserve">
+    <value>Топливо</value>
+  </data>
+  <data name="c_24" xml:space="preserve">
+    <value>Парковка</value>
+  </data>
+  <data name="c_25" xml:space="preserve">
+    <value>Проезд в общественном транспорте</value>
+  </data>
+  <data name="c_26" xml:space="preserve">
+    <value>Ремонт автомобиля</value>
+  </data>
+  <data name="c_27" xml:space="preserve">
+    <value>Домашний телефон</value>
+  </data>
+  <data name="c_28" xml:space="preserve">
+    <value>Интернет</value>
+  </data>
+  <data name="c_29" xml:space="preserve">
+    <value>Мобильный телефон</value>
+  </data>
+  <data name="c_3" xml:space="preserve">
+    <value>Бизнес-услуги</value>
+  </data>
+  <data name="c_30" xml:space="preserve">
+    <value>Телевидение</value>
+  </data>
+  <data name="c_31" xml:space="preserve">
+    <value>Прочие услуги</value>
+  </data>
+  <data name="c_32" xml:space="preserve">
+    <value>Реклама</value>
+  </data>
+  <data name="c_33" xml:space="preserve">
+    <value>Юридические услуги</value>
+  </data>
+  <data name="c_34" xml:space="preserve">
+    <value>Товары для офиса</value>
+  </data>
+  <data name="c_35" xml:space="preserve">
+    <value>Ксерокопия, печть, и т.д.</value>
+  </data>
+  <data name="c_36" xml:space="preserve">
+    <value>Оплата доставок</value>
+  </data>
+  <data name="c_37" xml:space="preserve">
+    <value>Книги и принадлежности</value>
+  </data>
+  <data name="c_38" xml:space="preserve">
+    <value>Студенческий кредит</value>
+  </data>
+  <data name="c_39" xml:space="preserve">
+    <value>Обучение</value>
+  </data>
   <data name="c_4" xml:space="preserve">
     <value>Образование</value>
   </data>
+  <data name="c_40" xml:space="preserve">
+    <value>Удовольствия</value>
+  </data>
+  <data name="c_41" xml:space="preserve">
+    <value>Искусство</value>
+  </data>
+  <data name="c_42" xml:space="preserve">
+    <value>Фильмы и DVD-диски</value>
+  </data>
+  <data name="c_44" xml:space="preserve">
+    <value>Газеты, журналы</value>
+  </data>
+  <data name="c_45" xml:space="preserve">
+    <value>Проценты за транзакцию в банкомате</value>
+  </data>
+  <data name="c_46" xml:space="preserve">
+    <value>Банковская комиссия</value>
+  </data>
+  <data name="c_47" xml:space="preserve">
+    <value>Финансовые переводы</value>
+  </data>
+  <data name="c_48" xml:space="preserve">
+    <value>Пеня за просрочку</value>
+  </data>
+  <data name="c_5" xml:space="preserve">
+    <value>Развлечения</value>
+  </data>
+  <data name="c_50" xml:space="preserve">
+    <value>Торговые комиссии</value>
+  </data>
+  <data name="c_51" xml:space="preserve">
+    <value>Финансовый советник</value>
+  </data>
+  <data name="c_52" xml:space="preserve">
+    <value>Страхование жизни</value>
+  </data>
+  <data name="c_53" xml:space="preserve">
+    <value>Алкоголь, бары</value>
+  </data>
+  <data name="c_54" xml:space="preserve">
+    <value>Кофейни</value>
+  </data>
+  <data name="c_55" xml:space="preserve">
+    <value>Фастфуд</value>
+  </data>
+  <data name="c_56" xml:space="preserve">
+    <value>Бакалейные товары</value>
+  </data>
+  <data name="c_57" xml:space="preserve">
+    <value>Рестораны</value>
+  </data>
+  <data name="c_58" xml:space="preserve">
+    <value>Благотворительность</value>
+  </data>
+  <data name="c_59" xml:space="preserve">
+    <value>Подарки</value>
+  </data>
+  <data name="c_6" xml:space="preserve">
+    <value>Пошлины и сборы</value>
+  </data>
+  <data name="c_60" xml:space="preserve">
+    <value>Дантист</value>
+  </data>
+  <data name="c_61" xml:space="preserve">
+    <value>Врач</value>
+  </data>
+  <data name="c_62" xml:space="preserve">
+    <value>Акулист</value>
+  </data>
+  <data name="c_63" xml:space="preserve">
+    <value>Гимнастика</value>
+  </data>
+  <data name="c_64" xml:space="preserve">
+    <value>Медицинское страхование</value>
+  </data>
+  <data name="c_65" xml:space="preserve">
+    <value>Лекарства</value>
+  </data>
+  <data name="c_66" xml:space="preserve">
+    <value>Спорт</value>
+  </data>
+  <data name="c_67" xml:space="preserve">
+    <value>Мебель</value>
+  </data>
+  <data name="c_68" xml:space="preserve">
+    <value>Ремонт</value>
+  </data>
+  <data name="c_69" xml:space="preserve">
+    <value>Страховка жилья</value>
+  </data>
+  <data name="c_7" xml:space="preserve">
+    <value>Финансы</value>
+  </data>
+  <data name="c_70" xml:space="preserve">
+    <value>Обслуживание жилья</value>
+  </data>
+  <data name="c_71" xml:space="preserve">
+    <value>Домашняя утварь</value>
+  </data>
+  <data name="c_72" xml:space="preserve">
+    <value>Лужайка и сад</value>
+  </data>
+  <data name="c_73" xml:space="preserve">
+    <value>Ипотека, аренда</value>
+  </data>
+  <data name="c_74" xml:space="preserve">
+    <value>Бонусы, премия</value>
+  </data>
+  <data name="c_75" xml:space="preserve">
+    <value>Процентный доход</value>
+  </data>
+  <data name="c_76" xml:space="preserve">
+    <value>Возврат долга</value>
+  </data>
+  <data name="c_77" xml:space="preserve">
+    <value>Компенсация</value>
+  </data>
+  <data name="c_78" xml:space="preserve">
+    <value>Рентный доход</value>
+  </data>
+  <data name="c_79" xml:space="preserve">
+    <value>Возврат покупки</value>
+  </data>
   <data name="c_8" xml:space="preserve">
-    <value>Обед&amp;Ужин</value>
+    <value>Обеды и рестораны</value>
+  </data>
+  <data name="c_80" xml:space="preserve">
+    <value>Пособие по уходу за ребенком</value>
+  </data>
+  <data name="c_81" xml:space="preserve">
+    <value>Детские вещи</value>
+  </data>
+  <data name="c_82" xml:space="preserve">
+    <value>Детский сад, няня</value>
+  </data>
+  <data name="c_83" xml:space="preserve">
+    <value>Помощь детям</value>
+  </data>
+  <data name="c_84" xml:space="preserve">
+    <value>Детские занятия</value>
+  </data>
+  <data name="c_85" xml:space="preserve">
+    <value>Игрушки</value>
+  </data>
+  <data name="c_86" xml:space="preserve">
+    <value>Прическа, волосы</value>
+  </data>
+  <data name="c_87" xml:space="preserve">
+    <value>Прачечная</value>
+  </data>
+  <data name="c_88" xml:space="preserve">
+    <value>Спа и массаж</value>
+  </data>
+  <data name="c_89" xml:space="preserve">
+    <value>Питание, принадлежности домашних животных</value>
+  </data>
+  <data name="c_9" xml:space="preserve">
+    <value>Подарки и пожертвования</value>
+  </data>
+  <data name="c_90" xml:space="preserve">
+    <value>Уход за домашними животными</value>
+  </data>
+  <data name="c_91" xml:space="preserve">
+    <value>Услуги вереринара</value>
+  </data>
+  <data name="c_92" xml:space="preserve">
+    <value>Книги</value>
+  </data>
+  <data name="c_93" xml:space="preserve">
+    <value>Одежда</value>
+  </data>
+  <data name="c_94" xml:space="preserve">
+    <value>Электроника и программное обеспечение</value>
+  </data>
+  <data name="c_95" xml:space="preserve">
+    <value>Хобби</value>
+  </data>
+  <data name="c_96" xml:space="preserve">
+    <value>Товары для спорта</value>
+  </data>
+  <data name="c_97" xml:space="preserve">
+    <value>Федеральный налог</value>
+  </data>
+  <data name="c_98" xml:space="preserve">
+    <value>Местный налог</value>
+  </data>
+  <data name="c_99" xml:space="preserve">
+    <value>Налог на недвижимость</value>
+  </data>
+  <data name="с_43" xml:space="preserve">
+    <value>Музыка</value>
+  </data>
+  <data name="с_49" xml:space="preserve">
+    <value>Плата за услуги</value>
   </data>
 </root>
