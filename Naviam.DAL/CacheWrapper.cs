@@ -67,7 +67,8 @@ namespace Naviam
             }
             else
             {
-                var obj = id != null ? HttpContext.Current.Session[key] : HttpContext.Current.Cache[key];
+                var obj = HttpContext.Current.Cache[key];
+                //var obj = id != null ? HttpContext.Current.Session[key] : HttpContext.Current.Cache[key];
                 if (obj != null)
                     res = (T)obj;
             }
@@ -110,16 +111,8 @@ namespace Naviam
             else
             {
                 object obj;
-                if (id != null)
-                {
-                    obj = HttpContext.Current.Session[key];
-                    HttpContext.Current.Session[key] = val;
-                }
-                else
-                {
-                    obj = HttpContext.Current.Cache[key];
-                    HttpContext.Current.Cache[key] = val;
-                }
+                obj = HttpContext.Current.Cache[key];
+                HttpContext.Current.Cache[key] = val;
                 if (obj != null)
                     res = (T)obj;
             }
@@ -172,19 +165,9 @@ namespace Naviam
             else
             {
                 if (val != null)
-                {
-                    if (id != null)
-                        HttpContext.Current.Session[key] = val;
-                    else
-                        HttpContext.Current.Cache[key] = val;
-                }
+                    HttpContext.Current.Cache[key] = val;
                 else
-                {
-                    if (id != null)
-                        HttpContext.Current.Session.Remove(key);
-                    else
-                        HttpContext.Current.Cache.Remove(key);
-                }
+                    HttpContext.Current.Cache.Remove(key);
             }
         }
 
@@ -210,7 +193,7 @@ namespace Naviam
             }
             else
             {
-                var obj = id != null ? HttpContext.Current.Session[key] : HttpContext.Current.Cache[key];
+                var obj = HttpContext.Current.Cache[key];
                 if (obj != null)
                     res = (List<T>)obj;
             }
@@ -244,10 +227,7 @@ namespace Naviam
             }
             else
             {
-                if (id != null)
-                    HttpContext.Current.Session[key] = val;
-                else
-                    HttpContext.Current.Cache[key] = val;
+                HttpContext.Current.Cache[key] = val;
             }
         }
 
@@ -276,7 +256,7 @@ namespace Naviam
             }
             else
             {
-                var obj = id != null ? HttpContext.Current.Session[key] : HttpContext.Current.Cache[key];
+                var obj = HttpContext.Current.Cache[key];
                 if (obj != null)
                 {
                     ((List<T>)obj).Add(val);
@@ -311,7 +291,7 @@ namespace Naviam
             }
             else
             {
-                var obj = id != null ? HttpContext.Current.Session[key] : HttpContext.Current.Cache[key];
+                var obj = HttpContext.Current.Cache[key];
                 if (obj != null)
                 {
                     var lst = (List<T>)obj;
@@ -347,7 +327,7 @@ namespace Naviam
             }
             else
             {
-                var obj = id != null ? HttpContext.Current.Session[key] : HttpContext.Current.Cache[key];
+                var obj = HttpContext.Current.Cache[key];
                 if (obj != null)
                 {
                     var lst = (List<T>)obj;
@@ -377,7 +357,7 @@ namespace Naviam
             }
             else
             {
-                var obj = id != null ? HttpContext.Current.Session[key] : HttpContext.Current.Cache[key];
+                var obj = HttpContext.Current.Cache[key];
                 if (obj != null)
                 {
                     var lst = (List<T>)obj;
@@ -413,7 +393,7 @@ namespace Naviam
             }
             else
             {
-                var obj = id != null ? HttpContext.Current.Session[key] : HttpContext.Current.Cache[key];
+                var obj = HttpContext.Current.Cache[key];
                 if (obj != null)
                 {
                     var lst = (List<T>)obj;
