@@ -60,13 +60,12 @@ Na vremya: 16:26:28
                 
                 TransactionsRepository transactions = new TransactionsRepository();
                 CurrenciesRepository curencies = new CurrenciesRepository();
-
                 Transaction tran = new Transaction();
                 Account account = SmsDataAdapter.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
                 tran.Amount = sms.Amount;
                 //TODO: autosearch category by merchant
-                //int? cat = CategoriesDataAdapter.FindCategoryForMerchant(account.Id, sms.Merchant);
-                tran.CategoryId = 20; //Uncategorized
+                int? cat = CategoriesDataAdapter.FindCategoryForMerchant(account.Id, sms.Merchant);
+                tran.CategoryId = cat; // 20 - Uncategorized
                 tran.CurrencyId = curencies.GetCurrencyByShortName(sms.ShortCurrency).Id;
                 tran.Date = DateTime.UtcNow;
                 tran.Description = DisplayNames.SMSAlertServiceBank;
