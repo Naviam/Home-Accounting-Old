@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Naviam.Data;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace Naviam.DAL
 {
@@ -87,6 +88,7 @@ namespace Naviam.DAL
                 var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {
+                    cmd.Parameters.Add("@id_category", SqlDbType.Int).Direction = ParameterDirection.InputOutput;
                     cmd.Parameters.AddWithValue("@id_account", id_account);
                     cmd.Parameters.AddWithValue("@merchant", merchant);
                     cmd.ExecuteNonQuery();
