@@ -28,7 +28,7 @@ namespace Naviam.Data
         public override string GetOperation()
         {
             string result = string.Empty;
-            string pattern = @"(?<operation>Retail|Service payment from card|Service payment to card|ATM)";
+            string pattern = @"(?<operation>Retail|Service payment from card|Service payment to card|ATM|Cash)";
             Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
             if (reg.IsMatch(_sms))
             {
@@ -93,7 +93,7 @@ namespace Naviam.Data
         public override string GetMerchant()
         {
             string result = string.Empty;
-            string pattern = @"[^\x00]*\r\n(?<merchant>[^\x00]*?\/[^\x00]*?\/[^\x00]*)\r\n";
+            string pattern = @"Na vremya:\s\d{1,2}:\d{1,2}:\d{1,5}\r?\n?(?<merchant>[^\x00]*)";
             Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
             if (reg.IsMatch(_sms))
             {
