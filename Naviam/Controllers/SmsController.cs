@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Naviam.Domain.Concrete;
 using Naviam.Data;
 using Naviam.DAL;
+using Naviam.WebUI.Helpers;
 using Naviam.WebUI.Resources;
 using log4net;
 
@@ -81,29 +82,36 @@ BLR/MINSK/BELCEL I-BANK
 
                 //TODO: check sms.Result????
 
-                TransactionsRepository transactions = new TransactionsRepository();
-                CurrenciesRepository curencies = new CurrenciesRepository();
-                Transaction tran = new Transaction();
-                Account account = SmsDataAdapter.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
-                tran.Amount = sms.Amount;
-                //autosearch category by merchant
-                tran.CategoryId = CategoriesDataAdapter.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()); ; // 20 - Uncategorized
-                tran.CurrencyId = curencies.GetCurrencyByShortName(sms.ShortCurrency).Id;
-                tran.Date = DateTime.UtcNow;
-                tran.Description = DisplayNames.SMSAlertServiceBank;
-                tran.Direction = sms.Direction;
-                tran.IncludeInTax = false;
-                tran.Notes = "";
-                tran.TransactionType = TransactionTypes.Cash;
-                tran.Merchant = sms.Merchant;
-                tran.AccountId = account.Id;
+                var transactions = new TransactionsRepository();
+                var curencies = new CurrenciesRepository();
+
+                var account = SmsDataAdapter.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
+                var tran = 
+                    new Transaction
+                    {
+                        Amount = sms.Amount,
+                        CategoryId =
+                            CategoriesDataAdapter.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
+                        //autosearch category by merchant
+                        // 20 - Uncategorized
+                        CurrencyId = curencies.GetCurrencyByShortName(sms.ShortCurrency).Id,
+                        Date = DateTime.UtcNow,
+                        Description = DisplayNames.SMSAlertServiceBank,
+                        Direction = sms.Direction,
+                        IncludeInTax = false,
+                        Notes = "",
+                        TransactionType = TransactionTypes.Cash,
+                        Merchant = sms.Merchant,
+                        AccountId = account.Id
+                    };
                 transactions.Insert(tran, account.CompanyId);
-                decimal val = tran.Amount.HasValue ? tran.Amount.Value : 0;
+                var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
                 AccountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
+                EmailHelper.SendSmsAlert(from, SessionHelper.UserProfile.Name, message);
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
             //throw new Exception("ddd");
             return Json("ok");
