@@ -155,15 +155,18 @@ namespace Naviam.WebUI.Controllers
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
-            if (ModelState.IsValid && model.Password==model.ConfirmPassword)
+            if (ModelState.IsValid && model.Password == model.ConfirmPassword)
             {
                 _membershipRepository.CreateUser(model.UserName, model.Password);
                 var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
 
-                LogOnModel lModel = new LogOnModel() { UserName = model.UserName};
+                LogOnModel lModel = new LogOnModel() { UserName = model.UserName };
                 if (profile != null)
                     return AuthSuccess(profile, lModel, null);
             }
+            //send mail with registration link
+
+            //return View("Confirmation");
             return View(model);
         }
 

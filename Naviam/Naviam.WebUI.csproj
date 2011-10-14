@@ -247,6 +247,7 @@
     <Content Include="Web.Deploy-Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="Views\Account\Confirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\combres.xml">
