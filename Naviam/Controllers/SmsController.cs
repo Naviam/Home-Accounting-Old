@@ -65,7 +65,7 @@ BLR/MINSK/BELCEL I-BANK
         {
             //message = testMessage;
             //gateway = "GETWAY1";
-            
+
             if (key != "givemeaccesstotoyou") return Json("error");
 
             //gateway = "GETWAY1";
@@ -74,25 +74,20 @@ BLR/MINSK/BELCEL I-BANK
             ILog log = LogManager.GetLogger("navSite");
             log.Debug(String.Format("gateway:{0}, from:{1}, message:{2}", gateway, from, message));
             int id_bank = 15; //BelSwissBank
-            
+
             try
             {
                 SmsBase sms = new BelSwissSms(message);
-                
+
                 //TODO: check sms.Result????
-                
+
                 TransactionsRepository transactions = new TransactionsRepository();
                 CurrenciesRepository curencies = new CurrenciesRepository();
                 Transaction tran = new Transaction();
                 Account account = SmsDataAdapter.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
                 tran.Amount = sms.Amount;
-                //TODO: autosearch category by merchant
-                if (!string.IsNullOrEmpty(sms.Merchant))
-                {
-                    tran.CategoryId = CategoriesDataAdapter.FindCategoryForMerchant(account.Id, sms.Merchant.Trim());
-                }
-                else
-                    tran.CategoryId = 20; // 20 - Uncategorized
+                //autosearch category by merchant
+                tran.CategoryId = CategoriesDataAdapter.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()); ; // 20 - Uncategorized
                 tran.CurrencyId = curencies.GetCurrencyByShortName(sms.ShortCurrency).Id;
                 tran.Date = DateTime.UtcNow;
                 tran.Description = DisplayNames.SMSAlertServiceBank;
@@ -103,8 +98,10 @@ BLR/MINSK/BELCEL I-BANK
                 tran.Merchant = sms.Merchant;
                 tran.AccountId = account.Id;
                 transactions.Insert(tran, account.CompanyId);
+                decimal val = tran.Amount.HasValue ? tran.Amount.Value : 0;
+                AccountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
             }
