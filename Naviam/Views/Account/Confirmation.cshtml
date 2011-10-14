@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Confirmation";
+    Layout = "~/Views/Shared/LayoutMember.cshtml";
+}
+
+<h2>Confirmation</h2>
+@using (Html.BeginForm()) {
+    <section class="signup">
+        <fieldset>
+            <div>
+@*                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Please enter your email here", type = "email" })
+                @Html.ValidationMessageFor(m => m.UserName)*@
+            </div>
+        </fieldset>
+    </section>
+    <div style="clear: left"></div>
+}
+
