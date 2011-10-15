@@ -15,14 +15,14 @@ namespace Naviam.WebUI.Controllers
     public class SmsController : Controller
     {
         static string testMessage = @"
-4..7983
-Cash
-Uspeshno
-2011-10-13 11:54:07
-Summa: 400000 BYR
-Ostatok: 1200962 BYR
-Na vremya: 11:54:12
-BLR/MINSK/EUROSET RKC 3
+4..0692 
+Service payment from card 
+Uspeshno 
+2011-09-01 00:00:00 
+Summa: 4828 BYR 
+Ostatok: 56552 BYR 
+Na vremya: 11:11:46 
+//RBS Balance loader
 ";
         static string other = @"
 4..0692 
@@ -68,12 +68,12 @@ BLR/MINSK/BELCEL I-BANK
             //gateway = "GETWAY1";
 
             if (key != "givemeaccesstotoyou") return Json("error");
-
-            //gateway = "GETWAY1";
+            
             Modem modem = ModemsDataAdapter.GetModemByGateway(gateway);
-            //TODO: get bank_id by "from" param
             ILog log = LogManager.GetLogger("navSite");
             log.Debug(String.Format("gateway:{0}, from:{1}, message:{2}", gateway, from, message));
+            
+            //TODO: get bank_id by "from" param
             int id_bank = 15; //BelSwissBank
 
             try
@@ -85,7 +85,7 @@ BLR/MINSK/BELCEL I-BANK
                 var transactions = new TransactionsRepository();
                 var curencies = new CurrenciesRepository();
 
-                var account = SmsDataAdapter.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
+                var account = AccountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
                 var tran = 
                     new Transaction
                     {
@@ -111,7 +111,7 @@ BLR/MINSK/BELCEL I-BANK
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
             //throw new Exception("ddd");
             return Json("ok");

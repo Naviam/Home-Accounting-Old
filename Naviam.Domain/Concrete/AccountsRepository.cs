@@ -83,7 +83,7 @@ namespace Naviam.Domain.Concrete
         //we need to provide full object (not only id) to delete from redis (restrict of redis)
         public static int Delete(Account entity, int? companyId)
         {
-            var res = AccountsDataAdapter.Delete(entity,companyId);
+            var res = AccountsDataAdapter.Delete(entity, companyId);
             if (res == 0)
             {
                 //if ok - remove from cache
@@ -102,6 +102,22 @@ namespace Naviam.Domain.Concrete
                 account.Balance = account.Balance + value;
                 cache.UpdateList(CacheKey, account, companyId);
             }
+            return res;
+        }
+
+        public static Account GetAccountBySms(string cardNumber, int? id_modem, int? id_bank) { return GetAccountBySms(cardNumber, id_modem, id_bank, false); }
+        public static Account GetAccountBySms(string cardNumber, int? id_modem, int? id_bank, bool forceSqlLoad)
+        {
+            var cache = new CacheWrapper();
+            Account res = null;
+            //load from DB
+            res = SmsDataAdapter.GetAccountBySms(cardNumber, id_modem, id_bank);
+            //save to cache
+            var res2 = cache.GetFromList(CacheKey, new Account() { Id = res.Id }, res.CompanyId);
+            if (res2 == null) // not found in cache->add
+                cache.AddToList<Account>(CacheKey, res, res.CompanyId);
+            else
+                cache.UpdateList(CacheKey, res, res.CompanyId);
             return res;
         }
     }//AccountsRepository
