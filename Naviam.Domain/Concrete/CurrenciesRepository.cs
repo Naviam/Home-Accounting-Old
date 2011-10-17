@@ -31,8 +31,8 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public Currency GetCurrencyByShortName(string shortName) { return GetCurrencyByShortName(shortName,false); }
-        public Currency GetCurrencyByShortName(string shortName, bool forceSqlLoad)
+        public virtual Currency GetCurrencyByShortName(string shortName) { return GetCurrencyByShortName(shortName,false); }
+        public virtual Currency GetCurrencyByShortName(string shortName, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             var list = cache.GetList<Currency>(CacheKey);

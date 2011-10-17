@@ -20,18 +20,20 @@ namespace Naviam.WebUI.Controllers
         private readonly TransactionsRepository _transRepository;
         private readonly AccountsRepository _accountsRepository;
         private readonly CurrenciesRepository _currenciesRepository;
+        private readonly CategoriesRepository _categoriesRepository;
 
         public SmsController()
-            : this(null, null, null, null)
+            : this(null, null, null, null, null)
         {
         }
 
-        public SmsController(ModemsRepository modemsRepository, TransactionsRepository transRepository, AccountsRepository accountsRepository, CurrenciesRepository currenciesRepository)
+        public SmsController(ModemsRepository modemsRepository, TransactionsRepository transRepository, AccountsRepository accountsRepository, CurrenciesRepository currenciesRepository, CategoriesRepository categoriesRepository)
         {
             _modemsRepository = modemsRepository ?? new ModemsRepository();
             _transRepository = transRepository ?? new TransactionsRepository();
             _accountsRepository = accountsRepository ?? new AccountsRepository();
             _currenciesRepository = currenciesRepository ?? new CurrenciesRepository();
+            _categoriesRepository = categoriesRepository ?? new CategoriesRepository();
         }
 
         static string testMessage = @"
@@ -107,8 +109,7 @@ BLR/MINSK/BELCEL I-BANK
                     new Transaction
                     {
                         Amount = sms.Amount,
-                        CategoryId =
-                            CategoriesDataAdapter.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
+                        CategoryId = _categoriesRepository.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
                         //autosearch category by merchant
                         // 20 - Uncategorized
                         CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,

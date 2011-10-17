@@ -50,13 +50,13 @@ Na vremya: 11:11:46
             var controller = GetController();
 
             // Act
-            //var result = controller.RecieveMessage("givemeaccesstotoyou", "GETWAY1", "BelSwissBank", "to", testMessage) as JsonResult;
-            //dynamic data = result.Data;
-            int result = 0;
+            var result = controller.RecieveMessage("givemeaccesstotoyou", "GETWAY1", "BelSwissBank", "to", testMessage) as JsonResult;
+            dynamic data = result.Data;
+            //int result = 0;
 
             // Assert
             Assert.IsNotNull(result);
-            //Assert.AreEqual("ok", data);
+            Assert.AreEqual("ok", data);
         }
 
         private static Modem GetTestModem(string gateway)
@@ -73,6 +73,13 @@ Na vremya: 11:11:46
             return res;
         }
 
+        private static Currency GetTestCurrencyByShortName(string shortName)
+        {
+            var res = new Currency();
+            res.Id = 1;
+            return res;
+        }
+
 
         private static SmsController GetController()
         {
@@ -80,11 +87,13 @@ Na vremya: 11:11:46
             modems_rep.Setup(m => m.GetModemByGateway(It.IsAny<string>())).Returns<string>(p => GetTestModem(p));
             var accs_rep = new Mock<AccountsRepository>();
             //Account account = null;
-            //accs_rep.Setup(m => m.GetAccountBySms(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns<string, int?, int?>(GetTestAccountBySms(p));
+            accs_rep.Setup(m => m.GetAccountBySms(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns<string, int?, int?>((p1, p2, p3)=> GetTestAccountBySms(p1, p2, p3));
             var trans_rep = new Mock<TransactionsRepository>();
             var currency_rep = new Mock<CurrenciesRepository>();
+            currency_rep.Setup(m => m.GetCurrencyByShortName(It.IsAny<string>())).Returns<string>(p => GetTestCurrencyByShortName(p));
+            var cats_rep = new Mock<CategoriesRepository>();
 
-            var controller = new SmsController(modems_rep.Object, trans_rep.Object, accs_rep.Object, currency_rep.Object);
+            var controller = new SmsController(modems_rep.Object, trans_rep.Object, accs_rep.Object, currency_rep.Object, cats_rep.Object);
             return controller;
         }
     }
