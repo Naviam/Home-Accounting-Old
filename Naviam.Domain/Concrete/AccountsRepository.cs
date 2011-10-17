@@ -116,10 +116,8 @@ namespace Naviam.Domain.Concrete
             if (res != null)
             {
                 //save to cache
-                var list = new List<Account>();
-                list.Add(res);
                 if (res2 == null) // not found in cache->add
-                    cache.SetList<Account>(CacheKey, list, res.CompanyId);
+                    cache.AddToList<Account>(CacheKey, res, res.CompanyId);
                 else
                     cache.UpdateList(CacheKey, res, res.CompanyId);
             }

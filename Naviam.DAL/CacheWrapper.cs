@@ -257,10 +257,12 @@ namespace Naviam
             else
             {
                 var obj = HttpContext.Current.Cache[key];
-                if (obj != null)
+                if (obj == null)
                 {
-                    ((List<T>)obj).Add(val);
+                    obj = new List<T>();
+                    HttpContext.Current.Cache[key] = obj;
                 }
+                ((List<T>)obj).Add(val);
             }
         }
 

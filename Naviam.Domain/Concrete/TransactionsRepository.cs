@@ -40,11 +40,12 @@ namespace Naviam.Domain.Concrete
             var res = cache.GetFromList(CacheKey, new Transaction { Id = id }, companyId);
             if (res == null || forceSqlLoad)
             {
+                bool inCache = res != null;
                 //load from DB
                 res = TransactionsDataAdapter.GetTransaction(id, companyId);
                 //res = new Transaction() { Description = "Test", Category = "Dinner", Amount = 100.20M, Id = 1, Date = DateTime.Now };
                 //save to cache
-                if (res == null) // not found in cache->add
+                if (!inCache) // not found in cache->add
                     cache.AddToList<Transaction>(CacheKey, res, companyId);
                 else
                     cache.UpdateList(CacheKey, res, companyId);
