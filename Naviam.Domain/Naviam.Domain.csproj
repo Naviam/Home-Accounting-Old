@@ -73,6 +73,7 @@
     <Compile Include="Concrete\TagsRepository.cs" />
     <Compile Include="Concrete\TransactionsRepository.cs" />
     <Compile Include="Entities\SecUtility.cs" />
+    <Compile Include="Concrete\ModemsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Concrete\Providers\NaviamMembershipProvider.cs" />
   </ItemGroup>

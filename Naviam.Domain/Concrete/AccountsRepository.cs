@@ -92,7 +92,7 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public static int ChangeBalance(int? accountId, int? companyId, decimal value)
+        public virtual int ChangeBalance(int? accountId, int? companyId, decimal value)
         {
             var res = AccountsDataAdapter.ChangeBalance(accountId, companyId, value);
             var cache = new CacheWrapper();
@@ -105,19 +105,24 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public static Account GetAccountBySms(string cardNumber, int? id_modem, int? id_bank) { return GetAccountBySms(cardNumber, id_modem, id_bank, false); }
-        public static Account GetAccountBySms(string cardNumber, int? id_modem, int? id_bank, bool forceSqlLoad)
+        public virtual Account GetAccountBySms(string cardNumber, int? id_modem, int? id_bank) { return GetAccountBySms(cardNumber, id_modem, id_bank, false); }
+        public virtual Account GetAccountBySms(string cardNumber, int? id_modem, int? id_bank, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
             Account res = null;
             //load from DB
             res = SmsDataAdapter.GetAccountBySms(cardNumber, id_modem, id_bank);
-            //save to cache
             var res2 = cache.GetFromList(CacheKey, new Account() { Id = res.Id }, res.CompanyId);
-            if (res2 == null) // not found in cache->add
-                cache.AddToList<Account>(CacheKey, res, res.CompanyId);
-            else
-                cache.UpdateList(CacheKey, res, res.CompanyId);
+            if (res != null)
+            {
+                //save to cache
+                var list = new List<Account>();
+                list.Add(res);
+                if (res2 == null) // not found in cache->add
+                    cache.SetList<Account>(CacheKey, list, res.CompanyId);
+                else
+                    cache.UpdateList(CacheKey, res, res.CompanyId);
+            }
             return res;
         }
     }//AccountsRepository

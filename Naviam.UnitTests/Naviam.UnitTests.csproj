@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountControllerTest.cs" />
+    <Compile Include="Controllers\SmsControllerTest.cs" />
     <Compile Include="Controllers\TransactionsControllerTest.cs" />
     <Compile Include="Helpers\EmailHelperTest.cs" />
     <Compile Include="Mocks\MockCacheWrapper.cs" />

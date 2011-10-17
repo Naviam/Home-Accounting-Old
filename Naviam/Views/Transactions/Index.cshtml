@@ -190,6 +190,7 @@
         <ul data-bind="template: {name:'filterTemplate', foreach:items, templateOptions: { remove: removeItem } }">
         </ul>
     </div>
+    @*<button onclick="$.postErr('@Url.Action("RecieveMessage", "Sms", new { key = "givemeaccesstotoyou", gateway = "GETWAY1", from = "BelSwissBank", to = "", message = "" })')" type="button">Test</button>*@
     <div id="transGrid">
         @{var user = ViewBag.CurrentUser as UserProfile;}
         

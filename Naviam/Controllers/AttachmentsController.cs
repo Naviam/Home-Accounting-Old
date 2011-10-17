@@ -63,7 +63,7 @@ namespace Naviam.WebUI.Controllers
                     var res = reps.BatchInsert(dbTransList, companyId);
                     if (res == 0)
                     {
-                        AccountsRepository.ChangeBalance(accId, companyId, sumAmount);
+                        new AccountsRepository().ChangeBalance(accId, companyId, sumAmount);
                         //reset redis
                         reps.ResetCache(companyId);
                         result = "ok";
