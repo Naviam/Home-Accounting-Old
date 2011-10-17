@@ -111,7 +111,6 @@ namespace Naviam.WebUI.Controllers
                     case AuthenticationStatus.Authenticated:
                         {
                             var fResp = response.GetExtension<FetchResponse>();
-                            //TODO: login or register
                             LogOnModel model = new LogOnModel() { UserName = fResp.Attributes[WellKnownAttributes.Contact.Email].Values[0] };
                             var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
 
