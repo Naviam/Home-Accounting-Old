@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace Naviam.Data
 {
-    public enum TransactionTypes { Cash = 0, Check, Pending }
+    public enum TransactionTypes { Manual = 0, SMS, Statement }
     public enum TransactionDirections { Expense = 0, Income }
 
     [Serializable]

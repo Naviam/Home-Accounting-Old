@@ -116,7 +116,8 @@ namespace Naviam.WebUI.Controllers
                             var catsIds = cats.Where(m => m.Name.ToLower().Contains(item.Value.ToLower()));
                             //!
                             if (item.Name == "ByString")
-                                trans = trans.Where(s => (s.Merchant != null && s.Merchant.ToLower().Contains(item.Value.ToLower())) || (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
+                                trans = trans.Where(s => (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
+                                //trans = trans.Where(s => (s.Merchant != null && s.Merchant.ToLower().Contains(item.Value.ToLower())) || (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
                                     Union(from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
                             else
                                 trans = (from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
@@ -157,8 +158,8 @@ namespace Naviam.WebUI.Controllers
             var head = new List<Head>
                            {
                                new Head {Field = "Date", Text = DisplayNames.Date, Size = 75},
-                               new Head {Field = "Description", Text = DisplayNames.Description, Size = 275},
-                               new Head {Field = "Merchant", Text = DisplayNames.Merchant, Size = 250},
+                               new Head {Field = "Description", Text = DisplayNames.Description, Size = 500},
+                               //new Head {Field = "Merchant", Text = DisplayNames.Merchant, Size = 250},
                                new Head {Field = "CategoryId", Text = DisplayNames.Category, Size = 175},
                                new Head {Field = "Amount", Text = DisplayNames.Amount, Size = 120}
                            };
@@ -353,8 +354,8 @@ namespace Naviam.WebUI.Controllers
             //merchant and description
             foreach (var item in trans)
             {
-                if (item.Merchant != null && item.Merchant.ToLower().Contains(q))
-                    vals.Add(Naviam.WebUI.Resources.JavaScript.Merchant + ": " + item.Merchant);
+                /*if (item.Merchant != null && item.Merchant.ToLower().Contains(q))
+                    vals.Add(Naviam.WebUI.Resources.JavaScript.Merchant + ": " + item.Merchant);*/
                 if (item.Description != null && item.Description.ToLower().Contains(q))
                     vals.Add(Naviam.WebUI.Resources.JavaScript.Description + ": " + item.Description);
             }

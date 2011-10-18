@@ -46,12 +46,13 @@ namespace Naviam.WebUI.Controllers
                             {
                                 Amount = Math.Abs(trans.AccountAmount),
                                 Date = trans.TransactionDate,
-                                Description = trans.OperationDescription,
+                                Description = trans.Place,
                                 Direction = trans.AccountAmount > 0 ? TransactionDirections.Income : TransactionDirections.Expense,
                                 Merchant = trans.Place,
-                                TransactionType = TransactionTypes.Cash,
+                                TransactionType = TransactionTypes.Statement,
                                 AccountId = accId,
                                 IncludeInTax = false,
+                                Notes = trans.OperationDescription,
                                 //CategoryId = 20
                                 CategoryId = null
                             };

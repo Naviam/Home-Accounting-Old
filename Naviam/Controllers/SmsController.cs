@@ -114,11 +114,11 @@ BLR/MINSK/BELCEL I-BANK
                         // 20 - Uncategorized
                         CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,
                         Date = DateTime.UtcNow,
-                        Description = DisplayNames.SMSAlertServiceBank,
+                        Description = sms.Merchant,
                         Direction = sms.Direction,
                         IncludeInTax = false,
                         Notes = "",
-                        TransactionType = TransactionTypes.Cash,
+                        TransactionType = TransactionTypes.SMS,
                         Merchant = sms.Merchant,
                         AccountId = account.Id
                     };

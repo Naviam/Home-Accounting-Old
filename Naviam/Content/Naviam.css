@@ -33,7 +33,7 @@ header {
   background-color: #89d6bc;
   height: 28px; }
   header div {
-    width: 1250px;
+    width: 1200px;
     margin-left: auto;
     margin-right: auto;
     height: 28px;
@@ -60,7 +60,7 @@ footer {
   -moz-border-radius: 2px; }
 
 div.container {
-  width: 1250px;
+  width: 1200px;
   margin-left: auto;
   margin-right: auto;
   -moz-box-shadow: 0.1em 1.6em 0.6em white;
@@ -71,7 +71,7 @@ div.container {
 section.menu {
   height: 70px;
   font-size: larger;
-  width: 1250px;
+  width: 1200px;
   margin-left: auto;
   margin-right: auto;
   background-color: white; }
@@ -516,13 +516,13 @@ button {
   display: block; }
 
 #page {
-  width: 1250px;
+  width: 1200px;
   margin: 0 auto;
   padding: 20px 0; }
 
 #content {
   float: left;
-  width: 800px;
+  width: 770px;
   padding: 0 10px 0 10px; }
 
 .upload_area {

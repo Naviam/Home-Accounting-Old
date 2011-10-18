@@ -105,7 +105,7 @@
 <div id="filter_area" class='left_side_pnl' data-bind='visible: selectedItem() != null && selectedItem().Id() != null' style="display: none;">
     <h5>@SharedStrings.Search</h5>
     <ul class='acc_menu'>
-        <li><a href="#" data-bind="click: function(event) {searchByKey('Merchant', selectedItem() != null ? selectedItem().Merchant : '', '@JavaScript.FindMerchant', selectedItem() != null ? selectedItem().Merchant() : ''); }, text: selectedItem() != null ? selectedItem().Merchant : ''" class='text_ellipsis'></a></li>
+        <li><a href="#" data-bind="click: function(event) {searchByKey('Description', selectedItem() != null ? selectedItem().Description : '', '@JavaScript.FindDescription', selectedItem() != null ? selectedItem().Description() : ''); }, text: selectedItem() != null ? selectedItem().Description : ''" class='text_ellipsis'></a></li>
         <li><a href="#" data-bind="click: function(event) {searchByKey('CategoryId', selectedItem() != null ? selectedItem().CategoryId : '', '@JavaScript.FindCategory', selectedItem() != null ? selectedItem().Category() : '' ,'int'); }, text: selectedItem() != null ? selectedItem().Category : ''" class='text_ellipsis'></a></li>
     </ul>
 </div>
@@ -136,10 +136,10 @@
             <span data-bind="visible: transModel.selectedItem() != $data, text: Description"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Description" />
         </td>
-        <td>
+        @*<td>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Merchant"></span>
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Merchant" />
-        </td>
+        </td>*@
         <td>
             <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
             <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'>
@@ -234,6 +234,10 @@
                 <label><input data-bind="checked: Direction" name="Direction" type="radio" value='1'/>@DisplayNames.Income</label>
             </td>
         </tr>
+        <tr data-bind="visible: Merchant">
+            <td>@DisplayNames.Merchant:</td>
+            <td><b><span data-bind="text: Merchant" /></b></td>
+        </tr>
         <tr>
             <td>@DisplayNames.IncludeInTax:</td>
             <td><input data-bind="checked: IncludeInTax" name="IncludeInTax" type="checkbox"/></td>
@@ -242,10 +246,6 @@
             <td>@DisplayNames.Tags:</td>
             <td><div data-bind='template: { name: "transTagsTemplate", foreach: catModel.tags, templateOptions: { tagIds: TagIds } }'></div></td>
         </tr>
-@*        <tr>
-            <td>@DisplayNames.Merchant:</td>
-            <td><input class="width100" data-bind="value: Merchant" name="Merchant"/></td>
-        </tr>*@
         <tr>
             <td>@DisplayNames.Notes:</td>
             <td><textarea data-bind="value: Notes" name="Notes" rows='6' cols='30'></textarea></td>
