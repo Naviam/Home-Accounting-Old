@@ -1,0 +1,44 @@
+example of request to sbsibank.by
+
+https://www.sbsibank.by/login.asp?mode=1
+
+Header
+
+Key	Value
+Request	POST /login.asp?mode=1 HTTP/1.1
+Accept	image/jpeg, image/gif, image/pjpeg, application/x-ms-application, application/xaml+xml, application/x-ms-xbap, */*
+Referer	https://www.sbsibank.by/login.asp?mode=1
+Accept-Language	ru-RU
+User-Agent	Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET4.0C; .NET4.0E; .NET CLR 3.5.30729; .NET CLR 3.0.30729)
+Content-Type	application/x-www-form-urlencoded
+Accept-Encoding	gzip, deflate
+Host	www.sbsibank.by
+Content-Length	50
+Connection	Keep-Alive
+Cache-Control	no-cache
+Cookie	UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDSCQSAACS=HGFOOIMDLPCKMIOJMBGLEPOD; ASPSESSIONIDQCQRDADT=IDFNAKBBPOKAJFEIPBBKINEC
+
+Body
+S1=0175&T1=FQ529&C1=ON&T2=XUI4K&B1=%C4%E0%EB%E5%E5 = белсвисбанк
+
+// S1=0226&T1=ttt&T2=ff&B1=%C4%E0%EB%E5%E5 - белвнешэкономбанк
+// S1=0182&T1=dffdf&T2=fff&B1=%C4%E0%EB%E5%E5 - технобанк
+
+
+RESPONSE
+
+Header
+
+Key	Value
+Response	HTTP/1.1 302 Object moved
+Cache-Control	private
+Content-Length	129
+Content-Type	text/html
+Location	home.asp
+X-Powered-By	ASP.NET
+Set-Cookie	UN=FQ529; expires=Mon, 15-Oct-2012 20:32:10 GMT; path=/
+Set-Cookie	C1=checked; expires=Mon, 15-Oct-2012 20:32:10 GMT; path=/
+Set-Cookie	S1=0175; expires=Mon, 15-Oct-2012 20:32:10 GMT; path=/
+Date	Sun, 16 Oct 2011 20:32:12 GMT
+
+Body
