@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Naviam.Domain.Concrete;
 using Naviam.Data;
@@ -62,7 +59,7 @@ Na vremya: 09:32:43
 BLR/MINSK/BELCEL I-BANK
 ";
         [HttpPost]
-        public ActionResult RecieveMessage(string key, string gateway, string from, string to, string message)
+        public JsonResult RecieveMessage(string key, string gateway, string from, string to, string message)
         {
             //message = testMessage;
             //gateway = "GETWAY1";
