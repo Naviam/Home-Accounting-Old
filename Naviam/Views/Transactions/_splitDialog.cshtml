@@ -91,7 +91,7 @@
         <thead>
         <tr>
             <th><span data-bind='text: initialDesc'></span></th>
-            <th><span data-bind='text: initialMerchant'></span></th>
+            @*<th><span data-bind='text: initialMerchant'></span></th>*@
             <th><span data-bind='text: initialCat'></span></th>
             <th><span data-bind='amount: initialAmount'></span></th>
             <th></th>
@@ -102,7 +102,7 @@
         <tfoot>
         <tr>
             <td><span data-bind='text: initialDesc'></span></td>
-            <td><span data-bind='text: initialMerchant'></span></td>
+            @*<td><span data-bind='text: initialMerchant'></span></td>*@
             <td><span data-bind='text: initialCat'></span></td>
             <td><span data-bind='amount: endAmount'></span></td>
         </tr>
@@ -116,7 +116,7 @@
 <script type="text/html" id="splitTransTemplate">
     <tr>
         <td><input data-bind="value: description"/></td>
-        <td><input data-bind="value: merchant"/></td>
+        @*<td><input data-bind="value: merchant"/></td>*@
         <td>
             <div style='position:relative;width:175px'>
                 <input class="width100 suggestCat" data-bind="category: category" name="Category"/>

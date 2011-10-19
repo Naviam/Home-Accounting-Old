@@ -79,7 +79,7 @@ namespace Naviam.WebUI.Controllers
         public ActionResult AddAccountAmount(int? id, decimal amount)
         {
             var companyId = CurrentUser.CurrentCompany;
-            AccountsRepository.ChangeBalance(id, companyId, amount);
+            new AccountsRepository().ChangeBalance(id, companyId, amount);
             /*Account acc = AccountsRepository.GetAccount(id, companyId);
             acc.Balance = acc.Balance + amount;
             AccountsRepository.Update(acc, companyId);*/

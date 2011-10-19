@@ -72,5 +72,11 @@ namespace Naviam.Domain.Concrete
             }
             return res;
         }
+
+        public virtual int? FindCategoryForMerchant(int? id_account, string merchant)
+        {
+            var res = CategoriesDataAdapter.FindCategoryForMerchant(id_account, merchant);
+            return res;
+        }
     }
 }

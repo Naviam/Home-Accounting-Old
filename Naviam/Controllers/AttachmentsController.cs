@@ -46,12 +46,13 @@ namespace Naviam.WebUI.Controllers
                             {
                                 Amount = Math.Abs(trans.AccountAmount),
                                 Date = trans.TransactionDate,
-                                Description = trans.OperationDescription,
+                                Description = trans.Place,
                                 Direction = trans.AccountAmount > 0 ? TransactionDirections.Income : TransactionDirections.Expense,
                                 Merchant = trans.Place,
-                                TransactionType = TransactionTypes.Cash,
+                                TransactionType = TransactionTypes.Statement,
                                 AccountId = accId,
                                 IncludeInTax = false,
+                                Notes = trans.OperationDescription,
                                 //CategoryId = 20
                                 CategoryId = null
                             };
@@ -63,7 +64,7 @@ namespace Naviam.WebUI.Controllers
                     var res = reps.BatchInsert(dbTransList, companyId);
                     if (res == 0)
                     {
-                        AccountsRepository.ChangeBalance(accId, companyId, sumAmount);
+                        new AccountsRepository().ChangeBalance(accId, companyId, sumAmount);
                         //reset redis
                         reps.ResetCache(companyId);
                         result = "ok";

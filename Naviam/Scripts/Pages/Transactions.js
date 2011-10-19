@@ -236,7 +236,7 @@ function loadTransactions() {
                 this.DescrSub.dispose();
             if (item.Id() != null) {
                 item.FullRow = ko.dependentObservable(function () {
-                    return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date() + this.Merchant();
+                    return this.Description() + "_" + this.Category() + "_" + this.Amount() + this.Date();
                 }, item);
                 this.DescrSub = item.FullRow.subscribe(function (newValue) {
                     transModel.Save(false);
@@ -462,7 +462,7 @@ $(document).ready(function () {
         transEdit.Amount(selItem.Amount());
         //transEdit.Category(selItem.Category());
         transEdit.Description(selItem.Description());
-        transEdit.Merchant(selItem.Merchant())
+        //transEdit.Merchant(selItem.Merchant())
         transEdit.Date(selItem.Date());
         //}
         ko.mapping.fromJS(ko.mapping.toJS(transEdit), {}, selItem);

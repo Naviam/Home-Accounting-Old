@@ -78,8 +78,8 @@ namespace Naviam.UnitTests.Controllers
             // Assert
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Data);
-            Assert.AreEqual(1, trans.Count);
-            Assert.AreEqual(3, tr.AccountId);
+            Assert.AreEqual(2, trans.Count);
+            Assert.AreEqual(2, tr.AccountId);
         }
 
         [TestMethod]
@@ -205,8 +205,9 @@ namespace Naviam.UnitTests.Controllers
             TransactionsController.Paging paging = new TransactionsController.Paging();
             PageContext pageContext = new PageContext();
             var fltrs = new List<TransactionsController.FilterHolder>();
-            fltrs.Add(new TransactionsController.FilterHolder() { Name = "ByString", Value = "Merchant" });
-            fltrs.Add(new TransactionsController.FilterHolder() { Name = "Merchant", Value = "test1 Merchant" });
+            fltrs.Add(new TransactionsController.FilterHolder() { Name = "ByString", Value = "Description" });
+            //fltrs.Add(new TransactionsController.FilterHolder() { Name = "Merchant", Value = "test1 Merchant" });
+            fltrs.Add(new TransactionsController.FilterHolder() { Name = "Description", Value = "test1 Description" });
             fltrs.Add(new TransactionsController.FilterHolder() { Name = "Category", Value = "test Cat3" });
             JavaScriptSerializer js = new JavaScriptSerializer();
             paging.Filter = js.Serialize(fltrs);
@@ -235,7 +236,7 @@ namespace Naviam.UnitTests.Controllers
                 CategoryId = 221,
                 CurrencyId = 1,
                 Date = new DateTime(),
-                Description = "test Description",
+                Description = "test1 Description",
                 Direction = TransactionDirections.Expense,
                 Id = 1,
                 IncludeInTax = false,
@@ -248,6 +249,7 @@ namespace Naviam.UnitTests.Controllers
             trans = trans.Clone();
             trans.Id = 2;
             trans.Merchant = "find Merchant";
+            trans.Description = "new desc";
             res.Add(trans);
             
             trans = trans.Clone();

@@ -83,7 +83,7 @@ namespace Naviam.Domain.Concrete
         //we need to provide full object (not only id) to delete from redis (restrict of redis)
         public static int Delete(Account entity, int? companyId)
         {
-            var res = AccountsDataAdapter.Delete(entity,companyId);
+            var res = AccountsDataAdapter.Delete(entity, companyId);
             if (res == 0)
             {
                 //if ok - remove from cache
@@ -92,7 +92,7 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public static int ChangeBalance(int? accountId, int? companyId, decimal value)
+        public virtual int ChangeBalance(int? accountId, int? companyId, decimal value)
         {
             var res = AccountsDataAdapter.ChangeBalance(accountId, companyId, value);
             var cache = new CacheWrapper();
@@ -101,6 +101,25 @@ namespace Naviam.Domain.Concrete
                 Account account = cache.GetFromList(CacheKey, new Account() { Id = accountId }, companyId);
                 account.Balance = account.Balance + value;
                 cache.UpdateList(CacheKey, account, companyId);
+            }
+            return res;
+        }
+
+        public virtual Account GetAccountBySms(string cardNumber, int? id_modem, int? id_bank) { return GetAccountBySms(cardNumber, id_modem, id_bank, false); }
+        public virtual Account GetAccountBySms(string cardNumber, int? id_modem, int? id_bank, bool forceSqlLoad)
+        {
+            var cache = new CacheWrapper();
+            Account res = null;
+            //load from DB
+            res = SmsDataAdapter.GetAccountBySms(cardNumber, id_modem, id_bank);
+            var res2 = cache.GetFromList(CacheKey, new Account() { Id = res.Id }, res.CompanyId);
+            if (res != null)
+            {
+                //save to cache
+                if (res2 == null) // not found in cache->add
+                    cache.AddToList<Account>(CacheKey, res, res.CompanyId);
+                else
+                    cache.UpdateList(CacheKey, res, res.CompanyId);
             }
             return res;
         }
