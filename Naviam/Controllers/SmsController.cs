@@ -18,6 +18,7 @@ namespace Naviam.WebUI.Controllers
         private readonly AccountsRepository _accountsRepository;
         private readonly CurrenciesRepository _currenciesRepository;
         private readonly CategoriesRepository _categoriesRepository;
+        private readonly MembershipRepository _membershipRepository;
 
         public SmsController()
             : this(null, null, null, null, null)
@@ -31,6 +32,8 @@ namespace Naviam.WebUI.Controllers
             _accountsRepository = accountsRepository ?? new AccountsRepository();
             _currenciesRepository = currenciesRepository ?? new CurrenciesRepository();
             _categoriesRepository = categoriesRepository ?? new CategoriesRepository();
+            _membershipRepository = _membershipRepository ?? new MembershipRepository();
+
         }
 
         static string testMessage = @"
@@ -102,6 +105,7 @@ BLR/MINSK/BELCEL I-BANK
                 //TODO: check sms.Result????
 
                 var account = _accountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
+                var usr = _membershipRepository.GetUserByAccount(account.Id.Value);
                 var tran = 
                     new Transaction
                     {
@@ -122,14 +126,12 @@ BLR/MINSK/BELCEL I-BANK
                 _transRepository.Insert(tran, account.CompanyId);
                 var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
                 _accountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
-                //TODO: we don't have UserProfile here !!!!
-                //EmailHelper.SendSmsAlert(from, SessionHelper.UserProfile.Name, message);
+                EmailHelper.SendSmsAlert(from, usr.Name, message);
             }
             catch (Exception e)
             {
                 throw e;
             }
-            //throw new Exception("ddd");
             return Json("ok");
         }
 

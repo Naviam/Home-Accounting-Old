@@ -18,14 +18,17 @@ namespace Naviam.DAL
                     cmd.Parameters.AddWithValue("@card_number", cardNumber.ToDbValue());
                     cmd.Parameters.AddWithValue("@id_modem", id_modem.ToDbValue());
                     cmd.Parameters.AddWithValue("@id_bank", id_bank.ToDbValue());
+                    cmd.Parameters.Add("@email", SqlDbType.NVarChar).Direction = ParameterDirection.InputOutput;
                     try
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
+
                             reader.Read();
                             if (reader.HasRows)
                             {
                                 res = new Account(reader);
+                                res.SmsUser = (cmd.Parameters.Contains("@email") && (ParameterDirection.Input != cmd.Parameters["@email"].Direction)) ? cmd.Parameters["@email"].Value as string : string.Empty;
                             }
                         }
                     }
