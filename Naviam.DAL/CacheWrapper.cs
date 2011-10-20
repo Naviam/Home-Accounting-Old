@@ -40,15 +40,15 @@ namespace Naviam
         //simple-4900ms     simple-3200ms
         //list-4600ms       list-15300ms
 
-        public static PooledRedisClientManager ClientManager 
-        {
+        public static PooledRedisClientManager ClientManager = new PooledRedisClientManager(ConfigurationManager.AppSettings["RedisHost"] + ":" + ConfigurationManager.AppSettings["RedisPort"]);
+        /*{
             get 
             {
                 var host = ConfigurationManager.AppSettings["RedisHost"];
                 var port = ConfigurationManager.AppSettings["RedisPort"];
                 return new PooledRedisClientManager(host + ":" + port);
             }
-        }
+        }*/
 
         #region Single obj
 
