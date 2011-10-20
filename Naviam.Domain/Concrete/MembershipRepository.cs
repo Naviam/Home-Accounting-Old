@@ -31,6 +31,17 @@ namespace Naviam.Domain.Concrete
             return profile;
         }
 
+        public virtual UserProfile GetUserByAccount(int accountId) { return GetUserByAccount(accountId, false); }
+        public virtual UserProfile GetUserByAccount(int accountId, bool extAuth)
+        {
+            var profile = MembershipDataAdapter.GetUserByAccount(accountId);
+            if (profile != null)
+            {
+                profile.Companies = GetCompanies(profile.Id);
+            }
+            return profile;
+        }
+
         public virtual string SetSessionForUser(UserProfile profile)
         {
             // generate session key

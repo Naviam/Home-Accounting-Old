@@ -41,6 +41,7 @@ namespace Naviam.Data
         public int? TypeId { get; set; }
         public int? FinInstitutionId { get; set; }
         public string FinInstitutionName { get; set; }
+        public string SmsUser { get; set; }
     }
 
     public static partial class SqlCommandExtensions
