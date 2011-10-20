@@ -108,7 +108,7 @@ BLR/MINSK/BELCEL I-BANK
                 //TODO: check sms.Result????
 
                 var account = _accountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
-                var usr = _membershipRepository.GetUserByAccount(account.Id.Value);
+                //var usr = _membershipRepository.GetUserByAccount(account.Id.Value);
                 var tran = 
                     new Transaction
                     {
@@ -129,7 +129,7 @@ BLR/MINSK/BELCEL I-BANK
                 _transRepository.Insert(tran, account.CompanyId);
                 var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
                 _accountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
-                EmailHelper.SendSmsAlert(from, usr.Name, message);
+                EmailHelper.SendSmsAlert(from, account.SmsUser, message);
             }
             catch (Exception e)
             {
