@@ -37,6 +37,36 @@ namespace Naviam.DAL
             return null;
         }
 
+        public static UserProfile GetUserByAccount(int accountId)
+        {
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "user_get_by_account";
+
+                    cmd.Parameters.AddWithValue("@id_account", accountId);
+                    try
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new UserProfile(reader);
+                            }
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return null;
+        }
+
         public static int CreateUser(UserProfile entity)
         {
             var res = -1;
