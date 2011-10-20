@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>c2e1f707-977f-4038-9741-d67b45d8c30a</ProjectGuid>
+    <ProjectGuid>{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>InternetBankClient</RootNamespace>
@@ -34,8 +34,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Json">
+      <HintPath>..\packages\JsonValue.0.5.0\lib\40\Microsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Net.Http">
+      <HintPath>..\packages\HttpClient.0.5.0\lib\40\Microsoft.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Net.Http.Formatting">
+      <HintPath>..\packages\HttpClient.0.5.0\lib\40\Microsoft.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Server.Common">
+      <HintPath>..\packages\JsonValue.0.5.0\lib\40\Microsoft.Server.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +58,9 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
