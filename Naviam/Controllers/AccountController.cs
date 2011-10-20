@@ -10,6 +10,8 @@ using Naviam.WebUI.Resources;
 using System.Globalization;
 using DotNetOpenAuth.OpenId.RelyingParty;
 using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
+using System.Data.SqlClient;
+using Naviam.Data;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -39,7 +41,7 @@ namespace Naviam.WebUI.Controllers
         // **************************************
         // URL: /Account/LogOn
         // **************************************
-        
+
         public ActionResult LogOn()
         {
             //remove from redis
@@ -60,7 +62,7 @@ namespace Naviam.WebUI.Controllers
 
                 if (profile != null)
                 {
-                    return AuthSuccess(profile, model, returnUrl);
+                    return AuthSuccess(profile, model, returnUrl, profile.IsApproved);
                 }
                 ModelState.AddModelError(String.Empty, ValidationStrings.UsernameOrPasswordIsIncorrect);
             }
@@ -68,8 +70,9 @@ namespace Naviam.WebUI.Controllers
             return View(model);
         }
 
-        private ActionResult AuthSuccess(Data.UserProfile profile, LogOnModel model, string returnUrl)
+        private ActionResult AuthSuccess(Data.UserProfile profile, LogOnModel model, string returnUrl, bool isApprove)
         {
+            if (!isApprove) return RedirectToAction("Confirmation", "Account");
             //setup forms ticket
             var sessionKey = _membershipRepository.SetSessionForUser(profile);
 
@@ -83,6 +86,11 @@ namespace Naviam.WebUI.Controllers
                 return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Transactions");
+        }
+
+        public ActionResult Confirmation()
+        {
+            return View("Confirmation");
         }
 
         [HttpGet]
@@ -115,7 +123,7 @@ namespace Naviam.WebUI.Controllers
                             var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
 
                             if (profile != null)
-                                return AuthSuccess(profile, model, null);
+                                return AuthSuccess(profile, model, null, profile.IsApproved);
                             else
                                 return Register();
                         }
@@ -154,17 +162,42 @@ namespace Naviam.WebUI.Controllers
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
+            UserProfile profile = null;
+            LogOnModel lModel = new LogOnModel() { UserName = model.UserName };
+
             if (ModelState.IsValid && model.Password == model.ConfirmPassword)
             {
-                _membershipRepository.CreateUser(model.UserName, model.Password);
-                var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
+                try
+                {
+                    _membershipRepository.CreateUser(model.UserName, model.Password);
+                }
+                catch (SqlException e)
+                {
+                    switch (e.Number)
+                    {
+                        case 50000: 
+                            profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
+                            return AuthSuccess(profile, lModel, null, profile.IsApproved); ;
+                        default:
+                            ModelState.AddModelError(String.Empty, e.Message);
+                            return View(model);
 
-                LogOnModel lModel = new LogOnModel() { UserName = model.UserName };
+                    }
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError(String.Empty, e.Message);
+                    return View(model);
+                }
+
+                profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
                 if (profile != null)
-                    return AuthSuccess(profile, lModel, null);
+                {
+                    return AuthSuccess(profile, lModel, null, profile.IsApproved);
+                }
             }
-            //send mail with registration link
 
+            //send mail with registration link
             //return View("Confirmation");
             return View(model);
         }
