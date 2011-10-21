@@ -225,4 +225,7 @@
   <data name="Tag" xml:space="preserve">
     <value>Tag</value>
   </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
 </root>

@@ -225,4 +225,7 @@
   <data name="Tag" xml:space="preserve">
     <value>Метка</value>
   </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Сумма</value>
+  </data>
 </root>

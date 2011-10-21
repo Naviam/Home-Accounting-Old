@@ -6,6 +6,7 @@
     ViewBag.CombresScripts = "reports";
 }
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
 @*intellisense support*@
 @if (false)
 { 
@@ -15,29 +16,26 @@
     <script type="text/javascript" src="~/Scripts/common.js"></script> 
 }
 
+<script type='text/javascript'>
+    var getReportsUrl = '@Url.Action("GetReport", "Reports")';
+</script>
+
 <script type="text/javascript">
     google.load("visualization", "1", { packages: ["corechart"] });
-    google.setOnLoadCallback(drawChart);
-    function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Category');
-        data.addColumn('number', 'Amount');
-        data.addRows(5);
-        data.setValue(0, 0, 'Work');
-        data.setValue(0, 1, 11);
-        data.setValue(1, 0, 'Eat');
-        data.setValue(1, 1, 2);
-        data.setValue(2, 0, 'Auto');
-        data.setValue(2, 1, 2);
-        data.setValue(3, 0, 'Shopping');
-        data.setValue(3, 1, 2);
-        data.setValue(4, 0, 'Food & Dining');
-        data.setValue(4, 1, 7);
-
-        var chart = new google.visualization.PieChart($('#chart_div')[0]);
-        chart.draw(data, { width: 450, height: 300, title: 'Spending by Category', is3D: true });
-    }
 </script>
 
 <div id="chart_div"></div>
+
+<div id='report_table'>
+
+<script type="text/html" id="r_tableTemplate">
+    <tr>
+        <td><span data-bind="text: Category"/></td>
+        <td><span data-bind="text: CategoryName"/></td>
+        <td><span data-bind="amount: Amount"/></td>
+    </tr>
+</script>
+    <table data-bind="template: {name:'r_tableTemplate', foreach:items }">
+    </table>
+</div>
 
