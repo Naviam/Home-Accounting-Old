@@ -26,15 +26,6 @@ namespace Naviam.WebUI.Controllers
             var accounts = AccountsRepository.GetAccounts(user.CurrentCompany);
             var currencies = curRepository.GetCurrencies();
             var accountTypes = AccountTypesRepository.GetAccountTypes();
-            //TODO: move Localize
-            var rm = new ResourceManager(typeof(Resources.Enums));
-            foreach (var item in accountTypes)
-            {
-                var st = rm.GetString("acct_" + item.Id.ToString());
-                if (!String.IsNullOrEmpty(st))
-                    item.TypeName = st;
-            }
-            //end Localize
             var finInst = FinanceInstitutionRepository.Get();
             var finLinks = FinanceInstitutionRepository.GetLinksToAccount();
             foreach (var account in accounts)

@@ -165,16 +165,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DisplayNames.ru.resx</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Enums.ru.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Enums.ru.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Enums1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Enums.resx</DependentUpon>
-    </Compile>
     <Compile Include="Resources\JavaScript.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -400,14 +390,6 @@
     <EmbeddedResource Include="Resources\DisplayNames.ru.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DisplayNames.ru.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Enums.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Enums1.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Enums.ru.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Enums.ru.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\JavaScript.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

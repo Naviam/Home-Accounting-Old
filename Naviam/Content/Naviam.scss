@@ -79,6 +79,11 @@ a {
 		text-decoration: none;
 }
 
+.currency {
+	.selected {
+		text-decoration: underline;
+	}
+}
 input[type=text], input[type=search], textarea {
 	border: $input-border;
 	padding: 4px;

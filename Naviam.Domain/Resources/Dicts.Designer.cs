@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Naviam.WebUI.Resources {
+namespace Naviam.Domain.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Naviam.WebUI.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Enums {
+    public class Dicts {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Enums() {
+        internal Dicts() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Naviam.WebUI.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Naviam.WebUI.Resources.Enums", typeof(Enums).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Naviam.Domain.Resources.Dicts", typeof(Dicts).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

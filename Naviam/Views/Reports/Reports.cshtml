@@ -28,14 +28,24 @@
 
 <div id='report_table'>
 
-<script type="text/html" id="r_tableTemplate">
-    <tr>
-        <td><span data-bind="text: Category"/></td>
-        <td><span data-bind="text: CategoryName"/></td>
-        <td><span data-bind="amount: Amount"/></td>
-    </tr>
-</script>
+
+    <script type="text/html" id="r_currTemplate">
+        <li data-bind="click: function(event) { $item.current($data.Id()); }, css: {selected: $item.current() == $data.Id()}">
+            <a data-bind="text: NameShort" href='#'/>
+        </li>
+    </script>
+    <ul data-bind="template: {name:'r_currTemplate', foreach:currencies, templateOptions: { current: request.selectedCurrency } }" class='currency'></ul>
+
+    <script type="text/html" id="r_tableTemplate">
+        <tr>
+            @*<td><span data-bind="text: CategoryId"/></td>*@
+            <td><span data-bind="text: CategoryName"/></td>
+            <td><span data-bind="amount: Amount"/></td>
+        </tr>
+    </script>
+    
     <table data-bind="template: {name:'r_tableTemplate', foreach:items }">
     </table>
+    <b><span data-bind="amount: endAmount"/></b>
 </div>
 

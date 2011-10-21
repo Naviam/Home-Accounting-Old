@@ -6,6 +6,9 @@ a {
   color: #5572bc;
   text-decoration: none; }
 
+.currency .selected {
+  text-decoration: underline; }
+
 input[type=text], input[type=search], textarea {
   border: 1px solid #9ebcb1;
   padding: 4px;

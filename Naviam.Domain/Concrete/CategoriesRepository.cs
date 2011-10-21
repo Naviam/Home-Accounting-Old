@@ -5,6 +5,7 @@ using System.Text;
 using Naviam.Data;
 using Naviam.DAL;
 using System.Data.SqlClient;
+using System.Resources;
 
 namespace Naviam.Domain.Concrete
 {
@@ -30,6 +31,15 @@ namespace Naviam.Domain.Concrete
                 //save to cache
                 cache.SetList(CacheKey, res, userId);
             }
+            //Localize
+            var rm = new ResourceManager(typeof(Resources.Dicts));
+            foreach (var item in res)
+            {
+                var st = rm.GetString("c_" + item.Id.ToString());
+                if (!String.IsNullOrEmpty(st))
+                    item.Name = st;
+            }
+            //end Localize
             return res;
         }
 
