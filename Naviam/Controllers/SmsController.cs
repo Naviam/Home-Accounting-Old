@@ -129,7 +129,7 @@ BLR/MINSK/BELCEL I-BANK
                 _transRepository.Insert(tran, account.CompanyId);
                 var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
                 _accountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
-                EmailHelper.SendSmsAlert(from, account.SmsUser, message);
+                EmailHelper.SendMail("subject", account.SmsUser, message, "sms@naviam.com");
             }
             catch (Exception e)
             {

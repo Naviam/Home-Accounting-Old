@@ -152,5 +152,11 @@ namespace Naviam.DAL
                 }
             }
         }
+
+        public static int ApproveUser()
+        {
+            return 0;
+        
+        }
     }
 }

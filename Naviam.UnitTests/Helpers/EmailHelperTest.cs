@@ -69,9 +69,10 @@ BLR/MINSK/EUROSET RKC 3
 ";
             var subject = "BelSwissBank";
             var recipients = "v.hatalski@gmail.com";
+            var from = "sms@naviam.com";
 
             // act
-            var result = EmailHelper.SendSmsAlert(subject, recipients, message);
+            var result = EmailHelper.SendMail(subject, recipients, message, from);
 
             // assert
             Assert.IsTrue(result);

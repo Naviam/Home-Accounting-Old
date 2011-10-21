@@ -88,9 +88,28 @@ namespace Naviam.WebUI.Controllers
             return RedirectToAction("Index", "Transactions");
         }
 
-        public ActionResult Confirmation()
+        public ActionResult Confirmation(string acc)
         {
-            return View("Confirmation");
+            var model = new LogOnModel();
+            model.UserName = acc;
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Confirmation(LogOnModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password);
+                //var profile = new Data.UserProfile();
+
+                if (profile != null)
+                {
+                    return AuthSuccess(profile, model, "", profile.IsApproved);
+                }
+                ModelState.AddModelError(String.Empty, ValidationStrings.UsernameOrPasswordIsIncorrect);
+            }
+            return View(model);
         }
 
         [HttpGet]
@@ -169,7 +188,8 @@ namespace Naviam.WebUI.Controllers
             {
                 try
                 {
-                    _membershipRepository.CreateUser(model.UserName, model.Password);
+                    profile = _membershipRepository.CreateUser(model.UserName, model.Password);
+                    EmailHelper.SendMail("Confirmation of registration on naviam.com", model.UserName, string.Format(@"http://localhost:54345/Account/Confirmation?acc={0}", profile.ApproveCode), "alert@naviam.com");
                 }
                 catch (SqlException e)
                 {
@@ -177,11 +197,10 @@ namespace Naviam.WebUI.Controllers
                     {
                         case 50000: 
                             profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
-                            return AuthSuccess(profile, lModel, null, profile.IsApproved); ;
+                            return RedirectToAction("Confirmation", "Account");
                         default:
                             ModelState.AddModelError(String.Empty, e.Message);
                             return View(model);
-
                     }
                 }
                 catch (Exception e)
