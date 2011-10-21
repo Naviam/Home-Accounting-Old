@@ -14,7 +14,8 @@ namespace Naviam.Data
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj == null) return false;
+            if (obj.GetType() != this.GetType()) return false;
             if (ReferenceEquals(this, obj)) return true;
             return ((DbEntity)obj).Id == Id;
         }
