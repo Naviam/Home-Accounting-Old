@@ -97,7 +97,7 @@ BLR/MINSK/BELCEL I-BANK
             Modem modem = _modemsRepository.GetModemByGateway(gateway);
             ILog log = LogManager.GetLogger("navSite");
             log.Debug(String.Format("gateway:{0}, from:{1}, message:{2}", gateway, from, message));
-            
+
             //TODO: get bank_id by "from" param
             int id_bank = 15; //BelSwissBank
 
@@ -129,11 +129,14 @@ BLR/MINSK/BELCEL I-BANK
                 _transRepository.Insert(tran, account.CompanyId);
                 var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
                 _accountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
+                log.Debug(String.Format("sending email to:{0}", account.SmsUser));
                 EmailHelper.SendSmsAlert(from, account.SmsUser, message);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw e;
+                Response.StatusCode = 500;
+                return Json(new { Text = ex.Message, stackTrace = ex.StackTrace });
+                //throw e;
             }
             return Json("ok");
         }

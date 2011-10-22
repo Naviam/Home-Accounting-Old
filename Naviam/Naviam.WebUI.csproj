@@ -204,7 +204,6 @@
       <Generator>ScssGenerator</Generator>
       <LastGenOutput>Login.css</LastGenOutput>
     </None>
-    <None Include="SMSConnectorScript.cs" />
     <Content Include="Content\blueprint\reset.css" />
     <Content Include="Content\blueprint\typography.css" />
     <Content Include="Content\images\bg.png" />

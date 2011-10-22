@@ -37,7 +37,7 @@ namespace DiafaanMessageServer
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(@"http://localhost:54345/Sms/RecieveMessage");
                 httpWebRequest.ContentType = "application/x-www-form-urlencoded";
                 httpWebRequest.Method = "POST";
-                string queryString = "key=" + HttpUtility.UrlEncode("ky1") + "&message=" + HttpUtility.UrlEncode(message) + "&gateway=" + HttpUtility.UrlEncode(gateway) +
+                string queryString = "key=" + HttpUtility.UrlEncode("givemeaccesstotoyou") + "&message=" + HttpUtility.UrlEncode(message) + "&gateway=" + HttpUtility.UrlEncode(gateway) +
                      "&from=" + HttpUtility.UrlEncode(fromAddress) + "&to=" + HttpUtility.UrlEncode(toAddress);
                 byte[] byteData = UTF8Encoding.UTF8.GetBytes(queryString);
                 httpWebRequest.ContentLength = byteData.Length;
@@ -61,8 +61,15 @@ namespace DiafaanMessageServer
             }
             catch (Exception e)
             {
+                WebException exc = e as WebException;
+                if (exc != null)
+                {
+                    string responseText = new StreamReader(exc.Response.GetResponseStream()).ReadToEnd();
+                    PostEventLog("Send error:" + responseText, responseText, EventLog.Error);
+                }
+                else
+                    PostEventLog(e.Message, e.ToString(), EventLog.Error);
                 //PostSendResult("1", "", StatusCode.SendError, "Error: message rejected", "", e.Message, false);
-                PostEventLog(e.Message, e.ToString(), EventLog.Error);
             }			//
             // TODO: Add code to handle received SMS messages
             // e.g.

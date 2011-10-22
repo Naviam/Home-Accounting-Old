@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using DiafaanMessageServer;
+using System.Collections;
 
 namespace SMSServer
 {
@@ -244,6 +246,16 @@ BLR/MINSK/BELCEL I-BANK
         //[^\x00]*\r\n(?<selector>[^\x00]*?\/[^\x00]*?\/[^\x00]*) merchant
         static void Main(string[] args)
         {
+            var connector = new ConnectorScript();
+            Hashtable messagePacket = new Hashtable();
+            messagePacket["PacketName"] = "MessageIn";
+            messagePacket["From"] = "BelSwissBank";
+            messagePacket["To"] = "to";
+            messagePacket["Message"] = s;
+            messagePacket["Gateway"] = "GETWAY1";
+            messagePacket["From"] = "BelSwissBank";
+            connector.OnMessagePacket(messagePacket);
+            return;
             SMSInfoBelswiss info = new SMSInfoBelswiss(s);
             string str = info.CardNumber;
 
