@@ -26,11 +26,28 @@
 
 <div id="chart_div"></div>
 
-<div id='report_table'>
+<div id="rep_menu">
+    <script type="text/html" id="r_menuTemplate">
+        <li data-bind="click: function() { $item.current($data); }, css: {selected: $item.current() == $data}">
+            <a data-bind="text: caption" href='#'/>
+        </li>
+    </script>
+    <div>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:menu, templateOptions: { current: selectedMenu } }" class='currency'>
+        </ul>
+    </div>
+    <div>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:selectedMenu() ? selectedMenu().subMenu : null, templateOptions: { current: selectedSubMenu } }" class='currency'>
+        </ul>
+    </div>
+</div>
+
+<div id='report_page'>
+<img src='@Url.Content("~/Content/images/refresh.png")' onclick='return reportsModel.request.selectedMenu(1);' style='float: right;cursor: pointer;margin-top: 3px;'/>
 
 
     <script type="text/html" id="r_currTemplate">
-        <li data-bind="click: function(event) { $item.current($data.Id()); }, css: {selected: $item.current() == $data.Id()}">
+        <li data-bind="click: function() { $item.current($data.Id()); }, css: {selected: $item.current() == $data.Id()}">
             <a data-bind="text: NameShort" href='#'/>
         </li>
     </script>
@@ -38,8 +55,8 @@
 
     <script type="text/html" id="r_tableTemplate">
         <tr>
-            @*<td><span data-bind="text: CategoryId"/></td>*@
-            <td><span data-bind="text: CategoryName"/></td>
+            @*<td><span data-bind="text: Id"/></td>*@
+            <td><span data-bind="text: Name"/></td>
             <td><span data-bind="amount: Amount"/></td>
         </tr>
     </script>
