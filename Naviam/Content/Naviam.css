@@ -6,8 +6,12 @@ a {
   color: #5572bc;
   text-decoration: none; }
 
-.currency .selected {
+.underline {
   text-decoration: underline; }
+
+.h_menu li {
+  float: left;
+  margin: 0 10px 0 0; }
 
 input[type=text], input[type=search], textarea {
   border: 1px solid #9ebcb1;

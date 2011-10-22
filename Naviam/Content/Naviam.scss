@@ -75,15 +75,18 @@ body {
 }
 
 a {
-		color: $link-color;
-		text-decoration: none;
+	color: $link-color;
+	text-decoration: none;
 }
 
-.currency {
-	.selected {
-		text-decoration: underline;
-	}
+.underline {
+	text-decoration: underline;
 }
+
+.h_menu {
+	li {float:left;margin: 0 10px 0 0;}
+}
+
 input[type=text], input[type=search], textarea {
 	border: $input-border;
 	padding: 4px;
@@ -114,7 +117,7 @@ nav {
 
 ul {
 	list-style-type: none;
-	}
+}
 
 header {
 	background-color: $bg-color3;

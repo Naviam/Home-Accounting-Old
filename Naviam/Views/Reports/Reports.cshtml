@@ -28,30 +28,32 @@
 
 <div id="rep_menu">
     <script type="text/html" id="r_menuTemplate">
-        <li data-bind="click: function() { $item.current($data); }, css: {selected: $item.current() == $data}">
+        <li data-bind="click: function() { $item.current($data); }, css: {underline: $item.current() == $data}">
             <a data-bind="text: caption" href='#'/>
         </li>
     </script>
-    <div>
-        <ul data-bind="template: {name:'r_menuTemplate', foreach:menu, templateOptions: { current: selectedMenu } }" class='currency'>
+    <div style='float:left;margin: 0 10px 0 0;'>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:menu, templateOptions: { current: selectedMenu } }">
         </ul>
     </div>
-    <div>
-        <ul data-bind="template: {name:'r_menuTemplate', foreach:selectedMenu() ? selectedMenu().subMenu : null, templateOptions: { current: selectedSubMenu } }" class='currency'>
+    <div style='float:left'>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:selectedMenu() ? selectedMenu().subMenu : null, templateOptions: { current: selectedSubMenu } }">
         </ul>
     </div>
 </div>
+<div style="clear:both"></div>
 
 <div id='report_page'>
-<img src='@Url.Content("~/Content/images/refresh.png")' onclick='return reportsModel.request.selectedMenu(1);' style='float: right;cursor: pointer;margin-top: 3px;'/>
+@*<img src='@Url.Content("~/Content/images/refresh.png")' onclick='return reportsModel.request.selectedMenu(1);' style='float: right;cursor: pointer;margin-top: 3px;'/>*@
 
 
     <script type="text/html" id="r_currTemplate">
-        <li data-bind="click: function() { $item.current($data.Id()); }, css: {selected: $item.current() == $data.Id()}">
+        <li data-bind="click: function() { $item.current($data.Id()); }, css: {underline: $item.current() == $data.Id()}">
             <a data-bind="text: NameShort" href='#'/>
         </li>
     </script>
-    <ul data-bind="template: {name:'r_currTemplate', foreach:currencies, templateOptions: { current: request.selectedCurrency } }" class='currency'></ul>
+    <ul data-bind="template: {name:'r_currTemplate', foreach:currencies, templateOptions: { current: request.selectedCurrency } }" class='h_menu'></ul>
+    <div style="clear:both"></div>
 
     <script type="text/html" id="r_tableTemplate">
         <tr>
@@ -61,7 +63,7 @@
         </tr>
     </script>
     
-    <table data-bind="template: {name:'r_tableTemplate', foreach:items }">
+    <table data-bind="template: {name:'r_tableTemplate', foreach:items }" class='table'>
     </table>
     <b><span data-bind="amount: endAmount"/></b>
 </div>

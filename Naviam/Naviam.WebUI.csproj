@@ -222,6 +222,8 @@
     <Content Include="Prototype\Login.htm" />
     <Content Include="PublicSitemap.xml" />
     <None Include="Scripts\Pages\Reports.js" />
+    <Content Include="Scripts\knockout-1.3.0beta.js" />
+    <Content Include="Scripts\knockout-1.3.0beta.min.js" />
     <Content Include="Scripts\Pages\Reports.min.js" />
     <None Include="Scripts\tests\initData.js" />
     <None Include="Scripts\tests\mockup.js" />
