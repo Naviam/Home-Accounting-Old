@@ -152,5 +152,27 @@ namespace Naviam.DAL
                 }
             }
         }
+
+        public static bool Approve(string email)
+        {
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("user_approve"))
+                {
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+        }
+
     }
 }
