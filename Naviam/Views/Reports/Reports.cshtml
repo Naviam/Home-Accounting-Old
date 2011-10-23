@@ -24,7 +24,8 @@
     google.load("visualization", "1", { packages: ["corechart"] });
 </script>
 
-<div id="chart_div"></div>
+<div id="chart_p"></div>
+<div id="chart_b"></div>
 
 <div id="rep_menu">
     <script type="text/html" id="r_menuTemplate">
@@ -45,6 +46,8 @@
 
 <div id='report_page'>
 @*<img src='@Url.Content("~/Content/images/refresh.png")' onclick='return reportsModel.request.selectedMenu(1);' style='float: right;cursor: pointer;margin-top: 3px;'/>*@
+<a href='#' data-bind="click: function() { graphType(0); }">Pie</a>
+<a href='#' data-bind="click: function() { graphType(1); }">Bar</a>
 
 
     <script type="text/html" id="r_currTemplate">

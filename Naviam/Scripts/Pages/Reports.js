@@ -23,6 +23,8 @@ reportsModel.Load = function () {
         reportsModel.request.selectedMenu.subscribe(function () { rep_req.selectedSubMenu(0); rep_req.selectedSubMenu.valueHasMutated(); });
         reportsModel.request.selectedSubMenu = ko.observable(0);
         reportsModel.request.selectedSubMenu.subscribe(function () { reportsModel.Refresh(); });
+        reportsModel.graphType = ko.observable(0);
+        reportsModel.graphType.subscribe(function () { reportsModel.fillChart(); });
         //
         //funcs
         reportsModel.Refresh = function () {
@@ -37,15 +39,33 @@ reportsModel.Load = function () {
                 total += parseInt(this.items()[i].Amount());
             return total;
         }, reportsModel);
+        reportsModel.getChartTitle = function () {
+            var title = '';
+            if (reportsModel.request.selectedSubMenu() == 0)
+                title = 'Spending by Category';
+            if (reportsModel.request.selectedSubMenu() == 1)
+                title = 'Spending by Merchant';
+            if (reportsModel.request.selectedSubMenu() == 2)
+                title = 'Spending by Tag';
+            return title;
+        }
         reportsModel.fillChart = function () {
             var data = new google.visualization.DataTable();
             data.addColumn('string', lang.Category);
             data.addColumn('number', 'Amount');
-            ko.utils.arrayForEach(reportsModel.items(), function (item) {
+            ko.utils.arrayForEach(this.items(), function (item) {
                 data.addRow([item.Name(), item.Amount()]);
             });
-
-            chart.draw(data, { width: 450, height: 300, title: 'Spending by Category', is3D: true });
+            $('#chart_p').hide();
+            $('#chart_b').hide();
+            if (this.graphType() == 0) {
+                chart.draw(data, { width: 550, height: 300, title: this.getChartTitle(), is3D: true });
+                $('#chart_p').show();
+            }
+            else {
+                chart_b.draw(data, { width: 550, height: 300, title: this.getChartTitle() });
+                $('#chart_b').show();
+            }
         }
         //
         ko.applyBindings(reportsModel, $("#report_page")[0]);
@@ -60,14 +80,16 @@ reportsModel.Load = function () {
 
 var menuModel = {
     menu: [
-            { id:0, caption: 'Spending', subMenu: [{id:0, caption: 'By Category'}, {id:1, caption: 'By Tags'}] }
+            { id: 0, caption: 'Spending', subMenu: [{ id: 0, caption: 'By Category' }, { id: 1, caption: 'By Merchant' }, { id: 2, caption: 'By Tag'}] }
         ],
     selectedMenu: ko.observable(),
     selectedSubMenu: ko.observable()
 };
 
 var chart = {};
+var chart_b = {};
 $(document).ready(function () {
-    chart = new google.visualization.PieChart($('#chart_div')[0]);
+    chart = new google.visualization.PieChart($('#chart_p')[0]);
+    chart_b = new google.visualization.BarChart($('#chart_b')[0]);
     reportsModel.Load();
 });

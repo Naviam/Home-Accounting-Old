@@ -63,15 +63,22 @@ namespace Naviam.WebUI.Controllers
                          join c in cats on t.CategoryId equals c.Id
                          where t.Direction == TransactionDirections.Expense && t.CurrencyId == currencyId
                          group t.Amount by c into g
-                         orderby g.Key.Name
+                         orderby g.Sum() descending
                          select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
 
             if (selectedSubMenu == 1)
                 report = from t in trans
+                         where t.Direction == TransactionDirections.Expense && t.CurrencyId == currencyId
+                         group t by t.Description into g
+                         orderby g.Sum(t=>t.Amount) descending
+                         select new { Id = g.Min(t=>t.Id), Amount = g.Sum(t => t.Amount), Name = g.Key }; //
+
+            if (selectedSubMenu == 2)
+                report = from t in trans
                          from tg in tags 
                          where t.Direction == TransactionDirections.Expense && t.CurrencyId == currencyId && t.TagIds.Contains(tg.Id.ToString())
                          group t.Amount by tg into g
-                         orderby g.Key.Name
+                         orderby g.Sum() descending
                          select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
 
 
