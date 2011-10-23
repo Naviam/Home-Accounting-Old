@@ -17,12 +17,12 @@ reportsModel.Load = function () {
         //props
         reportsModel.request = {};
         rep_req = reportsModel.request;
-        reportsModel.request.selectedCurrency = ko.observable(reportsModel.currencyId());
-        reportsModel.request.selectedCurrency.subscribe(function () { reportsModel.Refresh(); });
-        reportsModel.request.selectedMenu = ko.observable(0);
-        reportsModel.request.selectedMenu.subscribe(function () { rep_req.selectedSubMenu(0); rep_req.selectedSubMenu.valueHasMutated(); });
-        reportsModel.request.selectedSubMenu = ko.observable(0);
-        reportsModel.request.selectedSubMenu.subscribe(function () { reportsModel.Refresh(); });
+        rep_req.selectedCurrency = ko.observable(reportsModel.currencyId());
+        rep_req.selectedCurrency.subscribe(function () { reportsModel.Refresh(); });
+        rep_req.selectedMenu = ko.observable(reportsModel.selectedMenu());
+        //rep_req.selectedMenu.subscribe(function () { reportsModel.Refresh(); });
+        rep_req.selectedSubMenu = ko.observable(reportsModel.selectedSubMenu());
+        rep_req.selectedSubMenu.subscribe(function (val) { reportsModel.Refresh(); });
         reportsModel.graphType = ko.observable(0);
         reportsModel.graphType.subscribe(function () { reportsModel.fillChart(); });
         //
@@ -41,12 +41,18 @@ reportsModel.Load = function () {
         }, reportsModel);
         reportsModel.getChartTitle = function () {
             var title = '';
-            if (reportsModel.request.selectedSubMenu() == 0)
+            if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 0)
                 title = 'Spending by Category';
-            if (reportsModel.request.selectedSubMenu() == 1)
+            if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 1)
                 title = 'Spending by Merchant';
-            if (reportsModel.request.selectedSubMenu() == 2)
+            if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 2)
                 title = 'Spending by Tag';
+            if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 0)
+                title = 'Income by Category';
+            if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 1)
+                title = 'Income by Merchant';
+            if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 2)
+                title = 'Income by Tag';
             return title;
         }
         reportsModel.fillChart = function () {
@@ -69,10 +75,15 @@ reportsModel.Load = function () {
         }
         //
         ko.applyBindings(reportsModel, $("#report_page")[0]);
-        menuModel.selectedMenu(menuModel.menu[reportsModel.selectedMenu()]);
-        menuModel.selectedSubMenu(menuModel.menu[reportsModel.selectedMenu()].subMenu[reportsModel.selectedSubMenu()]);
-        menuModel.selectedMenu.subscribe(function (val) { reportsModel.request.selectedMenu(val.id); });
-        menuModel.selectedSubMenu.subscribe(function (val) { reportsModel.request.selectedSubMenu(val.id); });
+        menuModel.selectedMenu(menuModel.menu[rep_req.selectedMenu()]);
+        menuModel.selectedSubMenu(menuModel.menu[rep_req.selectedMenu()].subMenu[rep_req.selectedSubMenu()]);
+        menuModel.selectedMenu.subscribe(function (val) {
+            var need_update = rep_req.selectedSubMenu() == 0 && rep_req.selectedMenu() != val.id;
+            rep_req.selectedMenu(val.id);
+            menuModel.selectedSubMenu(menuModel.menu[val.id].subMenu[0]);
+            if (need_update) rep_req.selectedSubMenu.valueHasMutated(); 
+        });
+        menuModel.selectedSubMenu.subscribe(function (val) { rep_req.selectedSubMenu(val.id); });
         ko.applyBindings(menuModel, $("#rep_menu")[0]);
         reportsModel.fillChart();
     });
@@ -80,7 +91,8 @@ reportsModel.Load = function () {
 
 var menuModel = {
     menu: [
-            { id: 0, caption: 'Spending', subMenu: [{ id: 0, caption: 'By Category' }, { id: 1, caption: 'By Merchant' }, { id: 2, caption: 'By Tag'}] }
+            { id: 0, caption: 'Spending', subMenu: [{ id: 0, caption: 'By Category' }, { id: 1, caption: 'By Merchant' }, { id: 2, caption: 'By Tag'}] },
+            { id: 1, caption: 'Income', subMenu: [{ id: 0, caption: 'By Category' }, { id: 1, caption: 'By Merchant' }, { id: 2, caption: 'By Tag'}] }
         ],
     selectedMenu: ko.observable(),
     selectedSubMenu: ko.observable()
