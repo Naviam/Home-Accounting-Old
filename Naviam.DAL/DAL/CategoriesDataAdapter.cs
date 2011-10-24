@@ -152,8 +152,32 @@ namespace Naviam.DAL
             }
             return res;
         }
+
+        public static List<CategoryRule> GetCategoriesRules()
+        {
+            var res = new List<CategoryRule>();
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("categories_rules_get"))
+                {
+                    try
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                                res.Add(new CategoryRule(reader));
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return res;
+        }
+
+
     }
-
-
-
 }

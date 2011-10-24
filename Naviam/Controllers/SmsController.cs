@@ -89,7 +89,7 @@ BLR/MINSK/BELCEL I-BANK
         [HttpPost]
         public ActionResult RecieveMessage(string key, string gateway, string from, string to, string message)
         {
-            message = testMessage;
+            //message = testMessage;
             //gateway = "GETWAY1";
 
             if (key != "givemeaccesstotoyou") return Json("error");
@@ -108,12 +108,16 @@ BLR/MINSK/BELCEL I-BANK
                 //TODO: check sms.Result????
 
                 var account = _accountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
-                //var usr = _membershipRepository.GetUserByAccount(account.Id.Value);
+                
+                //get category id
+                var categoryId = _categoriesRepository.FindCategoryMerchant(account.Id, sms.Merchant.Trim());
+
                 var tran = 
                     new Transaction
                     {
                         Amount = sms.Amount,
-                        CategoryId = _categoriesRepository.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
+                        //CategoryId = _categoriesRepository.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
+                        CategoryId = categoryId,
                         //autosearch category by merchant
                         // 20 - Uncategorized
                         CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,

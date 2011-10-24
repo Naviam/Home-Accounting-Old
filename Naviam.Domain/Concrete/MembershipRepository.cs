@@ -58,7 +58,7 @@ namespace Naviam.Domain.Concrete
 
         public virtual bool Approve(string email)
         {
-            return MembershipDataAdapter.Approve(email);
+            return MembershipDataAdapter.ApproveUser(email);
         }
 
         public virtual UserProfile CreateUser(string email, string password, string default_company_name, string default_account_name)
