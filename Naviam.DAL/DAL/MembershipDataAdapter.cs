@@ -153,7 +153,7 @@ namespace Naviam.DAL
             }
         }
 
-        public static bool Approve(string email)
+        public static bool ApproveUser(string email)
         {
             using (var holder = SqlConnectionHelper.GetConnection())
             {
@@ -173,6 +173,5 @@ namespace Naviam.DAL
                 }
             }
         }
-
     }
 }

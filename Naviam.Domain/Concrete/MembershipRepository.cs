@@ -66,7 +66,7 @@ namespace Naviam.Domain.Concrete
             password = SimpleHash.ComputeHash(email.ToLower() + password + "SCEX", "SHA512", null);
 
             UserProfile res = null;
-            MembershipDataAdapter.CreateUser(email, password, default_company_name, default_account_name, GetApproveCode());
+            res = MembershipDataAdapter.CreateUser(email, password, default_company_name, default_account_name, GetApproveCode());
 
             return res;
         }
