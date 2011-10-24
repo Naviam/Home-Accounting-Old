@@ -15,20 +15,16 @@ reportsModel.Load = function () {
         };
         reportsModel = ko.mapping.fromJS(res, mapping);
         //props
-        reportsModel.request = {};
         rep_req = reportsModel.request;
-        rep_req.selectedCurrency = ko.observable(reportsModel.currencyId());
         rep_req.selectedCurrency.subscribe(function () { reportsModel.Refresh(); });
-        rep_req.selectedMenu = ko.observable(reportsModel.selectedMenu());
         //rep_req.selectedMenu.subscribe(function () { reportsModel.Refresh(); });
-        rep_req.selectedSubMenu = ko.observable(reportsModel.selectedSubMenu());
         rep_req.selectedSubMenu.subscribe(function (val) { reportsModel.Refresh(); });
         reportsModel.graphType = ko.observable(0);
         reportsModel.graphType.subscribe(function () { reportsModel.fillChart(); });
         //
         //funcs
         reportsModel.Refresh = function () {
-            $.postErr(getReportsUrl, ko.toJS(reportsModel.request), function (res) {
+            $.postErr(getReportsUrl, ko.toJS(rep_req), function (res) {
                 ko.mapping.updateFromJS(reportsModel, res);
                 reportsModel.fillChart();
             });
@@ -81,7 +77,7 @@ reportsModel.Load = function () {
             var need_update = rep_req.selectedSubMenu() == 0 && rep_req.selectedMenu() != val.id;
             rep_req.selectedMenu(val.id);
             menuModel.selectedSubMenu(menuModel.menu[val.id].subMenu[0]);
-            if (need_update) rep_req.selectedSubMenu.valueHasMutated(); 
+            if (need_update) rep_req.selectedSubMenu.valueHasMutated();
         });
         menuModel.selectedSubMenu.subscribe(function (val) { rep_req.selectedSubMenu(val.id); });
         ko.applyBindings(menuModel, $("#rep_menu")[0]);

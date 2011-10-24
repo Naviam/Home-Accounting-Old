@@ -13,9 +13,9 @@ namespace Naviam.WebUI.Controllers
     {
         public class GetReportRequest
         {
-            public int? selectedCurrency;
-            public int selectedMenu;
-            public int selectedSubMenu;
+            public int? selectedCurrency { get; set; }
+            public int? selectedMenu { get; set; }
+            public int? selectedSubMenu { get; set; }
         }
 
         private readonly TransactionsRepository _transRepository;
@@ -38,7 +38,7 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetReport(int? selectedCurrency, int? selectedMenu, int? selectedSubMenu)
+        public ActionResult GetReport(GetReportRequest request)
         {
             dynamic report = null;
             var user = CurrentUser;
@@ -53,38 +53,38 @@ namespace Naviam.WebUI.Controllers
                           group t by c into g
                           select new { Id = g.Key.Id, NameShort = g.Key.NameShort };
 
-            int? currencyId = selectedCurrency ?? (currencies.FirstOrDefault() != null ? currencies.FirstOrDefault().Id : null);
+            request.selectedCurrency = request.selectedCurrency ?? (currencies.FirstOrDefault() != null ? currencies.FirstOrDefault().Id : null);
 
-            selectedMenu = selectedMenu ?? 0;
-            selectedSubMenu = selectedSubMenu ?? 0;
+            request.selectedMenu = request.selectedMenu ?? 0;
+            request.selectedSubMenu = request.selectedSubMenu ?? 0;
 
-            if ((selectedMenu == 0 || selectedMenu == 1))
+            if ((request.selectedMenu == 0 || request.selectedMenu == 1))
             {
-                if (selectedSubMenu == 0)
+                if (request.selectedSubMenu == 0)
                     report = from t in trans
                              join c in cats on t.CategoryId equals c.Id
-                             where t.Direction == (TransactionDirections)selectedMenu && t.CurrencyId == currencyId
+                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency
                              group t.Amount by c into g
                              orderby g.Sum() descending
                              select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
 
-                if (selectedSubMenu == 1)
+                if (request.selectedSubMenu == 1)
                     report = from t in trans
-                             where t.Direction == (TransactionDirections)selectedMenu && t.CurrencyId == currencyId
+                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency
                              group t by t.Description into g
                              orderby g.Sum(t => t.Amount) descending
                              select new { Id = g.Min(t => t.Id), Amount = g.Sum(t => t.Amount), Name = g.Key }; //
 
-                if (selectedSubMenu == 2)
+                if (request.selectedSubMenu == 2)
                     report = from t in trans
                              from tg in tags
-                             where t.Direction == (TransactionDirections)selectedMenu && t.CurrencyId == currencyId && t.TagIds.Contains(tg.Id.ToString())
+                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.TagIds.Contains(tg.Id.ToString())
                              group t.Amount by tg into g
                              orderby g.Sum() descending
                              select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
             }
 
-            return Json(new { items = report, currencies, currencyId, selectedMenu, selectedSubMenu });
+            return Json(new { items = report, currencies, request });
         }
 
     }
