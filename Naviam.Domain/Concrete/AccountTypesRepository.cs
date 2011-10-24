@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Naviam.Data;
 using Naviam.DAL;
+using System.Resources;
 
 namespace Naviam.Domain.Concrete
 {
@@ -28,6 +29,15 @@ namespace Naviam.Domain.Concrete
                 //save to cache
                 cache.SetList(CacheKey, res);
             }
+            //Localize
+            var rm = new ResourceManager(typeof(Resources.Dicts));
+            foreach (var item in res)
+            {
+                var st = rm.GetString("acct_" + item.Id.ToString());
+                if (!String.IsNullOrEmpty(st))
+                    item.TypeName = st;
+            }
+            //end Localize
             return res;
         }
     }

@@ -56,6 +56,11 @@ namespace Naviam.Domain.Concrete
             return CreateUser(email, password, DEFAULT_COMPANY_NAME, DEFAULT_ACCOUNT_NAME);
         }
 
+        public virtual bool Approve(string email)
+        {
+            return MembershipDataAdapter.Approve(email);
+        }
+
         public virtual UserProfile CreateUser(string email, string password, string default_company_name, string default_account_name)
         {
             password = SimpleHash.ComputeHash(email.ToLower() + password + "SCEX", "SHA512", null);
@@ -68,7 +73,7 @@ namespace Naviam.Domain.Concrete
 
         public string GetApproveCode()
         {
-            return Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(1, 10);
+            return Guid.NewGuid().ToString().Replace("-", string.Empty);
         }
     }
 }

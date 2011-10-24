@@ -6,6 +6,7 @@
     ViewBag.CombresScripts = "reports";
 }
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
 @*intellisense support*@
 @if (false)
 { 
@@ -15,29 +16,57 @@
     <script type="text/javascript" src="~/Scripts/common.js"></script> 
 }
 
-<script type="text/javascript">
+<script type='text/javascript'>
+    var getReportsUrl = '@Url.Action("GetReport", "Reports")';
     google.load("visualization", "1", { packages: ["corechart"] });
-    google.setOnLoadCallback(drawChart);
-    function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Category');
-        data.addColumn('number', 'Amount');
-        data.addRows(5);
-        data.setValue(0, 0, 'Work');
-        data.setValue(0, 1, 11);
-        data.setValue(1, 0, 'Eat');
-        data.setValue(1, 1, 2);
-        data.setValue(2, 0, 'Auto');
-        data.setValue(2, 1, 2);
-        data.setValue(3, 0, 'Shopping');
-        data.setValue(3, 1, 2);
-        data.setValue(4, 0, 'Food & Dining');
-        data.setValue(4, 1, 7);
-
-        var chart = new google.visualization.PieChart($('#chart_div')[0]);
-        chart.draw(data, { width: 450, height: 300, title: 'Spending by Category', is3D: true });
-    }
 </script>
 
-<div id="chart_div"></div>
+<div id="rep_menu">
+    <script type="text/html" id="r_menuTemplate">
+        <li data-bind="click: function() { $item.current($data); }, css: {underline: $item.current() == $data}">
+            <a data-bind="text: caption" href='#'/>
+        </li>
+    </script>
+    <div style='float:left;margin: 0 10px 0 0;'>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:menu, templateOptions: { current: selectedMenu } }">
+        </ul>
+    </div>
+    <div style='float:left'>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:selectedMenu() ? selectedMenu().subMenu : null, templateOptions: { current: selectedSubMenu } }">
+        </ul>
+    </div>
+</div>
+<div style="clear:both"></div>
+
+
+<div id='report_page'>
+<div>
+    <a href='#' data-bind="click: function() { graphType(0); }">Pie</a>
+    <a href='#' data-bind="click: function() { graphType(1); }">Bar</a>
+</div>
+
+<div id="chart_p"></div>
+<div id="chart_b"></div>
+
+
+    <script type="text/html" id="r_currTemplate">
+        <li data-bind="click: function() { $item.current($data.Id()); }, css: {underline: $item.current() == $data.Id()}">
+            <a data-bind="text: NameShort" href='#'/>
+        </li>
+    </script>
+    <ul data-bind="template: {name:'r_currTemplate', foreach:currencies, templateOptions: { current: request.selectedCurrency } }" class='h_menu'></ul>
+    <div style="clear:both"></div>
+
+    <script type="text/html" id="r_tableTemplate">
+        <tr>
+            @*<td><span data-bind="text: Id"/></td>*@
+            <td><span data-bind="text: Name"/></td>
+            <td><span data-bind="amount: Amount"/></td>
+        </tr>
+    </script>
+    
+    <table data-bind="template: {name:'r_tableTemplate', foreach:items }" class='table'>
+    </table>
+    <b><span data-bind="amount: endAmount"/></b>
+</div>
 

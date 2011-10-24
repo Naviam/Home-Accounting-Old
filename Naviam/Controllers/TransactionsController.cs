@@ -245,15 +245,6 @@ namespace Naviam.WebUI.Controllers
         private List<Category> GetCategories(int? userId)
         {
             var cats = _categoriesRepository.GetAll(userId);
-            //TODO: move Localize
-            var rm = new ResourceManager(typeof(Resources.Enums));
-            foreach (var item in cats)
-            {
-                var st = rm.GetString("c_" + item.Id.ToString());
-                if (!String.IsNullOrEmpty(st))
-                    item.Name = st;
-            }
-            //end Localize
             return cats;
         }
 

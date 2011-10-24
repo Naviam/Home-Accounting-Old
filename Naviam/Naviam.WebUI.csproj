@@ -165,16 +165,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DisplayNames.ru.resx</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Enums.ru.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Enums.ru.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Enums1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Enums.resx</DependentUpon>
-    </Compile>
     <Compile Include="Resources\JavaScript.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -214,7 +204,6 @@
       <Generator>ScssGenerator</Generator>
       <LastGenOutput>Login.css</LastGenOutput>
     </None>
-    <None Include="SMSConnectorScript.cs" />
     <Content Include="Content\blueprint\reset.css" />
     <Content Include="Content\blueprint\typography.css" />
     <Content Include="Content\images\bg.png" />
@@ -233,6 +222,8 @@
     <Content Include="Prototype\Login.htm" />
     <Content Include="PublicSitemap.xml" />
     <None Include="Scripts\Pages\Reports.js" />
+    <Content Include="Scripts\knockout-1.3.0beta.js" />
+    <Content Include="Scripts\knockout-1.3.0beta.min.js" />
     <Content Include="Scripts\Pages\Reports.min.js" />
     <None Include="Scripts\tests\initData.js" />
     <None Include="Scripts\tests\mockup.js" />
@@ -400,14 +391,6 @@
     <EmbeddedResource Include="Resources\DisplayNames.ru.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DisplayNames.ru.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Enums.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Enums1.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Enums.ru.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Enums.ru.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\JavaScript.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

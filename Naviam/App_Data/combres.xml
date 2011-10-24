@@ -62,12 +62,22 @@
       <resource path="~/Scripts/knockout-1.2.1.min.js" />
       <resource path="~/Scripts/knockout.bindingHandlers.min.js" />
     </resourceSet>
+    <resourceSet name="knockout1_3" type="js">
+      <resource reference="jquery" />
+      <resource path="~/Scripts/jquery.tmpl.min.js" />
+      <resource path="~/Scripts/knockout-1.3.0beta.min.js" />
+      <resource path="~/Scripts/knockout.bindingHandlers.min.js" />
+    </resourceSet>
     <resourceSet name="knockout validate" type="js">
       <resource reference="knockout" />
       <resource reference="validate" />
     </resourceSet>
     <resourceSet name="knockout map" type="js">
       <resource reference="knockout" />
+      <resource path="~/Scripts/knockout.mapping.min.js" />
+    </resourceSet>
+    <resourceSet name="knockout1_3 map" type="js">
+      <resource reference="knockout1_3" />
       <resource path="~/Scripts/knockout.mapping.min.js" />
     </resourceSet>
     <resourceSet name="knockout map validate" type="js">

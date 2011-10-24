@@ -93,6 +93,9 @@ function addCommas(nStr) {
     }
     return x1 + x2;
 }
+String.prototype.capitalize = function () {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
 $.format = function (source, params) {
     if (arguments.length == 1)
         return function () {

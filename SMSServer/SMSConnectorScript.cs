@@ -1,4 +1,4 @@
-﻿// Diafaan SMS Server Scripting Connector skeleton script
+﻿// Diafaan SMS Server Scripting Connector script
 //
 using System;
 using System.Collections;
@@ -12,6 +12,16 @@ namespace DiafaanMessageServer
 {
     public class ConnectorScript : IScript
     {
+        public class SmsHolder
+        {
+            public string fromAddress;
+            public string toAddress;
+            public string message;
+            public string gateway;
+        }
+
+        private static ArrayList smsQueue = new ArrayList();
+
         private IScriptHost host = null;
 
         public void OnLoad(IScriptHost host)
@@ -28,16 +38,27 @@ namespace DiafaanMessageServer
             // TODO: Add cleanup code, make sure to remove (Timer) event handlers here
             //
         }
+
+        private void AddToQueue(SmsHolder hld)
+        {
+            smsQueue.Add(hld);
+        }
+
         private void OnMessageReceived(string fromAddress, string toAddress, string message, string messageType,
                                        string messageId, string smsc, string pdu, string gateway,
                                        DateTime sendTime, DateTime receiveTime)
         {
+            SmsHolder hld = new SmsHolder();
+            hld.fromAddress = fromAddress;
+            hld.gateway = gateway;
+            hld.message = message;
+            hld.toAddress = toAddress;
             try
             {
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(@"http://localhost:54345/Sms/RecieveMessage");
                 httpWebRequest.ContentType = "application/x-www-form-urlencoded";
                 httpWebRequest.Method = "POST";
-                string queryString = "key=" + HttpUtility.UrlEncode("ky1") + "&message=" + HttpUtility.UrlEncode(message) + "&gateway=" + HttpUtility.UrlEncode(gateway) +
+                string queryString = "key=" + HttpUtility.UrlEncode("givemeaccesstotoyou") + "&message=" + HttpUtility.UrlEncode(message) + "&gateway=" + HttpUtility.UrlEncode(gateway) +
                      "&from=" + HttpUtility.UrlEncode(fromAddress) + "&to=" + HttpUtility.UrlEncode(toAddress);
                 byte[] byteData = UTF8Encoding.UTF8.GetBytes(queryString);
                 httpWebRequest.ContentLength = byteData.Length;
@@ -61,10 +82,17 @@ namespace DiafaanMessageServer
             }
             catch (Exception e)
             {
+                WebException exc = e as WebException;
+                //AddToQueue(hld);
+                if (exc != null)
+                {
+                    string responseText = new StreamReader(exc.Response.GetResponseStream()).ReadToEnd();
+                    PostEventLog("Send error:" + responseText, responseText, EventLog.Error);
+                }
+                else
+                    PostEventLog(e.Message, e.ToString(), EventLog.Error);
                 //PostSendResult("1", "", StatusCode.SendError, "Error: message rejected", "", e.Message, false);
-                PostEventLog(e.Message, e.ToString(), EventLog.Error);
             }			//
-            // TODO: Add code to handle received SMS messages
             // e.g.
             // PostSendMessage(fromAddress, "", "We have received your message", "sms.text", "", "", "");
             //

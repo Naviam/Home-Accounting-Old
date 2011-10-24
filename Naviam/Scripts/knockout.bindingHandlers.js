@@ -52,3 +52,28 @@ ko.bindingHandlers.notEmpty = {
         $(element).val(ko.utils.unwrapObservable(valueAccessor()));
     }
 };
+ko.bindingHandlers.amount = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+        var options = allBindingsAccessor().amountOptions || {};
+        var allowZero = options.allowZero || false;
+        //handle the field changing
+        var checkElem = function () {
+            var observable = valueAccessor();
+            var parsed = parseFloat($(element).val().replace(/[^\d.]+/g, ""));
+            var correct = !isNaN(parsed) && (parsed > 0 || allowZero);
+            if (correct)
+                observable(parsed);
+            else
+                $(element).val(observable()); //restore old
+        };
+        ko.utils.registerEventHandler(element, "change", checkElem);
+        var requestedEventsToCatch = allBindingsAccessor()["valueUpdate"];
+        if (requestedEventsToCatch)
+            ko.utils.registerEventHandler(element, requestedEventsToCatch, checkElem);
+    },
+    update: function (element, valueAccessor) {
+        var val = addCommas(ko.utils.unwrapObservable(valueAccessor()));
+        $(element).val(val);
+        $(element).text(val);
+    }
+};

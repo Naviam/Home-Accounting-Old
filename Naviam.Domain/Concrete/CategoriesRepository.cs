@@ -5,12 +5,14 @@ using System.Text;
 using Naviam.Data;
 using Naviam.DAL;
 using System.Data.SqlClient;
+using System.Resources;
 
 namespace Naviam.Domain.Concrete
 {
     public class CategoriesRepository
     {
         private const string CacheKey = "transCategory";
+        private const string MerchCacheKey = "transMerchCategory";
 
         public virtual void ResetCache(int? userId)
         {
@@ -30,6 +32,15 @@ namespace Naviam.Domain.Concrete
                 //save to cache
                 cache.SetList(CacheKey, res, userId);
             }
+            //Localize
+            var rm = new ResourceManager(typeof(Resources.Dicts));
+            foreach (var item in res)
+            {
+                var st = rm.GetString("c_" + item.Id.ToString());
+                if (!String.IsNullOrEmpty(st))
+                    item.Name = st;
+            }
+            //end Localize
             return res;
         }
 
@@ -75,6 +86,30 @@ namespace Naviam.Domain.Concrete
 
         public virtual int? FindCategoryForMerchant(int? id_account, string merchant)
         {
+            var res = CategoriesDataAdapter.FindCategoryForMerchant(id_account, merchant);
+            return res;
+        }
+
+        public virtual List<CategoryMerchant> GetMerchantsCategories() { return GetMerchantsCategories(false); }
+        public virtual List<CategoryMerchant> GetMerchantsCategories(bool forceSqlLoad)
+        {
+            var cache = new CacheWrapper();
+            var res = cache.GetList<CategoryMerchant>(MerchCacheKey);
+            
+            if (res == null || forceSqlLoad)
+            {
+                //load from DB
+                res = CategoriesDataAdapter.GetCategoriesMerchant();
+                //save to cache
+                cache.SetList(MerchCacheKey, res);
+            }
+            //end Localize
+            return res;
+        }
+
+        public virtual int? GetCategoryForMerchant(int? id_account, string merchant)
+        {
+            //get by user configuration (table dbo.merchants_categories)
             var res = CategoriesDataAdapter.FindCategoryForMerchant(id_account, merchant);
             return res;
         }
