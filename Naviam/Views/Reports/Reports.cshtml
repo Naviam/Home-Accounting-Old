@@ -18,14 +18,8 @@
 
 <script type='text/javascript'>
     var getReportsUrl = '@Url.Action("GetReport", "Reports")';
-</script>
-
-<script type="text/javascript">
     google.load("visualization", "1", { packages: ["corechart"] });
 </script>
-
-<div id="chart_p"></div>
-<div id="chart_b"></div>
 
 <div id="rep_menu">
     <script type="text/html" id="r_menuTemplate">
@@ -44,10 +38,15 @@
 </div>
 <div style="clear:both"></div>
 
+
 <div id='report_page'>
-@*<img src='@Url.Content("~/Content/images/refresh.png")' onclick='return reportsModel.request.selectedMenu(1);' style='float: right;cursor: pointer;margin-top: 3px;'/>*@
-<a href='#' data-bind="click: function() { graphType(0); }">Pie</a>
-<a href='#' data-bind="click: function() { graphType(1); }">Bar</a>
+<div>
+    <a href='#' data-bind="click: function() { graphType(0); }">Pie</a>
+    <a href='#' data-bind="click: function() { graphType(1); }">Bar</a>
+</div>
+
+<div id="chart_p"></div>
+<div id="chart_b"></div>
 
 
     <script type="text/html" id="r_currTemplate">

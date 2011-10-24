@@ -38,34 +38,34 @@ reportsModel.Load = function () {
         reportsModel.getChartTitle = function () {
             var title = '';
             if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 0)
-                title = 'Spending by Category';
+                title = lang.Spending + ' ' + lang.ByCategory;
             if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 1)
-                title = 'Spending by Merchant';
+                title = lang.Spending + ' ' + lang.ByMerchant;
             if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 2)
-                title = 'Spending by Tag';
+                title = lang.Spending + ' ' + lang.ByTag;
             if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 0)
-                title = 'Income by Category';
+                title = lang.Income + ' ' + lang.ByCategory;
             if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 1)
-                title = 'Income by Merchant';
+                title = lang.Income + ' ' + lang.ByMerchant;
             if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 2)
-                title = 'Income by Tag';
+                title = lang.Income + ' ' + lang.ByTag;
             return title;
         }
         reportsModel.fillChart = function () {
             var data = new google.visualization.DataTable();
-            data.addColumn('string', lang.Category);
-            data.addColumn('number', 'Amount');
+            data.addColumn('string', 'key');
+            data.addColumn('number', lang.Amount);
             ko.utils.arrayForEach(this.items(), function (item) {
                 data.addRow([item.Name(), item.Amount()]);
             });
             $('#chart_p').hide();
             $('#chart_b').hide();
             if (this.graphType() == 0) {
-                chart.draw(data, { width: 550, height: 300, title: this.getChartTitle(), is3D: true });
+                chart.draw(data, { width: 1100, height: 300, title: this.getChartTitle(), is3D: true });
                 $('#chart_p').show();
             }
             else {
-                chart_b.draw(data, { width: 550, height: 300, title: this.getChartTitle() });
+                chart_b.draw(data, { width: 1100, height: 300, title: this.getChartTitle() });
                 $('#chart_b').show();
             }
         }
@@ -87,8 +87,8 @@ reportsModel.Load = function () {
 
 var menuModel = {
     menu: [
-            { id: 0, caption: 'Spending', subMenu: [{ id: 0, caption: 'By Category' }, { id: 1, caption: 'By Merchant' }, { id: 2, caption: 'By Tag'}] },
-            { id: 1, caption: 'Income', subMenu: [{ id: 0, caption: 'By Category' }, { id: 1, caption: 'By Merchant' }, { id: 2, caption: 'By Tag'}] }
+            { id: 0, caption: lang.Spending, subMenu: [{ id: 0, caption: lang.ByCategory.capitalize() }, { id: 1, caption: lang.ByMerchant.capitalize() }, { id: 2, caption: lang.ByTag.capitalize()}] },
+            { id: 1, caption: lang.Income, subMenu: [{ id: 0, caption: lang.ByCategory.capitalize() }, { id: 1, caption: lang.ByMerchant.capitalize() }, { id: 2, caption: lang.ByTag.capitalize()}] }
         ],
     selectedMenu: ko.observable(),
     selectedSubMenu: ko.observable()
