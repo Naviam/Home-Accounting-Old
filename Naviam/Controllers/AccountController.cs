@@ -12,6 +12,7 @@ using DotNetOpenAuth.OpenId.RelyingParty;
 using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using System.Data.SqlClient;
 using Naviam.Data;
+using log4net;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -57,6 +58,9 @@ namespace Naviam.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
+                ILog log = LogManager.GetLogger("navSite");
+                log.Debug("LogOn");
+
                 var profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password);
                 //var profile = new Data.UserProfile();
 

@@ -124,7 +124,7 @@ namespace Naviam.Domain.Concrete
             //get by statistic from db
             var stats = GetMerchantsCategories();
             res = stats.FirstOrDefault(x => x.Merchant.Equals(merchant, StringComparison.InvariantCultureIgnoreCase));
-            return res.CategoryId.HasValue ? res.CategoryId.Value : DEFAULT_CATEGORY_ID;
+            return res!=null ? res.CategoryId.Value : DEFAULT_CATEGORY_ID;
         }
 
         public virtual int? FindCategoryByRules(string merchant)
