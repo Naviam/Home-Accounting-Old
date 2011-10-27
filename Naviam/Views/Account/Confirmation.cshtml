@@ -1,4 +1,4 @@
-﻿@model LogOnModel
+﻿@model ConfirmationModel
 @using Naviam.WebUI.Models
 @using Naviam.WebUI.Resources
 @{
@@ -14,8 +14,8 @@
     <section class="signup">
         <fieldset>
             <div>
-                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Please enter your confirmation code here" })
-                @Html.ValidationMessageFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.ApproveCode, new { placeholder = "Please enter your confirmation code here" })
+                @Html.ValidationMessageFor(m => m.ApproveCode)
             </div>
             <p><button type="submit">Ok</button></p>
         </fieldset>

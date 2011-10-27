@@ -126,6 +126,9 @@
   <data name="Amount" xml:space="preserve">
     <value>Amount</value>
   </data>
+  <data name="ApproveCode" xml:space="preserve">
+    <value>Approve Code</value>
+  </data>
   <data name="Balance" xml:space="preserve">
     <value>Balance</value>
   </data>

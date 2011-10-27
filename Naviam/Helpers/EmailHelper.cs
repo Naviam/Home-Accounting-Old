@@ -20,7 +20,8 @@ namespace Naviam.WebUI.Helpers
                          {
                              EnableSsl = true,
                              Credentials =
-                                 new NetworkCredential("alert@naviam.com", "ruinruin")
+                                 //new NetworkCredential("alert@naviam.com", "ruinruin")
+                                 new NetworkCredential("pavel.mironchik@gmail.com", "pvtqUjhsysx150")
                          };
             try
             {

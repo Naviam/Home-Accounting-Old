@@ -75,5 +75,15 @@ namespace Naviam.Domain.Concrete
         {
             return Guid.NewGuid().ToString().Replace("-", string.Empty);
         }
+
+        public virtual UserProfile GetUserByApproveCode(string code)
+        {
+            var profile = MembershipDataAdapter.GetUserByApproveCode(code);
+            if (profile != null)
+            {
+                profile.Companies = GetCompanies(profile.Id);
+            }
+            return profile;
+        }
     }
 }
