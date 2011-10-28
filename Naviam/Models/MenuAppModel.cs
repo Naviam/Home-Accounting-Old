@@ -137,6 +137,7 @@ namespace Naviam.WebUI.Models
         const string ATTR_STYLE = "style";
         const string ATTR_CONTROLLER = "controller";
         const string ATTR_ACTION = "action";
+        const string ATTR_RESTRICTIONS = "restrictions";
         #endregion .constants
 
         #region .fields
@@ -194,6 +195,9 @@ namespace Naviam.WebUI.Models
 
         [XmlAttribute(AttributeName = ATTR_ACTION)]
         public string Action { get; set; }
+
+        [XmlAttribute(AttributeName = ATTR_RESTRICTIONS)]
+        public string Restrictions { get; set; }
 
         [XmlAttribute(AttributeName = ATTR_ROLES)]
         public List<String> Roles { get; set; }
@@ -316,6 +320,7 @@ namespace Naviam.WebUI.Models
             item.Style = reader[ATTR_STYLE];
             item.Controller = reader[ATTR_CONTROLLER];
             item.Action = reader[ATTR_ACTION];
+            item.Restrictions = reader[ATTR_RESTRICTIONS];
             string roles = reader[ATTR_ROLES];
             item.Roles = new List<string>();
             if (!string.IsNullOrEmpty(roles))
@@ -350,6 +355,7 @@ namespace Naviam.WebUI.Models
             writer.WriteAttributeString(ATTR_CONTROLLER, current.Controller);
             writer.WriteAttributeString(ATTR_ACTION, current.Action);
             writer.WriteAttributeString(ATTR_ENABLELOCALIZATION, current.EnableLocalization.ToString());
+            writer.WriteAttributeString(ATTR_RESTRICTIONS, current.Restrictions);
         }
         #endregion .IXmlSerializable
 
