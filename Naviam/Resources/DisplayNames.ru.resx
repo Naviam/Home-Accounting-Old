@@ -126,6 +126,9 @@
   <data name="Amount" xml:space="preserve">
     <value>Сумма</value>
   </data>
+  <data name="ApproveCode" xml:space="preserve">
+    <value>Код подтверждения</value>
+  </data>
   <data name="Balance" xml:space="preserve">
     <value>Баланс</value>
   </data>

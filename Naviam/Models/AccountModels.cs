@@ -25,6 +25,13 @@ namespace Naviam.WebUI.Models
         public bool RememberMe { get; set; }
     }
 
+    public class ConfirmationModel
+    {
+        [Required(ErrorMessageResourceName = "ApproveCodeRequired", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [Display(Name = "ApproveCode", ResourceType = typeof(DisplayNames))]
+        public string ApproveCode { get; set; }
+    }
+
     public class RegisterModel
     {
         public string UserName { get; set; }

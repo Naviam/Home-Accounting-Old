@@ -1,5 +1,6 @@
 ﻿using Naviam.WebUI.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
 
 namespace Naviam.UnitTests.Helpers
 {
@@ -66,11 +67,12 @@ Ostatok: 1200962 BYR
 Na vremya: 11:54:12
 BLR/MINSK/EUROSET RKC 3
 ";
-            const string subject = "BelSwissBank";
-            const string recipients = "v.hatalski@gmail.com";
+            var subject = "BelSwissBank";
+            var recipients = "v.hatalski@gmail.com";
+            var from = "sms@naviam.com";
 
             // act
-            var result = EmailHelper.SendSmsAlert(subject, recipients, message);
+            var result = EmailHelper.SendMail(subject, recipients, message, from);
 
             // assert
             Assert.IsTrue(result);

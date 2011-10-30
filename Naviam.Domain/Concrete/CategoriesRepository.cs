@@ -5,12 +5,16 @@ using System.Text;
 using Naviam.Data;
 using Naviam.DAL;
 using System.Data.SqlClient;
+using System.Resources;
+using System.Text.RegularExpressions;
 
 namespace Naviam.Domain.Concrete
 {
     public class CategoriesRepository
     {
         private const string CacheKey = "transCategory";
+        private const string MerchCacheKey = "transMerchCategory";
+        private const int DEFAULT_CATEGORY_ID = 20; // 20 - Uncategorized
 
         public virtual void ResetCache(int? userId)
         {
@@ -30,6 +34,15 @@ namespace Naviam.Domain.Concrete
                 //save to cache
                 cache.SetList(CacheKey, res, userId);
             }
+            //Localize
+            var rm = new ResourceManager(typeof(Resources.Dicts));
+            foreach (var item in res)
+            {
+                var st = rm.GetString("c_" + item.Id.ToString());
+                if (!String.IsNullOrEmpty(st))
+                    item.Name = st;
+            }
+            //end Localize
             return res;
         }
 
@@ -77,6 +90,53 @@ namespace Naviam.Domain.Concrete
         {
             var res = CategoriesDataAdapter.FindCategoryForMerchant(id_account, merchant);
             return res;
+        }
+
+        public virtual List<CategoryMerchant> GetMerchantsCategories() { return GetMerchantsCategories(false); }
+        public virtual List<CategoryMerchant> GetMerchantsCategories(bool forceSqlLoad)
+        {
+            var cache = new CacheWrapper();
+            var res = cache.GetList<CategoryMerchant>(MerchCacheKey);
+
+            if (res == null || forceSqlLoad)
+            {
+                //load from DB
+                res = CategoriesDataAdapter.GetCategoriesMerchant();
+                //save to cache
+                cache.SetList(MerchCacheKey, res);
+            }
+            //end Localize
+            return res;
+        }
+
+        public virtual int? FindCategoryMerchant(int? id_account, string merchant)
+        {
+            //get by user configuration (table dbo.merchants_categories)
+            var res = CategoriesDataAdapter.GetUsersCategoryMerchant(id_account, merchant);
+            if (res != null)
+                return res.CategoryId;
+
+            //get by category rules
+            var val = FindCategoryByRules(merchant);
+            if (val != null)
+                return val;
+
+            //get by statistic from db
+            var stats = GetMerchantsCategories();
+            res = stats.FirstOrDefault(x => x.Merchant.Equals(merchant, StringComparison.InvariantCultureIgnoreCase));
+            return res!=null ? res.CategoryId.Value : DEFAULT_CATEGORY_ID;
+        }
+
+        public virtual int? FindCategoryByRules(string merchant)
+        {
+            var rules = CategoriesDataAdapter.GetCategoriesRules();
+            foreach (var rule in rules)
+            {
+                var reg = new Regex(rule.RegX, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+                if (reg.IsMatch(merchant))
+                    return rule.Id;
+            }
+            return null;
         }
     }
 }

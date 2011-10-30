@@ -1,16 +1,23 @@
-﻿@{
+﻿@model ConfirmationModel
+@using Naviam.WebUI.Models
+@using Naviam.WebUI.Resources
+@{
     ViewBag.Title = "Confirmation";
-    Layout = "~/Views/Shared/LayoutMember.cshtml";
+    Layout = "~/Views/Shared/LayoutPublic.cshtml";
 }
 
 <h2>Confirmation</h2>
-@using (Html.BeginForm()) {
+@Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
+
+@using (Html.BeginForm())
+{
     <section class="signup">
         <fieldset>
             <div>
-@*                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Please enter your email here", type = "email" })
-                @Html.ValidationMessageFor(m => m.UserName)*@
+                @Html.TextBoxFor(m => m.ApproveCode, new { placeholder = "Please enter your confirmation code here" })
+                @Html.ValidationMessageFor(m => m.ApproveCode)
             </div>
+            <p><button type="submit">Ok</button></p>
         </fieldset>
     </section>
     <div style="clear: left"></div>

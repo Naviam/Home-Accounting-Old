@@ -20,10 +20,11 @@ namespace Naviam.Data
 
         public UserProfile()  {}
 
-        public UserProfile(string email, string password)
+        public UserProfile(string email, string password, string approveCode)
         {
             Name = email;
             Password = password;
+            ApproveCode = approveCode;
         }
 
         public UserProfile(IDataRecord record)
@@ -38,9 +39,10 @@ namespace Naviam.Data
             PasswordAnswer = record["password_answer"] as string;
             LanguageId = record["id_language"] as int?;
             LanguageNameShort = record["language_name_short"] as string;
-            IsApproved = record["is_approved"] as bool?;
+            IsApproved = (record["is_approved"] as bool?).HasTrue();
             CreationDate = record["creation_date"] as DateTime?;
             DefaultCompany = record["id_company"] as int?;
+            ApproveCode = record["approve_code"] as string;
         }
 
         public string Name { get; set; }
@@ -97,8 +99,10 @@ namespace Naviam.Data
         public string Comment { get; set; }
         public string PasswordQuestion { get; set; }
         public string PasswordAnswer { get; set; }
-        public bool? IsApproved { get; set; }
+        public bool IsApproved { get; set; }
         public DateTime? CreationDate { get; set; }
+        public string ApproveCode { get; set; }
+        public Exception LastException { get; set; }
     }
 
     public static partial class SqlCommandExtensions
@@ -119,7 +123,7 @@ namespace Naviam.Data
             command.Parameters.Add("@first_name", SqlDbType.NVarChar).Value = userProfile.FirstName.ToDbValue(); 
             command.Parameters.Add("@last_name", SqlDbType.NVarChar).Value = userProfile.LastName.ToDbValue();
             command.Parameters.Add("@comment", SqlDbType.NVarChar).Value = userProfile.Comment.ToDbValue();
-            command.Parameters.Add("@is_approved", SqlDbType.NVarChar).Value = userProfile.IsApproved.ToDbValue();
+            command.Parameters.Add("@is_approved", SqlDbType.Bit).Value = userProfile.IsApproved;
             command.Parameters.Add("@current_time_utc", SqlDbType.DateTime).Value = DateTime.UtcNow;
         }
     }

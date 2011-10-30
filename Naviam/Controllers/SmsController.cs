@@ -37,14 +37,14 @@ namespace Naviam.WebUI.Controllers
         }
 
         static string testMessage = @"
-4..0692 
-Service payment from card 
-Uspeshno 
-2011-09-01 00:00:00 
-Summa: 4828 BYR 
-Ostatok: 56552 BYR 
-Na vremya: 11:11:46 
-//RBS Balance loader
+4..7983
+Retail
+Uspeshno
+2011-10-27 17:25:44
+Summa: 257900 BYR
+Ostatok: 1264348 BYR
+Na vremya: 20:26:12
+BLR/MINSK REG./KRAVT SHOP (AKVABEL)
 ";
         static string other = @"
 4..0692 
@@ -82,11 +82,20 @@ Summa: 50000 BYR
 Ostatok: 141380 BYR
 Na vremya: 09:32:43
 BLR/MINSK/BELCEL I-BANK
+
+4..7983
+Retail
+Uspeshno
+2011-10-27 17:25:44
+Summa: 257900 BYR
+Ostatok: 1264348 BYR
+Na vremya: 20:26:12
+BLR/MINSK REG./KRAVT SHOP (AKVABEL)
 ";
         [HttpPost]
         public JsonResult RecieveMessage(string key, string gateway, string from, string to, string message)
         {
-            message = testMessage;
+            //message = testMessage;
             //gateway = "GETWAY1";
 
             if (key != "givemeaccesstotoyou") return Json("error");
@@ -94,7 +103,7 @@ BLR/MINSK/BELCEL I-BANK
             Modem modem = _modemsRepository.GetModemByGateway(gateway);
             ILog log = LogManager.GetLogger("navSite");
             log.Debug(String.Format("gateway:{0}, from:{1}, message:{2}", gateway, from, message));
-            
+
             //TODO: get bank_id by "from" param
             int id_bank = 15; //BelSwissBank
 
@@ -103,14 +112,17 @@ BLR/MINSK/BELCEL I-BANK
                 SmsBase sms = new BelSwissSms(message);
 
                 //TODO: check sms.Result????
-
                 var account = _accountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
-                var usr = _membershipRepository.GetUserByAccount(account.Id.Value);
+                
+                //get category id
+                var categoryId = _categoriesRepository.FindCategoryMerchant(account.Id, sms.Merchant.Trim());
+
                 var tran = 
                     new Transaction
                     {
                         Amount = sms.Amount,
-                        CategoryId = _categoriesRepository.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
+                        //CategoryId = _categoriesRepository.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
+                        CategoryId = categoryId,
                         //autosearch category by merchant
                         // 20 - Uncategorized
                         CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,
@@ -126,11 +138,13 @@ BLR/MINSK/BELCEL I-BANK
                 _transRepository.Insert(tran, account.CompanyId);
                 var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
                 _accountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
-                EmailHelper.SendSmsAlert(from, usr.Name, message);
+                EmailHelper.SendMail("subject", account.SmsUser, message, "sms@naviam.com");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw e;
+                Response.StatusCode = 500;
+                return Json(new { Text = ex.Message, stackTrace = ex.StackTrace });
+                //throw e;
             }
             return Json("ok");
         }

@@ -15,10 +15,9 @@ namespace Naviam.DAL
             {
                 using (SqlCommand cmd = holder.Connection.CreateSPCommand("sms_account_get"))
                 {
-                    cmd.Parameters.AddWithValue("@card_number", cardNumber.ToDbValue());
-                    cmd.Parameters.AddWithValue("@id_modem", id_modem.ToDbValue());
-                    cmd.Parameters.AddWithValue("@id_bank", id_bank.ToDbValue());
-                    cmd.Parameters.Add("@email", SqlDbType.NVarChar).Direction = ParameterDirection.InputOutput;
+                    cmd.Parameters.AddWithValue("@card_number", cardNumber);
+                    cmd.Parameters.AddWithValue("@id_modem", id_modem);
+                    cmd.Parameters.AddWithValue("@id_bank", id_bank);
                     try
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -28,7 +27,6 @@ namespace Naviam.DAL
                             if (reader.HasRows)
                             {
                                 res = new Account(reader);
-                                res.SmsUser = (cmd.Parameters.Contains("@email") && (ParameterDirection.Input != cmd.Parameters["@email"].Direction)) ? cmd.Parameters["@email"].Value as string : string.Empty;
                             }
                         }
                     }

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Security;
 using Naviam.DAL;
 using Naviam.Data;
+using System.Data.SqlClient;
 
 namespace Naviam.Domain.Concrete
 {
@@ -22,7 +23,7 @@ namespace Naviam.Domain.Concrete
         public virtual UserProfile GetUser(string userName, string password, bool extAuth)
         {
             var profile = MembershipDataAdapter.GetUser(userName, password);
-            if (!extAuth && profile !=null && !SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", profile.Password))
+            if (!extAuth && profile != null && !SimpleHash.VerifyHash(userName + password + "SCEX", "SHA512", profile.Password))
                 profile = null;
             if (profile != null)
             {
@@ -55,10 +56,34 @@ namespace Naviam.Domain.Concrete
             return CreateUser(email, password, DEFAULT_COMPANY_NAME, DEFAULT_ACCOUNT_NAME);
         }
 
+        public virtual bool Approve(string email)
+        {
+            return MembershipDataAdapter.ApproveUser(email);
+        }
+
         public virtual UserProfile CreateUser(string email, string password, string default_company_name, string default_account_name)
         {
             password = SimpleHash.ComputeHash(email.ToLower() + password + "SCEX", "SHA512", null);
-            return MembershipDataAdapter.CreateUser(email, password, default_company_name, default_account_name);
+
+            UserProfile res = null;
+            res = MembershipDataAdapter.CreateUser(email, password, default_company_name, default_account_name, GetApproveCode());
+
+            return res;
+        }
+
+        public string GetApproveCode()
+        {
+            return Guid.NewGuid().ToString().Replace("-", string.Empty);
+        }
+
+        public virtual UserProfile GetUserByApproveCode(string code)
+        {
+            var profile = MembershipDataAdapter.GetUserByApproveCode(code);
+            if (profile != null)
+            {
+                profile.Companies = GetCompanies(profile.Id);
+            }
+            return profile;
         }
     }
 }

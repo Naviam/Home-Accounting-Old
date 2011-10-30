@@ -225,4 +225,22 @@
   <data name="Tag" xml:space="preserve">
     <value>Tag</value>
   </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="ByCategory" xml:space="preserve">
+    <value>by Category</value>
+  </data>
+  <data name="ByMerchant" xml:space="preserve">
+    <value>by Merchant</value>
+  </data>
+  <data name="ByTag" xml:space="preserve">
+    <value>by Tag</value>
+  </data>
+  <data name="Income" xml:space="preserve">
+    <value>Income</value>
+  </data>
+  <data name="Spending" xml:space="preserve">
+    <value>Spending</value>
+  </data>
 </root>

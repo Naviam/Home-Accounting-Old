@@ -89,6 +89,8 @@
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\AccountType.cs" />
     <Compile Include="Entities\Category.cs" />
+    <Compile Include="Entities\CategoryMerchant.cs" />
+    <Compile Include="Entities\CategoryRule.cs" />
     <Compile Include="Entities\Company.cs" />
     <Compile Include="Entities\Currency.cs" />
     <Compile Include="Entities\DbEntity.cs" />

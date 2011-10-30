@@ -14,7 +14,7 @@ namespace Naviam.Data
         {
             InitialBalance = 0;
         }
-        public Account(SqlDataReader reader)
+        public  Account(SqlDataReader reader)
         {
             Id = reader["id"] as int?;
             Name = reader["name"] as string;
@@ -27,6 +27,7 @@ namespace Naviam.Data
             Balance = reader["balance"] as decimal?;
             FinInstitutionId = reader["id_financial_institution"] as int?;
             CardNumber = reader["card_number"] as string;
+            SmsUser = reader.HasColumn("email")? reader["email"] as string : string.Empty;
         }
         
         public string Name { get; set; }

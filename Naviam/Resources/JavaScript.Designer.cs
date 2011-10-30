@@ -70,6 +70,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amount.
+        /// </summary>
+        public static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to April.
         /// </summary>
         public static string April {
@@ -84,6 +93,33 @@ namespace Naviam.WebUI.Resources {
         public static string August {
             get {
                 return ResourceManager.GetString("August", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to by Category.
+        /// </summary>
+        public static string ByCategory {
+            get {
+                return ResourceManager.GetString("ByCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to by Merchant.
+        /// </summary>
+        public static string ByMerchant {
+            get {
+                return ResourceManager.GetString("ByMerchant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to by Tag.
+        /// </summary>
+        public static string ByTag {
+            get {
+                return ResourceManager.GetString("ByTag", resourceCulture);
             }
         }
         
@@ -241,6 +277,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Income.
+        /// </summary>
+        public static string Income {
+            get {
+                return ResourceManager.GetString("Income", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to January.
         /// </summary>
         public static string January {
@@ -336,6 +381,15 @@ namespace Naviam.WebUI.Resources {
         public static string September {
             get {
                 return ResourceManager.GetString("September", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spending.
+        /// </summary>
+        public static string Spending {
+            get {
+                return ResourceManager.GetString("Spending", resourceCulture);
             }
         }
         

@@ -75,8 +75,16 @@ body {
 }
 
 a {
-		color: $link-color;
-		text-decoration: none;
+	color: $link-color;
+	text-decoration: none;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
+.h_menu {
+	li {float:left;margin: 0 10px 0 0;}
 }
 
 input[type=text], input[type=search], textarea {
@@ -109,7 +117,7 @@ nav {
 
 ul {
 	list-style-type: none;
-	}
+}
 
 header {
 	background-color: $bg-color3;

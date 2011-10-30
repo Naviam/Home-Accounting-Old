@@ -30,7 +30,7 @@ namespace Naviam.DAL
                     catch (SqlException e)
                     {
                         cmd.AddDetailsToException(e);
-                        throw;
+                        throw e;
                     }
                 }
             }
@@ -89,9 +89,9 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static UserProfile CreateUser(string email, string password, string default_company_name, string default_account_name)
+        public static UserProfile CreateUser(string email, string password, string default_company_name, string default_account_name, string approveCode)
         {
-            UserProfile res = new UserProfile(email, password);
+            UserProfile res = new UserProfile(email, password, approveCode);
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 var cmd = holder.Connection.CreateSPCommand("user_signin");
@@ -103,6 +103,7 @@ namespace Naviam.DAL
                     cmd.Parameters.Add("@default_company_name", SqlDbType.NVarChar).Value = default_company_name;
                     cmd.Parameters.Add("@default_account_name", SqlDbType.NVarChar).Value = default_account_name;
                     cmd.Parameters.Add("@current_time_utc", SqlDbType.DateTime).Value = DateTime.UtcNow;
+                    cmd.Parameters.Add("@approve_code", SqlDbType.NVarChar).Value = approveCode;
                     cmd.ExecuteNonQuery();
                     res.Id = cmd.GetRowIdParameter();
                 }
@@ -151,5 +152,57 @@ namespace Naviam.DAL
                 }
             }
         }
+
+        public static bool ApproveUser(string email)
+        {
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("user_approve"))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+        }
+
+        public static UserProfile GetUserByApproveCode(string approveCode)
+        {
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "user_get_by_code";
+
+                    cmd.Parameters.AddWithValue("@code", approveCode);
+                    try
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new UserProfile(reader);
+                            }
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return null;
+        }
+
     }
 }

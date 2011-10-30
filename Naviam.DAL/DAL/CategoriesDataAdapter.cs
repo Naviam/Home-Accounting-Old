@@ -12,7 +12,7 @@ namespace Naviam.DAL
             var res = new List<Category>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.categories_get"))
+                using (var cmd = holder.Connection.CreateSPCommand("categories_get"))
                 {
                     cmd.Parameters.AddWithValue("@id_user", userId);
                     try
@@ -37,7 +37,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                var commName = action == DbActionType.Insert ? "web.category_create" : "web.category_update";
+                var commName = action == DbActionType.Insert ? "category_create" : "web.category_update";
                 var cmd = holder.Connection.CreateSPCommand(commName);
                 try
                 {
@@ -61,7 +61,7 @@ namespace Naviam.DAL
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
             {
-                using (var cmd = holder.Connection.CreateSPCommand("web.category_delete"))
+                using (var cmd = holder.Connection.CreateSPCommand("category_delete"))
                 {
                     try
                     {
@@ -101,10 +101,83 @@ namespace Naviam.DAL
                 }
             }
             return res;
-        
         }
+
+        public static List<CategoryMerchant> GetCategoriesMerchant()
+        {
+            var res = new List<CategoryMerchant>();
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("categories_merchants_get"))
+                {
+                    try
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                                res.Add(new CategoryMerchant(reader));
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return res;
+        }
+
+        public static CategoryMerchant GetUsersCategoryMerchant(int? id_account, string merchant)
+        {
+            CategoryMerchant res = null;
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                var commName = "categories_merchants_user_get";
+                var cmd = holder.Connection.CreateSPCommand(commName);
+                try
+                {
+                    cmd.Parameters.Add("@id_category", SqlDbType.Int).Direction = ParameterDirection.InputOutput;
+                    cmd.Parameters.AddWithValue("@id_account", id_account);
+                    cmd.Parameters.AddWithValue("@merchant", merchant);
+                    cmd.ExecuteNonQuery();
+                    int? categoryId = cmd.GetRowIdParameter("@id_category");
+                    res = categoryId.HasValue ? new CategoryMerchant(merchant, categoryId.Value) : null;
+                }
+                catch (SqlException e)
+                {
+                    cmd.AddDetailsToException(e);
+                    throw;
+                }
+            }
+            return res;
+        }
+
+        public static List<CategoryRule> GetCategoriesRules()
+        {
+            var res = new List<CategoryRule>();
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("categories_rules_get"))
+                {
+                    try
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                                res.Add(new CategoryRule(reader));
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return res;
+        }
+
+
     }
-
-
-
 }
