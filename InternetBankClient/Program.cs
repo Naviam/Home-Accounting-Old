@@ -28,14 +28,7 @@ namespace InternetBankClient
 
         public static dynamic GetRequestUri(string bankId)
         {
-            switch (bankId)
-            {
-                case "0175":
-                    return new
-                               {
-                                   LoginUri = "login.asp?mode=1"
-                               };
-            }
+                    return "login.asp?mode=1";
         }
     
         public void Login(string bankId, string username, string password)
@@ -89,9 +82,9 @@ namespace InternetBankClient
                                                             reportRequestContent);
 
                     var location = responseReportRequest.Headers.Location;
-                    Console.WriteLine("Openning " + "https://www.sbsibank.by/show.asp?id=106874" + " with content: " +
-                                      content2);
-                    var response2 = client.Post("https://www.sbsibank.by/show.asp?id=106874", content2);
+                    //Console.WriteLine("Openning " + "https://www.sbsibank.by/show.asp?id=106874" + " with content: " +
+                    //                  content2);
+                    //var response2 = client.Post("https://www.sbsibank.by/show.asp?id=106874", content2);
                 }
             }
         }
