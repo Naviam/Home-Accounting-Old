@@ -43,7 +43,7 @@ namespace Naviam.WebUI.Helpers
         /// <param name="message">Body of email</param>
         public static bool SendMail(string subject, string recipients, string message, string from)
         {
-            string path = AppDomain.CurrentDomain.BaseDirectory + @"Content\Naviam_logo1.png";
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"Content\Naviam_logo2.png";
             return SendMail(subject, recipients, message, from, path);
         }
 

@@ -221,7 +221,7 @@
       <DependentUpon>Login.scss</DependentUpon>
     </Content>
     <Content Include="Content\logo.png" />
-    <Content Include="Content\Naviam_logo1.png" />
+    <Content Include="Content\Naviam_logo2.png" />
     <Content Include="favicon.ico" />
     <Content Include="Prototype\Login.htm" />
     <Content Include="PublicSitemap.xml">
