@@ -76,7 +76,7 @@ namespace Naviam.WebUI.Controllers
 
         private ActionResult AuthSuccess(Data.UserProfile profile, LogOnModel model, string returnUrl, bool isApprove)
         {
-            if (!isApprove) return RedirectToAction("Confirmation", "Account", new { acc = profile.ApproveCode, email = profile.Name });
+            if (!isApprove) return RedirectToAction("Confirmation", "Account", new { acc = (string)null, email = profile.Name });
             //setup forms ticket
             var sessionKey = _membershipRepository.SetSessionForUser(profile);
 
@@ -91,15 +91,27 @@ namespace Naviam.WebUI.Controllers
             }
             return RedirectToAction("Index", "Transactions");
         }
-
+        
+        
         public ActionResult Confirmation(string acc, string email)
         {
             var model = new ConfirmationModel();
-            //model.ApproveCode = acc;
+            model.ApproveCode = acc;
             model.Email = email;
-            return View(model);
-        }
+            //mail
+            if (!string.IsNullOrEmpty(acc) && !string.IsNullOrEmpty(acc))
+            {
+                UserProfile profile = _membershipRepository.GetUserByApproveCode(model.ApproveCode);
 
+                if (profile != null)
+                {
+                    profile.IsApproved = _membershipRepository.Approve(profile.Name);
+                    return AuthSuccess(profile, new LogOnModel() { UserName = profile.Name, RememberMe = false }, "", true);
+                }
+            }
+            return View("Confirmation", model);
+        }
+        
         [HttpPost]
         public ActionResult Confirmation(ConfirmationModel model)
         {
@@ -115,12 +127,15 @@ namespace Naviam.WebUI.Controllers
                 }
                 ModelState.AddModelError(String.Empty, ValidationStrings.UsernameOrPasswordIsIncorrect);
             }
+            
             return View(model);
         }
 
         public string ConfirmationMail(ConfirmationModel model)
         {
-            EmailHelper.SendMail("Confirmation of registration on naviam.com", model.Email, string.Format(@"http://localhost:54345/Account/Confirmation?acc={0}", model.ApproveCode), "alert@naviam.com");
+            Uri url = HttpContext.Request.Url;
+            string res = url.Scheme + @"://" + url.Authority;
+            EmailHelper.SendMail("Confirmation of registration on naviam.com", model.Email, string.Format(@"{2}/Account/Confirmation?acc={0}&email={1}", model.ApproveCode, model.Email, res), "alert@naviam.com");
             return "ok";
         }
 
@@ -201,7 +216,12 @@ namespace Naviam.WebUI.Controllers
                 try
                 {
                     profile = _membershipRepository.CreateUser(model.UserName, model.Password);
-                    EmailHelper.SendMail("Confirmation of registration on naviam.com", model.UserName, string.Format(@"http://localhost:54345/Account/Confirmation?acc={0}", profile.ApproveCode), "alert@naviam.com");
+                    Uri url = HttpContext.Request.Url;
+                    string res = url.Scheme + @"://" + url.Authority;
+
+                    
+                    
+                    EmailHelper.SendMail("Confirmation of registration on naviam.com", model.UserName, string.Format(@"{2}/Account/Confirmation?acc={0}&email={1}", profile.ApproveCode, model.UserName, res), "alert@naviam.com");
                 }
                 catch (SqlException e)
                 {
@@ -209,6 +229,11 @@ namespace Naviam.WebUI.Controllers
                     {
                         case 50000:
                             profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
+                            if(profile!=null && profile.IsApproved)
+                            {
+                                ModelState.AddModelError(String.Empty,"Пользователь с таким именем уже существует.");
+                                return View(model);
+                            }
                             return RedirectToAction("Confirmation", "Account", new { acc = profile.ApproveCode, email = model.UserName });
                         default:
                             ModelState.AddModelError(String.Empty, e.Message);
@@ -238,6 +263,8 @@ namespace Naviam.WebUI.Controllers
         {
             return View("LogOn");
         }
+
+        private const string CONFIRMATION_MAIL_TEXT = @"";
     }
 
     // The FormsAuthentication type is sealed and contains static members, so it is difficult to
