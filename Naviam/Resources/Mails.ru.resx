@@ -139,4 +139,7 @@
 &lt;br&gt;
 Команда Naviam</value>
   </data>
+  <data name="ConfirmationMailSubject" xml:space="preserve">
+    <value>Поддтверждение регистрации на Naviam</value>
+  </data>
 </root>

@@ -10,6 +10,7 @@ using Naviam.WebUI.Helpers;
 using Naviam.WebUI.Resources;
 using log4net;
 using Naviam.Domain;
+using Naviam.NotificationCenter;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -92,7 +93,7 @@ namespace Naviam.WebUI.Controllers
                 _transRepository.Insert(tran, account.CompanyId);
                 var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
                 _accountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
-                EmailHelper.SendMail("subject", account.SmsUser, message, "sms@naviam.com");
+                NotificationManager.Instance.SendSmsMail(account.SmsUser, message);
             }
             catch (Exception ex)
             {
@@ -161,6 +162,6 @@ Ostatok: 1264348 BYR
 Na vremya: 20:26:12
 BLR/MINSK REG./KRAVT SHOP (AKVABEL)
 ";
-  
+
     }
 }

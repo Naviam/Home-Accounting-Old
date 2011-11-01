@@ -88,5 +88,14 @@ namespace Naviam.WebUI.Resources {
                 return ResourceManager.GetString("ConfirmationMail", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmation of registration on Naviam.
+        /// </summary>
+        public static string ConfirmationMailSubject {
+            get {
+                return ResourceManager.GetString("ConfirmationMailSubject", resourceCulture);
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using System.Data.SqlClient;
 using Naviam.Data;
 using log4net;
+using Naviam.NotificationCenter;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -133,16 +134,8 @@ namespace Naviam.WebUI.Controllers
 
         public string ConfirmationMail(ConfirmationModel model)
         {
-            Uri url = HttpContext.Request.Url;
-            string res = url.Scheme + @"://" + url.Authority;
-            EmailHelper.SendMail("Confirmation of registration on naviam.com", model.Email, GetMailBody(string.Format(@"{2}/Account/Confirmation?acc={0}&email={1}", model.ApproveCode, model.Email, res), model.ApproveCode), "alert@naviam.com");
+            NotificationManager.Instance.SendConfirmationRegistrationMail(model.Email, model.ApproveCode, model.Email);
             return "ok";
-        }
-
-        public string GetMailBody(string confirmationLink, string code)
-        {
-            string res = string.Format(Resources.Mails.ConfirmationMail, confirmationLink, code);
-            return res;
         }
 
         [HttpGet]
@@ -222,9 +215,7 @@ namespace Naviam.WebUI.Controllers
                 try
                 {
                     profile = _membershipRepository.CreateUser(model.UserName, model.Password);
-                    Uri url = HttpContext.Request.Url;
-                    string res = url.Scheme + @"://" + url.Authority;
-                    EmailHelper.SendMail("Confirmation of registration on naviam.com", model.UserName, GetMailBody(string.Format(@"{2}/Account/Confirmation?acc={0}&email={1}", profile.ApproveCode, model.UserName, res), profile.ApproveCode), "alert@naviam.com");
+                    NotificationManager.Instance.SendConfirmationRegistrationMail(model.UserName, profile.ApproveCode, model.UserName);
                 }
                 catch (SqlException e)
                 {

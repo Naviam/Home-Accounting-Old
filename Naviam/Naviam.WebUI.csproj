@@ -135,11 +135,11 @@
     <Compile Include="Helpers\Cookies\CookieContainer.cs" />
     <Compile Include="Helpers\Cookies\ICookieContainer.cs" />
     <Compile Include="Helpers\CustomModelBinder.cs" />
-    <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\HandleErrorWithElmahAttribute.cs" />
     <Compile Include="Helpers\ModelStateHelper.cs" />
     <Compile Include="Helpers\MyFormValueProvider.cs" />
     <Compile Include="Helpers\NinjectControllerFactory.cs" />
+    <Compile Include="Helpers\NotificationCenter\NotificationManager.cs" />
     <Compile Include="Helpers\Parsers\BelSwissParser.cs" />
     <Compile Include="Helpers\Parsers\ParserBase.cs" />
     <Compile Include="Helpers\Parsers\ParsersFactory.cs" />

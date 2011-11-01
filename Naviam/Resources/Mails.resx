@@ -140,4 +140,7 @@ Thanks again,
 &lt;br&gt;
 The Naviam Team</value>
   </data>
+  <data name="ConfirmationMailSubject" xml:space="preserve">
+    <value>Confirmation of registration on Naviam</value>
+  </data>
 </root>
