@@ -175,6 +175,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>JavaScript.ru.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Mails.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Mails.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\NaviamResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -406,6 +411,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>JavaScript.ru.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Mails.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Mails.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Mails.ru.resx" />
     <EmbeddedResource Include="Resources\NaviamResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NaviamResources.Designer.cs</LastGenOutput>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Naviam.Data;
 using System.Data.SqlClient;
 
@@ -24,6 +23,34 @@ namespace Naviam.DAL
                         {
                             while (reader.Read())
                                 res.Add(new FinanceInstitution(reader));
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+
+            }
+            return res;
+        }
+
+        public static FinanceInstitution GetByIdentifier(string identifier)
+        {
+            FinanceInstitution res = null;
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("fininst_get_by_sms_identifier"))
+                {
+                    try
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                res = new FinanceInstitution(reader);
+                            }
                         }
                     }
                     catch (SqlException e)
