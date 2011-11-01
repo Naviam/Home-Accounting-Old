@@ -44,11 +44,16 @@ namespace Naviam.WebUI.Controllers
         {
             //message = testMessage;
             //gateway = "GETWAY1";
+            ILog log = LogManager.GetLogger("navSite");
 
-            if (key != "givemeaccesstotoyou") return Json("error");
+            if (key != "givemeaccesstotoyou")
+            {
+                log.Error("session key does not match with the original!");
+                return Json("error");
+            }
 
             Modem modem = _modemsRepository.GetModemByGateway(gateway);
-            ILog log = LogManager.GetLogger("navSite");
+            
             log.Debug(String.Format("gateway:{0}, from:{1}, message:{2}", gateway, from, message));
 
             FinanceInstitution bank = FinanceInstitutionDataAdapter.GetByIdentifier(from);
