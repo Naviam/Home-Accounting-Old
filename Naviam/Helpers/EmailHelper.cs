@@ -63,7 +63,7 @@ namespace Naviam.WebUI.Helpers
                 //MailDefinition md = new MailDefinition();
                 MailMessage mess = new MailMessage();
                 mess.IsBodyHtml = true;
-                mess.BodyEncoding = System.Text.Encoding.GetEncoding(1251);
+                mess.BodyEncoding = System.Text.Encoding.UTF8;// GetEncoding(1251);
                 mess.From = new MailAddress(from);
                 mess.To.Add(recipients);
                 mess.Subject = subject;
