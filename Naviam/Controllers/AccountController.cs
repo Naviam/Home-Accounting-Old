@@ -135,13 +135,14 @@ namespace Naviam.WebUI.Controllers
         {
             Uri url = HttpContext.Request.Url;
             string res = url.Scheme + @"://" + url.Authority;
-            EmailHelper.SendMail("Confirmation of registration on naviam.com", model.Email, GetMailBody(string.Format(@"{2}/Account/Confirmation?acc={0}&email={1}", model.ApproveCode, model.Email, res)), "alert@naviam.com");
+            EmailHelper.SendMail("Confirmation of registration on naviam.com", model.Email, GetMailBody(string.Format(@"{2}/Account/Confirmation?acc={0}&email={1}", model.ApproveCode, model.Email, res), model.ApproveCode), "alert@naviam.com");
             return "ok";
         }
 
-        public string GetMailBody(string confirmationLink)
+        public string GetMailBody(string confirmationLink, string code)
         {
-            return string.Format(Resources.Mails.ConfirmationMail, confirmationLink);
+            string res = string.Format(Resources.Mails.ConfirmationMail, confirmationLink, code);
+            return res;
         }
 
         [HttpGet]
@@ -223,7 +224,7 @@ namespace Naviam.WebUI.Controllers
                     profile = _membershipRepository.CreateUser(model.UserName, model.Password);
                     Uri url = HttpContext.Request.Url;
                     string res = url.Scheme + @"://" + url.Authority;
-                    EmailHelper.SendMail("Confirmation of registration on naviam.com", model.UserName,GetMailBody(string.Format(@"{2}/Account/Confirmation?acc={0}&email={1}", profile.ApproveCode, model.UserName, res)), "alert@naviam.com");
+                    EmailHelper.SendMail("Confirmation of registration on naviam.com", model.UserName, GetMailBody(string.Format(@"{2}/Account/Confirmation?acc={0}&email={1}", profile.ApproveCode, model.UserName, res), profile.ApproveCode), "alert@naviam.com");
                 }
                 catch (SqlException e)
                 {

@@ -120,6 +120,8 @@
   <data name="ConfirmationMail" xml:space="preserve">
     <value>&lt;p&gt;
 Спасибо за регистрацию на Naviam. Ваши регистрационные данные в настоящее время добавляются.
+&lt;/p&gt;&lt;p&gt;
+Ваш код регистрации: {1}
 &lt;/p&gt;
 &lt;p&gt;
 &lt;b&gt;

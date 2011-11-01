@@ -22,7 +22,7 @@ namespace Naviam.WebUI.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Mails {
+    public class Mails {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Naviam.WebUI.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Naviam.WebUI.Resources.Mails", typeof(Mails).Assembly);
@@ -51,7 +51,7 @@ namespace Naviam.WebUI.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,6 +63,9 @@ namespace Naviam.WebUI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to &lt;p&gt;
         ///Thank you for registering on Naviam. Your sign-in email address has now been updated.
+        ///&lt;/p&gt;
+        ///&lt;p&gt;
+        ///Your registration code is: {1}
         ///&lt;/p&gt;
         ///&lt;p&gt;
         ///&lt;b&gt;
@@ -80,7 +83,7 @@ namespace Naviam.WebUI.Resources {
         ///&lt;br&gt;
         ///The Naviam Team.
         /// </summary>
-        internal static string ConfirmationMail {
+        public static string ConfirmationMail {
             get {
                 return ResourceManager.GetString("ConfirmationMail", resourceCulture);
             }

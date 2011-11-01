@@ -122,6 +122,9 @@
 Thank you for registering on Naviam. Your sign-in email address has now been updated.
 &lt;/p&gt;
 &lt;p&gt;
+Your registration code is: {1}
+&lt;/p&gt;
+&lt;p&gt;
 &lt;b&gt;
 Please reconfirm your email by &lt;a target="_blank" href="{0}"&gt;clicking here&lt;/a&gt;
 &lt;/b&gt;
