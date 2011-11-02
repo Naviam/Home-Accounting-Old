@@ -15,7 +15,6 @@
     <script type="text/javascript" src="~/Scripts/common.js"></script> 
 }
 <script type='text/javascript'>
-    //    var initialData = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model)));
     var getBudgets = '@Url.Action("BudgetGet", "Budget")';
 
     var budgetsModel = {};
@@ -35,6 +34,9 @@
     
     ko.applyBindings(budgetsModel, document.body);
 
+    $(document).ready(function () {
+        budgetsModel.Load();
+    });
 </script>
 <p>You have asked for <span data-bind="text: items().length">&nbsp;</span> gift(s)</p>
 <table>

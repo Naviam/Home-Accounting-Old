@@ -23,19 +23,14 @@ namespace Naviam.WebUI.Controllers
                 new Budget { Id = 1, Title = "Tall Hat", Amount = 49.95 },
                 new Budget { Id = 2, Title = "Long Cloak", Amount = 78.25 }
             };
-            return Json(new { initialState });
+            return Json(new {items = initialState });
             //return View(initialState);
             //return View();
         }
 
         public ActionResult Budget()
         {
-            var initialState = new List<Budget> {
-                new Budget { Id = 1, Title = "Tall Hat", Amount = 49.95 },
-                new Budget { Id = 2, Title = "Long Cloak", Amount = 78.25 }
-            };
-            return Json(new { initialState });
-            //return View();
+            return View();
         }
 
 
