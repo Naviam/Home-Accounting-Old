@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Concrete\AccountsRepository.cs" />
     <Compile Include="Concrete\AccountTypesRepository.cs" />
+    <Compile Include="Concrete\BudgetRepository.cs" />
     <Compile Include="Concrete\CategoriesRepository.cs" />
     <Compile Include="Concrete\CurrenciesRepository.cs" />
     <Compile Include="Concrete\FinanceInstitutionRepository.cs" />

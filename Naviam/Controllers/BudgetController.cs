@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Naviam.Domain.Concrete;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -13,16 +14,26 @@ namespace Naviam.WebUI.Controllers
         public double Amount { get; set; }
     }
 
+    public class GetBudgetRequest
+    {
+        public DateTime? startDate { get; set; }
+        public DateTime? endDate { get; set; }
+    }
 
     public class BudgetController : BaseController
     {
-        [HttpPost]
-        public ActionResult BudgetGet()
+        private readonly BudgetRepository _budgetRepository;
+
+        public BudgetController(BudgetRepository budgetRepository = null)
         {
-            var initialState = new List<Budget> {
-                new Budget { Id = 1, Title = "Tall Hat", Amount = 49.95 },
-                new Budget { Id = 2, Title = "Long Cloak", Amount = 78.25 }
-            };
+            _budgetRepository = budgetRepository ?? new BudgetRepository();
+        }
+
+        [HttpPost]
+        public ActionResult BudgetGet(GetBudgetRequest request)
+        {
+            var user = CurrentUser;
+            var initialState = _budgetRepository.GetBudgets(user.CurrentCompany);
             return Json(new {items = initialState });
             //return View(initialState);
             //return View();
