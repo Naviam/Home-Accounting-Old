@@ -31,21 +31,19 @@
             ko.applyBindings(budgetsModel, document.body);
         });
     };
-    
-    
 
     $(document).ready(function () {
         budgetsModel.Load();
     });
 </script>
-<p>You have asked for <span data-bind="text: items().length">&nbsp;</span> gift(s)</p>
-<table>
-    <tbody data-bind="template: { name: 'giftRowTemplate', foreach: items }">
-    </tbody>
-</table>
-<script type="text/html" id="giftRowTemplate">
-    <tr>
-        <td>Gift name: <input data-bind="value: Title"/></td>
-        <td>Price: \$ <input data-bind="value: Amount"/></td>
-    </tr>
+
+<ul class="budget_items" data-bind="template: { name: 'budgetRowTemplate', foreach: items }">
+</ul>
+<script type="text/html" id="budgetRowTemplate">
+    <li>
+        <a class="title" href="#" title="View transactions for Gas & Fuel">
+                <span data-bind="text: CategoryId"/>
+         </a>
+        <span class="bar"><span data-bind="text: Amount"/></span>
+    </li>
 </script>
