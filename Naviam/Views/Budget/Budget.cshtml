@@ -28,11 +28,11 @@
                 }
             };
             budgetsModel = ko.mapping.fromJS(res, mapping);
-
+            ko.applyBindings(budgetsModel, document.body);
         });
     };
     
-    ko.applyBindings(budgetsModel, document.body);
+    
 
     $(document).ready(function () {
         budgetsModel.Load();
