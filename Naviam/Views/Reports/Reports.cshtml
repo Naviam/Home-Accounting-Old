@@ -66,13 +66,28 @@
     <script type="text/html" id="r_tableTemplate">
         <tr>
             @*<td><span data-bind="text: Id"/></td>*@
-            <td><span data-bind="text: Name"/></td>
+            <th><span data-bind="text: Name"/></th>
             <td><span data-bind="amount: Amount"/></td>
         </tr>
     </script>
+
+    <script type="text/html" id="r_tableHTemplate">
+            <tr>
+            <th><span data-bind="text: headColumn1"/></th>
+            <td><span data-bind="text: headColumn2"/></td>
+            </tr>
+    </script>
     
-    <table data-bind="template: {name:'r_tableTemplate', foreach:items }" class='table'>
+    <table id='portfolio' class="portfolio">
+        <thead data-bind='template: { name: "r_tableHTemplate" }'>
+        </thead>
+        <tfoot>
+            <tr class="totals">
+            <th>Total</th>
+            <td data-bind="amount: endAmount"></td>
+            </tr>
+        </tfoot>
+        <tbody data-bind="template: {name:'r_tableTemplate', foreach:items }" ></tbody>
     </table>
-    <b><span data-bind="amount: endAmount"/></b>
 </div>
 

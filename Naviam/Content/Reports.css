@@ -6,3 +6,35 @@
 #rep_menu {
   float: left;
   margin: 0 10px 10px 300px; }
+
+table.portfolio {
+  margin: 0 0 10px 20px;
+  float: left;
+  width: 360px; }
+  table.portfolio thead th, table.portfolio thead td {
+    font-size: 12px;
+    font-family: "Helvetica Neue",arial,sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #E0E0DC;
+    color: #6F655D; }
+  table.portfolio tbody {
+    font-size: 12px; }
+    table.portfolio tbody th, table.portfolio tbody td {
+      border-top: 1px dashed #DEDEDE; }
+  table.portfolio td {
+    text-align: right;
+    color: #382D24; }
+  table.portfolio th, table.portfolio td {
+    line-height: normal;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-top: 5px;
+    vertical-align: top; }
+  table.portfolio tfoot tr.totals th, table.portfolio tfoot tr.totals td {
+    border-top: 1px solid #999999;
+    font-family: "Helvetica Neue",arial,sans-serif;
+    font-size: 18px; }
+  table.portfolio tfoot tr.totals td {
+    font-weight: bold; }

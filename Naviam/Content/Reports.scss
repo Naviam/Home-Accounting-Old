@@ -9,3 +9,50 @@
 	float:left;
 	margin: 0 10px 10px 300px;
 }
+
+table.portfolio {
+    margin: 0 0 10px 20px;
+    float: left;
+    width: 360px;
+	//border-collapse: collapse;
+	thead {
+		th, td {
+			font-size: 12px;
+			font-family: "Helvetica Neue",arial,sans-serif;
+			font-weight: bold;
+			letter-spacing: 1px;
+			text-transform: uppercase;
+			border-bottom: 1px solid #E0E0DC;
+			color: #6F655D;
+		}
+	}
+	tbody {
+		font-size: 12px;
+		th, td {
+			border-top: 1px dashed #DEDEDE;
+		}
+	}
+	td {
+		text-align: right;
+		color: #382D24;
+	}
+	th, td {
+		line-height: normal;
+		padding-bottom: 5px;
+		padding-left: 5px;
+		padding-top: 5px;
+		vertical-align: top;
+	}
+	tfoot {
+		tr.totals {
+			th, td {
+				border-top: 1px solid #999999;
+				font-family: "Helvetica Neue",arial,sans-serif;
+				font-size: 18px;
+			}
+			td {
+				font-weight: bold;
+			}
+		}
+	}
+}
