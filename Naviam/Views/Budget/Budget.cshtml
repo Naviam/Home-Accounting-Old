@@ -1,5 +1,6 @@
 ﻿@using Naviam.WebUI.Resources
 @using Naviam.Data;
+
 @{
     ViewBag.Title = SharedStrings.BudgetTitle;
     Layout = "~/Views/Shared/_LayoutWithSidebars.cshtml";
@@ -13,3 +14,36 @@
     <script type="text/javascript" src="~/Scripts/knockout.mapping.js"></script> 
     <script type="text/javascript" src="~/Scripts/common.js"></script> 
 }
+<script type='text/javascript'>
+    //    var initialData = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model)));
+    var getBudgets = '@Url.Action("BudgetGet", "Budget")';
+
+    var budgetsModel = {};
+    budgetsModel.Load = function () {
+        $.postErr(getBudgets, function (res) {
+            var mapping = {
+                'items': {
+                    key: function (data) {
+                        return ko.utils.unwrapObservable(data.Id);
+                    }
+                }
+            };
+            budgetsModel = ko.mapping.fromJS(res, mapping);
+
+        });
+    };
+    
+    ko.applyBindings(budgetsModel, document.body);
+
+</script>
+<p>You have asked for <span data-bind="text: items().length">&nbsp;</span> gift(s)</p>
+<table>
+    <tbody data-bind="template: { name: 'giftRowTemplate', foreach: items }">
+    </tbody>
+</table>
+<script type="text/html" id="giftRowTemplate">
+    <tr>
+        <td>Gift name: <input data-bind="value: Title"/></td>
+        <td>Price: \$ <input data-bind="value: Amount"/></td>
+    </tr>
+</script>
