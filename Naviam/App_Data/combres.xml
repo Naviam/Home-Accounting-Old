@@ -31,8 +31,13 @@
     <resourceSet name="naviamCss" type="css">
         <resource path="~/Content/blueprint/reset.css" />
         <resource path="~/Content/Naviam.css" />
-      <resource path="~/Content/ddsmoothmenu.css" />
-      <resource path="~/Content/ddsmoothmenu-v.css" />
+        <resource path="~/Content/ddsmoothmenu.css" />
+        <resource path="~/Content/ddsmoothmenu-v.css" />
+    </resourceSet>
+    <resourceSet name="reportsCss" type="css">
+      <resource path="~/Content/blueprint/reset.css" />
+      <resource path="~/Content/Naviam.css" />
+      <resource path="~/Content/Reports.css" />
     </resourceSet>
     <!--JS-->
     <resourceSet name="jquery" type="js">

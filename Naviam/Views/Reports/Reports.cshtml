@@ -4,6 +4,7 @@
     ViewBag.Title = SharedStrings.ReportsTitle;
     Layout = "~/Views/Shared/_LayoutWithSidebars.cshtml";
     ViewBag.CombresScripts = "reports";
+    ViewBag.CombresCss = "reportsCss";
 }
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
@@ -21,18 +22,23 @@
     google.load("visualization", "1", { packages: ["corechart"] });
 </script>
 
+@*@section LeftColumn {
+}
+@section RightColumn {
+}*@
 <div id="rep_menu">
     <script type="text/html" id="r_menuTemplate">
         <li data-bind="click: function() { $item.current($data); }, css: {underline: $item.current() == $data}">
             <a data-bind="text: caption" href='#'/>
         </li>
     </script>
-    <div style='float:left;margin: 0 10px 0 0;'>
-        <ul data-bind="template: {name:'r_menuTemplate', foreach:menu, templateOptions: { current: selectedMenu } }">
+    <div>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:menu, templateOptions: { current: selectedMenu } }" class='h_menu'>
         </ul>
     </div>
-    <div style='float:left'>
-        <ul data-bind="template: {name:'r_menuTemplate', foreach:selectedMenu() ? selectedMenu().subMenu : null, templateOptions: { current: selectedSubMenu } }">
+    <div style="clear:both"></div>
+    <div>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:selectedMenu() ? selectedMenu().subMenu : null, templateOptions: { current: selectedSubMenu } }" class='h_menu'>
         </ul>
     </div>
 </div>
@@ -40,14 +46,10 @@
 
 
 <div id='report_page'>
-<div>
-    <a href="#"><img src="@Url.Content("~/Content/images/stats_pie.png")" data-bind="click: function() { graphType(0); }"/></a>
-    <a href="#"><img src="@Url.Content("~/Content/images/stats_bars.png")" data-bind="click: function() { graphType(1); }"/></a>
-</div>
-
-<div id="chart_p"></div>
-<div id="chart_b"></div>
-
+    <div style='float:right;margin-top: 10px;'>
+        <a href="#"><img src="@Url.Content("~/Content/images/stats_pie.png")" data-bind="click: function() { graphType(0); }"/></a>
+        <a href="#"><img src="@Url.Content("~/Content/images/stats_bars.png")" data-bind="click: function() { graphType(1); }"/></a>
+    </div>
 
     <script type="text/html" id="r_currTemplate">
         <li data-bind="click: function() { $item.current($data.Id()); }, css: {underline: $item.current() == $data.Id()}">
@@ -55,7 +57,11 @@
         </li>
     </script>
     <ul data-bind="template: {name:'r_currTemplate', foreach:currencies, templateOptions: { current: request.selectedCurrency } }" class='h_menu'></ul>
+
     <div style="clear:both"></div>
+
+    <div id="chart_p"></div>
+    <div id="chart_b"></div>
 
     <script type="text/html" id="r_tableTemplate">
         <tr>
