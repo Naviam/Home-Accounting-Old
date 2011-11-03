@@ -159,6 +159,9 @@
   <data name="LoginHeader" xml:space="preserve">
     <value>Вход на сайт</value>
   </data>
+  <data name="Month" xml:space="preserve">
+    <value>Месяц</value>
+  </data>
   <data name="Move" xml:space="preserve">
     <value>Переместить</value>
   </data>
@@ -194,6 +197,9 @@
   </data>
   <data name="TargetsTitle" xml:space="preserve">
     <value>Цели</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Всего</value>
   </data>
   <data name="Transactions" xml:space="preserve">
     <value>Транзакции</value>

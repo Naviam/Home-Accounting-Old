@@ -243,4 +243,7 @@
   <data name="Spending" xml:space="preserve">
     <value>Spending</value>
   </data>
+  <data name="OverTime" xml:space="preserve">
+    <value>Over Time</value>
+  </data>
 </root>

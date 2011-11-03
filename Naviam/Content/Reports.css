@@ -7,6 +7,9 @@
   float: left;
   margin: 0 10px 10px 300px; }
 
+#report_page {
+  margin-left: 10px; }
+
 table.portfolio {
   margin: 0 0 10px 20px;
   float: left;

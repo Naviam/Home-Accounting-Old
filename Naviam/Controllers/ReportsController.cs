@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Naviam.Domain.Concrete;
 
 using Naviam.Data;
+using System.Globalization;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -16,6 +17,14 @@ namespace Naviam.WebUI.Controllers
             public int? selectedCurrency { get; set; }
             public int? selectedMenu { get; set; }
             public int? selectedSubMenu { get; set; }
+            public DateTime? startDate { get; set; }
+            public DateTime? endDate { get; set; }
+        }
+
+        public class ReqMonth
+        {
+            public int id { get; set; }
+            public string name { get; set; }
         }
 
         private readonly TransactionsRepository _transRepository;
@@ -37,6 +46,14 @@ namespace Naviam.WebUI.Controllers
             return View();
         }
 
+        public string GetMonthName(int month, bool abbreviate, IFormatProvider provider = null)
+        {
+            DateTimeFormatInfo info = DateTimeFormatInfo.GetInstance(provider);
+            if (abbreviate) return info.GetAbbreviatedMonthName(month);
+            return info.GetMonthName(month);
+        }
+
+
         [HttpPost]
         public ActionResult GetReport(GetReportRequest request)
         {
@@ -57,6 +74,17 @@ namespace Naviam.WebUI.Controllers
 
             request.selectedMenu = request.selectedMenu ?? 0;
             request.selectedSubMenu = request.selectedSubMenu ?? 0;
+            request.startDate = request.startDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var endYear = DateTime.Now.Year;
+            var endMonth = DateTime.Now.Month + 1;
+            if (endMonth > 12) { endMonth = 1; endYear++; }
+            request.endDate = request.endDate ?? new DateTime(endYear, endMonth, 1);
+
+            var months = new List<ReqMonth>();
+            for (int i = 1; i < 13; i++)
+            {
+                months.Add(new ReqMonth() { id = i, name = GetMonthName(i, false) });
+            }
 
             var headColumn1 = Resources.JavaScript.Category;
             var headColumn2 = Resources.JavaScript.Spending;
@@ -70,7 +98,7 @@ namespace Naviam.WebUI.Controllers
                     headColumn1 = Resources.JavaScript.Category;
                     report = from t in trans
                              join c in cats on t.CategoryId equals c.Id
-                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency
+                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate
                              group t.Amount by c into g
                              orderby g.Sum() descending
                              select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
@@ -80,7 +108,7 @@ namespace Naviam.WebUI.Controllers
                 {
                     headColumn1 = Resources.JavaScript.Merchant;
                     report = from t in trans
-                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency
+                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate
                              group t by t.Description into g
                              orderby g.Sum(t => t.Amount) descending
                              select new { Id = g.Min(t => t.Id), Amount = g.Sum(t => t.Amount), Name = g.Key }; //
@@ -91,10 +119,21 @@ namespace Naviam.WebUI.Controllers
                     headColumn1 = Resources.JavaScript.Tag;
                     report = from t in trans
                              from tg in tags
-                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.TagIds.Contains(tg.Id.ToString())
+                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.TagIds.Contains(tg.Id.ToString()) && t.Date >= request.startDate && t.Date < request.endDate
                              group t.Amount by tg into g
                              orderby g.Sum() descending
                              select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
+                }
+                
+                if (request.selectedSubMenu == 3)
+                {
+                    headColumn1 = Resources.SharedStrings.Month;
+                    report = from t in trans
+                             join c in months on t.Date.Value.Month equals c.id
+                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate
+                             group t.Amount by c into g
+                             orderby g.Key.id
+                             select new { Id = g.Key.id, Amount = g.Sum(), Name = g.Key.name }; //
                 }
             }
 

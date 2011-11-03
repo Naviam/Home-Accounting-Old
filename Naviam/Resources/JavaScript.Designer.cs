@@ -367,6 +367,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Over Time.
+        /// </summary>
+        public static string OverTime {
+            get {
+                return ResourceManager.GetString("OverTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sa.
         /// </summary>
         public static string SaturdayS {
