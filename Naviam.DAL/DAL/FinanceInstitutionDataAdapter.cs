@@ -48,6 +48,7 @@ namespace Naviam.DAL
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
+                            reader.Read();
                             if (reader.HasRows)
                             {
                                 res = new FinanceInstitution(reader);
