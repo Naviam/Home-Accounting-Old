@@ -17,6 +17,7 @@ reportsModel.Load = function () {
         //props
         rep_req = reportsModel.request;
         rep_req.selectedCurrency.subscribe(function () { reportsModel.Refresh(); });
+        rep_req.selectedTimeFrame.subscribe(function () { reportsModel.Refresh(); });
         //rep_req.selectedMenu.subscribe(function () { reportsModel.Refresh(); });
         rep_req.selectedSubMenu.subscribe(function (val) { reportsModel.Refresh(); });
         reportsModel.graphType = ko.observable(0);
@@ -81,6 +82,7 @@ reportsModel.Load = function () {
         }
         //
         ko.applyBindings(reportsModel, $("#report_page")[0]);
+        ko.applyBindings(reportsModel, $("#timeline")[0]);
         menuModel.selectedMenu(menuModel.menu[rep_req.selectedMenu()]);
         menuModel.selectedSubMenu(menuModel.menu[rep_req.selectedMenu()].subMenu[rep_req.selectedSubMenu()]);
         menuModel.selectedMenu.subscribe(function (val) {
