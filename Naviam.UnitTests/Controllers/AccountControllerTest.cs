@@ -125,6 +125,37 @@ namespace Naviam.UnitTests.Controllers
         }
         #endregion
 
+        #region CONFRMATION TESTS
+        [TestMethod]
+        public void ConfirmationGet()
+        {
+            // Arrange
+            var controller = GetAccountController();
+
+            // Act
+            var result = (ViewResult)controller.Confirmation("acc", "email");
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Confirmation", result.ViewName);
+        }
+
+        //[TestMethod]
+        //public void ConfirmationPostRedirectsHomeIfConfirmationSuccessful()
+        //{
+        //    // Arrange
+        //    var controller = GetAccountController(new UserProfile());
+
+        //    // Act
+        //    var result = controller.Confirmation(
+        //        new ConfirmationModel { ApproveCode = "someCode", Email="someEmail" });
+
+        //    // Assert
+        //    Assert.AreEqual("Transactions", result.RouteValues["controller"]);
+        //    Assert.AreEqual("Index", result.RouteValues["action"]);
+        //}
+        #endregion
+
         #region REGISTER TESTS
         [TestMethod]
         public void RegisterGet()
