@@ -43,6 +43,7 @@ namespace Naviam.DAL
             {
                 using (var cmd = holder.Connection.CreateSPCommand("fininst_get_by_sms_identifier"))
                 {
+                    cmd.Parameters.AddWithValue("@sms_identifier", identifier.ToDbValue());
                     try
                     {
                         using (var reader = cmd.ExecuteReader())
