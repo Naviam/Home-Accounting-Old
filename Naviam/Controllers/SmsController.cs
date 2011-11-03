@@ -53,7 +53,7 @@ namespace Naviam.WebUI.Controllers
             }
 
             Modem modem = _modemsRepository.GetModemByGateway(gateway);
-            
+
             log.Debug(String.Format("gateway:{0}, from:{1}, message:{2}", gateway, from, message));
 
             FinanceInstitution bank = FinanceInstitutionDataAdapter.GetByIdentifier(from);
@@ -62,10 +62,18 @@ namespace Naviam.WebUI.Controllers
                 log.Warn(String.Format("can't find bank"));
                 return Json("ok");
             }
-            //int id_bank = 15;
             try
             {
-                SmsBase sms = new BelSwissSms(message);
+                SmsBase sms;
+                switch (bank.Id)
+                {
+                    case 15: sms = new BelSwissSms(message);
+                        break;
+                    default:
+                        sms = new BelSwissSms(message);
+                        break;
+                }
+
 
                 //TODO: check sms.Result if need????
                 var account = _accountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, bank.Id);
@@ -86,7 +94,7 @@ namespace Naviam.WebUI.Controllers
                         //autosearch category by merchant
                         // 20 - Uncategorized
                         CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,
-                        Date = DateTime.UtcNow,
+                        Date = sms.Date,
                         Description = sms.Merchant,
                         Direction = sms.Direction,
                         IncludeInTax = false,
