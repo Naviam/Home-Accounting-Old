@@ -17,6 +17,7 @@ namespace Naviam.WebUI.Controllers
             public int? selectedCurrency { get; set; }
             public int? selectedMenu { get; set; }
             public int? selectedSubMenu { get; set; }
+            public int? selectedTimeFrame { get; set; }
             public DateTime? startDate { get; set; }
             public DateTime? endDate { get; set; }
         }
@@ -25,6 +26,29 @@ namespace Naviam.WebUI.Controllers
         {
             public int id { get; set; }
             public string name { get; set; }
+        }
+
+        public enum ReportType
+        {
+            ByExpense,
+            ByIncome
+        }
+
+        public enum ReportSubtype
+        {
+            ByCategory,
+            ByMerchant,
+            ByTag,
+            OverTime
+        }
+        
+        public enum ReportTimeFrame
+        {
+            ThisMonth,
+            LastMonth,
+            ThisYear,
+            AllTime,
+            Selected
         }
 
         private readonly TransactionsRepository _transRepository;
@@ -74,11 +98,28 @@ namespace Naviam.WebUI.Controllers
 
             request.selectedMenu = request.selectedMenu ?? 0;
             request.selectedSubMenu = request.selectedSubMenu ?? 0;
-            request.startDate = request.startDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            var endYear = DateTime.Now.Year;
-            var endMonth = DateTime.Now.Month + 1;
-            if (endMonth > 12) { endMonth = 1; endYear++; }
-            request.endDate = request.endDate ?? new DateTime(endYear, endMonth, 1);
+            request.selectedTimeFrame = request.selectedTimeFrame ?? 0;
+
+            if (request.selectedTimeFrame == (int)ReportTimeFrame.ThisMonth)
+            {
+                request.startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                request.endDate = request.startDate.Value.AddMonths(1);
+            }
+            if (request.selectedTimeFrame == (int)ReportTimeFrame.LastMonth)
+            {
+                request.startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1);
+                request.endDate = request.startDate.Value.AddMonths(1);
+            }
+            if (request.selectedTimeFrame == (int)ReportTimeFrame.ThisYear)
+            {
+                request.startDate = new DateTime(DateTime.Now.Year, 1, 1);
+                request.endDate = request.startDate.Value.AddYears(1);
+            }
+            if (request.selectedTimeFrame == (int)ReportTimeFrame.AllTime)
+            {
+                request.startDate = new DateTime(DateTime.MinValue.Year, 1, 1);
+                request.endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
+            }
 
             var months = new List<ReqMonth>();
             for (int i = 1; i < 13; i++)
@@ -89,11 +130,11 @@ namespace Naviam.WebUI.Controllers
             var headColumn1 = Resources.JavaScript.Category;
             var headColumn2 = Resources.JavaScript.Spending;
 
-            if ((request.selectedMenu == 0 || request.selectedMenu == 1))
+            if ((request.selectedMenu == (int)ReportType.ByExpense || request.selectedMenu == (int)ReportType.ByIncome))
             {
-                if (request.selectedMenu == 1)
+                if (request.selectedMenu == (int)ReportType.ByIncome)
                     headColumn2 = Resources.JavaScript.Income;
-                if (request.selectedSubMenu == 0)
+                if (request.selectedSubMenu == (int)ReportSubtype.ByCategory) 
                 {
                     headColumn1 = Resources.JavaScript.Category;
                     report = from t in trans
@@ -104,7 +145,7 @@ namespace Naviam.WebUI.Controllers
                              select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
                 }
 
-                if (request.selectedSubMenu == 1)
+                if (request.selectedSubMenu == (int)ReportSubtype.ByMerchant)
                 {
                     headColumn1 = Resources.JavaScript.Merchant;
                     report = from t in trans
@@ -114,7 +155,7 @@ namespace Naviam.WebUI.Controllers
                              select new { Id = g.Min(t => t.Id), Amount = g.Sum(t => t.Amount), Name = g.Key }; //
                 }
 
-                if (request.selectedSubMenu == 2)
+                if (request.selectedSubMenu == (int)ReportSubtype.ByTag) 
                 {
                     headColumn1 = Resources.JavaScript.Tag;
                     report = from t in trans
@@ -124,8 +165,8 @@ namespace Naviam.WebUI.Controllers
                              orderby g.Sum() descending
                              select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
                 }
-                
-                if (request.selectedSubMenu == 3)
+
+                if (request.selectedSubMenu == (int)ReportSubtype.OverTime) 
                 {
                     headColumn1 = Resources.SharedStrings.Month;
                     report = from t in trans

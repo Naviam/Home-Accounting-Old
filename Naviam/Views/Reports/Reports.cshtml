@@ -26,6 +26,18 @@
 }
 @section RightColumn {
 }*@
+
+<div id="timeline">
+    <ul class="h_menu timeframe_menu">
+        <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(0); },css: {underline: request.selectedTimeFrame() == 0}">@SharedStrings.ThisMonth</a></li>
+        <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(1); },css: {underline: request.selectedTimeFrame() == 1}">@SharedStrings.LastMonth</a></li>
+        <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(2); },css: {underline: request.selectedTimeFrame() == 2}">@SharedStrings.ThisYear</a></li>
+        <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(3); },css: {underline: request.selectedTimeFrame() == 3}">@SharedStrings.AllTime</a></li>
+    </ul>
+</div>
+
+<div style="clear:both"></div>
+
 <div id="rep_menu">
     <script type="text/html" id="r_menuTemplate">
         <li data-bind="click: function() { $item.current($data); }, css: {underline: $item.current() == $data}">
