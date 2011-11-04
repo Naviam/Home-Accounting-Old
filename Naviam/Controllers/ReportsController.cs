@@ -18,6 +18,8 @@ namespace Naviam.WebUI.Controllers
             public int? selectedMenu { get; set; }
             public int? selectedSubMenu { get; set; }
             public int? selectedTimeFrame { get; set; }
+            public int? selectedTimeFrameStart { get; set; }
+            public int? selectedTimeFrameEnd { get; set; }
             public DateTime? startDate { get; set; }
             public DateTime? endDate { get; set; }
         }
@@ -25,7 +27,9 @@ namespace Naviam.WebUI.Controllers
         public class ReqMonth
         {
             public int id { get; set; }
+            public int year { get; set; }
             public string name { get; set; }
+            public string shortName { get; set; }
         }
 
         public enum ReportType
@@ -48,7 +52,7 @@ namespace Naviam.WebUI.Controllers
             LastMonth,
             ThisYear,
             AllTime,
-            Selected
+            Custom
         }
 
         private readonly TransactionsRepository _transRepository;
@@ -96,14 +100,16 @@ namespace Naviam.WebUI.Controllers
 
             request.selectedCurrency = request.selectedCurrency ?? (currencies.FirstOrDefault() != null ? currencies.FirstOrDefault().Id : null);
 
-            request.selectedMenu = request.selectedMenu ?? 0;
-            request.selectedSubMenu = request.selectedSubMenu ?? 0;
-            request.selectedTimeFrame = request.selectedTimeFrame ?? 0;
+            request.selectedMenu = request.selectedMenu ?? (int)ReportType.ByExpense;
+            request.selectedSubMenu = request.selectedSubMenu ?? (int)ReportSubtype.ByCategory;
+            request.selectedTimeFrame = request.selectedTimeFrame ?? (int)ReportTimeFrame.ThisMonth;
 
             string timeFrameDesc = "";
 
             var firstTrans = trans.OrderBy(t => t.Date).FirstOrDefault();
             var firstTransDate = firstTrans != null ? firstTrans.Date : null;
+            var lastTrans = trans.OrderByDescending(t => t.Date).FirstOrDefault();
+            var lastTransDate = lastTrans != null ? lastTrans.Date : null;
 
             if (request.selectedTimeFrame == (int)ReportTimeFrame.ThisMonth)
             {
@@ -118,22 +124,54 @@ namespace Naviam.WebUI.Controllers
             if (request.selectedTimeFrame == (int)ReportTimeFrame.ThisYear)
             {
                 request.startDate = new DateTime(DateTime.Now.Year, 1, 1);
-                request.endDate = request.startDate.Value.AddYears(1);
+                if (request.startDate < firstTransDate)
+                    request.startDate = firstTransDate;
+                request.endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
             }
             if (request.selectedTimeFrame == (int)ReportTimeFrame.AllTime)
             {
                 request.startDate = firstTransDate;
                 request.endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
             }
+            if (request.selectedTimeFrame == (int)ReportTimeFrame.Custom)
+            {
+                int month = request.selectedTimeFrameStart.Value - (request.selectedTimeFrameStart.Value / 100) * 100;
+                request.startDate = new DateTime(request.selectedTimeFrameStart.Value / 100, month, 1);
+                month = request.selectedTimeFrameEnd.Value - (request.selectedTimeFrameEnd.Value / 100) * 100;
+                request.endDate = new DateTime(request.selectedTimeFrameEnd.Value / 100, month, 1).AddMonths(1);
+            }
+            request.selectedTimeFrameStart = request.startDate.Value.ToYearMonth();
+            request.selectedTimeFrameEnd = request.endDate.Value.AddMonths(-1).ToYearMonth();
             timeFrameDesc = String.Format("{0} {1}", GetMonthName(request.startDate.Value.Month, false), request.startDate.Value.Year);
             DateTime endFrame = request.endDate.Value.AddMonths(-1);
             if (request.startDate.Value.Month != endFrame.Month)
                 timeFrameDesc += String.Format(" - {0} {1}", GetMonthName(endFrame.Month, false), endFrame.Year);
 
+            //request.startDate = new DateTime(2010, 1, 1);
+            //request.endDate = new DateTime(DateTime.Now.Year, 1, 1).AddYears(1);
             var months = new List<ReqMonth>();
-            for (int i = 1; i < 13; i++)
+            for (int i = request.startDate.Value.ToYearMonth(); i < request.endDate.Value.ToYearMonth(); i++)
             {
-                months.Add(new ReqMonth() { id = i, name = GetMonthName(i, false) });
+                int month = i - (i / 100) * 100;
+                if (month == 13)
+                {
+                    month = 1;
+                    i += 88;
+                }
+                months.Add(new ReqMonth() { id = i, year = i / 100, name = GetMonthName(month, false), shortName = GetMonthName(month, true) });
+            }
+            
+            //period of all transactions
+            var transTimeFrame = new List<ReqMonth>();
+            for (int i = firstTransDate.Value.ToYearMonth(); i <= lastTransDate.Value.ToYearMonth(); i++)
+            {
+                int month = i - (i / 100) * 100;
+                if (month == 13)
+                {
+                    month = 1;
+                    i += 88;
+                }
+                transTimeFrame.Add(new ReqMonth() { id = i, year = i / 100, name = GetMonthName(month, false), shortName = GetMonthName(month, true) });
             }
 
             var headColumn1 = Resources.JavaScript.Category;
@@ -179,7 +217,7 @@ namespace Naviam.WebUI.Controllers
                 {
                     headColumn1 = Resources.SharedStrings.Month;
                     report = from t in trans
-                             join c in months on t.Date.Value.Month equals c.id
+                             join c in months on t.Date.Value.ToYearMonth() equals c.id
                              where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate
                              group t.Amount by c into g
                              orderby g.Key.id
@@ -187,7 +225,7 @@ namespace Naviam.WebUI.Controllers
                 }
             }
 
-            return Json(new { items = report, currencies, request, headColumn1, headColumn2, timeFrameDesc });
+            return Json(new { items = report, currencies, request, headColumn1, headColumn2, timeFrameDesc, transTimeFrame });
         }
 
     }

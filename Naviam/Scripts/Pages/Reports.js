@@ -24,6 +24,22 @@ reportsModel.Load = function () {
         reportsModel.graphType.subscribe(function () { reportsModel.fillChart(); });
         //
         //funcs
+        reportsModel.isTimeFrameSelected = function (time) {
+            return rep_req.selectedTimeFrameStart() <= time && rep_req.selectedTimeFrameEnd() >= time;
+        };
+        reportsModel.changeTimeFrame = function (ev, newVal) {
+            var oldS = rep_req.selectedTimeFrameStart();
+            var oldE = rep_req.selectedTimeFrameEnd();
+            var newS = newVal;
+            var newE = newVal;
+            if ((ev.ctrlKey || ev.shiftKey) && newVal > oldS) newS = oldS;
+            if ((ev.ctrlKey || ev.shiftKey) && newVal < oldE) newE = oldE;
+            rep_req.selectedTimeFrameStart(newS);
+            rep_req.selectedTimeFrameEnd(newE);
+            var needR = rep_req.selectedTimeFrame() == 4 && (newS != oldS || newE != oldE);
+            rep_req.selectedTimeFrame(4);
+            if (needR) reportsModel.Refresh();
+        };
         reportsModel.Refresh = function () {
             $.postErr(getReportsUrl, ko.toJS(rep_req), function (res) {
                 ko.mapping.updateFromJS(reportsModel, res);
