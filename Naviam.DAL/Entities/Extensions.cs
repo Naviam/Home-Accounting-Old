@@ -24,7 +24,6 @@ namespace Naviam.Data
 
     #endregion
 
-
     #region Array
 
     public static class ArrayExtensions
