@@ -12,7 +12,30 @@
 }
 
 #report_page {
-	margin-left:10px;
+	margin-left:20px;
+}
+
+#timeline {
+	margin-left:20px;
+	 h3 {
+		color: #4D4E53;
+		font-size: 16px;
+		float:left;
+	}
+	.time_frame {
+		margin-top:10px;
+		td {
+			color: #B2B2B2;
+			padding: 5px;
+			font-size: 9px;
+			text-transform: uppercase;
+			cursor:pointer;
+			&.selected {
+				border:1px solid #303030;
+				color: #4D4E53;
+			}
+		}
+	}
 }
 
 .timeframe_menu {

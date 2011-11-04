@@ -9,7 +9,25 @@
   font-size: 16px; }
 
 #report_page {
-  margin-left: 10px; }
+  margin-left: 20px; }
+
+#timeline {
+  margin-left: 20px; }
+  #timeline h3 {
+    color: #4D4E53;
+    font-size: 16px;
+    float: left; }
+  #timeline .time_frame {
+    margin-top: 10px; }
+    #timeline .time_frame td {
+      color: #B2B2B2;
+      padding: 5px;
+      font-size: 9px;
+      text-transform: uppercase;
+      cursor: pointer; }
+      #timeline .time_frame td.selected {
+        border: 1px solid #303030;
+        color: #4D4E53; }
 
 .timeframe_menu {
   float: right;

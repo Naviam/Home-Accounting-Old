@@ -28,12 +28,24 @@
 }*@
 
 <div id="timeline">
+    <h3><span data-bind="text: timeFrameDesc"></span></h3>
     <ul class="h_menu timeframe_menu">
         <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(0); },css: {underline: request.selectedTimeFrame() == 0}">@SharedStrings.ThisMonth</a></li>
         <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(1); },css: {underline: request.selectedTimeFrame() == 1}">@SharedStrings.LastMonth</a></li>
         <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(2); },css: {underline: request.selectedTimeFrame() == 2}">@SharedStrings.ThisYear</a></li>
         <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(3); },css: {underline: request.selectedTimeFrame() == 3}">@SharedStrings.AllTime</a></li>
     </ul>
+    <div style="clear:both"></div>
+@*    <table style="" class='time_frame'>
+    <tr>
+        <td class='selected'>
+            May<br />2011
+        </td>
+        <td>
+            Jun<br />2011
+        </td>
+    </tr>
+    </table>*@
 </div>
 
 <div style="clear:both"></div>
@@ -58,7 +70,7 @@
 
 
 <div id='report_page'>
-    <div style='float:right;margin-top: 10px;'>
+    <div style='float:right;margin-top: 10px;margin-right:10px;'>
         <a href="#"><img src="@Url.Content("~/Content/images/stats_pie.png")" data-bind="click: function() { graphType(0); }"/></a>
         <a href="#"><img src="@Url.Content("~/Content/images/stats_bars.png")" data-bind="click: function() { graphType(1); }"/></a>
     </div>

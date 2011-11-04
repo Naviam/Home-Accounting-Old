@@ -100,6 +100,11 @@ namespace Naviam.WebUI.Controllers
             request.selectedSubMenu = request.selectedSubMenu ?? 0;
             request.selectedTimeFrame = request.selectedTimeFrame ?? 0;
 
+            string timeFrameDesc = "";
+
+            var firstTrans = trans.OrderBy(t => t.Date).FirstOrDefault();
+            var firstTransDate = firstTrans != null ? firstTrans.Date : null;
+
             if (request.selectedTimeFrame == (int)ReportTimeFrame.ThisMonth)
             {
                 request.startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -117,9 +122,13 @@ namespace Naviam.WebUI.Controllers
             }
             if (request.selectedTimeFrame == (int)ReportTimeFrame.AllTime)
             {
-                request.startDate = new DateTime(DateTime.MinValue.Year, 1, 1);
+                request.startDate = firstTransDate;
                 request.endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
             }
+            timeFrameDesc = String.Format("{0} {1}", GetMonthName(request.startDate.Value.Month, false), request.startDate.Value.Year);
+            DateTime endFrame = request.endDate.Value.AddMonths(-1);
+            if (request.startDate.Value.Month != endFrame.Month)
+                timeFrameDesc += String.Format(" - {0} {1}", GetMonthName(endFrame.Month, false), endFrame.Year);
 
             var months = new List<ReqMonth>();
             for (int i = 1; i < 13; i++)
@@ -178,7 +187,7 @@ namespace Naviam.WebUI.Controllers
                 }
             }
 
-            return Json(new { items = report, currencies, request, headColumn1, headColumn2 });
+            return Json(new { items = report, currencies, request, headColumn1, headColumn2, timeFrameDesc });
         }
 
     }
