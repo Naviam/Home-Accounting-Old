@@ -27,7 +27,7 @@ namespace Naviam.WebUI.Models
         {
             get
             {
-                return _rootNode != null && _rootNode.Count > 0 ? _rootNode.GetRange(0, _rootNode.Count) : null;
+                return _rootNode != null? _rootNode.GetRange(0, _rootNode.Count) : null;
             }
         }
         public List<MainMenuItem> SubMenu
@@ -57,19 +57,24 @@ namespace Naviam.WebUI.Models
         public MenuModel(string controller, string action, NameValueCollection queryString, string sitemapConfigName = "siteMapFile")
         {
             _queryString = queryString;
-            Initialize(sitemapConfigName);
+            Initialize(sitemapConfigName, controller, action);
             SetActiveMenuItems(controller, action);
         }
 
         #endregion .ctors
 
         #region .metods
-        private void Initialize(string sitemapConfigName)
+        private void Initialize(string sitemapConfigName, string controller, string action)
         {
             _internalMenuItemsList = new List<MainMenuItem>();
             string pathAbsolute = HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings[sitemapConfigName]);
             _rootNode = (MainMenuItem)MainMenuItem.FromXml(typeof(MainMenuItem), pathAbsolute);
-            GetInternalMenuItemsList(_rootNode);
+            
+            //check restrictions
+            if (_rootNode.Restrictions != null && _rootNode.Restrictions.Equals(action, StringComparison.InvariantCultureIgnoreCase)) 
+                _rootNode.Clear();
+            
+            GetInternalMenuItemsList(_rootNode, controller, action);
         }
 
         private string ToQueryString(NameValueCollection nvc)
@@ -77,14 +82,16 @@ namespace Naviam.WebUI.Models
             return (nvc.Count > 0 ? "?" : "") + string.Join("&", Array.ConvertAll(nvc.AllKeys, key => string.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(nvc[key]))));
         }
 
-        private void GetInternalMenuItemsList(MainMenuItem mainMenuItem)
+        private void GetInternalMenuItemsList(MainMenuItem mainMenuItem, string controller, string action)
         {
+            if (mainMenuItem.Restrictions!=null && mainMenuItem.Restrictions.Equals(action, StringComparison.InvariantCultureIgnoreCase))
+                return;
             _internalMenuItemsList.Add(mainMenuItem);
             if (mainMenuItem.Url != null && _queryString != null)
                 mainMenuItem.Url = mainMenuItem.Url + ToQueryString(_queryString);
             foreach (MainMenuItem itm in mainMenuItem)
             {
-                GetInternalMenuItemsList(itm);
+                GetInternalMenuItemsList(itm, controller, action);
             }
         }
         private void SetActiveMenuItems(string controller, string action)

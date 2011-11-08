@@ -740,3 +740,13 @@ button {
 .notice {background:#fff6bf;color:#514721;border-color:#ffd324; a {color:#514721;}}
 .success {background:#e6efc2;color:#264409;border-color:#c6d880; a {color:#264409;}}
 .info {background:#d5edf8;color:#205791;border-color:#92cae4; a {color:#205791;}}
+
+ul.budget_items {float: left; position: relative; list-style: none outside none;}
+ul.budget_items li{float: left;
+    height: 61px;
+    margin-top: -15px;
+    padding-top: 7px;
+    position: relative;
+    top: 10px;
+    width: 510px;}
+.bar {width:530px; height: 14px; background:url("planning_bars.gif") no-repeat scroll left top transparent;display: block;}

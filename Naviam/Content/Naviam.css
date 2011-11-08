@@ -597,3 +597,23 @@ button {
   border-color: #92cae4; }
   .info a {
     color: #205791; }
+
+ul.budget_items {
+  float: left;
+  position: relative;
+  list-style: none outside none; }
+
+ul.budget_items li {
+  float: left;
+  height: 61px;
+  margin-top: -15px;
+  padding-top: 7px;
+  position: relative;
+  top: 10px;
+  width: 510px; }
+
+.bar {
+  width: 530px;
+  height: 14px;
+  background: url("planning_bars.gif") no-repeat scroll left top transparent;
+  display: block; }

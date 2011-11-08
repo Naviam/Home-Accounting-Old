@@ -1,6 +1,7 @@
 ﻿using Naviam.WebUI.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
+using Naviam.NotificationCenter;
 
 namespace Naviam.UnitTests.Helpers
 {
@@ -72,7 +73,7 @@ BLR/MINSK/EUROSET RKC 3
             var from = "sms@naviam.com";
 
             // act
-            var result = EmailHelper.SendMail(subject, recipients, message, from);
+            var result = NotificationManager.Instance.SendSmsMail(recipients, message);
 
             // assert
             Assert.IsTrue(result);

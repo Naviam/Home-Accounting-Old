@@ -11,7 +11,8 @@ namespace Naviam.WebUI.Controllers
     {
         public ActionResult TopMenu(string sitemapConfigName)
         {
-            return PartialView(new MenuModel(GetController(), GetAction(), Request.QueryString, "publicSiteMapFile"));
+            var model = new MenuModel(GetController(), GetAction(), Request.QueryString, "publicSiteMapFile");
+            return PartialView(model);
         }
         
         private string GetController()

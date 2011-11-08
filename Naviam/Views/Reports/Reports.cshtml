@@ -4,6 +4,7 @@
     ViewBag.Title = SharedStrings.ReportsTitle;
     Layout = "~/Views/Shared/_LayoutWithSidebars.cshtml";
     ViewBag.CombresScripts = "reports";
+    ViewBag.CombresCss = "reportsCss";
 }
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
@@ -21,18 +22,46 @@
     google.load("visualization", "1", { packages: ["corechart"] });
 </script>
 
+@*@section LeftColumn {
+}
+@section RightColumn {
+}*@
+
+<div id="timeline">
+    <ul class="h_menu timeframe_menu">
+        <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(0); },css: {underline: request.selectedTimeFrame() == 0}">@SharedStrings.ThisMonth</a></li>
+        <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(1); },css: {underline: request.selectedTimeFrame() == 1}">@SharedStrings.LastMonth</a></li>
+        <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(2); },css: {underline: request.selectedTimeFrame() == 2}">@SharedStrings.ThisYear</a></li>
+        <li><a href="#" data-bind="click: function() { request.selectedTimeFrame(3); },css: {underline: request.selectedTimeFrame() == 3}">@SharedStrings.AllTime</a></li>
+    </ul>
+    <h3><span data-bind="text: timeFrameDesc"></span></h3>
+    <div style="clear:both"></div>
+    <script type="text/html" id="r_frameTemplate">
+        <td data-bind="click: function(ev) { $item.currentS(ev, $data.id()); }, css: {selected: $item.isSelected($data.id()) }">
+            <span data-bind="text: shortName"></span><br /><span data-bind="text: year"></span>
+        </td>
+    </script>
+    <table class='time_frame' >
+    <tr data-bind="template: {name:'r_frameTemplate', foreach:transTimeFrame, templateOptions: { currentS: changeTimeFrame, isSelected: isTimeFrameSelected } }">
+    </tr>
+    </table>
+</div>
+
+<div style="clear:both"></div>
+
 <div id="rep_menu">
     <script type="text/html" id="r_menuTemplate">
         <li data-bind="click: function() { $item.current($data); }, css: {underline: $item.current() == $data}">
             <a data-bind="text: caption" href='#'/>
         </li>
     </script>
-    <div style='float:left;margin: 0 10px 0 0;'>
-        <ul data-bind="template: {name:'r_menuTemplate', foreach:menu, templateOptions: { current: selectedMenu } }">
+    <div>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:menu, templateOptions: { current: selectedMenu } }" class='h_menu'>
         </ul>
     </div>
-    <div style='float:left'>
-        <ul data-bind="template: {name:'r_menuTemplate', foreach:selectedMenu() ? selectedMenu().subMenu : null, templateOptions: { current: selectedSubMenu } }">
+    <div style="clear:both"></div>
+    <div>
+        <ul data-bind="template: {name:'r_menuTemplate', foreach:selectedMenu() ? selectedMenu().subMenu : null, templateOptions: { current: selectedSubMenu } }" class='h_menu'>
         </ul>
     </div>
 </div>
@@ -40,14 +69,10 @@
 
 
 <div id='report_page'>
-<div>
-    <a href="#"><img src="@Url.Content("~/Content/images/stats_pie.png")" data-bind="click: function() { graphType(0); }"/></a>
-    <a href="#"><img src="@Url.Content("~/Content/images/stats_bars.png")" data-bind="click: function() { graphType(1); }"/></a>
-</div>
-
-<div id="chart_p"></div>
-<div id="chart_b"></div>
-
+    <div style='float:right;margin-top: 10px;margin-right:10px;'>
+        <a href="#"><img src="@Url.Content("~/Content/images/stats_pie.png")" data-bind="click: function() { graphType(0); }"/></a>
+        <a href="#"><img src="@Url.Content("~/Content/images/stats_bars.png")" data-bind="click: function() { graphType(1); }"/></a>
+    </div>
 
     <script type="text/html" id="r_currTemplate">
         <li data-bind="click: function() { $item.current($data.Id()); }, css: {underline: $item.current() == $data.Id()}">
@@ -55,18 +80,38 @@
         </li>
     </script>
     <ul data-bind="template: {name:'r_currTemplate', foreach:currencies, templateOptions: { current: request.selectedCurrency } }" class='h_menu'></ul>
+
     <div style="clear:both"></div>
+
+    <div id="chart_p"></div>
+    <div id="chart_b"></div>
+    <div id="chart_c"></div>
 
     <script type="text/html" id="r_tableTemplate">
         <tr>
             @*<td><span data-bind="text: Id"/></td>*@
-            <td><span data-bind="text: Name"/></td>
+            <th><span data-bind="text: Name"/></th>
             <td><span data-bind="amount: Amount"/></td>
         </tr>
     </script>
+
+    <script type="text/html" id="r_tableHTemplate">
+            <tr>
+            <th><span data-bind="text: headColumn1"/></th>
+            <td><span data-bind="text: headColumn2"/></td>
+            </tr>
+    </script>
     
-    <table data-bind="template: {name:'r_tableTemplate', foreach:items }" class='table'>
+    <table id='portfolio' class="portfolio">
+        <thead data-bind='template: { name: "r_tableHTemplate" }'>
+        </thead>
+        <tfoot>
+            <tr class="totals">
+            <th>@SharedStrings.Total</th>
+            <td data-bind="amount: endAmount"></td>
+            </tr>
+        </tfoot>
+        <tbody data-bind="template: {name:'r_tableTemplate', foreach:items }" ></tbody>
     </table>
-    <b><span data-bind="amount: endAmount"/></b>
 </div>
 

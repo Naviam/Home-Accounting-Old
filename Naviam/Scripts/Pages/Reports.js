@@ -17,12 +17,29 @@ reportsModel.Load = function () {
         //props
         rep_req = reportsModel.request;
         rep_req.selectedCurrency.subscribe(function () { reportsModel.Refresh(); });
+        rep_req.selectedTimeFrame.subscribe(function () { reportsModel.Refresh(); });
         //rep_req.selectedMenu.subscribe(function () { reportsModel.Refresh(); });
         rep_req.selectedSubMenu.subscribe(function (val) { reportsModel.Refresh(); });
         reportsModel.graphType = ko.observable(0);
         reportsModel.graphType.subscribe(function () { reportsModel.fillChart(); });
         //
         //funcs
+        reportsModel.isTimeFrameSelected = function (time) {
+            return rep_req.selectedTimeFrameStart() <= time && rep_req.selectedTimeFrameEnd() >= time;
+        };
+        reportsModel.changeTimeFrame = function (ev, newVal) {
+            var oldS = rep_req.selectedTimeFrameStart();
+            var oldE = rep_req.selectedTimeFrameEnd();
+            var newS = newVal;
+            var newE = newVal;
+            if ((ev.ctrlKey || ev.shiftKey) && newVal > oldS) newS = oldS;
+            if ((ev.ctrlKey || ev.shiftKey) && newVal < oldE) newE = oldE;
+            rep_req.selectedTimeFrameStart(newS);
+            rep_req.selectedTimeFrameEnd(newE);
+            var needR = rep_req.selectedTimeFrame() == 4 && (newS != oldS || newE != oldE);
+            rep_req.selectedTimeFrame(4);
+            if (needR) reportsModel.Refresh();
+        };
         reportsModel.Refresh = function () {
             $.postErr(getReportsUrl, ko.toJS(rep_req), function (res) {
                 ko.mapping.updateFromJS(reportsModel, res);
@@ -43,12 +60,16 @@ reportsModel.Load = function () {
                 title = lang.Spending + ' ' + lang.ByMerchant;
             if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 2)
                 title = lang.Spending + ' ' + lang.ByTag;
+            if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 3)
+                title = lang.Spending + ' ' + lang.OverTime;
             if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 0)
                 title = lang.Income + ' ' + lang.ByCategory;
             if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 1)
                 title = lang.Income + ' ' + lang.ByMerchant;
             if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 2)
                 title = lang.Income + ' ' + lang.ByTag;
+            if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 3)
+                title = lang.Income + ' ' + lang.OverTime;
             return title;
         }
         reportsModel.fillChart = function () {
@@ -60,17 +81,24 @@ reportsModel.Load = function () {
             });
             $('#chart_p').hide();
             $('#chart_b').hide();
+            $('#chart_c').hide();
             if (this.graphType() == 0) {
                 chart.draw(data, { width: 1100, height: 300, title: this.getChartTitle(), is3D: true });
                 $('#chart_p').show();
             }
             else {
-                chart_b.draw(data, { width: 1100, height: 300, title: this.getChartTitle() });
-                $('#chart_b').show();
+                if (rep_req.selectedSubMenu() == 3) {
+                    chart_c.draw(data, { width: 1100, height: 300, title: this.getChartTitle() });
+                    $('#chart_c').show();
+                } else {
+                    chart_b.draw(data, { width: 1100, height: 300, title: this.getChartTitle() });
+                    $('#chart_b').show();
+                }
             }
         }
         //
         ko.applyBindings(reportsModel, $("#report_page")[0]);
+        ko.applyBindings(reportsModel, $("#timeline")[0]);
         menuModel.selectedMenu(menuModel.menu[rep_req.selectedMenu()]);
         menuModel.selectedSubMenu(menuModel.menu[rep_req.selectedMenu()].subMenu[rep_req.selectedSubMenu()]);
         menuModel.selectedMenu.subscribe(function (val) {
@@ -87,8 +115,8 @@ reportsModel.Load = function () {
 
 var menuModel = {
     menu: [
-            { id: 0, caption: lang.Spending, subMenu: [{ id: 0, caption: lang.ByCategory.capitalize() }, { id: 1, caption: lang.ByMerchant.capitalize() }, { id: 2, caption: lang.ByTag.capitalize()}] },
-            { id: 1, caption: lang.Income, subMenu: [{ id: 0, caption: lang.ByCategory.capitalize() }, { id: 1, caption: lang.ByMerchant.capitalize() }, { id: 2, caption: lang.ByTag.capitalize()}] }
+            { id: 0, caption: lang.Spending, subMenu: [{ id: 0, caption: lang.ByCategory.capitalize() }, { id: 1, caption: lang.ByMerchant.capitalize() }, { id: 2, caption: lang.ByTag.capitalize() }, { id: 3, caption: lang.OverTime.capitalize()}] },
+            { id: 1, caption: lang.Income, subMenu: [{ id: 0, caption: lang.ByCategory.capitalize() }, { id: 1, caption: lang.ByMerchant.capitalize() }, { id: 2, caption: lang.ByTag.capitalize() }, { id: 3, caption: lang.OverTime.capitalize()}] }
         ],
     selectedMenu: ko.observable(),
     selectedSubMenu: ko.observable()
@@ -99,5 +127,6 @@ var chart_b = {};
 $(document).ready(function () {
     chart = new google.visualization.PieChart($('#chart_p')[0]);
     chart_b = new google.visualization.BarChart($('#chart_b')[0]);
+    chart_c = new google.visualization.ColumnChart($('#chart_c')[0]);
     reportsModel.Load();
 });

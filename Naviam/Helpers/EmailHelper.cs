@@ -3,6 +3,8 @@ using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using log4net;
+using System.Net.Mime;
+using System.Web.UI.WebControls;
 
 namespace Naviam.WebUI.Helpers
 {
@@ -16,6 +18,14 @@ namespace Naviam.WebUI.Helpers
         /// <param name="message">Body of email</param>
         public static bool SendMail(string subject, string recipients, string message, string from)
         {
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"Content\Naviam_logo2.png";
+            return SendMail(subject, recipients, message, from, path);
+        }
+
+        public static bool SendMail(string subject, string recipients, string message, string from, string picPath)
+        {
+            //return true;
+
             var sc = new SmtpClient("smtp.gmail.com")
                          {
                              EnableSsl = true,
@@ -25,7 +35,21 @@ namespace Naviam.WebUI.Helpers
                          };
             try
             {
-                sc.Send(from, recipients, subject, message);
+                //MailDefinition md = new MailDefinition();
+                MailMessage mess = new MailMessage();
+                mess.IsBodyHtml = true;
+                mess.BodyEncoding = System.Text.Encoding.UTF8;
+                mess.SubjectEncoding = System.Text.Encoding.UTF8;
+                mess.From = new MailAddress(from);
+                mess.To.Add(recipients);
+                mess.Subject = subject;
+                Attachment attach = new Attachment(picPath);// mess.Attachments.Add( AddAttachment("d:\\test.gif"); 
+                string contentID = Guid.NewGuid().ToString();
+                attach.ContentId = contentID;
+                mess.Body = String.Format("<html><body><img src=\"cid:{0}\"><div>{1}</div></body></html>", contentID, message);
+                mess.Attachments.Add(attach);
+                sc.Send(mess);
+                //sc.Send(from, recipients, subject, message);
                 return true;
             }
             catch (Exception e)
@@ -36,32 +60,6 @@ namespace Naviam.WebUI.Helpers
             }
         }
 
-        //public static bool SendMail(string subject, string recipients, string message)
-        //{
-        //    try
-        //    {
-        //        var sc = new SmtpClient("smtp.gmail.com")
-        //        {
-        //            EnableSsl = true,
-        //            Credentials =
-        //                new NetworkCredential("alert@naviam.com", "ruinruin")
-        //        };
 
-        //        MailMessage mess = new MailMessage();
-        //        mess.BodyEncoding = System.Text.Encoding.GetEncoding(1251);
-        //        mess.To.Add(recipients);
-        //        mess.From = new MailAddress(@"alert@naviam.com");
-        //        mess.Subject = subject;
-        //        mess.Body = message;
-        //        sc.Send(mess);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        var log = LogManager.GetLogger("navSite");
-        //        log.Debug(e.Message);
-        //        throw;
-        //    }
-        //    return true;
-        //}
     }
 }

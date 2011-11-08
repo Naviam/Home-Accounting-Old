@@ -13,6 +13,7 @@ using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using System.Data.SqlClient;
 using Naviam.Data;
 using log4net;
+using Naviam.NotificationCenter;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -76,7 +77,7 @@ namespace Naviam.WebUI.Controllers
 
         private ActionResult AuthSuccess(Data.UserProfile profile, LogOnModel model, string returnUrl, bool isApprove)
         {
-            if (!isApprove) return RedirectToAction("Confirmation", "Account", new { acc = profile.ApproveCode });
+            if (!isApprove) return RedirectToAction("Confirmation", "Account", new { acc = (string)null, email = profile.Name });
             //setup forms ticket
             var sessionKey = _membershipRepository.SetSessionForUser(profile);
 
@@ -91,14 +92,27 @@ namespace Naviam.WebUI.Controllers
             }
             return RedirectToAction("Index", "Transactions");
         }
-
-        public ActionResult Confirmation(string acc)
+        
+        
+        public ActionResult Confirmation(string acc, string email)
         {
             var model = new ConfirmationModel();
             model.ApproveCode = acc;
-            return View(model);
-        }
+            model.Email = email;
+            //mail
+            if (!string.IsNullOrEmpty(acc) && !string.IsNullOrEmpty(acc))
+            {
+                UserProfile profile = _membershipRepository.GetUserByApproveCode(model.ApproveCode);
 
+                if (profile != null)
+                {
+                    profile.IsApproved = _membershipRepository.Approve(profile.Name);
+                    return AuthSuccess(profile, new LogOnModel() { UserName = profile.Name, RememberMe = false }, "", true);
+                }
+            }
+            return View("Confirmation", model);
+        }
+        
         [HttpPost]
         public ActionResult Confirmation(ConfirmationModel model)
         {
@@ -114,7 +128,14 @@ namespace Naviam.WebUI.Controllers
                 }
                 ModelState.AddModelError(String.Empty, ValidationStrings.UsernameOrPasswordIsIncorrect);
             }
+            
             return View(model);
+        }
+
+        public string ConfirmationMail(ConfirmationModel model)
+        {
+            NotificationManager.Instance.SendConfirmationRegistrationMail(model.Email, model.ApproveCode, model.Email);
+            return "ok";
         }
 
         [HttpGet]
@@ -194,7 +215,7 @@ namespace Naviam.WebUI.Controllers
                 try
                 {
                     profile = _membershipRepository.CreateUser(model.UserName, model.Password);
-                    EmailHelper.SendMail("Confirmation of registration on naviam.com", model.UserName, string.Format(@"http://localhost:54345/Account/Confirmation?acc={0}", profile.ApproveCode), "alert@naviam.com");
+                    NotificationManager.Instance.SendConfirmationRegistrationMail(model.UserName, profile.ApproveCode, model.UserName);
                 }
                 catch (SqlException e)
                 {
@@ -202,7 +223,12 @@ namespace Naviam.WebUI.Controllers
                     {
                         case 50000:
                             profile = _membershipRepository.GetUser(model.UserName.ToLower(), model.Password, true);
-                            return RedirectToAction("Confirmation", "Account", new { acc = profile.ApproveCode });
+                            if(profile!=null && profile.IsApproved)
+                            {
+                                ModelState.AddModelError(String.Empty,"Пользователь с таким именем уже существует.");
+                                return View(model);
+                            }
+                            return RedirectToAction("Confirmation", "Account", new { acc = profile.ApproveCode, email = model.UserName });
                         default:
                             ModelState.AddModelError(String.Empty, e.Message);
                             return View(model);
@@ -231,6 +257,8 @@ namespace Naviam.WebUI.Controllers
         {
             return View("LogOn");
         }
+
+        private const string CONFIRMATION_MAIL_TEXT = @"";
     }
 
     // The FormsAuthentication type is sealed and contains static members, so it is difficult to

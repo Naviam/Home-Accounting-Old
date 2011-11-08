@@ -5,10 +5,7 @@
     ViewBag.Title = "Confirmation";
     Layout = "~/Views/Shared/LayoutPublic.cshtml";
 }
-
-<h2>Confirmation</h2>
 @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
-
 @using (Html.BeginForm())
 {
     <section class="signup">
@@ -17,9 +14,12 @@
                 @Html.TextBoxFor(m => m.ApproveCode, new { placeholder = "Please enter your confirmation code here" })
                 @Html.ValidationMessageFor(m => m.ApproveCode)
             </div>
-            <p><button type="submit">Ok</button></p>
+            <div>
+            <p style="float:left;"><button type="submit">Ok</button></p>
+            <p style="float:left;"><button type="button" onclick="$.postErr('@Url.Action("ConfirmationMail", "Account", Model)')">Test</button></p>
+            </div>
         </fieldset>
     </section>
-    <div style="clear: left"></div>
+    <div style="clear: left">
+    </div>
 }
-

@@ -10,7 +10,22 @@ using System.IO;
 
 namespace Naviam.Data
 {
- 
+
+    #region DateTime
+
+    public static class DateTimeExtensions
+    {
+
+        public static int ToYearMonth(this DateTime val)
+        {
+            return val.Year * 100 + val.Month;
+        }
+    }
+
+    #endregion
+
+    #region Array
+
     public static class ArrayExtensions
     {
         public static string ToXml(this string[] input)
@@ -45,6 +60,10 @@ namespace Naviam.Data
             return result.ToString();
         }
     }
+    
+    #endregion
+
+    #region DbValue
 
     /// <summary>
     /// Encapsulates extensions related to database values read/write
@@ -250,6 +269,8 @@ namespace Naviam.Data
 
         #endregion
     }
+    
+    #endregion
 
     #region IEnumerable
 
@@ -270,7 +291,7 @@ namespace Naviam.Data
 
     #endregion
 
-    #region IEnumerable
+    #region Boolean
 
     public static class BooleanExtensions
     {

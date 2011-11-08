@@ -7,12 +7,12 @@ using Naviam.WebUI.Helpers;
 using Naviam.WebUI.Resources;
 using log4net;
 using Naviam.Domain;
+using Naviam.NotificationCenter;
 
 namespace Naviam.WebUI.Controllers
 {
     public class SmsController : Controller
     {
-
         private readonly ModemsRepository _modemsRepository;
         private readonly TransactionsRepository _transRepository;
         private readonly AccountsRepository _accountsRepository;
@@ -35,6 +35,86 @@ namespace Naviam.WebUI.Controllers
             _membershipRepository = _membershipRepository ?? new MembershipRepository();
 
         }
+
+        [HttpPost]
+        public ActionResult RecieveMessage(string key, string gateway, string from, string to, string message)
+        {
+            //message = testMessage;
+            //gateway = "GETWAY1";
+            ILog log = LogManager.GetLogger("navSite");
+
+            if (key != "givemeaccesstotoyou")
+            {
+                log.Error("session key does not match with the original!");
+                return Json("error");
+            }
+
+            Modem modem = _modemsRepository.GetModemByGateway(gateway);
+
+            log.Debug(String.Format("gateway:{0}, from:{1}, message:{2}", gateway, from, message));
+
+            FinanceInstitution bank = FinanceInstitutionDataAdapter.GetByIdentifier(from);
+            if (bank == null)
+            {
+                log.Warn(String.Format("can't find bank"));
+                return Json("ok");
+            }
+            try
+            {
+                SmsBase sms;
+                switch (bank.Id)
+                {
+                    case 15: sms = new BelSwissSms(message);
+                        break;
+                    default:
+                        sms = new BelSwissSms(message);
+                        break;
+                }
+
+
+                //TODO: check sms.Result if need????
+                var account = _accountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, bank.Id);
+                if (account == null)
+                {
+                    log.Warn(String.Format("can't find account"));
+                    return Json("ok");
+                }
+                //get category id
+                var categoryId = _categoriesRepository.FindCategoryMerchant(account.Id, sms.Merchant.Trim());
+
+                var tran =
+                    new Transaction
+                    {
+                        Amount = sms.Amount,
+                        //CategoryId = _categoriesRepository.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
+                        CategoryId = categoryId,
+                        //autosearch category by merchant
+                        // 20 - Uncategorized
+                        CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,
+                        Date = sms.Date,
+                        Description = sms.Merchant,
+                        Direction = sms.Direction,
+                        IncludeInTax = false,
+                        Notes = "",
+                        TransactionType = TransactionTypes.SMS,
+                        Merchant = sms.Merchant,
+                        AccountId = account.Id
+                    };
+                _transRepository.Insert(tran, account.CompanyId);
+                var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
+                _accountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
+                NotificationManager.Instance.SendSmsMail(account.SmsUser, message);
+            }
+            catch (Exception ex)
+            {
+                log.Error(String.Format("sms error"), ex);
+                Response.StatusCode = 500;
+                return Json(new { Text = ex.Message, stackTrace = ex.StackTrace });
+                //throw e;
+            }
+            return Json("ok");
+        }
+
 
         static string testMessage = @"
 4..7983
@@ -92,62 +172,6 @@ Ostatok: 1264348 BYR
 Na vremya: 20:26:12
 BLR/MINSK REG./KRAVT SHOP (AKVABEL)
 ";
-        [HttpPost]
-        public JsonResult RecieveMessage(string key, string gateway, string from, string to, string message)
-        {
-            //message = testMessage;
-            //gateway = "GETWAY1";
-
-            if (key != "givemeaccesstotoyou") return Json("error");
-
-            Modem modem = _modemsRepository.GetModemByGateway(gateway);
-            ILog log = LogManager.GetLogger("navSite");
-            log.Debug(String.Format("gateway:{0}, from:{1}, message:{2}", gateway, from, message));
-
-            //TODO: get bank_id by "from" param
-            int id_bank = 15; //BelSwissBank
-
-            try
-            {
-                SmsBase sms = new BelSwissSms(message);
-
-                //TODO: check sms.Result????
-                var account = _accountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, id_bank);
-                
-                //get category id
-                var categoryId = _categoriesRepository.FindCategoryMerchant(account.Id, sms.Merchant.Trim());
-
-                var tran = 
-                    new Transaction
-                    {
-                        Amount = sms.Amount,
-                        //CategoryId = _categoriesRepository.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
-                        CategoryId = categoryId,
-                        //autosearch category by merchant
-                        // 20 - Uncategorized
-                        CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,
-                        Date = DateTime.UtcNow,
-                        Description = sms.Merchant,
-                        Direction = sms.Direction,
-                        IncludeInTax = false,
-                        Notes = "",
-                        TransactionType = TransactionTypes.SMS,
-                        Merchant = sms.Merchant,
-                        AccountId = account.Id
-                    };
-                _transRepository.Insert(tran, account.CompanyId);
-                var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
-                _accountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
-                EmailHelper.SendMail("subject", account.SmsUser, message, "sms@naviam.com");
-            }
-            catch (Exception ex)
-            {
-                Response.StatusCode = 500;
-                return Json(new { Text = ex.Message, stackTrace = ex.StackTrace });
-                //throw e;
-            }
-            return Json("ok");
-        }
 
     }
 }

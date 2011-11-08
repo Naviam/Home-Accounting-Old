@@ -1,5 +1,6 @@
 ﻿@using Naviam.WebUI.Resources
 @using Naviam.Data;
+
 @{
     ViewBag.Title = SharedStrings.BudgetTitle;
     Layout = "~/Views/Shared/_LayoutWithSidebars.cshtml";
@@ -13,3 +14,36 @@
     <script type="text/javascript" src="~/Scripts/knockout.mapping.js"></script> 
     <script type="text/javascript" src="~/Scripts/common.js"></script> 
 }
+<script type='text/javascript'>
+    var getBudgets = '@Url.Action("BudgetGet", "Budget")';
+
+    var budgetsModel = {};
+    budgetsModel.Load = function () {
+        $.postErr(getBudgets, function (res) {
+            var mapping = {
+                'items': {
+                    key: function (data) {
+                        return ko.utils.unwrapObservable(data.Id);
+                    }
+                }
+            };
+            budgetsModel = ko.mapping.fromJS(res, mapping);
+            ko.applyBindings(budgetsModel, document.body);
+        });
+    };
+
+    $(document).ready(function () {
+        budgetsModel.Load();
+    });
+</script>
+
+<ul class="budget_items" data-bind="template: { name: 'budgetRowTemplate', foreach: items }">
+</ul>
+<script type="text/html" id="budgetRowTemplate">
+    <li>
+        <a class="title" href="#" title="View transactions for Gas & Fuel">
+                <span data-bind="text: CategoryId"/>
+         </a>
+        <span class="bar"><span data-bind="text: Amount"/></span>
+    </li>
+</script>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<tree xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="root">
+<tree xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="root" restrictions="Confirmation">
     <node url="~/Account/Logon" title="LogIn" enableLocalization="true" controller="Account" action="Logon">
     </node>
     <node url="~/Account/Register" title="SignUp" enableLocalization="true" controller="Account" action="Register">
