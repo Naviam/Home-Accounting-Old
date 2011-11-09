@@ -95,6 +95,7 @@
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages" />
     <Reference Include="System.Web.Helpers" />
@@ -132,6 +133,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SmsController.cs" />
     <Compile Include="Controllers\TargetsController.cs" />
+    <Compile Include="Controllers\TechController.cs" />
     <Compile Include="Helpers\Cookies\CookieContainer.cs" />
     <Compile Include="Helpers\Cookies\ICookieContainer.cs" />
     <Compile Include="Helpers\CustomModelBinder.cs" />
@@ -403,6 +405,10 @@
     <ProjectReference Include="..\Naviam.Domain\Naviam.Domain.csproj">
       <Project>{A38638B1-4ABF-4C98-B535-06ABAEE17540}</Project>
       <Name>Naviam.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NBRBService\NBRBService.csproj">
+      <Project>{664244EA-9588-4E90-A458-A764A2815F97}</Project>
+      <Name>NBRBService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
