@@ -112,7 +112,10 @@ namespace Naviam
             {
                 object obj;
                 obj = HttpContext.Current.Cache[key];
-                HttpContext.Current.Cache[key] = val;
+                if (val != null)
+                    HttpContext.Current.Cache[key] = val;
+                else
+                    HttpContext.Current.Cache.Remove(key);
                 if (obj != null)
                     res = (T)obj;
             }
@@ -227,7 +230,10 @@ namespace Naviam
             }
             else
             {
-                HttpContext.Current.Cache[key] = val;
+                if (val == null)
+                    HttpContext.Current.Cache.Remove(key);
+                else
+                    HttpContext.Current.Cache[key] = val;
             }
         }
 
