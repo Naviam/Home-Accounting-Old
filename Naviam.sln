@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsOfRedis", "TestsOfRedi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBRBService", "NBRBService\NBRBService.csproj", "{664244EA-9588-4E90-A458-A764A2815F97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviamTechCenter", "NaviamTechCenter\NaviamTechCenter.csproj", "{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Naviam2.vsmdi
@@ -223,6 +225,21 @@ Global
 		{664244EA-9588-4E90-A458-A764A2815F97}.Release|Mixed Platforms.Build.0 = Release|x86
 		{664244EA-9588-4E90-A458-A764A2815F97}.Release|x86.ActiveCfg = Release|x86
 		{664244EA-9588-4E90-A458-A764A2815F97}.Release|x86.Build.0 = Release|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Debug|x86.ActiveCfg = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Debug|x86.Build.0 = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Deploy-Dev|Any CPU.ActiveCfg = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Deploy-Dev|Mixed Platforms.ActiveCfg = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Deploy-Dev|Mixed Platforms.Build.0 = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Deploy-Dev|x86.ActiveCfg = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Deploy-Dev|x86.Build.0 = Debug|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Release|Any CPU.ActiveCfg = Release|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Release|Mixed Platforms.Build.0 = Release|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Release|x86.ActiveCfg = Release|x86
+		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using Naviam.Domain.Concrete;
 using Naviam.Data;
 using System.Threading;
-using NBRBService.NBRBServiceReference;
 
 namespace Naviam.WebUI.Controllers
 {
@@ -25,18 +24,18 @@ namespace Naviam.WebUI.Controllers
             AsyncManager.OutstandingOperations.Decrement();
         }
 
-        public void GetRates(DateTime date)
-        {
-            AsyncManager.OutstandingOperations.Increment();
-            ExRatesSoapClient client = new ExRatesSoapClient();
-            client.ExRatesDailyCompleted += new EventHandler<ExRatesDailyCompletedEventArgs>(ExRatesDailyCompleted);
-            client.ExRatesDailyAsync(date);
-        }
+        //public void GetRates(DateTime date)
+        //{
+        //    AsyncManager.OutstandingOperations.Increment();
+        //    ExRatesSoapClient client = new ExRatesSoapClient();
+        //    client.ExRatesDailyCompleted += new EventHandler<ExRatesDailyCompletedEventArgs>(ExRatesDailyCompleted);
+        //    client.ExRatesDailyAsync(date);
+        //}
 
-        private void ExRatesDailyCompleted(object sender, ExRatesDailyCompletedEventArgs e)
-        {
-            AsyncManager.OutstandingOperations.Decrement();
-        }
+        //private void ExRatesDailyCompleted(object sender, ExRatesDailyCompletedEventArgs e)
+        //{
+        //    AsyncManager.OutstandingOperations.Decrement();
+        //}
 
     }
 }
