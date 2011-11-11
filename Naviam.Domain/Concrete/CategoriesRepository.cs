@@ -7,6 +7,7 @@ using Naviam.DAL;
 using System.Data.SqlClient;
 using System.Resources;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Naviam.Domain.Concrete
 {
@@ -137,6 +138,14 @@ namespace Naviam.Domain.Concrete
                     return rule.Id;
             }
             return null;
+        }
+
+        public delegate List<CategoryMerchant> GetMerchantsCategoriesAsynchCaller();
+
+        public List<CategoryMerchant> GetMerchantsCategoriesAsynch()
+        {
+            //Thread.Sleep(10000);
+            return GetMerchantsCategories(true);
         }
     }
 }

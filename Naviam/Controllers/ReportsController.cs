@@ -34,7 +34,8 @@ namespace Naviam.WebUI.Controllers
         public enum ReportType
         {
             ByExpense,
-            ByIncome
+            ByIncome,
+            NetIncome
         }
 
         public enum ReportSubtype
@@ -175,6 +176,8 @@ namespace Naviam.WebUI.Controllers
 
             var headColumn1 = Resources.JavaScript.Category;
             var headColumn2 = Resources.JavaScript.Spending;
+            var headColumn3 = "";
+            var headColumn4 = "";
 
             if ((request.selectedMenu == (int)ReportType.ByExpense || request.selectedMenu == (int)ReportType.ByIncome))
             {
@@ -188,7 +191,7 @@ namespace Naviam.WebUI.Controllers
                              where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate
                              group t.Amount by c into g
                              orderby g.Sum() descending
-                             select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
+                             select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name, Amount2 = 0 }; //
                 }
 
                 if (request.selectedSubMenu == (int)ReportSubtype.ByMerchant)
@@ -198,7 +201,7 @@ namespace Naviam.WebUI.Controllers
                              where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate
                              group t by t.Description into g
                              orderby g.Sum(t => t.Amount) descending
-                             select new { Id = g.Min(t => t.Id), Amount = g.Sum(t => t.Amount), Name = g.Key }; //
+                             select new { Id = g.Min(t => t.Id), Amount = g.Sum(t => t.Amount), Name = g.Key, Amount2 = 0 }; //
                 }
 
                 if (request.selectedSubMenu == (int)ReportSubtype.ByTag) 
@@ -209,7 +212,7 @@ namespace Naviam.WebUI.Controllers
                              where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.TagIds.Contains(tg.Id.ToString()) && t.Date >= request.startDate && t.Date < request.endDate
                              group t.Amount by tg into g
                              orderby g.Sum() descending
-                             select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name }; //
+                             select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name, Amount2 = 0 }; //
                 }
 
                 if (request.selectedSubMenu == (int)ReportSubtype.OverTime) 
@@ -220,11 +223,27 @@ namespace Naviam.WebUI.Controllers
                              where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate
                              group t.Amount by c into g
                              orderby g.Key.id
-                             select new { Id = g.Key.id, Amount = g.Sum(), Name = g.Key.name }; //
+                             select new { Id = g.Key.id, Amount = g.Sum(), Name = g.Key.name, Amount2 = 0 }; //
+                }
+            }
+            if (request.selectedMenu == (int)ReportType.NetIncome)
+            {
+                if (request.selectedSubMenu == (int)ReportSubtype.OverTime)
+                {
+                    headColumn1 = Resources.SharedStrings.Month;
+                    headColumn2 = Resources.JavaScript.Income;
+                    headColumn3 = Resources.JavaScript.Spending;
+                    headColumn4 = Resources.JavaScript.NetIncome;
+                    report = from t in trans
+                             join c in months on t.Date.Value.ToYearMonth() equals c.id
+                             where t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate
+                             group t.Direction == TransactionDirections.Income ? t.Amount : - t.Amount by c into g
+                             orderby g.Key.id
+                             select new { Id = g.Key.id, Amount = g.Sum(s => s.Value > 0 ? s.Value : 0), Amount2 = g.Sum(s => s.Value < 0 ? -s.Value : 0), Name = g.Key.name }; //
                 }
             }
 
-            return Json(new { items = report, currencies, request, headColumn1, headColumn2, timeFrameDesc, transTimeFrame });
+            return Json(new { items = report, currencies, request, headColumn1, headColumn2, headColumn3, headColumn4, timeFrameDesc, transTimeFrame });
         }
 
     }

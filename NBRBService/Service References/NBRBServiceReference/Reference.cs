@@ -8,12 +8,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Naviam.DAL.NBRB {
+namespace NBRBService.NBRBServiceReference {
     using System.Data;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="http://www.nbrb.by/", ConfigurationName="Naviam.DAL.NBRB.ExRatesSoap")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="http://www.nbrb.by/", ConfigurationName="NBRBServiceReference.ExRatesSoap")]
     public interface ExRatesSoap {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://www.nbrb.by/CurrenciesRefDaily", ReplyAction="*")]
@@ -82,12 +82,12 @@ namespace Naviam.DAL.NBRB {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface ExRatesSoapChannel : Naviam.DAL.NBRB.ExRatesSoap, System.ServiceModel.IClientChannel {
+    public interface ExRatesSoapChannel : NBRBService.NBRBServiceReference.ExRatesSoap, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ExRatesSoapClient : System.ServiceModel.ClientBase<Naviam.DAL.NBRB.ExRatesSoap>, Naviam.DAL.NBRB.ExRatesSoap {
+    public partial class ExRatesSoapClient : System.ServiceModel.ClientBase<NBRBService.NBRBServiceReference.ExRatesSoap>, NBRBService.NBRBServiceReference.ExRatesSoap {
         
         public ExRatesSoapClient() {
         }

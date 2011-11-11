@@ -36,10 +36,12 @@ namespace Naviam.WebUI.Controllers
                         throw new Exception("Invalid file format");
                     var companyId = CurrentUser.CurrentCompany;
                     var reps = new TransactionsRepository();
+                    var repCat = new CategoriesRepository();
                     decimal sumAmount = 0;
                     var dbTransList = new List<Transaction>();
                     foreach (var trans in statRes.Transactions)
                     {
+                        var categoryId = repCat.FindCategoryMerchant(accId, trans.Place.Trim());
                         if (trans.AccountAmount != 0)
                         {
                             var dbTrans = new Transaction()
@@ -54,7 +56,7 @@ namespace Naviam.WebUI.Controllers
                                 IncludeInTax = false,
                                 Notes = trans.OperationDescription,
                                 //CategoryId = 20
-                                CategoryId = null
+                                CategoryId = categoryId
                             };
                             dbTransList.Add(dbTrans);
                             sumAmount += trans.AccountAmount;
@@ -66,7 +68,7 @@ namespace Naviam.WebUI.Controllers
                     {
                         new AccountsRepository().ChangeBalance(accId, companyId, sumAmount);
                         //reset redis
-                        reps.ResetCache(companyId);
+                        //reps.ResetCache(companyId);
                         result = "ok";
                     }
                     if (Request.UrlReferrer != null) Response.Redirect(Request.UrlReferrer.PathAndQuery);

@@ -246,4 +246,7 @@
   <data name="OverTime" xml:space="preserve">
     <value>Over Time</value>
   </data>
+  <data name="NetIncome" xml:space="preserve">
+    <value>Net Income</value>
+  </data>
 </root>

@@ -61,5 +61,32 @@ namespace Naviam.DAL
             return res;
         }
 
+        public static List<DateTime?> GetRateAbsentDates(int daysCount, int countryId)
+        {
+            List<DateTime?> res = new List<DateTime?>();
+            using (var holder = SqlConnectionHelper.GetConnection())
+            {
+                using (var cmd = holder.Connection.CreateSPCommand("rate_absent_dates_get"))
+                {
+                    cmd.Parameters.AddWithValue("@days_count", daysCount);
+                    cmd.Parameters.AddWithValue("@id_country", countryId);
+                    try
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                                res.Add(reader["date"] as DateTime?);
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        cmd.AddDetailsToException(e);
+                        throw;
+                    }
+                }
+            }
+            return res;
+        }
+
     }
 }

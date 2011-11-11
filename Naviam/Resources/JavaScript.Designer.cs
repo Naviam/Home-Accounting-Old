@@ -349,6 +349,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Net Income.
+        /// </summary>
+        public static string NetIncome {
+            get {
+                return ResourceManager.GetString("NetIncome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to November.
         /// </summary>
         public static string November {

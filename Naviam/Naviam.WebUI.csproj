@@ -95,6 +95,7 @@
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages" />
     <Reference Include="System.Web.Helpers" />
@@ -132,6 +133,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SmsController.cs" />
     <Compile Include="Controllers\TargetsController.cs" />
+    <Compile Include="Controllers\TechController.cs" />
     <Compile Include="Helpers\Cookies\CookieContainer.cs" />
     <Compile Include="Helpers\Cookies\ICookieContainer.cs" />
     <Compile Include="Helpers\CustomModelBinder.cs" />
