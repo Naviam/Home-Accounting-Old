@@ -65,6 +65,8 @@ namespace Naviam.WebUI.Controllers
             try
             {
                 SmsBase sms;
+                
+                //try find bank
                 switch (bank.Id)
                 {
                     case 15: sms = new BelSwissSms(message);
@@ -73,18 +75,25 @@ namespace Naviam.WebUI.Controllers
                         sms = new BelSwissSms(message);
                         break;
                 }
-
-
-                //TODO: check sms.Result if need????
+                
+                //try find account
                 var account = _accountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, bank.Id);
                 if (account == null)
                 {
                     log.Warn(String.Format("can't find account"));
                     return Json("ok");
                 }
+                
+                //if result is not Uspeshno send sms and not add transaction to db
+                if (string.IsNullOrEmpty(sms.Result) || !sms.Result.Equals("Uspeshno", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    log.Warn(String.Format("sms resault is {0}", sms.Result));
+                    NotificationManager.Instance.SendSmsMail(account.SmsUser, message);
+                    return Json("ok");
+                }
+
                 //get category id
                 var categoryId = _categoriesRepository.FindCategoryMerchant(account.Id, sms.Merchant.Trim());
-
                 var tran =
                     new Transaction
                     {

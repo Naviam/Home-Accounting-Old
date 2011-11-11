@@ -41,12 +41,12 @@ namespace Naviam.Data
         public override string GetResult()
         {
             string result = string.Empty;
-            string pattern = @"(?<result>Uspeshno)";
+            string pattern = @"([^\x00]*(?<operation>Retail|Service payment from card|Service payment to card|ATM|Cash)(?<result>[^\x00]*?)(?<date>(?:\d{4}|\d{2})-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,5})[^\x00]*)";
             Regex reg = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant);
             if (reg.IsMatch(_sms))
             {
                 Match match = reg.Match(_sms);
-                result = match.Groups["result"].Success ? match.Groups["result"].Value : "";
+                result = match.Groups["result"].Success ? match.Groups["result"].Value.Trim() : "";
             }
             return result;
         }
@@ -98,7 +98,7 @@ namespace Naviam.Data
             if (reg.IsMatch(_sms))
             {
                 Match match = reg.Match(_sms);
-                result = match.Groups["merchant"].Success ? match.Groups["merchant"].Value : "";
+                result = match.Groups["merchant"].Success ? match.Groups["merchant"].Value.Trim() : "";
             }
             return result;
         }
