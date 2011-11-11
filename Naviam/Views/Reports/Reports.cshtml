@@ -70,7 +70,7 @@
 
 <div id='report_page'>
     <div style='float:right;margin-top: 10px;margin-right:10px;'>
-        <a href="#"><img src="@Url.Content("~/Content/images/stats_pie.png")" data-bind="click: function() { graphType(0); }"/></a>
+        <a href="#"><img src="@Url.Content("~/Content/images/stats_pie.png")" data-bind="visible: request.selectedMenu() != 2, click: function() { graphType(0); }"/></a>
         <a href="#"><img src="@Url.Content("~/Content/images/stats_bars.png")" data-bind="click: function() { graphType(1); }"/></a>
     </div>
 
@@ -92,6 +92,8 @@
             @*<td><span data-bind="text: Id"/></td>*@
             <th><span data-bind="text: Name"/></th>
             <td><span data-bind="amount: Amount"/></td>
+            <td><span data-bind="visible: reportsModel.headColumn3() != '', amount: Amount2"/></td>
+            <td data-bind="css: {down : Amount()-Amount2() < 0, up : Amount()-Amount2() > 0}"><span data-bind="visible: reportsModel.headColumn4() != '', amount: Amount()-Amount2()"/></td>
         </tr>
     </script>
 
@@ -99,6 +101,8 @@
             <tr>
             <th><span data-bind="text: headColumn1"/></th>
             <td><span data-bind="text: headColumn2"/></td>
+            <td><span data-bind="text: headColumn3"/></td>
+            <td><span data-bind="text: headColumn4"/></td>
             </tr>
     </script>
     
@@ -109,6 +113,8 @@
             <tr class="totals">
             <th>@SharedStrings.Total</th>
             <td data-bind="amount: endAmount"></td>
+            <td data-bind="visible: endAmount2() != 0, amount: endAmount2"></td>
+            <td data-bind="visible: endAmount2() != 0, amount: endAmount() - endAmount2(), css: {down : endAmount() - endAmount2() < 0, up : endAmount() - endAmount2() > 0}"></td>
             </tr>
         </tfoot>
         <tbody data-bind="template: {name:'r_tableTemplate', foreach:items }" ></tbody>

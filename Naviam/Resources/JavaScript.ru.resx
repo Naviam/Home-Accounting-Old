@@ -246,4 +246,7 @@
   <data name="OverTime" xml:space="preserve">
     <value>По времени</value>
   </data>
+  <data name="NetIncome" xml:space="preserve">
+    <value>Чистая Прибыль</value>
+  </data>
 </root>
