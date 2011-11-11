@@ -141,7 +141,7 @@
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Merchant" />
         </td>*@
         <td>
-            <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
+            <span data-bind="visible: transModel.selectedItem() != $data, text: Category, css: { b_upper: CategoryId() == 20 }"></span>
             <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'>
                 <input class="width100 enterastab" data-bind="category: Category" name="Category"/>
                 <a href="#" onclick='return catModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a>

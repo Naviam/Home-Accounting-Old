@@ -180,6 +180,10 @@ section.main aside.right {
   color: White; }
 
 /*Grid----------*/
+.b_upper {
+  font-weight: bold;
+  text-transform: uppercase; }
+
 .grid {
   border-collapse: collapse;
   background: #ececd8;
