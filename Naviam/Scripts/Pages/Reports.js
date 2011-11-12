@@ -43,6 +43,7 @@ reportsModel.Load = function () {
         reportsModel.Refresh = function () {
             $.postErr(getReportsUrl, ko.toJS(rep_req), function (res) {
                 ko.mapping.updateFromJS(reportsModel, res);
+                reportsModel.setupDragTime();
                 reportsModel.fillChart();
             });
         };
@@ -116,7 +117,31 @@ reportsModel.Load = function () {
                     $('#chart_b').show();
                 }
             }
-        }
+        };
+        reportsModel.isDragged = false;
+        reportsModel.setupDragTime = function () {
+            //time frame drag
+            $('.time_frame_cell')
+            .mouseover(function (e) {
+                e.preventDefault();
+                if (reportsModel.isDragged) {
+                    var val = $(e.target).attr('data_val');
+                    if (!val) //on span
+                        val = $(e.target).parent().attr('data_val');
+                    if (val) {
+                        e.shiftKey = true;
+                        reportsModel.changeTimeFrame(e, val);
+                    }
+                }
+            })
+            .mousedown(function (e) {
+                e.preventDefault();
+                reportsModel.isDragged = true;
+            })
+            .mouseup(function (e) {
+                reportsModel.isDragged = false;
+            });
+        };
         //
         ko.applyBindings(reportsModel, $("#report_page")[0]);
         ko.applyBindings(reportsModel, $("#timeline")[0]);
@@ -130,6 +155,7 @@ reportsModel.Load = function () {
         });
         menuModel.selectedSubMenu.subscribe(function (val) { rep_req.selectedSubMenu(val.id); });
         ko.applyBindings(menuModel, $("#rep_menu")[0]);
+        reportsModel.setupDragTime();
         reportsModel.fillChart();
     });
 };

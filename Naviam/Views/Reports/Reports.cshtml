@@ -37,11 +37,11 @@
     <h3><span data-bind="text: timeFrameDesc"></span></h3>
     <div style="clear:both"></div>
     <script type="text/html" id="r_frameTemplate">
-        <td data-bind="click: function(ev) { $item.currentS(ev, $data.id()); }, css: {selected: $item.isSelected($data.id()) }">
+        <td class='time_frame_cell' data-bind="click: function(ev) { $item.currentS(ev, $data.id()); }, css: {selected: $item.isSelected($data.id()) }, attr: {data_val: $data.id()}">
             <span data-bind="text: shortName"></span><br /><span data-bind="text: year"></span>
         </td>
     </script>
-    <table class='time_frame' >
+    <table class='time_frame'>
     <tr data-bind="template: {name:'r_frameTemplate', foreach:transTimeFrame, templateOptions: { currentS: changeTimeFrame, isSelected: isTimeFrameSelected } }">
     </tr>
     </table>
