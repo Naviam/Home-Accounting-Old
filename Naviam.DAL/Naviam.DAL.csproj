@@ -101,6 +101,7 @@
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Entities\FinanceInstitution.cs" />
     <Compile Include="Entities\Modem.cs" />
+    <Compile Include="Entities\Rate.cs" />
     <Compile Include="Entities\Sms\BelSwissSms.cs" />
     <Compile Include="Entities\Sms\SmsBase.cs" />
     <Compile Include="Entities\Tag.cs" />

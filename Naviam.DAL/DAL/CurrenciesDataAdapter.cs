@@ -61,9 +61,9 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static List<DateTime?> GetRateAbsentDates(int daysCount, int countryId)
+        public static List<DateTime> GetRateAbsentDates(int daysCount, int countryId)
         {
-            List<DateTime?> res = new List<DateTime?>();
+            List<DateTime> res = new List<DateTime>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateSPCommand("rate_absent_dates_get"))
@@ -75,7 +75,10 @@ namespace Naviam.DAL
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
-                                res.Add(reader["date"] as DateTime?);
+                            {
+                                DateTime? date = reader["date"] as DateTime?;
+                                if(date.HasValue) res.Add(date.Value);
+                            }
                         }
                     }
                     catch (SqlException e)
@@ -88,5 +91,54 @@ namespace Naviam.DAL
             return res;
         }
 
+        public static void BulkUpdateRates(List<CurrRate> rates)
+        {
+            //List<DateTime> res = new List<DateTime>();
+            //using (var holder = SqlConnectionHelper.GetConnection())
+            //{
+            //    using (var cmd = holder.Connection.CreateSPCommand("rate_absent_dates_get"))
+            //    {
+            //        try
+            //        {
+            //            using (var reader = cmd.ExecuteReader())
+            //            {
+            //                while (reader.Read())
+            //                {
+            //                    DateTime? date = reader["date"] as DateTime?;
+            //                    if (date.HasValue) res.Add(date.Value);
+            //                }
+            //            }
+            //        }
+            //        catch (SqlException e)
+            //        {
+            //            cmd.AddDetailsToException(e);
+            //            throw;
+            //        }
+            //    }
+            //}
+        }
+
+
+    }
+    
+    [Serializable]
+    public class CurrRate
+    {
+        public CurrRate()
+        {
+
+        }
+        public CurrRate(DateTime date, string currCode, decimal rateVal, int countryId)
+        {
+            Date = date;
+            CurrCode = currCode;
+            RateVal = rateVal;
+            CountryId = countryId;
+        }
+
+        public DateTime Date { get; set; }
+        public string CurrCode { get; set; }
+        public decimal RateVal { get; set; }
+        public int CountryId { get; set; }
     }
 }

@@ -145,6 +145,7 @@
     <Compile Include="Helpers\Parsers\BelSwissParser.cs" />
     <Compile Include="Helpers\Parsers\ParserBase.cs" />
     <Compile Include="Helpers\Parsers\ParsersFactory.cs" />
+    <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
