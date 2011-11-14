@@ -63,9 +63,9 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static List<DateTime> GetRateAbsentDates(int daysCount, int countryId)
+        public static List<string> GetRateAbsentDates(int daysCount, int countryId)
         {
-            List<DateTime> res = new List<DateTime>();
+            List<string> res = new List<string>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateSPCommand("rate_absent_dates_get"))
@@ -78,8 +78,7 @@ namespace Naviam.DAL
                         {
                             while (reader.Read())
                             {
-                                DateTime? date = reader["date"] as DateTime?;
-                                if (date.HasValue) res.Add(date.Value);
+                                res.Add(reader["date"] as string);
                             }
                         }
                     }
@@ -98,7 +97,8 @@ namespace Naviam.DAL
             DataTable ratesTable = Rate.InitDataTable();
             foreach (CurrRate rate in rates)
             {
-                ratesTable.Rows.Add(0, rate.CountryId, rate.RateVal, rate.Date, int.Parse(rate.CurrCode));
+                DateTime date = DateTime.ParseExact(rate.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                ratesTable.Rows.Add(0, rate.CountryId, rate.RateVal, date, int.Parse(rate.CurrCode));
             }
             //TODO: make additional technical connection with more power rights then web_access but not like sa
             string connectionString = @"Data Source=minsk.servicechannel.com\naviam;Initial Catalog=naviam;Integrated Security=False;User ID=sa;Password=dev_access1;Enlist=False";
@@ -131,7 +131,7 @@ namespace Naviam.DAL
         {
 
         }
-        public CurrRate(DateTime date, string currCode, decimal rateVal, int countryId)
+        public CurrRate(string date, string currCode, decimal rateVal, int countryId)
         {
 
             Date = date;
@@ -140,7 +140,7 @@ namespace Naviam.DAL
             CountryId = countryId;
         }
 
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string CurrCode { get; set; }
         public decimal RateVal { get; set; }
         public int CountryId { get; set; }
