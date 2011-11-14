@@ -20,8 +20,9 @@ namespace Naviam.WebUI.Controllers
         private readonly TransactionsRepository _transRepository;
         private readonly CategoriesRepository _categoriesRepository;
         private readonly TagsRepository _tagsRepository;
-        
-        public TransactionsController(): this(null, null, null)
+
+        public TransactionsController()
+            : this(null, null, null)
         {
         }
 
@@ -31,7 +32,7 @@ namespace Naviam.WebUI.Controllers
             _categoriesRepository = categoriesRepository ?? new CategoriesRepository();
             _tagsRepository = tagsRepository ?? new TagsRepository();
         }
-        
+
         public class FilterHolder
         {
             public string Name { get; set; }
@@ -117,7 +118,7 @@ namespace Naviam.WebUI.Controllers
                             //!
                             if (item.Name == "ByString")
                                 trans = trans.Where(s => (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
-                                //trans = trans.Where(s => (s.Merchant != null && s.Merchant.ToLower().Contains(item.Value.ToLower())) || (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
+                                    //trans = trans.Where(s => (s.Merchant != null && s.Merchant.ToLower().Contains(item.Value.ToLower())) || (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
                                     Union(from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
                             else
                                 trans = (from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
@@ -130,17 +131,34 @@ namespace Naviam.WebUI.Controllers
                                 var tags = _tagsRepository.GetAll(user.Id);
                                 var selTags = tags.Where(m => m.Name.ToLower().Contains(item.Value.ToLower()));
                                 trans = (from t in trans
-                                        from tg in selTags
-                                        where t.TagIds.Contains(tg.Id.ToString())
+                                         from tg in selTags
+                                         where t.TagIds.Contains(tg.Id.ToString())
                                          select t).ToList();
                             }
                             else
-                            {
-                                if (item.Type == "int")
-                                    paging.Filter += String.Format("{0}=={1} and ", item.Name, item.Value);
+                                if (item.Name == "Direction")
+                                {
+                                    trans = (from t in trans
+                                             where t.Direction == (TransactionDirections)Convert.ToInt32(item.Value)
+                                             select t).ToList();
+                                }
                                 else
-                                    paging.Filter += String.Format("{0}==\"{1}\" and ", item.Name, item.Value);
-                            }
+                                    if (item.Name == "BetweenDate")
+                                    {
+                                        var startD = new DateTime(Convert.ToInt32(item.Value.Substring(0, 4)), Convert.ToInt32(item.Value.Substring(4, 2)), 1);
+                                        var endD = new DateTime(Convert.ToInt32(item.Value.Substring(6, 4)), Convert.ToInt32(item.Value.Substring(10, 2)), 1); ;
+                                        endD = endD.AddMonths(1);
+                                        trans = (from t in trans
+                                                 where t.Date >= startD && t.Date < endD
+                                                 select t).ToList();
+                                    }
+                                    else
+                                    {
+                                        if (item.Type == "int")
+                                            paging.Filter += String.Format("{0}=={1} and ", item.Name, item.Value);
+                                        else
+                                            paging.Filter += String.Format("{0}==\"{1}\" and ", item.Name, item.Value);
+                                    }
                         }
                     }
                     if (!String.IsNullOrEmpty(paging.Filter))
@@ -333,7 +351,7 @@ namespace Naviam.WebUI.Controllers
             {
                 if (item.Name.ToLower().Contains(q))
                     vals.Add(Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name);
-                    //res += Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name + "|" + item.Id.ToString() + "\n";
+                //res += Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name + "|" + item.Id.ToString() + "\n";
             }
             //tags
             foreach (var item in tags)

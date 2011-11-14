@@ -50,6 +50,8 @@ table.portfolio {
     color: #6F655D; }
   table.portfolio tbody {
     font-size: 12px; }
+    table.portfolio tbody tr {
+      cursor: pointer; }
     table.portfolio tbody th, table.portfolio tbody td {
       border-top: 1px dashed #DEDEDE; }
   table.portfolio td {

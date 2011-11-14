@@ -8,6 +8,9 @@
   <output path="..\Scripts\Pages\Reports.min.js">
     <input path="..\Scripts\Pages\Reports.js"/>
   </output>
+  <output path="..\Scripts\Pages\Filters.min.js">
+    <input path="..\Scripts\Pages\Filters.js"/>
+  </output>
   <output path="..\Scripts\common.min.js">
     <input path="..\Scripts\common.js"/>
   </output>

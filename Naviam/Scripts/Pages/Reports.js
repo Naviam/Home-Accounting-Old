@@ -59,6 +59,31 @@ reportsModel.Load = function () {
                 total += parseInt(this.items()[i].Amount2());
             return total;
         }, reportsModel);
+        reportsModel.selectTable = function (item) {
+            if (rep_req.selectedMenu() == 2) return;
+            if (rep_req.selectedSubMenu() == 0)
+                filterModel.Add('CategoryId', item.Id(), lang.FindCategory, item.Name(), "int");
+            if (rep_req.selectedSubMenu() == 1)
+                filterModel.Add('Merchant', item.Name(), lang.FindMerchant, item.Name());
+            if (rep_req.selectedSubMenu() == 2)
+                filterModel.Add('TagName', item.Name(), lang.FindTag, item.Name());
+            //add type
+            if (rep_req.selectedMenu() == 0)
+                filterModel.Add('Direction', '0', lang.FindDirection, lang.Spending);
+            if (rep_req.selectedMenu() == 1)
+                filterModel.Add('Direction', '1', lang.FindDirection, lang.Income);
+            //add time period
+            var dStart = '' + (rep_req.selectedTimeFrameStart() - 1);
+            var dEnd = '' + (rep_req.selectedTimeFrameEnd() - 1);
+            var dateS = new Date(dStart.substr(0, 4), dStart.substr(4, 2));
+            var dateE = new Date(dEnd.substr(0, 4), dEnd.substr(4, 2));
+            //get last day of month
+            dateE.setMonth(dateE.getMonth() + 1);
+            dateE.setDate(dateE.getDate() - 1);
+            filterModel.Add('BetweenDate', rep_req.selectedTimeFrameStart() + '' + rep_req.selectedTimeFrameEnd(), lang.FindBetweenDate, dateS.format() + ' - ' + dateE.format());
+            localStorage.setItem("transFilter", ko.toJSON(filterModel.items));
+            window.location = transUrl;
+        };
         reportsModel.getChartTitle = function () {
             var title = '';
             if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 0)

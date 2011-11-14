@@ -223,6 +223,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to between.
+        /// </summary>
+        public static string FindBetweenDate {
+            get {
+                return ResourceManager.GetString("FindBetweenDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to categorized under.
         /// </summary>
         public static string FindCategory {
@@ -237,6 +246,15 @@ namespace Naviam.WebUI.Resources {
         public static string FindDescription {
             get {
                 return ResourceManager.GetString("FindDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string FindDirection {
+            get {
+                return ResourceManager.GetString("FindDirection", resourceCulture);
             }
         }
         
