@@ -66,6 +66,9 @@ table.portfolio {
 	}
 	tbody {
 		font-size: 12px;
+		tr {
+			cursor:pointer;
+		}
 		th, td {
 			border-top: 1px dashed #DEDEDE;
 		}

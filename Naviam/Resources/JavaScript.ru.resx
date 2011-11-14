@@ -249,4 +249,10 @@
   <data name="NetIncome" xml:space="preserve">
     <value>Чистая Прибыль</value>
   </data>
+  <data name="FindBetweenDate" xml:space="preserve">
+    <value>период</value>
+  </data>
+  <data name="FindDirection" xml:space="preserve">
+    <value>тип</value>
+  </data>
 </root>

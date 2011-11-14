@@ -19,6 +19,7 @@
 
 <script type='text/javascript'>
     var getReportsUrl = '@Url.Action("GetReport", "Reports")';
+    var transUrl = '@Url.Action("Index", "Transactions")';
     google.load("visualization", "1", { packages: ["corechart"] });
 </script>
 
@@ -88,7 +89,7 @@
     <div id="chart_c"></div>
 
     <script type="text/html" id="r_tableTemplate">
-        <tr>
+        <tr data-bind="click: function() { $item.current($data); }">
             @*<td><span data-bind="text: Id"/></td>*@
             <th><span data-bind="text: Name"/></th>
             <td><span data-bind="amount: Amount"/></td>
@@ -117,7 +118,7 @@
             <td data-bind="visible: endAmount2() != 0, amount: endAmount() - endAmount2(), css: {down : endAmount() - endAmount2() < 0, up : endAmount() - endAmount2() > 0}"></td>
             </tr>
         </tfoot>
-        <tbody data-bind="template: {name:'r_tableTemplate', foreach:items }" ></tbody>
+        <tbody data-bind="template: {name:'r_tableTemplate', foreach:items, templateOptions: { current: selectTable }  }" ></tbody>
     </table>
 </div>
 
