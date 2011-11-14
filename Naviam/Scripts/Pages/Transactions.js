@@ -6,8 +6,10 @@ var transModel = {
     paging: { Page: 1, SortField: 'Date', SortDirection: 1, Filter: '' }
 };
 var transEdit = {};
-var filterModel = {};
+var filterModel = {}; 
+//props
 filterModel.items = ko.observableArray();
+//methods
 filterModel.toString = function () {
     return ko.toJSON(this.items);
 };
@@ -104,6 +106,9 @@ ko.bindingHandlers.category = {
 //};
 //!!!
 function loadTransactions() {
+    //localStorage.setItem("transFilter", null);
+    filterModel.items(ko.utils.parseJson(localStorage.getItem("transFilter")));
+    transModel.paging.Filter = filterModel.toString();
     $.postErr(getTransUrl, transModel.paging, function (res) {
         var childItem = function (data) {
             ko.mapping.fromJS(data, {}, this);
@@ -132,6 +137,7 @@ function loadTransactions() {
         transModel.ReloadPage = function () {
             if (this.DescrSub != null)
                 this.DescrSub.dispose();
+            localStorage.setItem("transFilter", ko.toJSON(filterModel.items));
             transModel.paging.Filter = filterModel.toString();
             $.postErr(getTransUrl, transModel.paging, function (res) {
                 ko.mapping.updateFromJS(transModel, res);
