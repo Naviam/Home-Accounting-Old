@@ -19,6 +19,7 @@ namespace NaviamTechCenter
             Timer ratesUpdateTimer = new Timer(timerCallback1, new AutoResetEvent(false), 0, 1000000);
 
             Console.Read();
+
             return;
             CategoriesMerchantsUpdater categoriesMerchantsUpdater = new CategoriesMerchantsUpdater();
             TimerCallback timerCallback2 = categoriesMerchantsUpdater.Update;

@@ -14,6 +14,7 @@ namespace Naviam.WebUI.Controllers
 {
     public class TechController : AsyncController
     {
+        private CurrenciesRepository _currenciesRepository = new CurrenciesRepository();
         public void UpdateMerchantsCategories()
         {
             CategoriesRepository _categoriesRepository = new CategoriesRepository();
@@ -26,46 +27,57 @@ namespace Naviam.WebUI.Controllers
         {
             AsyncManager.OutstandingOperations.Decrement();
         }
-
-        public void ListAsync(int daysCount, int countryId)
+        [AsyncTimeout(10000)]
+        public void ListDatesAsync(int daysCount, int countryId)
         {
             AsyncManager.OutstandingOperations.Increment();
-            Task.Factory.StartNew(() => GetRateAbsentDatesData(daysCount, countryId));
+            Task.Factory.StartNew(() =>
+                {
+                    try { AsyncManager.Parameters["result"] = CurrenciesDataAdapter.GetRateAbsentDates(daysCount, countryId); }
+                    catch (Exception ex) { }
+                    finally { AsyncManager.OutstandingOperations.Decrement(); }
+                }
+            );
         }
-
-        public void GetRateAbsentDatesData(int daysCount, int countryId)
-        {
-            AsyncManager.Parameters["result"] = CurrenciesDataAdapter.GetRateAbsentDates(daysCount, countryId);
-            AsyncManager.OutstandingOperations.Decrement();
-        }
-        public string ListCompleted(List<DateTime> result)
+        public string ListDatesCompleted(List<DateTime> result)
         {
             string res = Naviam.WebUI.Helpers.SerializationHelper.ToXml(result);
             return res;
         }
 
-        public string UpdateRates2(string rates)
+        public void UpdateRatesAsync(List<CurrRate> rates)
         {
-
-            return "ok";
-        }
-        public void UpdateRatesAsync(string rates)
-        {
-           // return "ok";
             AsyncManager.OutstandingOperations.Increment();
+            //Task.Factory.StartNew(() =>
+            //{
+            //    try {
+            //            List<Currency> currencies = _currenciesRepository.GetCurrencies();
+            //            foreach (CurrRate rate in rates)
+            //                rate.CurrCode = currencies.FirstOrDefault(x => x.Code.Equals(rate.CurrCode, StringComparison.InvariantCultureIgnoreCase)).Id.ToString();
+            //            CurrenciesDataAdapter.BulkUpdateRates(rates);
+            //        }
+            //    catch (Exception ex) { }
+            //    finally { AsyncManager.OutstandingOperations.Decrement(); }
+            //}
+            //);
+
+            List<Currency> currencies = _currenciesRepository.GetCurrencies();
+            foreach (CurrRate rate in rates)
+                rate.CurrCode = currencies.FirstOrDefault(x => x.Code.Equals(rate.CurrCode, StringComparison.InvariantCultureIgnoreCase)).Id.ToString();
+            CurrenciesDataAdapter.BulkUpdateRates(rates);
+
             Task.Factory.StartNew(() => UpdateRatesExec(rates));
         }
 
-        public void UpdateRatesExec(string rates)
+        public void UpdateRatesExec(List<CurrRate> rates)
         {
-            List<CurrRate> ratesObj = (List<CurrRate>)Naviam.WebUI.Helpers.SerializationHelper.FromXmlString(typeof(List<CurrRate>), rates);
-            CurrenciesDataAdapter.BulkUpdateRates(ratesObj);
+
             AsyncManager.OutstandingOperations.Decrement();
         }
 
         public string UpdateRatesCompleted()
         {
-            return "";
+            return "ok";
         }
 
     }

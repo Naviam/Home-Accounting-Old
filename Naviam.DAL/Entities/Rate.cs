@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace Naviam.Data
 {
@@ -24,5 +25,18 @@ namespace Naviam.Data
         public decimal? Value { get; set; }
         public DateTime? Date { get; set; }
         public int? CurrencyId { get; set; }
+
+        public static DataTable InitDataTable()
+        {
+            DataTable res = new DataTable("rates");
+            res.Columns.Add("id", typeof(int));
+            res.Columns.Add("id_country", typeof(int));
+            res.Columns.Add("value", typeof(decimal));
+            res.Columns.Add("date", typeof(DateTime));
+            res.Columns.Add("id_currency", typeof(int));
+            return res;
+        }
     }
+
+
 }
