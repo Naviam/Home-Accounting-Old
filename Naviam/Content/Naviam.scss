@@ -737,6 +737,7 @@ button {
 	background-color: #fff;
 	opacity: 0.3;
 	position: absolute;
+	background: url('images/loading7.gif') center no-repeat;
 }
 
 .error, .alert, .notice, .success, .info {padding:1px;margin-bottom:5px;border:2px solid #ddd;z-index:10000;}

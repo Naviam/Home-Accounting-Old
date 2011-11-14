@@ -222,6 +222,7 @@
     <Content Include="Content\images\bg.png" />
     <Content Include="Content\images\delete.png" />
     <Content Include="Content\images\edit.png" />
+    <Content Include="Content\images\loading7.gif" />
     <Content Include="Content\images\refresh.png" />
     <Content Include="Content\images\stats_bars.png" />
     <Content Include="Content\images\stats_lines.png" />

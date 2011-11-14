@@ -566,7 +566,8 @@ button {
   zIndex: 999998;
   background-color: #fff;
   opacity: 0.3;
-  position: absolute; }
+  position: absolute;
+  background: url("images/loading7.gif") center no-repeat; }
 
 .error, .alert, .notice, .success, .info {
   padding: 1px;
