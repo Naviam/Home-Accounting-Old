@@ -112,33 +112,33 @@ namespace Naviam.Domain.Concrete
 
         public virtual int? FindCategoryMerchant(int? id_account, string merchant)
         {
-            //get by user configuration (table dbo.merchants_categories)
-            var res = CategoriesDataAdapter.GetUsersCategoryMerchant(id_account, merchant);
-            if (res != null)
-                return res.CategoryId;
+            ////get by user configuration (table dbo.merchants_categories)
+            //var res = CategoriesDataAdapter.GetUsersCategoryMerchant(id_account, merchant);
+            //if (res != null)
+            //    return res.CategoryId;
 
-            //get by category rules
-            var val = FindCategoryByRules(merchant);
-            if (val != null)
-                return val;
+            ////get by category rules
+            //var val = FindCategoryByRules(merchant);
+            //if (val != null)
+            //    return val;
 
             //get by statistic from db
             var stats = GetMerchantsCategories();
-            res = stats.FirstOrDefault(x => x.Merchant.Equals(merchant, StringComparison.InvariantCultureIgnoreCase));
+            var res = stats.FirstOrDefault(x => x.Merchant.Equals(merchant, StringComparison.InvariantCultureIgnoreCase));
             return res!=null ? res.CategoryId.Value : DEFAULT_CATEGORY_ID;
         }
 
-        public virtual int? FindCategoryByRules(string merchant)
-        {
-            var rules = CategoriesDataAdapter.GetCategoriesRules();
-            foreach (var rule in rules)
-            {
-                var reg = new Regex(rule.RegX, RegexOptions.Multiline | RegexOptions.CultureInvariant);
-                if (reg.IsMatch(merchant))
-                    return rule.Id;
-            }
-            return null;
-        }
+        //public virtual int? FindCategoryByRules(string merchant)
+        //{
+        //    var rules = CategoriesDataAdapter.GetCategoriesRules();
+        //    foreach (var rule in rules)
+        //    {
+        //        var reg = new Regex(rule.RegX, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+        //        if (reg.IsMatch(merchant))
+        //            return rule.Id;
+        //    }
+        //    return null;
+        //}
 
         public delegate List<CategoryMerchant> GetMerchantsCategoriesAsynchCaller();
 

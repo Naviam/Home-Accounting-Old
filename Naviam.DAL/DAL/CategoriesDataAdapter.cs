@@ -128,55 +128,55 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static CategoryMerchant GetUsersCategoryMerchant(int? id_account, string merchant)
-        {
-            CategoryMerchant res = null;
-            using (var holder = SqlConnectionHelper.GetConnection())
-            {
-                var commName = "categories_merchants_user_get";
-                var cmd = holder.Connection.CreateSPCommand(commName);
-                try
-                {
-                    cmd.Parameters.Add("@id_category", SqlDbType.Int).Direction = ParameterDirection.InputOutput;
-                    cmd.Parameters.AddWithValue("@id_account", id_account);
-                    cmd.Parameters.AddWithValue("@merchant", merchant);
-                    cmd.ExecuteNonQuery();
-                    int? categoryId = cmd.GetRowIdParameter("@id_category");
-                    res = categoryId.HasValue ? new CategoryMerchant(merchant, categoryId.Value) : null;
-                }
-                catch (SqlException e)
-                {
-                    cmd.AddDetailsToException(e);
-                    throw;
-                }
-            }
-            return res;
-        }
+        //public static CategoryMerchant GetUsersCategoryMerchant(int? id_account, string merchant)
+        //{
+        //    CategoryMerchant res = null;
+        //    using (var holder = SqlConnectionHelper.GetConnection())
+        //    {
+        //        var commName = "merchant_category_user_get";
+        //        var cmd = holder.Connection.CreateSPCommand(commName);
+        //        try
+        //        {
+        //            cmd.Parameters.Add("@id_category", SqlDbType.Int).Direction = ParameterDirection.InputOutput;
+        //            cmd.Parameters.AddWithValue("@id_account", id_account);
+        //            cmd.Parameters.AddWithValue("@merchant", merchant);
+        //            cmd.ExecuteNonQuery();
+        //            int? categoryId = cmd.GetRowIdParameter("@id_category");
+        //            res = categoryId.HasValue ? new CategoryMerchant(merchant, categoryId.Value) : null;
+        //        }
+        //        catch (SqlException e)
+        //        {
+        //            cmd.AddDetailsToException(e);
+        //            throw;
+        //        }
+        //    }
+        //    return res;
+        //}
 
-        public static List<CategoryRule> GetCategoriesRules()
-        {
-            var res = new List<CategoryRule>();
-            using (var holder = SqlConnectionHelper.GetConnection())
-            {
-                using (var cmd = holder.Connection.CreateSPCommand("categories_rules_get"))
-                {
-                    try
-                    {
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                                res.Add(new CategoryRule(reader));
-                        }
-                    }
-                    catch (SqlException e)
-                    {
-                        cmd.AddDetailsToException(e);
-                        throw;
-                    }
-                }
-            }
-            return res;
-        }
+        //public static List<CategoryRule> GetCategoriesRules()
+        //{
+        //    var res = new List<CategoryRule>();
+        //    using (var holder = SqlConnectionHelper.GetConnection())
+        //    {
+        //        using (var cmd = holder.Connection.CreateSPCommand("categories_rules_get"))
+        //        {
+        //            try
+        //            {
+        //                using (var reader = cmd.ExecuteReader())
+        //                {
+        //                    while (reader.Read())
+        //                        res.Add(new CategoryRule(reader));
+        //                }
+        //            }
+        //            catch (SqlException e)
+        //            {
+        //                cmd.AddDetailsToException(e);
+        //                throw;
+        //            }
+        //        }
+        //    }
+        //    return res;
+        //}
 
 
     }
