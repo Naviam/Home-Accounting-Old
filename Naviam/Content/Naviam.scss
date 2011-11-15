@@ -730,6 +730,9 @@ button {
 			cursor: pointer;
 		}
 	}
+	.rem_all {
+		margin-top: 5px;
+	}
 }
 
 .win_blocker {
@@ -737,7 +740,7 @@ button {
 	background-color: #fff;
 	opacity: 0.3;
 	position: absolute;
-	background: url('images/loading7.gif') center no-repeat;
+	background: url('images/loading7.gif') center 5% no-repeat;
 }
 
 .error, .alert, .notice, .success, .info {padding:1px;margin-bottom:5px;border:2px solid #ddd;z-index:10000;}

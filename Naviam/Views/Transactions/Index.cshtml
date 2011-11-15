@@ -189,6 +189,11 @@
     <div id='display_filter' class='filter_view'>
         <ul data-bind="template: {name:'filterTemplate', foreach:items, templateOptions: { remove: removeItem } }">
         </ul>
+        <div  class='rem_all'>
+        <a data-bind="click: function() { transModel.removeFilters(); }, visible: items().length > 0" href='#'>
+        @SharedStrings.RemoveAll
+        </a>
+        </div>
     </div>
     @*<button onclick="$.postErr('@Url.Action("RecieveMessage", "Sms", new { key = "givemeaccesstotoyou", gateway = "GETWAY1", from = "BelSwissBank", to = "", message = "" })')" type="button">Test</button>*@
     <div id="transGrid">

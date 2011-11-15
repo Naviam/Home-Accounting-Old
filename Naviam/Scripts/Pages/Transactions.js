@@ -121,6 +121,10 @@ function loadTransactions() {
             localStorage.setItem("transPageSize", pageSize);
             this.ReloadPage();
         };
+        transModel.removeFilters = function () {
+            filterModel.Clear();
+            this.ReloadPage();
+        };
         transModel.ShowDialog = function () {
             var row = this.selectedRow();
             var frm = $("#transDlg");

@@ -180,6 +180,9 @@
   <data name="Rate" xml:space="preserve">
     <value>Курс</value>
   </data>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Удалить все</value>
+  </data>
   <data name="Reports" xml:space="preserve">
     <value>Отчёты</value>
   </data>
