@@ -110,8 +110,14 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public virtual int? FindCategoryMerchant(int? id_account, string merchant)
+        public virtual int? FindCategoryMerchant(int? idCompany, string merchant)
         {
+            RulesRepository rep = new RulesRepository();
+            string val = rep.GetValueByRules("merchant", merchant, "id_category", idCompany);
+            int ires = 0;
+            if (int.TryParse(val, out ires))
+                return ires;
+
             ////get by user configuration (table dbo.merchants_categories)
             //var res = CategoriesDataAdapter.GetUsersCategoryMerchant(id_account, merchant);
             //if (res != null)

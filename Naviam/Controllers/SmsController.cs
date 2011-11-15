@@ -93,7 +93,7 @@ namespace Naviam.WebUI.Controllers
                 }
 
                 //get category id
-                var categoryId = _categoriesRepository.FindCategoryMerchant(account.Id, sms.Merchant.Trim());
+                var categoryId = _categoriesRepository.FindCategoryMerchant(account.CompanyId, sms.Merchant.Trim());
                 var tran =
                     new Transaction
                     {

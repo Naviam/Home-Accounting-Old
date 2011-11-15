@@ -41,7 +41,7 @@ namespace Naviam.WebUI.Controllers
                     var dbTransList = new List<Transaction>();
                     foreach (var trans in statRes.Transactions)
                     {
-                        var categoryId = repCat.FindCategoryMerchant(accId, trans.Place.Trim());
+                        var categoryId = repCat.FindCategoryMerchant(companyId, trans.Place.Trim());
                         if (trans.AccountAmount != 0)
                         {
                             var dbTrans = new Transaction()
