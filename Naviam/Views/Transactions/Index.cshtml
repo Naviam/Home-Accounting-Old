@@ -218,6 +218,13 @@
             <img src='@Url.Content("~/Content/images/refresh.png")' onclick='return transModel.ReloadPage();' style='float: right;cursor: pointer;margin-top: 3px;'/>
             <div data-bind='template: "transPagingTemplate"' class='paging'></div>
         </div>
+        <div>
+            <ul class='h_menu'>
+                <li><a href="#" data-bind="click: function() { transModel.SetPageSize(25); },css: {underline: transModel.paging.PageSize() == 25}">25</a></li>
+                <li><a href="#" data-bind="click: function() { transModel.SetPageSize(50); },css: {underline: transModel.paging.PageSize() == 50}">50</a></li>
+                <li><a href="#" data-bind="click: function() { transModel.SetPageSize(100); },css: {underline: transModel.paging.PageSize() == 100}">100</a></li>
+            </ul>
+        </div>
     </div>
     <div class="overlaywoshadow" id="transDlg">
         <div>

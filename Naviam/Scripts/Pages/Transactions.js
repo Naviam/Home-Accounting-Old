@@ -65,6 +65,8 @@ function loadTransactions() {
     //localStorage.setItem("transFilter", null);
     filterModel.items(ko.utils.parseJson(localStorage.getItem("transFilter")));
     transModel.paging.Filter = filterModel.toString();
+    var pSize = localStorage.getItem("transPageSize");
+    transModel.paging.PageSize = pSize ? pSize : 50;
     $.postErr(getTransUrl, transModel.paging, function (res) {
         var childItem = function (data) {
             ko.mapping.fromJS(data, {}, this);
@@ -114,6 +116,11 @@ function loadTransactions() {
         //                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
         //            }
         //}
+        transModel.SetPageSize = function (pageSize) {
+            transModel.paging.PageSize(pageSize);
+            localStorage.setItem("transPageSize", pageSize);
+            this.ReloadPage();
+        };
         transModel.ShowDialog = function () {
             var row = this.selectedRow();
             var frm = $("#transDlg");
