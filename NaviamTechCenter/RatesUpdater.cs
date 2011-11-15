@@ -8,6 +8,7 @@ using System.Data;
 using System.Net;
 using System.IO;
 using System.Web.Script.Serialization;
+using System.Globalization;
 
 namespace NaviamTechCenter
 {
@@ -21,7 +22,7 @@ namespace NaviamTechCenter
         const int DefaultTimeout = 2 * 60 * 1000; // 2 minutes timeout
         const int BUFFER_SIZE = 1024;
 
-        private static log4net.ILog logger = log4net.LogManager.GetLogger("navTechCenter");
+        private static log4net.ILog logger = Program.logger;
 
         private static List<string> neededCurrenciesCodes = new List<string> { "840", "978", "985", "428", "440", "643" };
 
@@ -94,6 +95,17 @@ namespace NaviamTechCenter
                 logger.Error("RespCallback Exception raised!", e);
             }
             allDone.Set();
+        }
+        private static void TimeoutCallbackSendResult(object state, bool timedOut)
+        {
+            if (timedOut)
+            {
+                HttpWebRequest request = state as HttpWebRequest;
+                if (request != null)
+                {
+                    request.Abort();
+                }
+            }
         }
         private static void RespCallbackSendResult(IAsyncResult asynchronousResult)
         {
@@ -171,18 +183,19 @@ namespace NaviamTechCenter
 
         public static void GetRates(string absentDays)
         {
+            //TODO: why get "ok" here?
             ExRatesSoapClient client = null;
             DataSet cursies = null;
 
-            List<DateTime> dates = new List<DateTime>();
-            dates = (List<DateTime>)SerializationHelper.FromXmlString(typeof(List<DateTime>), absentDays);
+            List<string> dates = new List<string>();
+            dates = (List<string>)SerializationHelper.FromXmlString(typeof(List<string>), absentDays);
             if (dates != null && dates.Count > 0)
             {
                 client = new ExRatesSoapClient();
                 List<CurrRate> result = new List<CurrRate>();
-                foreach (DateTime date in dates)
+                foreach (string date in dates)
                 {
-                    cursies = client.ExRatesDaily(date);
+                    cursies = client.ExRatesDaily(DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture));
                     if (cursies != null)
                     {
                         foreach (DataRow row in cursies.Tables[0].Rows)
@@ -217,7 +230,7 @@ namespace NaviamTechCenter
             RequestState requestState = new RequestState();
             requestState.request = httpWebRequest;
             IAsyncResult result = (IAsyncResult)httpWebRequest.BeginGetResponse(new AsyncCallback(RespCallbackSendResult), requestState);
-            ThreadPool.RegisterWaitForSingleObject(result.AsyncWaitHandle, new WaitOrTimerCallback(TimeoutCallback), httpWebRequest, DefaultTimeout, true);
+            ThreadPool.RegisterWaitForSingleObject(result.AsyncWaitHandle, new WaitOrTimerCallback(TimeoutCallbackSendResult), httpWebRequest, DefaultTimeout, true);
 
             // The response came in the allowed time. The work processing will happen in the callback function.
             allDone2.WaitOne();
@@ -254,7 +267,7 @@ namespace NaviamTechCenter
         {
 
         }
-        public CurrRate(DateTime date, string currCode, decimal rateVal, int countryId)
+        public CurrRate(string date, string currCode, decimal rateVal, int countryId)
         {
             Date = date;
             CurrCode = currCode;
@@ -262,7 +275,7 @@ namespace NaviamTechCenter
             CountryId = countryId;
         }
 
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string CurrCode { get; set; }
         public decimal RateVal { get; set; }
         public int CountryId { get; set; }

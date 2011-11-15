@@ -15,8 +15,10 @@ namespace Naviam.WebUI.Controllers
     public class TechController : AsyncController
     {
         private CurrenciesRepository _currenciesRepository = new CurrenciesRepository();
+        private log4net.ILog logger = log4net.LogManager.GetLogger("navSite");
         public void UpdateMerchantsCategories()
         {
+            
             CategoriesRepository _categoriesRepository = new CategoriesRepository();
             AsyncManager.OutstandingOperations.Increment();
             CategoriesRepository.GetMerchantsCategoriesAsynchCaller caller = new CategoriesRepository.GetMerchantsCategoriesAsynchCaller(_categoriesRepository.GetMerchantsCategoriesAsynch);
@@ -34,12 +36,12 @@ namespace Naviam.WebUI.Controllers
             Task.Factory.StartNew(() =>
                 {
                     try { AsyncManager.Parameters["result"] = CurrenciesDataAdapter.GetRateAbsentDates(daysCount, countryId); }
-                    catch (Exception ex) { }
+                    catch (Exception ex) { logger.Error("ListDatesAsync error!", ex); }
                     finally { AsyncManager.OutstandingOperations.Decrement(); }
                 }
             );
         }
-        public string ListDatesCompleted(List<DateTime> result)
+        public string ListDatesCompleted(List<string> result)
         {
             string res = Naviam.WebUI.Helpers.SerializationHelper.ToXml(result);
             return res;
@@ -48,32 +50,32 @@ namespace Naviam.WebUI.Controllers
         public void UpdateRatesAsync(List<CurrRate> rates)
         {
             AsyncManager.OutstandingOperations.Increment();
-            //Task.Factory.StartNew(() =>
-            //{
-            //    try {
-            //            List<Currency> currencies = _currenciesRepository.GetCurrencies();
-            //            foreach (CurrRate rate in rates)
-            //                rate.CurrCode = currencies.FirstOrDefault(x => x.Code.Equals(rate.CurrCode, StringComparison.InvariantCultureIgnoreCase)).Id.ToString();
-            //            CurrenciesDataAdapter.BulkUpdateRates(rates);
-            //        }
-            //    catch (Exception ex) { }
-            //    finally { AsyncManager.OutstandingOperations.Decrement(); }
-            //}
-            //);
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    List<Currency> currencies = CurrenciesDataAdapter.GetCurrencies();
+                    foreach (CurrRate rate in rates)
+                        rate.CurrCode = currencies.FirstOrDefault(x => x.Code.Equals(rate.CurrCode, StringComparison.InvariantCultureIgnoreCase)).Id.ToString();
+                    CurrenciesDataAdapter.BulkUpdateRates(rates);
+                }
+                catch (Exception ex) { logger.Error("UpdateRatesAsync error!", ex); }
+                finally { AsyncManager.OutstandingOperations.Decrement(); }
+            }
+            );
 
-            List<Currency> currencies = _currenciesRepository.GetCurrencies();
-            foreach (CurrRate rate in rates)
-                rate.CurrCode = currencies.FirstOrDefault(x => x.Code.Equals(rate.CurrCode, StringComparison.InvariantCultureIgnoreCase)).Id.ToString();
-            CurrenciesDataAdapter.BulkUpdateRates(rates);
+            //List<Currency> currencies = _currenciesRepository.GetCurrencies();
+            //foreach (CurrRate rate in rates)
+            //    rate.CurrCode = currencies.FirstOrDefault(x => x.Code.Equals(rate.CurrCode, StringComparison.InvariantCultureIgnoreCase)).Id.ToString();
+            //CurrenciesDataAdapter.BulkUpdateRates(rates);
 
-            Task.Factory.StartNew(() => UpdateRatesExec(rates));
+            //Task.Factory.StartNew(() => UpdateRatesExec(rates));
         }
 
-        public void UpdateRatesExec(List<CurrRate> rates)
-        {
-
-            AsyncManager.OutstandingOperations.Decrement();
-        }
+        //public void UpdateRatesExec(List<CurrRate> rates)
+        //{
+        //    AsyncManager.OutstandingOperations.Decrement();
+        //}
 
         public string UpdateRatesCompleted()
         {

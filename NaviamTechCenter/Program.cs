@@ -6,11 +6,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 using System.IO;
+using log4net.Config;
+
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "NaviamTechCenter.exe.config", Watch = true)]
 
 namespace NaviamTechCenter
 {
-    class Program
+    
+    public class Program
     {
+        public static log4net.ILog logger = log4net.LogManager.GetLogger("navTechCenter");
+
         static void Main(string[] args)
         {
             //set rates update timer
