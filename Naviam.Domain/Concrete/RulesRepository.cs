@@ -32,6 +32,7 @@ namespace Naviam.Domain.Concrete
             }
             return res;
         }
+
         public virtual string GetValueByRules(string targetField, string targetFieldValue, string field, int? companyId)
         { return GetValueByRules(targetField, targetFieldValue, field, companyId, false); }
         public virtual string GetValueByRules(string targetField, string targetFieldValue, string field, int? companyId, bool forceSqlLoad)
@@ -40,7 +41,7 @@ namespace Naviam.Domain.Concrete
             List<FieldRule> rules = GetUserRules(companyId);
             foreach (FieldRule rule in rules)
             {
-                if (rule.RuleType.Value == RuleTypes.Equals)
+                if (rule.RuleType == RuleTypes.Equals)
                 {
                     if (rule.FildTarget.Equals(targetField, StringComparison.InvariantCultureIgnoreCase)
                         && rule.Fild.Equals(field, StringComparison.InvariantCultureIgnoreCase)
@@ -49,7 +50,7 @@ namespace Naviam.Domain.Concrete
                         return rule.FildValue;
                     }
                 }
-                else if (rule.RuleType.Value == RuleTypes.Regex)
+                else if (rule.RuleType == RuleTypes.Regex)
                 {
                     if (rule.FildTarget.Equals(targetField, StringComparison.InvariantCultureIgnoreCase)
                         && rule.Fild.Equals(field, StringComparison.InvariantCultureIgnoreCase)
@@ -60,6 +61,15 @@ namespace Naviam.Domain.Concrete
                 }
             }
             return result;
+        }
+
+        public virtual string FindDescriptionMerchant(int? idCompany, string merchant)
+        {
+            //get description by user rules
+            string val = GetValueByRules("merchant", merchant, "description", idCompany);
+            if (!string.IsNullOrEmpty(val)) 
+                return val;
+            return merchant;
         }
     }
 }

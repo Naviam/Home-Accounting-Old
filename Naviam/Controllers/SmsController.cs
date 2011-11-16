@@ -22,6 +22,7 @@ namespace Naviam.WebUI.Controllers
         private readonly CurrenciesRepository _currenciesRepository;
         private readonly CategoriesRepository _categoriesRepository;
         private readonly MembershipRepository _membershipRepository;
+        private readonly RulesRepository _rulesRepository;
 
         public SmsController()
             : this(null, null, null, null, null)
@@ -36,7 +37,7 @@ namespace Naviam.WebUI.Controllers
             _currenciesRepository = currenciesRepository ?? new CurrenciesRepository();
             _categoriesRepository = categoriesRepository ?? new CategoriesRepository();
             _membershipRepository = _membershipRepository ?? new MembershipRepository();
-
+            _rulesRepository = _rulesRepository ?? new RulesRepository();
         }
 
         [HttpPost]
@@ -98,18 +99,17 @@ namespace Naviam.WebUI.Controllers
                     new Transaction
                     {
                         Amount = sms.Amount,
-                        //CategoryId = _categoriesRepository.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
                         CategoryId = categoryId,
-                        //autosearch category by merchant
-                        // 20 - Uncategorized
+                        //autosearch category by merchant, default 20 - Uncategorized
                         CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,
                         Date = sms.Date,
-                        Description = sms.Merchant,
+                        //autosearch description by merchant, default description = mechant
+                        Description = _rulesRepository.FindDescriptionMerchant(account.CompanyId,sms.Merchant.Trim()),
                         Direction = sms.Direction,
                         IncludeInTax = false,
                         Notes = "",
                         TransactionType = TransactionTypes.SMS,
-                        Merchant = sms.Merchant,
+                        Merchant = sms.Merchant.Trim(),
                         AccountId = account.Id
                     };
                 _transRepository.Insert(tran, account.CompanyId);
@@ -122,7 +122,6 @@ namespace Naviam.WebUI.Controllers
                 log.Error(String.Format("sms error"), ex);
                 Response.StatusCode = 500;
                 return Json(new { Text = ex.Message, stackTrace = ex.StackTrace });
-                //throw e;
             }
             return Json("ok");
         }

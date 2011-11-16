@@ -87,12 +87,6 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
-        public virtual int? FindCategoryForMerchant(int? id_account, string merchant)
-        {
-            var res = CategoriesDataAdapter.FindCategoryForMerchant(id_account, merchant);
-            return res;
-        }
-
         public virtual List<CategoryMerchant> GetMerchantsCategories() { return GetMerchantsCategories(false); }
         public virtual List<CategoryMerchant> GetMerchantsCategories(bool forceSqlLoad)
         {
@@ -112,39 +106,18 @@ namespace Naviam.Domain.Concrete
 
         public virtual int? FindCategoryMerchant(int? idCompany, string merchant)
         {
+            //get category by user rules
             RulesRepository rep = new RulesRepository();
             string val = rep.GetValueByRules("merchant", merchant, "id_category", idCompany);
             int ires = 0;
             if (int.TryParse(val, out ires))
                 return ires;
 
-            ////get by user configuration (table dbo.merchants_categories)
-            //var res = CategoriesDataAdapter.GetUsersCategoryMerchant(id_account, merchant);
-            //if (res != null)
-            //    return res.CategoryId;
-
-            ////get by category rules
-            //var val = FindCategoryByRules(merchant);
-            //if (val != null)
-            //    return val;
-
             //get by statistic from db
             var stats = GetMerchantsCategories();
             var res = stats.FirstOrDefault(x => x.Merchant.Equals(merchant, StringComparison.InvariantCultureIgnoreCase));
             return res!=null ? res.CategoryId.Value : DEFAULT_CATEGORY_ID;
         }
-
-        //public virtual int? FindCategoryByRules(string merchant)
-        //{
-        //    var rules = CategoriesDataAdapter.GetCategoriesRules();
-        //    foreach (var rule in rules)
-        //    {
-        //        var reg = new Regex(rule.RegX, RegexOptions.Multiline | RegexOptions.CultureInvariant);
-        //        if (reg.IsMatch(merchant))
-        //            return rule.Id;
-        //    }
-        //    return null;
-        //}
 
         public delegate List<CategoryMerchant> GetMerchantsCategoriesAsynchCaller();
 

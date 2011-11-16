@@ -34,6 +34,5 @@ namespace Naviam.DAL
             }
             return res;
         }
-
     }
 }
