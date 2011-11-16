@@ -33,6 +33,65 @@ namespace Naviam.Domain.Concrete
             return res;
         }
 
+        public static FieldRule GetRule(int? id, int? companyId) { return GetRule(id, companyId, false); }
+        public static FieldRule GetRule(int? id, int? companyId, bool forceSqlLoad)
+        {
+            var cache = new CacheWrapper();
+            var res = cache.GetFromList(CacheKey, new FieldRule() { Id = id }, companyId);
+            if (res == null || forceSqlLoad)
+            {
+                //load from DB
+                res = RulesDataAdapter.GetRule(id, companyId);
+                //save to cache
+                if (res == null) // not found in cache->add
+                    cache.AddToList<FieldRule>(CacheKey, res, companyId);
+                else
+                    cache.UpdateList(CacheKey, res, companyId);
+            }
+            return res;
+        }
+
+        private static int InsertUpdate(FieldRule entity, int? companyId, DbActionType action, bool intoCache)
+        {
+            var cache = new CacheWrapper();
+            var res = RulesDataAdapter.InsertUpdate(entity, companyId, action);
+            if (res == 0)
+            {
+                //if ok - update cache
+                if (intoCache)
+                {
+                    if (action == DbActionType.Insert)
+                        cache.AddToList(CacheKey, entity, companyId);
+                    if (action == DbActionType.Update)
+                        cache.UpdateList(CacheKey, entity, companyId);
+                }
+            }
+            return res;
+        }
+
+        public static int Insert(FieldRule entity, int? companyId) { return Insert(entity, companyId, true); }
+        public static int Insert(FieldRule entity, int? companyId, bool intoCache)
+        {
+            return InsertUpdate(entity, companyId, DbActionType.Insert, intoCache);
+        }
+
+        public static int Update(FieldRule entity, int? companyId)
+        {
+            return InsertUpdate(entity, companyId, DbActionType.Update, true);
+        }
+
+        public static int Delete(FieldRule entity, int? companyId)
+        {
+            var res = RulesDataAdapter.Delete(entity, companyId);
+            if (res == 0)
+            {
+                //if ok - remove from cache
+                new CacheWrapper().RemoveFromList(CacheKey, entity, companyId);
+            }
+            return res;
+        }
+
+
         public virtual string GetValueByRules(string targetField, string targetFieldValue, string field, int? companyId)
         { return GetValueByRules(targetField, targetFieldValue, field, companyId, false); }
         public virtual string GetValueByRules(string targetField, string targetFieldValue, string field, int? companyId, bool forceSqlLoad)
