@@ -94,7 +94,7 @@ namespace Naviam.WebUI.Controllers
                 }
 
                 //get category id
-                var categoryId = _categoriesRepository.FindCategoryMerchant(account.CompanyId, sms.Merchant.Trim());
+                var categoryId = _categoriesRepository.FindCategoryMerchant(account.UserId, sms.Merchant.Trim());
                 var tran =
                     new Transaction
                     {
@@ -104,7 +104,7 @@ namespace Naviam.WebUI.Controllers
                         CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,
                         Date = sms.Date,
                         //autosearch description by merchant, default description = mechant
-                        Description = _rulesRepository.FindDescriptionMerchant(account.CompanyId,sms.Merchant.Trim()),
+                        Description = _rulesRepository.FindDescriptionMerchant(account.UserId, sms.Merchant.Trim()),
                         Direction = sms.Direction,
                         IncludeInTax = false,
                         Notes = "",

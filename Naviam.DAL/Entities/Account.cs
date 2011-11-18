@@ -28,6 +28,7 @@ namespace Naviam.Data
             FinInstitutionId = reader["id_financial_institution"] as int?;
             CardNumber = reader["card_number"] as string;
             SmsUser = reader.HasColumn("email")? reader["email"] as string : string.Empty;
+            UserId = reader.HasColumn("id_user") ? reader["id_user"] as int? : null;
         }
         
         public string Name { get; set; }
@@ -43,6 +44,7 @@ namespace Naviam.Data
         public int? FinInstitutionId { get; set; }
         public string FinInstitutionName { get; set; }
         public string SmsUser { get; set; }
+        public int? UserId { get; set; }
     }
 
     public static partial class SqlCommandExtensions

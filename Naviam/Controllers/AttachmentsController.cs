@@ -37,19 +37,20 @@ namespace Naviam.WebUI.Controllers
                     var companyId = CurrentUser.CurrentCompany;
                     var reps = new TransactionsRepository();
                     var repCat = new CategoriesRepository();
+                    var repRule = new RulesRepository(); 
                     var account = AccountsRepository.GetAccount(accId, companyId);
                     decimal sumAmount = 0;
                     var dbTransList = new List<Transaction>();
                     foreach (var trans in statRes.Transactions)
                     {
-                        var categoryId = repCat.FindCategoryMerchant(companyId, trans.Place.Trim());
+                        var categoryId = repCat.FindCategoryMerchant(CurrentUser.Id, trans.Place.Trim());
                         if (trans.AccountAmount != 0)
                         {
                             var dbTrans = new Transaction()
                             {
                                 Amount = Math.Abs(trans.AccountAmount),
                                 Date = trans.TransactionDate,
-                                Description = trans.Place,
+                                Description = repRule.FindDescriptionMerchant(CurrentUser.Id, trans.Place.Trim()), //trans.Place,
                                 Direction = trans.AccountAmount > 0 ? TransactionDirections.Income : TransactionDirections.Expense,
                                 Merchant = trans.Place,
                                 TransactionType = TransactionTypes.Statement,
