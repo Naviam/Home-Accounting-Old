@@ -273,6 +273,9 @@
   <data name="c_42" xml:space="preserve">
     <value>Фильмы и DVD-диски</value>
   </data>
+  <data name="c_43" xml:space="preserve">
+    <value>Музыка</value>
+  </data>
   <data name="c_44" xml:space="preserve">
     <value>Газеты, журналы</value>
   </data>
@@ -452,9 +455,6 @@
   </data>
   <data name="c_99" xml:space="preserve">
     <value>Налог на недвижимость</value>
-  </data>
-  <data name="с_43" xml:space="preserve">
-    <value>Музыка</value>
   </data>
   <data name="с_49" xml:space="preserve">
     <value>Плата за услуги</value>

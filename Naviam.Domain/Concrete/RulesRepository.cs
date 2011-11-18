@@ -113,12 +113,13 @@ namespace Naviam.Domain.Concrete
                 {
                     if (rule.FildTarget.Equals(targetField, StringComparison.InvariantCultureIgnoreCase)
                         && rule.Fild.Equals(field, StringComparison.InvariantCultureIgnoreCase)
-                        && Regex.IsMatch(targetFieldValue, rule.FildTargetValue, RegexOptions.Multiline | RegexOptions.CultureInvariant))
+                        && Regex.IsMatch(targetFieldValue, rule.FildTargetValue, RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))
                     {
                         return rule.FildValue;
                     }
                 }
-            }
+            }//foreach
+
             return result;
         }
 
