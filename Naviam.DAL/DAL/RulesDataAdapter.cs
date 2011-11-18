@@ -7,14 +7,14 @@ namespace Naviam.DAL
 {
     public class RulesDataAdapter
     {
-        public static List<FieldRule> GetUserRules(int? companyId)
+        public static List<FieldRule> GetUserRules(int? userId)
         {
             var res = new List<FieldRule>();
             using (var holder = SqlConnectionHelper.GetConnection())
             {
                 using (var cmd = holder.Connection.CreateSPCommand("user_rules_get"))
                 {
-                    cmd.Parameters.AddWithValue("@id_company", companyId);
+                    cmd.Parameters.AddWithValue("@id_user", userId);
                     try
                     {
                         using (var reader = cmd.ExecuteReader())
@@ -35,14 +35,14 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static FieldRule GetRule(int? id, int? companyId)
+        public static FieldRule GetRule(int? id, int? userId)
         {
             FieldRule res = null;
             using (SqlConnectionHolder holder = SqlConnectionHelper.GetConnection(SqlConnectionHelper.ConnectionType.Naviam))
             {
                 using (SqlCommand cmd = holder.Connection.CreateSPCommand("user_rules_get"))
                 {
-                    cmd.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
+                    cmd.Parameters.AddWithValue("@id_user", userId.ToDbValue());
                     cmd.Parameters.AddWithValue("@id_rule", id);
                     try
                     {
@@ -65,7 +65,7 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static int InsertUpdate(FieldRule entity, int? companyId, DbActionType action)
+        public static int InsertUpdate(FieldRule entity, int? userId, DbActionType action)
         {
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
@@ -89,7 +89,7 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static int Delete(FieldRule entity, int? companyId)
+        public static int Delete(FieldRule entity, int? userId)
         {
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
@@ -99,7 +99,7 @@ namespace Naviam.DAL
                     try
                     {
                         command.AddCommonParameters(entity.Id);
-                        command.Parameters.AddWithValue("@id_company", companyId.ToDbValue());
+                        command.Parameters.AddWithValue("@id_user", userId.ToDbValue());
                         command.ExecuteNonQuery();
                         res = command.GetReturnParameter();
                     }

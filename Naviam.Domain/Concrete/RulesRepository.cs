@@ -12,92 +12,92 @@ namespace Naviam.Domain.Concrete
     {
         private const string CacheKey = "accountRules";
 
-        public void ResetCache(int? companyId)
+        public void ResetCache(int? userId)
         {
             var cache = new CacheWrapper();
-            cache.SetList<FieldRule>(CacheKey, null, companyId);
+            cache.SetList<FieldRule>(CacheKey, null, userId);
         }
 
-        public virtual List<FieldRule> GetUserRules(int? companyId) { return GetUserRules(companyId, false); }
-        public virtual List<FieldRule> GetUserRules(int? companyId, bool forceSqlLoad)
+        public virtual List<FieldRule> GetUserRules(int? userId) { return GetUserRules(userId, false); }
+        public virtual List<FieldRule> GetUserRules(int? userId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
-            var res = cache.GetList<FieldRule>(CacheKey, companyId);
+            var res = cache.GetList<FieldRule>(CacheKey, userId);
             if (res == null || forceSqlLoad)
             {
                 //load from DB
-                res = RulesDataAdapter.GetUserRules(companyId);
+                res = RulesDataAdapter.GetUserRules(userId);
                 //save to cache
-                cache.SetList(CacheKey, res, companyId);
+                cache.SetList(CacheKey, res, userId);
             }
             return res;
         }
 
-        public static FieldRule GetRule(int? id, int? companyId) { return GetRule(id, companyId, false); }
-        public static FieldRule GetRule(int? id, int? companyId, bool forceSqlLoad)
+        public virtual FieldRule GetRule(int? id, int? userId) { return GetRule(id, userId, false); }
+        public virtual FieldRule GetRule(int? id, int? userId, bool forceSqlLoad)
         {
             var cache = new CacheWrapper();
-            var res = cache.GetFromList(CacheKey, new FieldRule() { Id = id }, companyId);
+            var res = cache.GetFromList(CacheKey, new FieldRule() { Id = id }, userId);
             if (res == null || forceSqlLoad)
             {
                 //load from DB
-                res = RulesDataAdapter.GetRule(id, companyId);
+                res = RulesDataAdapter.GetRule(id, userId);
                 //save to cache
                 if (res == null) // not found in cache->add
-                    cache.AddToList<FieldRule>(CacheKey, res, companyId);
+                    cache.AddToList<FieldRule>(CacheKey, res, userId);
                 else
-                    cache.UpdateList(CacheKey, res, companyId);
+                    cache.UpdateList(CacheKey, res, userId);
             }
             return res;
         }
 
-        private static int InsertUpdate(FieldRule entity, int? companyId, DbActionType action, bool intoCache)
+        private int InsertUpdate(FieldRule entity, int? userId, DbActionType action, bool intoCache)
         {
             var cache = new CacheWrapper();
-            var res = RulesDataAdapter.InsertUpdate(entity, companyId, action);
+            var res = RulesDataAdapter.InsertUpdate(entity, userId, action);
             if (res == 0)
             {
                 //if ok - update cache
                 if (intoCache)
                 {
                     if (action == DbActionType.Insert)
-                        cache.AddToList(CacheKey, entity, companyId);
+                        cache.AddToList(CacheKey, entity, userId);
                     if (action == DbActionType.Update)
-                        cache.UpdateList(CacheKey, entity, companyId);
+                        cache.UpdateList(CacheKey, entity, userId);
                 }
             }
             return res;
         }
 
-        public static int Insert(FieldRule entity, int? companyId) { return Insert(entity, companyId, true); }
-        public static int Insert(FieldRule entity, int? companyId, bool intoCache)
+        public virtual int Insert(FieldRule entity, int? userId) { return Insert(entity, userId, true); }
+        public virtual int Insert(FieldRule entity, int? userId, bool intoCache)
         {
-            return InsertUpdate(entity, companyId, DbActionType.Insert, intoCache);
+            return InsertUpdate(entity, userId, DbActionType.Insert, intoCache);
         }
 
-        public static int Update(FieldRule entity, int? companyId)
+        public virtual int Update(FieldRule entity, int? userId)
         {
-            return InsertUpdate(entity, companyId, DbActionType.Update, true);
+            return InsertUpdate(entity, userId, DbActionType.Update, true);
         }
 
-        public static int Delete(FieldRule entity, int? companyId)
+        public virtual int Delete(FieldRule entity, int? userId)
         {
-            var res = RulesDataAdapter.Delete(entity, companyId);
+            var res = RulesDataAdapter.Delete(entity, userId);
             if (res == 0)
             {
                 //if ok - remove from cache
-                new CacheWrapper().RemoveFromList(CacheKey, entity, companyId);
+                new CacheWrapper().RemoveFromList(CacheKey, entity, userId);
             }
             return res;
         }
 
 
-        public virtual string GetValueByRules(string targetField, string targetFieldValue, string field, int? companyId)
-        { return GetValueByRules(targetField, targetFieldValue, field, companyId, false); }
-        public virtual string GetValueByRules(string targetField, string targetFieldValue, string field, int? companyId, bool forceSqlLoad)
+        public virtual string GetValueByRules(string targetField, string targetFieldValue, string field, int? userId)
+        { return GetValueByRules(targetField, targetFieldValue, field, userId, false); }
+        public virtual string GetValueByRules(string targetField, string targetFieldValue, string field, int? userId, bool forceSqlLoad)
         {
             string result = string.Empty;
-            List<FieldRule> rules = GetUserRules(companyId);
+            List<FieldRule> rules = GetUserRules(userId);
             foreach (FieldRule rule in rules)
             {
                 if (rule.RuleType == RuleTypes.Equals)
@@ -123,10 +123,10 @@ namespace Naviam.Domain.Concrete
             return result;
         }
 
-        public virtual string FindDescriptionMerchant(int? idCompany, string merchant)
+        public virtual string FindDescriptionMerchant(int? userId, string merchant)
         {
             //get description by user rules
-            string val = GetValueByRules("merchant", merchant, "description", idCompany);
+            string val = GetValueByRules("merchant", merchant, "description", userId);
             if (!string.IsNullOrEmpty(val)) 
                 return val;
             return merchant;
