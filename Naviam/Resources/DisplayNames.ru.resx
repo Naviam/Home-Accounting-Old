@@ -168,6 +168,9 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Запомнить</value>
   </data>
+  <data name="Rules" xml:space="preserve">
+    <value>Правила</value>
+  </data>
   <data name="SMSAlertServiceBank" xml:space="preserve">
     <value>Услуга банка смс оповещение</value>
   </data>

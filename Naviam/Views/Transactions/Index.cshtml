@@ -190,7 +190,7 @@
         <ul data-bind="template: {name:'filterTemplate', foreach:items, templateOptions: { remove: removeItem } }">
         </ul>
         <div  class='rem_all'>
-        <a data-bind="click: function() { transModel.removeFilters(); }, visible: items().length > 0" href='#'>
+        <a data-bind="click: function() { transModel.removeFilters(); }, visible: items().length > 1" href='#'>
         @SharedStrings.RemoveAll
         </a>
         </div>
@@ -250,6 +250,20 @@
             <td>@DisplayNames.Merchant:</td>
             <td><b><span data-bind="text: Merchant" /></b></td>
         </tr>
+@*        <tr data-bind="visible: transModel.ShowRenameDesc()">
+            <td>@DisplayNames.Rules:</td>
+            <td>
+                <input name="RenameDescription" type="checkbox"/>
+                <span>Always rename <span data-bind="text: Description"></span> as <span data-bind="text: transModel.RenameToDesc()"></span>.</span>
+            </td>
+        </tr>
+        <tr data-bind="visible: Merchant">
+            <td></td>
+            <td>
+                <input name="RenameCategory" type="checkbox"/>
+                <span>Always categorize Duane Reade as Pharmacy.</span>
+            </td>
+        </tr>*@
         <tr>
             <td>@DisplayNames.IncludeInTax:</td>
             <td><input data-bind="checked: IncludeInTax" name="IncludeInTax" type="checkbox"/></td>

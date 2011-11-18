@@ -121,6 +121,14 @@ function loadTransactions() {
             localStorage.setItem("transPageSize", pageSize);
             this.ReloadPage();
         };
+        transModel.ShowRenameDesc = function () {
+            var item = this.selectedItem();
+            return item != null && transEdit.Description() != item.Description() && item.Merchant() != null;
+        };
+        transModel.RenameToDesc = function () {
+            var item = this.selectedItem();
+            return item != null ? item.Description() : "";
+        };
         transModel.removeFilters = function () {
             filterModel.Clear();
             this.ReloadPage();
