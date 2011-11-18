@@ -629,7 +629,9 @@ $(document).ready(function () {
             }
             var input = $(btn).parent().find('[name="Category"]');
             this.inputCat = input;
-            menu.css({ top: input.offset().top + 20, left: input.offset().left });
+            var yPos = input.offset().top - menu.height();
+            if (yPos < 0) yPos = 0;
+            menu.css({ top: yPos, left: input.offset().left });
             menu.width(input.width());
             $("#cat_menu ul").width(input.width());
             menu.slideDown();
