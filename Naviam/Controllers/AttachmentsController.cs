@@ -37,6 +37,7 @@ namespace Naviam.WebUI.Controllers
                     var companyId = CurrentUser.CurrentCompany;
                     var reps = new TransactionsRepository();
                     var repCat = new CategoriesRepository();
+                    var account = AccountsRepository.GetAccount(accId, companyId);
                     decimal sumAmount = 0;
                     var dbTransList = new List<Transaction>();
                     foreach (var trans in statRes.Transactions)
@@ -56,7 +57,8 @@ namespace Naviam.WebUI.Controllers
                                 IncludeInTax = false,
                                 Notes = trans.OperationDescription,
                                 //CategoryId = 20
-                                CategoryId = categoryId
+                                CategoryId = categoryId,
+                                CurrencyId = account.CurrencyId
                             };
                             dbTransList.Add(dbTrans);
                             sumAmount += trans.AccountAmount;
