@@ -187,9 +187,10 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateTransaction(Transaction trans, PageContext pageContext)
+        public ActionResult UpdateTransaction(Transaction trans, PageContext pageContext, bool? renameDescription)
         {
-            var companyId = CurrentUser.CurrentCompany;
+            var user = CurrentUser;
+            var companyId = user.CurrentCompany;
             var tags = Request.Form["TagIds[]"] as string;
             trans.TagIds = new List<string>();
             if (tags != null)
@@ -206,6 +207,15 @@ namespace Naviam.WebUI.Controllers
             {
                 var updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, companyId);
                 amount = (trans.Direction == updateTrans.Direction) ? -(updateTrans.Amount - trans.Amount) : trans.Amount * 2;
+                //add to rules
+                if (!String.IsNullOrEmpty(updateTrans.Merchant))
+                {
+                    if (renameDescription.HasTrue())
+                    {
+                        var rule = new FieldRule() { FieldTargetValue = updateTrans.Merchant, FieldValue = trans.Description, UserId = user.Id};
+                        _rulesRepository.Insert(rule, user.Id);
+                    }
+                }
                 _transRepository.Update(trans, companyId);
             }
             else

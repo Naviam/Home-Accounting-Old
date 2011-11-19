@@ -259,8 +259,8 @@
 @*        <tr data-bind="visible: transModel.ShowRenameDesc()">
             <td>@DisplayNames.Rules:</td>
             <td>
-                <input name="RenameDescription" type="checkbox"/>
-                <span>Always rename <span data-bind="text: Description"></span> as <span data-bind="text: transModel.RenameToDesc()"></span>.</span>
+                <input data-bind="checked: RenameDescription" name="RenameDescription" type="checkbox"/>
+                <span>Always rename <span data-bind="text: Merchant"></span> as <span data-bind="text: transModel.RenameToDesc()"></span>.</span>
             </td>
         </tr>
         <tr data-bind="visible: Merchant">

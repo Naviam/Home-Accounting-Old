@@ -31,6 +31,7 @@ jQuery.postErr = function (url, data, callback, type) {
 
         dataType: type,
         error: function (xmlHttpRequest, textStatus, errorThrown) {
+            unblockWindow();
             parseSiteError(xmlHttpRequest);
         }
     });

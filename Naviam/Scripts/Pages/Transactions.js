@@ -69,24 +69,26 @@ function loadTransactions() {
     transModel.paging.PageSize = pSize ? pSize : 50;
     $.postErr(getTransUrl, transModel.paging, function (res) {
         var childItem = function (data) {
-            ko.mapping.fromJS(data, {}, this);
+            ko.mapping.fromJS(data, {'include': ["RenameDescription"]}, this);
             var catItem = catModel.itemById(data.CategoryId);
             var catName = catItem != null ? catItem.Name() : '';
             this.Category = ko.observable(catName);
             this.Currency = ko.observable(accountsModel.currencyById(this.CurrencyId()));
+            this.RenameDescription = ko.observable(false);
         };
         var mapping = {
             'items': {
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.Id);
                 }
-                , create: function (options) {
+                ,create: function (options) {
                     return new childItem(options.data, {}, this);
                 }
             }
         };
         transModel = ko.mapping.fromJS(res, mapping);
         ko.mapping.fromJS(ko.mapping.toJS(res.transTemplate), {}, transEdit);
+        transEdit.RenameDescription = ko.observable(false);
         transModel.paging.Page.subscribe(function (newValue) {
             transModel.ReloadPage();
         });
@@ -156,6 +158,7 @@ function loadTransactions() {
             fItem.Currency = ko.observable();
             fItem.CurrencyId = ko.observable(accountsModel.selectedItem().CurrencyId);
             fItem.AccountId = ko.observable(accountsModel.selectedItem().Id);
+            fItem.RenameDescription = ko.observable(false);
             return fItem;
         };
         transModel.Add = function () {
@@ -230,7 +233,9 @@ function loadTransactions() {
         };
         transModel.SaveItem = function (sItem, reloadPage) {
             if (sItem) {
-                $.postErr(updateTransUrl, ko.mapping.toJS(sItem), function (res) {
+                var itemToSave = ko.mapping.toJS(sItem);
+                //itemToSave.RenameDescription = sItem.RenameDescription();
+                $.postErr(updateTransUrl, itemToSave, function (res) {
                     //transModel.selectedItem().Id(res.Id);
                     var amount = res.amount;
                     amount = res.trans.Direction == 0 ? -amount : amount;
