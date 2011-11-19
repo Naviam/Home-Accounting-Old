@@ -168,6 +168,9 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Запомнить</value>
   </data>
+  <data name="Replace" xml:space="preserve">
+    <value>Замена</value>
+  </data>
   <data name="Rules" xml:space="preserve">
     <value>Правила</value>
   </data>
@@ -176,6 +179,9 @@
   </data>
   <data name="Tags" xml:space="preserve">
     <value>Метки</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Тип</value>
   </data>
   <data name="UserName" xml:space="preserve">
     <value>Email</value>

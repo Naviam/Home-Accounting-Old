@@ -147,9 +147,6 @@
   <data name="Edit" xml:space="preserve">
     <value>Редактировать</value>
   </data>
-  <data name="EditCategories" xml:space="preserve">
-    <value>Редактировать категории</value>
-  </data>
   <data name="EnterNewTag" xml:space="preserve">
     <value>Введите имя метки</value>
   </data>
@@ -164,6 +161,12 @@
   </data>
   <data name="LoginHeader" xml:space="preserve">
     <value>Вход на сайт</value>
+  </data>
+  <data name="ManageCategories" xml:space="preserve">
+    <value>Управление категориями</value>
+  </data>
+  <data name="ManageRules" xml:space="preserve">
+    <value>Управление правилами</value>
   </data>
   <data name="Month" xml:space="preserve">
     <value>Месяц</value>

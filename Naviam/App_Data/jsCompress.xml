@@ -11,6 +11,9 @@
   <output path="..\Scripts\Pages\Filters.min.js">
     <input path="..\Scripts\Pages\Filters.js"/>
   </output>
+  <output path="..\Scripts\Pages\Rules.min.js">
+    <input path="..\Scripts\Pages\Rules.js"/>
+  </output>
   <output path="..\Scripts\common.min.js">
     <input path="..\Scripts\common.js"/>
   </output>

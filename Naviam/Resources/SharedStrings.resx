@@ -147,9 +147,6 @@
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="EditCategories" xml:space="preserve">
-    <value>Edit Categories</value>
-  </data>
   <data name="EnterNewTag" xml:space="preserve">
     <value>enter name of tag</value>
   </data>
@@ -164,6 +161,12 @@
   </data>
   <data name="LoginHeader" xml:space="preserve">
     <value>Log in</value>
+  </data>
+  <data name="ManageCategories" xml:space="preserve">
+    <value>Manage Categories</value>
+  </data>
+  <data name="ManageRules" xml:space="preserve">
+    <value>Manage Rules</value>
   </data>
   <data name="Month" xml:space="preserve">
     <value>Month</value>

@@ -89,7 +89,7 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static int Delete(FieldRule entity, int? userId)
+        public static int Delete(int? id, int? userId)
         {
             var res = -1;
             using (var holder = SqlConnectionHelper.GetConnection())
@@ -98,7 +98,7 @@ namespace Naviam.DAL
                 {
                     try
                     {
-                        command.AddCommonParameters(entity.Id);
+                        command.AddCommonParameters(id);
                         command.Parameters.AddWithValue("@id_user", userId.ToDbValue());
                         command.ExecuteNonQuery();
                         res = command.GetReturnParameter();

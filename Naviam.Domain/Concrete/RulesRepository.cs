@@ -80,13 +80,13 @@ namespace Naviam.Domain.Concrete
             return InsertUpdate(entity, userId, DbActionType.Update, true);
         }
 
-        public virtual int Delete(FieldRule entity, int? userId)
+        public virtual int Delete(int? id, int? userId)
         {
-            var res = RulesDataAdapter.Delete(entity, userId);
+            var res = RulesDataAdapter.Delete(id, userId);
             if (res == 0)
             {
                 //if ok - remove from cache
-                new CacheWrapper().RemoveFromList(CacheKey, entity, userId);
+                new CacheWrapper().RemoveFromList2(CacheKey, new FieldRule() { Id = id }, userId);
             }
             return res;
         }
@@ -102,20 +102,20 @@ namespace Naviam.Domain.Concrete
             {
                 if (rule.RuleType == RuleTypes.Equals)
                 {
-                    if (rule.FildTarget.Equals(targetField, StringComparison.InvariantCultureIgnoreCase)
-                        && rule.Fild.Equals(field, StringComparison.InvariantCultureIgnoreCase)
-                        && rule.FildTargetValue.Equals(targetFieldValue, StringComparison.InvariantCultureIgnoreCase))
+                    if (rule.FieldTarget.Equals(targetField, StringComparison.InvariantCultureIgnoreCase)
+                        && rule.Field.Equals(field, StringComparison.InvariantCultureIgnoreCase)
+                        && rule.FieldTargetValue.Equals(targetFieldValue, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        return rule.FildValue;
+                        return rule.FieldValue;
                     }
                 }
                 else if (rule.RuleType == RuleTypes.Regex)
                 {
-                    if (rule.FildTarget.Equals(targetField, StringComparison.InvariantCultureIgnoreCase)
-                        && rule.Fild.Equals(field, StringComparison.InvariantCultureIgnoreCase)
-                        && Regex.IsMatch(targetFieldValue, rule.FildTargetValue, RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))
+                    if (rule.FieldTarget.Equals(targetField, StringComparison.InvariantCultureIgnoreCase)
+                        && rule.Field.Equals(field, StringComparison.InvariantCultureIgnoreCase)
+                        && Regex.IsMatch(targetFieldValue, rule.FieldTargetValue, RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))
                     {
-                        return rule.FildValue;
+                        return rule.FieldValue;
                     }
                 }
             }//foreach

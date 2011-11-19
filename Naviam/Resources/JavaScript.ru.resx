@@ -255,4 +255,7 @@
   <data name="FindDirection" xml:space="preserve">
     <value>тип</value>
   </data>
+  <data name="DeleteRule" xml:space="preserve">
+    <value>Вы действительно хотите удалить правило?</value>
+  </data>
 </root>

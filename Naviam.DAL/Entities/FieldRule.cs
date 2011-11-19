@@ -14,27 +14,30 @@ namespace Naviam.Data
     {
         public FieldRule() 
         {
-            
+            //default
+            Field = "description";
+            FieldTarget = "merchant";
+            Priority = 1;
         }
 
         public FieldRule(SqlDataReader reader)
         {
             Id = reader["id"] as int?;
             UserId = reader["id_user"] as int?;
-            FildTarget = reader["field_target"] as string;
-            FildTargetValue = reader["field_target_value"] as string;
-            Fild = reader["field"] as string;
-            FildValue = reader["field_value"] as string;
+            FieldTarget = reader["field_target"] as string;
+            FieldTargetValue = reader["field_target_value"] as string;
+            Field = reader["field"] as string;
+            FieldValue = reader["field_value"] as string;
             Priority = reader["priority"] as int?;
             short? val = reader["type_rule"] as short?;
             RuleType = val.HasValue ? (RuleTypes)val.Value : 0;
         }
 
         public int? UserId { get; set; }
-        public string FildTarget { get; set; }
-        public string FildTargetValue { get; set; }
-        public string Fild { get; set; }
-        public string FildValue { get; set; }
+        public string FieldTarget { get; set; }
+        public string FieldTargetValue { get; set; }
+        public string Field { get; set; }
+        public string FieldValue { get; set; }
         public int? Priority { get; set; }
         public RuleTypes RuleType { get; set; }
     }
@@ -51,10 +54,10 @@ namespace Naviam.Data
         {
             command.AddCommonParameters(rule.Id, action);
             command.Parameters.Add("@id_user", SqlDbType.Int).Value = rule.UserId.ToDbValue();
-            command.Parameters.Add("@field_target", SqlDbType.NVarChar).Value = rule.FildTarget.ToDbValue();
-            command.Parameters.Add("@field_target_value", SqlDbType.NVarChar).Value = rule.FildTargetValue.ToDbValue();
-            command.Parameters.Add("@field", SqlDbType.NVarChar).Value = rule.Fild.ToDbValue();
-            command.Parameters.Add("@field_value", SqlDbType.NVarChar).Value = rule.FildValue.ToDbValue();
+            command.Parameters.Add("@field_target", SqlDbType.NVarChar).Value = rule.FieldTarget.ToDbValue();
+            command.Parameters.Add("@field_target_value", SqlDbType.NVarChar).Value = rule.FieldTargetValue.ToDbValue();
+            command.Parameters.Add("@field", SqlDbType.NVarChar).Value = rule.Field.ToDbValue();
+            command.Parameters.Add("@field_value", SqlDbType.NVarChar).Value = rule.FieldValue.ToDbValue();
             command.Parameters.Add("@priority", SqlDbType.Int).Value = rule.Priority.ToDbValue();
             command.Parameters.Add("@type_rule", SqlDbType.SmallInt).Value = (short)rule.RuleType;
         }

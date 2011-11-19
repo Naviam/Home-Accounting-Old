@@ -28,6 +28,11 @@
     var updateTagUrl = '@Url.Action("UpdateTag", "Transactions")';
     var delTagUrl = '@Url.Action("DeleteTag", "Transactions")';
 
+    var getRulesDlg = '@Url.Action("GetRulesDialog", "Transactions")';
+    var getRulesUrl = '@Url.Action("GetRules", "Transactions")';
+    var updateRuleUrl = '@Url.Action("UpdateRule", "Transactions")';
+    var delRuleUrl = '@Url.Action("DeleteRule", "Transactions")';
+
     var getExchangeDlg = '@Url.Action("GetExchangeDialog", "Transactions")';
     var getSplitDlg = '@Url.Action("GetSplitDialog", "Transactions")';
     var splitTransUrl = '@Url.Action("SplitTrans", "Transactions")';
@@ -97,7 +102,8 @@
     </ul>
 </div>
 <div class='left_side_pnl'>
-    <a href="#" onclick='return catModel.EditCategories();' class='edit'>@SharedStrings.EditCategories</a>
+    <a href="#" onclick='return catModel.EditCategories();' class='edit'>@SharedStrings.ManageCategories</a>
+    <a href="#" onclick='return dialogs.showDialog("#rulesDialog", getRulesDlg, rulesModel);' class='edit'>@SharedStrings.ManageRules</a>
 </div>
 }
 
@@ -190,7 +196,7 @@
         <ul data-bind="template: {name:'filterTemplate', foreach:items, templateOptions: { remove: removeItem } }">
         </ul>
         <div  class='rem_all'>
-        <a data-bind="click: function() { transModel.removeFilters(); }, visible: items().length > 1" href='#'>
+        <a data-bind="click: function() { transModel.removeFilters(); }, visible: items() != null? items().length > 1 : false" href='#' style="display: none;">
         @SharedStrings.RemoveAll
         </a>
         </div>
@@ -345,4 +351,5 @@
 @*<div id='tag_edit_area' class="overlay"></div>*@
 <div id='exchangeDialog' class="overlay" style='width:700px'></div>
 <div id='splitDialog' class="overlay" style='width:700px'></div>
+<div id='rulesDialog' class="overlay" style='width:700px'></div>
 

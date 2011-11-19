@@ -20,17 +20,19 @@ namespace Naviam.WebUI.Controllers
         private readonly TransactionsRepository _transRepository;
         private readonly CategoriesRepository _categoriesRepository;
         private readonly TagsRepository _tagsRepository;
+        private readonly RulesRepository _rulesRepository;
 
         public TransactionsController()
             : this(null, null, null)
         {
         }
 
-        public TransactionsController(TransactionsRepository transRepository, CategoriesRepository categoriesRepository, TagsRepository tagsRepository)
+        public TransactionsController(TransactionsRepository transRepository, CategoriesRepository categoriesRepository, TagsRepository tagsRepository, RulesRepository rulesRepository = null)
         {
             _transRepository = transRepository ?? new TransactionsRepository();
             _categoriesRepository = categoriesRepository ?? new CategoriesRepository();
             _tagsRepository = tagsRepository ?? new TagsRepository();
+            _rulesRepository = rulesRepository ?? new RulesRepository();
         }
 
         public class FilterHolder
@@ -254,6 +256,44 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetSplitDialog()
         {
             return PartialView("_splitDialog");
+        }
+
+        #endregion
+
+        #region Rules
+
+        [HttpPost]
+        public ActionResult GetRulesDialog()
+        {
+            return PartialView("_rulesDialog");
+        }
+        
+        [HttpPost]
+        public ActionResult GetRules()
+        {
+            var user = CurrentUser;
+            var rules = _rulesRepository.GetUserRules(user.Id);
+            return Json(new { items = rules, ruleTemplate = new FieldRule() });
+        }
+
+        [HttpPost]
+        public ActionResult UpdateRule(FieldRule entity)
+        {
+            var user = CurrentUser;
+            entity.UserId = user.Id;
+            if (entity.Id != null)
+                _rulesRepository.Update(entity, entity.UserId);
+            else
+                _rulesRepository.Insert(entity, entity.UserId);
+            return Json(entity);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteRule(int? id)
+        {
+            var user = CurrentUser;
+            _rulesRepository.Delete(id, user.Id);
+            return Json(id);
         }
 
         #endregion
