@@ -60,7 +60,10 @@ rulesModel.EditItem = function (item) {
         item.FieldValue(c_item.Id());
     }
     $.postErr(updateRuleUrl, item, function (res) {
-        item.Id(res.Id);
+        if (item.Id() == null && res.res != 0) {
+            ko.utils.arrayRemoveItem(rulesModel.srv.items, item);
+        }
+        ko.mapping.updateFromJS(item, res.entity);
     });
 }
 rulesModel.AddItem = function () {
