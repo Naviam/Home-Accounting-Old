@@ -69,12 +69,13 @@ function loadTransactions() {
     transModel.paging.PageSize = pSize ? pSize : 50;
     $.postErr(getTransUrl, transModel.paging, function (res) {
         var childItem = function (data) {
-            ko.mapping.fromJS(data, { 'include': ["RenameDescription"] }, this);
+            ko.mapping.fromJS(data, { 'include': ["RenameDescription", "RenameCategory"] }, this);
             var catItem = catModel.itemById(data.CategoryId);
             var catName = catItem != null ? catItem.Name() : '';
             this.Category = ko.observable(catName);
             this.Currency = ko.observable(accountsModel.currencyById(this.CurrencyId()));
             this.RenameDescription = ko.observable(false);
+            this.RenameCategory = ko.observable(false);
         };
         var mapping = {
             'items': {
@@ -89,6 +90,7 @@ function loadTransactions() {
         transModel = ko.mapping.fromJS(res, mapping);
         ko.mapping.fromJS(ko.mapping.toJS(res.transTemplate), {}, transEdit);
         transEdit.RenameDescription = ko.observable(false);
+        transEdit.RenameCategory = ko.observable(false);
         transModel.paging.Page.subscribe(function (newValue) {
             transModel.ReloadPage();
         });
@@ -127,9 +129,17 @@ function loadTransactions() {
             var item = this.selectedItem();
             return item != null && transEdit.Description() != item.Description() && item.Merchant() != null;
         };
+        transModel.ShowRenameCat = function () {
+            var item = this.selectedItem();
+            return item != null && transEdit.CategoryId() != item.CategoryId() && item.Merchant() != null;
+        };
         transModel.RenameToDesc = function () {
             var item = this.selectedItem();
             return item != null ? item.Description() : "";
+        };
+        transModel.RenameToCat = function () {
+            var item = this.selectedItem();
+            return item != null ? item.Category() : "";
         };
         transModel.removeFilters = function () {
             filterModel.Clear();
@@ -159,6 +169,7 @@ function loadTransactions() {
             fItem.CurrencyId = ko.observable(accountsModel.selectedItem().CurrencyId);
             fItem.AccountId = ko.observable(accountsModel.selectedItem().Id);
             fItem.RenameDescription = ko.observable(false);
+            fItem.RenameCategory = ko.observable(false);
             return fItem;
         };
         transModel.Add = function () {
@@ -234,13 +245,20 @@ function loadTransactions() {
         transModel.SaveItem = function (sItem, reloadPage) {
             if (sItem) {
                 var itemToSave = ko.mapping.toJS(sItem);
+                var needRefreshRules = false;
+                if (sItem.RenameDescription() || sItem.RenameCategory())
+                    needRefreshRules = true;
                 sItem.RenameDescription(false);
+                sItem.RenameCategory(false);
                 $.postErr(updateTransUrl, itemToSave, function (res) {
                     //transModel.selectedItem().Id(res.Id);
                     var amount = res.amount;
                     amount = res.trans.Direction == 0 ? -amount : amount;
                     accountsModel.addAmount(res.trans.AccountId, amount);
-                    if (reloadPage) transModel.ReloadPage();
+                    if (reloadPage)
+                        transModel.ReloadPage();
+                    if (needRefreshRules)
+                        rulesModel.Refresh();
                 });
             }
         };

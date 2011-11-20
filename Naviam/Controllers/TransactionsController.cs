@@ -187,7 +187,7 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateTransaction(Transaction trans, PageContext pageContext, bool? renameDescription)
+        public ActionResult UpdateTransaction(Transaction trans, PageContext pageContext, bool? renameDescription, bool? renameCategory)
         {
             var user = CurrentUser;
             var companyId = user.CurrentCompany;
@@ -213,6 +213,11 @@ namespace Naviam.WebUI.Controllers
                     if (renameDescription.HasTrue())
                     {
                         var rule = new FieldRule() { FieldTargetValue = updateTrans.Merchant, FieldValue = trans.Description, UserId = user.Id};
+                        _rulesRepository.Insert(rule, user.Id);
+                    }
+                    if (renameCategory.HasTrue())
+                    {
+                        var rule = new FieldRule() { FieldTargetValue = updateTrans.Merchant, Field = "id_category", FieldValue = trans.CategoryId.ToString(), UserId = user.Id };
                         _rulesRepository.Insert(rule, user.Id);
                     }
                 }
@@ -283,6 +288,9 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             var rules = _rulesRepository.GetUserRules(user.Id);
+            rules = (from r in rules
+                     where r.UserId != null
+                     select r).ToList();
             return Json(new { items = rules, ruleTemplate = new FieldRule() });
         }
 

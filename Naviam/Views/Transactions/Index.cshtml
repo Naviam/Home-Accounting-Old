@@ -256,20 +256,20 @@
             <td>@DisplayNames.Merchant:</td>
             <td><b><span data-bind="text: Merchant" /></b></td>
         </tr>
- @*      <tr data-bind="visible: transModel.ShowRenameDesc()">
+       <tr data-bind="visible: transModel.ShowRenameDesc()">
             <td>@DisplayNames.Rules:</td>
             <td>
                 <input data-bind="checked: RenameDescription" name="RenameDescription" type="checkbox"/>
                 <span>Always rename <span data-bind="text: Merchant"></span> as <span data-bind="text: transModel.RenameToDesc()"></span>.</span>
             </td>
         </tr>
-         <tr data-bind="visible: Merchant">
-            <td></td>
+        <tr data-bind="visible: transModel.ShowRenameCat()">
+            <td>@DisplayNames.Rules:</td>
             <td>
-                <input name="RenameCategory" type="checkbox"/>
-                <span>Always categorize Duane Reade as Pharmacy.</span>
+                <input  data-bind="checked: RenameCategory" name="RenameCategory" type="checkbox"/>
+                <span>Always categorize <span data-bind="text: Merchant"></span> as <span data-bind="text: transModel.RenameToCat()"></span>.</span>
             </td>
-        </tr>*@
+        </tr>
         <tr>
             <td>@DisplayNames.IncludeInTax:</td>
             <td><input data-bind="checked: IncludeInTax" name="IncludeInTax" type="checkbox"/></td>

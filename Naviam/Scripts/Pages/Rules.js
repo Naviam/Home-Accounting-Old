@@ -36,6 +36,10 @@ rulesModel.Load = function (callback) {
             callback();
     });
 };
+rulesModel.Refresh = function () {
+    if (!this.isLoaded) return;
+    rulesModel.Load();
+};
 rulesModel.DeleteItem = function (item) {
     var $this = this;
     askToUser(lang.DeleteRule, function () {
