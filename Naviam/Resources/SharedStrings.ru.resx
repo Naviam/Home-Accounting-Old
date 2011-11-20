@@ -192,6 +192,9 @@
   <data name="ReportsTitle" xml:space="preserve">
     <value>Отчеты</value>
   </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Поиск</value>
   </data>
