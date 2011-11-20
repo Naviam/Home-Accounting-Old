@@ -4,7 +4,7 @@
 <tr>
     <td>
         <span data-bind="text: FieldTargetValue, visible: UserId() == null"></span>
-        <input data-bind="notEmpty: FieldTargetValue, event: {change: function() {rulesModel.EditItem($data);} }, visible: UserId() != null"></input>
+        <input data-bind="notEmpty: FieldTargetValue, event: {change: function() {rulesModel.EditItem($data, true);} }, visible: UserId() != null"></input>
     </td>
     <td>
         <div data-bind="visible: UserId() != null">
@@ -18,16 +18,16 @@
             <span data-bind="text: Category, visible: Field() == 'id_category'"></span>
         </div>
         <div data-bind="visible: UserId() != null" style='width:175px'> @*User rules*@
-            <input class="width100" data-bind="notEmpty: FieldValue, event: {change: function() {rulesModel.EditItem($data);} }, visible: Field() == 'description'"/>
+            <input class="width100" data-bind="notEmpty: FieldValue, event: {change: function() {rulesModel.EditItem($data, true);} }, visible: Field() == 'description'"/>
             <div data-bind="visible: Field() == 'id_category'" style='position:relative'>
-                <input class="width100 suggestCat" data-bind="category: Category, event: {change: function() {rulesModel.EditItem($data);}, result: function() {rulesModel.EditItem($data);} }" name="Category"/>
+                <input class="width100 suggestCat" data-bind="category: Category, event: {change: function() {rulesModel.EditItem($data, true);}, result: function() {rulesModel.EditItem($data, true);} }" name="Category"/>
                 <a href="#" onclick='return catModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a>
             </div>
         </div>
     </td>
     <td>
         <a href="#" data-bind="click: function() {rulesModel.DeleteItem($data);}, visible: UserId() != null && Id() != null">@SharedStrings.Delete</a>
-        @*<a href="#" data-bind="click: function() {rulesModel.EditItem($data);}, visible: UserId() != null && Id() == null">@SharedStrings.Save</a>*@
+        <a href="#" data-bind="click: function() {rulesModel.EditItem($data, false);}, visible: UserId() != null && Id() == null">@SharedStrings.Save</a>
     </td>
 </tr>
 </script>

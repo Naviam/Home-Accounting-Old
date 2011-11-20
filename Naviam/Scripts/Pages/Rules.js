@@ -50,7 +50,8 @@ rulesModel.DeleteItem = function (item) {
         });
     });
 }
-rulesModel.EditItem = function (item) {
+rulesModel.EditItem = function (item, fromField) {
+    if (fromField && item.Id() == null) return;
     var cat = item.Category();
     if (!item.Field() || !item.FieldTargetValue() || (!item.FieldValue() && item.Field() != 'id_category')) return;
     if (item.Field() == 'id_category') {
@@ -60,9 +61,9 @@ rulesModel.EditItem = function (item) {
         item.FieldValue(c_item.Id());
     }
     $.postErr(updateRuleUrl, item, function (res) {
-        if (item.Id() == null && res.res != 0) {
+        /*if (item.Id() == null && res.res != 0) {
             ko.utils.arrayRemoveItem(rulesModel.srv.items, item);
-        }
+        }*/
         ko.mapping.updateFromJS(item, res.entity);
     });
 }
