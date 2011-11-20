@@ -43,10 +43,10 @@ namespace Naviam.Domain.Concrete
                 //load from DB
                 res = RulesDataAdapter.GetRule(id, userId);
                 //save to cache
-                if (res == null) // not found in cache->add
+                /*if (res == null) // not found in cache->add
                     cache.AddToList<FieldRule>(CacheKey, res, userId);
                 else
-                    cache.UpdateList(CacheKey, res, userId);
+                    cache.UpdateList(CacheKey, res, userId);*/
             }
             return res;
         }

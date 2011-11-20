@@ -42,10 +42,10 @@ namespace Naviam.Domain.Concrete
                 //load from DB
                 res = AccountsDataAdapter.GetAccount(id, companyId);
                 //save to cache
-                if (res == null) // not found in cache->add
-                    cache.AddToList<Account>(CacheKey, res, companyId);
-                else
-                    cache.UpdateList(CacheKey, res, companyId);
+                //if (res == null) // not found in cache->add
+                //    cache.AddToList<Account>(CacheKey, res, companyId);
+                //else
+                //    cache.UpdateList(CacheKey, res, companyId);
             }
             return res;
         }
@@ -116,10 +116,10 @@ namespace Naviam.Domain.Concrete
             if (res != null)
             {
                 //save to cache
-                if (res2 == null) // not found in cache->add
-                    cache.AddToList<Account>(CacheKey, res, res.CompanyId);
-                else
-                    cache.UpdateList(CacheKey, res, res.CompanyId);
+                //if (res2 == null) // not found in cache->add
+                //    cache.AddToList<Account>(CacheKey, res, res.CompanyId);
+                //else
+                //    cache.UpdateList(CacheKey, res, res.CompanyId);
             }
             return res;
         }

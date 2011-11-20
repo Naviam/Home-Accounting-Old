@@ -69,7 +69,7 @@ function loadTransactions() {
     transModel.paging.PageSize = pSize ? pSize : 50;
     $.postErr(getTransUrl, transModel.paging, function (res) {
         var childItem = function (data) {
-            ko.mapping.fromJS(data, {'include': ["RenameDescription"]}, this);
+            ko.mapping.fromJS(data, { 'include': ["RenameDescription"] }, this);
             var catItem = catModel.itemById(data.CategoryId);
             var catName = catItem != null ? catItem.Name() : '';
             this.Category = ko.observable(catName);
@@ -81,7 +81,7 @@ function loadTransactions() {
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.Id);
                 }
-                ,create: function (options) {
+                , create: function (options) {
                     return new childItem(options.data, {}, this);
                 }
             }
@@ -234,7 +234,7 @@ function loadTransactions() {
         transModel.SaveItem = function (sItem, reloadPage) {
             if (sItem) {
                 var itemToSave = ko.mapping.toJS(sItem);
-                //itemToSave.RenameDescription = sItem.RenameDescription();
+                sItem.RenameDescription(false);
                 $.postErr(updateTransUrl, itemToSave, function (res) {
                     //transModel.selectedItem().Id(res.Id);
                     var amount = res.amount;

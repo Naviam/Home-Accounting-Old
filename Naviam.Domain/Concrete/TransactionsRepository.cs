@@ -45,10 +45,10 @@ namespace Naviam.Domain.Concrete
                 res = TransactionsDataAdapter.GetTransaction(id, companyId);
                 //res = new Transaction() { Description = "Test", Category = "Dinner", Amount = 100.20M, Id = 1, Date = DateTime.Now };
                 //save to cache
-                if (!inCache) // not found in cache->add
-                    cache.AddToList<Transaction>(CacheKey, res, companyId);
-                else
-                    cache.UpdateList(CacheKey, res, companyId);
+                //if (!inCache) // not found in cache->add
+                //    cache.AddToList<Transaction>(CacheKey, res, companyId);
+                //else
+                //    cache.UpdateList(CacheKey, res, companyId);
             }
             return res;
         }
