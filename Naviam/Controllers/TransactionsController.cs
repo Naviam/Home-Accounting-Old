@@ -299,11 +299,16 @@ namespace Naviam.WebUI.Controllers
         {
             var user = CurrentUser;
             entity.UserId = user.Id;
+            int res = 0;
             if (entity.Id != null)
-                _rulesRepository.Update(entity, entity.UserId);
+            {
+                res = _rulesRepository.Update(entity, entity.UserId);
+                if (res != 0)
+                    entity = _rulesRepository.GetRule(entity.Id, entity.UserId);
+            }
             else
-                _rulesRepository.Insert(entity, entity.UserId);
-            return Json(entity);
+                res = _rulesRepository.Insert(entity, entity.UserId);
+            return Json(new { entity, res });
         }
 
         [HttpPost]
