@@ -119,12 +119,5 @@ namespace Naviam.Domain.Concrete
             return res!=null ? res.CategoryId.Value : DEFAULT_CATEGORY_ID;
         }
 
-        public delegate List<CategoryMerchant> GetMerchantsCategoriesAsynchCaller();
-
-        public List<CategoryMerchant> GetMerchantsCategoriesAsynch()
-        {
-            //Thread.Sleep(10000);
-            return GetMerchantsCategories(true);
-        }
     }
 }

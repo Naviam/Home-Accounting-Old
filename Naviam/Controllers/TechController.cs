@@ -16,28 +16,57 @@ namespace Naviam.WebUI.Controllers
     {
         private CurrenciesRepository _currenciesRepository = new CurrenciesRepository();
         private log4net.ILog logger = log4net.LogManager.GetLogger("navSite");
-        public void UpdateMerchantsCategories()
-        {
-            
-            CategoriesRepository _categoriesRepository = new CategoriesRepository();
-            AsyncManager.OutstandingOperations.Increment();
-            CategoriesRepository.GetMerchantsCategoriesAsynchCaller caller = new CategoriesRepository.GetMerchantsCategoriesAsynchCaller(_categoriesRepository.GetMerchantsCategoriesAsynch);
-            IAsyncResult res = caller.BeginInvoke(UpdateMerchantsCategoriesCompleted, null);
+        private const string stringResult = "ok";
+
+        public void TestConnection()
+        { 
         }
 
-        private void UpdateMerchantsCategoriesCompleted(object sender)
+        public void UpdateMerchantsCategoriesAsync()
         {
-            AsyncManager.OutstandingOperations.Decrement();
+            AsyncManager.OutstandingOperations.Increment();
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    CategoriesRepository _categoriesRepository = new CategoriesRepository();
+                    _categoriesRepository.GetMerchantsCategories(true);
+                }
+                catch (Exception ex) 
+                { 
+                    logger.Error("update categories error!", ex); 
+                }
+                finally 
+                { 
+                    AsyncManager.OutstandingOperations.Decrement(); 
+                }
+            }
+            );
         }
-        [AsyncTimeout(10000)]
+
+        public string UpdateMerchantsCategoriesCompleted(object sender)
+        {
+            return stringResult;
+        }
+
+        //[AsyncTimeout(10000)]
         public void ListDatesAsync(int daysCount, int countryId)
         {
             AsyncManager.OutstandingOperations.Increment();
             Task.Factory.StartNew(() =>
                 {
-                    try { AsyncManager.Parameters["result"] = CurrenciesDataAdapter.GetRateAbsentDates(daysCount, countryId); }
-                    catch (Exception ex) { logger.Error("ListDatesAsync error!", ex); }
-                    finally { AsyncManager.OutstandingOperations.Decrement(); }
+                    try 
+                    { 
+                        AsyncManager.Parameters["result"] = CurrenciesDataAdapter.GetRateAbsentDates(daysCount, countryId); 
+                    }
+                    catch (Exception ex) 
+                    { 
+                        logger.Error("get absent dates list async error!", ex); 
+                    }
+                    finally 
+                    { 
+                        AsyncManager.OutstandingOperations.Decrement(); 
+                    }
                 }
             );
         }
@@ -59,27 +88,21 @@ namespace Naviam.WebUI.Controllers
                         rate.CurrCode = currencies.FirstOrDefault(x => x.Code.Equals(rate.CurrCode, StringComparison.InvariantCultureIgnoreCase)).Id.ToString();
                     CurrenciesDataAdapter.BulkUpdateRates(rates);
                 }
-                catch (Exception ex) { logger.Error("UpdateRatesAsync error!", ex); }
-                finally { AsyncManager.OutstandingOperations.Decrement(); }
+                catch (Exception ex) 
+                { 
+                    logger.Error("update rates acync error!", ex); 
+                }
+                finally 
+                { 
+                    AsyncManager.OutstandingOperations.Decrement(); 
+                }
             }
             );
-
-            //List<Currency> currencies = _currenciesRepository.GetCurrencies();
-            //foreach (CurrRate rate in rates)
-            //    rate.CurrCode = currencies.FirstOrDefault(x => x.Code.Equals(rate.CurrCode, StringComparison.InvariantCultureIgnoreCase)).Id.ToString();
-            //CurrenciesDataAdapter.BulkUpdateRates(rates);
-
-            //Task.Factory.StartNew(() => UpdateRatesExec(rates));
         }
-
-        //public void UpdateRatesExec(List<CurrRate> rates)
-        //{
-        //    AsyncManager.OutstandingOperations.Decrement();
-        //}
 
         public string UpdateRatesCompleted()
         {
-            return "ok";
+            return stringResult;
         }
 
     }
