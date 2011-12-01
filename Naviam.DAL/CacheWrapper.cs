@@ -250,7 +250,9 @@ namespace Naviam
                     using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
-                        list.Add(val);
+                        //don't create new list
+                        if (typedRedis.ContainsKey(key))
+                            list.Add(val);
                     }
                     if (id != null)
                     {
@@ -265,8 +267,11 @@ namespace Naviam
                 var obj = HttpContext.Current.Cache[key];
                 if (obj == null)
                 {
-                    obj = new List<T>();
-                    HttpContext.Current.Cache[key] = obj;
+                    //obj = GetList<T>(key, id);
+                    /*obj = new List<T>();
+                    HttpContext.Current.Cache[key] = obj;*/
+                    //don't create new list
+                    return;
                 }
                 ((List<T>)obj).Add(val);
             }

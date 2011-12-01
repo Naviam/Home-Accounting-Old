@@ -249,4 +249,13 @@
   <data name="NetIncome" xml:space="preserve">
     <value>Net Income</value>
   </data>
+  <data name="FindBetweenDate" xml:space="preserve">
+    <value>between</value>
+  </data>
+  <data name="FindDirection" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="DeleteRule" xml:space="preserve">
+    <value>Do you really want to delete rule?</value>
+  </data>
 </root>

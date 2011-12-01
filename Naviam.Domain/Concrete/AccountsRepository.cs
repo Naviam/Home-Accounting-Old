@@ -42,10 +42,10 @@ namespace Naviam.Domain.Concrete
                 //load from DB
                 res = AccountsDataAdapter.GetAccount(id, companyId);
                 //save to cache
-                if (res == null) // not found in cache->add
-                    cache.AddToList<Account>(CacheKey, res, companyId);
-                else
-                    cache.UpdateList(CacheKey, res, companyId);
+                //if (res == null) // not found in cache->add
+                //    cache.AddToList<Account>(CacheKey, res, companyId);
+                //else
+                //    cache.UpdateList(CacheKey, res, companyId);
             }
             return res;
         }
@@ -99,8 +99,11 @@ namespace Naviam.Domain.Concrete
             if (res == 0)
             {
                 Account account = cache.GetFromList(CacheKey, new Account() { Id = accountId }, companyId);
-                account.Balance = account.Balance + value;
-                cache.UpdateList(CacheKey, account, companyId);
+                if (account != null)
+                {
+                    account.Balance = account.Balance + value;
+                    cache.UpdateList(CacheKey, account, companyId);
+                }
             }
             return res;
         }
@@ -112,14 +115,14 @@ namespace Naviam.Domain.Concrete
             Account res = null;
             //load from DB
             res = SmsDataAdapter.GetAccountBySms(cardNumber, id_modem, id_bank);
-            var res2 = cache.GetFromList(CacheKey, new Account() { Id = res.Id }, res.CompanyId);
-            if (res != null)
+            //res = cache.GetFromList(CacheKey, new Account() { Id = res.Id }, res.CompanyId);
+            if (res == null)
             {
                 //save to cache
-                if (res2 == null) // not found in cache->add
-                    cache.AddToList<Account>(CacheKey, res, res.CompanyId);
-                else
-                    cache.UpdateList(CacheKey, res, res.CompanyId);
+                //if (res2 == null) // not found in cache->add
+                //    cache.AddToList<Account>(CacheKey, res, res.CompanyId);
+                //else
+                //    cache.UpdateList(CacheKey, res, res.CompanyId);
             }
             return res;
         }

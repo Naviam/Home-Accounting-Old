@@ -1,0 +1,54 @@
+﻿@using Naviam.WebUI.Resources
+
+<script type="text/html" id="tbl_tmpl">
+<tr>
+    <td>
+        <span data-bind="text: FieldTargetValue, visible: UserId() == null"></span>
+        <input data-bind="notEmpty: FieldTargetValue, event: {change: function() {rulesModel.EditItem($data, true);} }, visible: UserId() != null"></input>
+    </td>
+    <td>
+        <div data-bind="visible: UserId() != null">
+            <label><input data-bind="checked: Field, attr: { name: 'Field' + Id() }, event: {change: function() {$data.FieldValue('');} }" type="radio" value='description' />@DisplayNames.Description</label>
+            <label><input data-bind="checked: Field, attr: { name: 'Field' + Id() }" name="Field" type="radio" value='id_category' />@DisplayNames.Category</label>
+        </div>
+    </td>
+    <td>
+        <div data-bind="visible: UserId() == null"> @*System rules*@
+            <span data-bind="text: FieldValue, visible: Field() == 'description'"></span>
+            <span data-bind="text: Category, visible: Field() == 'id_category'"></span>
+        </div>
+        <div data-bind="visible: UserId() != null" style='width:175px'> @*User rules*@
+            <input class="width100" data-bind="notEmpty: FieldValue, event: {change: function() {rulesModel.EditItem($data, true);} }, visible: Field() == 'description'"/>
+            <div data-bind="visible: Field() == 'id_category'" style='position:relative'>
+                <input class="width100 suggestCat" data-bind="category: Category, event: {change: function() {rulesModel.EditItem($data, true);}, result: function() {rulesModel.EditItem($data, true);} }" name="Category"/>
+                <a href="#" onclick='return catModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a>
+            </div>
+        </div>
+    </td>
+    <td>
+        <a href="#" data-bind="click: function() {rulesModel.DeleteItem($data);}, visible: UserId() != null && Id() != null">@SharedStrings.Delete</a>
+        <a href="#" data-bind="click: function() {rulesModel.EditItem($data, false);}, visible: UserId() != null && Id() == null">@SharedStrings.Save</a>
+    </td>
+</tr>
+</script>
+
+<table class='table'>
+<thead>
+    <tr>
+    <th>@DisplayNames.Merchant</th>
+    <th>@DisplayNames.Type</th>
+    <th>@DisplayNames.Replace</th>
+    <th colspan='1'></th>
+    </tr>
+</thead>
+<tbody data-bind="template: { name: 'tbl_tmpl', foreach:items }"></tbody>
+</table>
+
+<button data-bind="click: rulesModel.AddItem">@SharedStrings.Add</button>
+<br /><br />
+@*<form data-bind="submit: rulesModel.AddItem">
+    <input data-bind='value: catNameToAdd, valueUpdate: "keyup"' />
+    <button type="submit" data-bind="enable: catNameToAdd() != ''">@SharedStrings.Add</button>
+</form>*@
+
+<button type="button" class='close'>Ok</button>

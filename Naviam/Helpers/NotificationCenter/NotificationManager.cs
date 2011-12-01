@@ -50,11 +50,25 @@ namespace Naviam.NotificationCenter
 
         public bool SendSmsMail(string recipients, string message)
         {
+            return SendSmsMail(recipients, message, false);
+        }
+
+        public bool SendSmsMail(string recipients, string message, bool useMessage)
+        {
+            string messageText = string.Empty;
+            string contentID = string.Empty;
+            string picPath = string.Empty;
             try
             {
-                string contentID = Guid.NewGuid().ToString();
-                string messageText = String.Format("<html><body><img src=\"cid:{0}\"><div>{1}</div></body></html>", contentID, message);
-                string picPath = AppDomain.CurrentDomain.BaseDirectory + @"Content\Naviam_logo2.png";
+                if (useMessage)
+                {
+                    contentID = Guid.NewGuid().ToString();
+                    picPath = AppDomain.CurrentDomain.BaseDirectory + @"Content\Naviam_logo2.png";
+                    messageText = String.Format("<html><body><img src=\"cid:{0}\"><div>{1}</div></body></html>", contentID, message);
+                }
+                else
+                    messageText = String.Format("<html><body><div>{0}</div></body></html>", message);
+
                 MailMessage mess = GetMailMessage(recipients, _mailSettings.Smtp.Network.UserName, "subject", messageText, picPath, true, contentID);
                 SendMail(mess);
                 return true;
@@ -65,7 +79,7 @@ namespace Naviam.NotificationCenter
                 log.Debug(e.Message);
                 throw;
             }
-        
+
         }
 
         public bool SendConfirmationRegistrationMail(string recipients, string approveCode, string email)

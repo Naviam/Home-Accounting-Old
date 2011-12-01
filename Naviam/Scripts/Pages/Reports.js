@@ -20,6 +20,7 @@ reportsModel.Load = function () {
         rep_req.selectedTimeFrame.subscribe(function () { reportsModel.Refresh(); });
         //rep_req.selectedMenu.subscribe(function () { reportsModel.Refresh(); });
         rep_req.selectedSubMenu.subscribe(function (val) { reportsModel.Refresh(); });
+        rep_req.selectedCategoryId = null;
         reportsModel.graphType = ko.observable(0);
         reportsModel.graphType.subscribe(function () { reportsModel.fillChart(); });
         //
@@ -43,7 +44,9 @@ reportsModel.Load = function () {
         reportsModel.Refresh = function () {
             $.postErr(getReportsUrl, ko.toJS(rep_req), function (res) {
                 ko.mapping.updateFromJS(reportsModel, res);
+                reportsModel.setupDragTime();
                 reportsModel.fillChart();
+                //rep_req.selectedCategoryId = null;
             });
         };
         reportsModel.endAmount = ko.dependentObservable(function () {
@@ -58,24 +61,66 @@ reportsModel.Load = function () {
                 total += parseInt(this.items()[i].Amount2());
             return total;
         }, reportsModel);
+        reportsModel.selectTable = function (item) {
+            if (rep_req.selectedMenu() == 2) return;
+            if (rep_req.selectedSubMenu() == 0) {
+                //filterModel.Add('Category', item.Name(), lang.FindCategory, item.Name());
+                filterModel.Add('CategoryId', item.Id(), lang.FindCategory, item.Name(), "int");
+                /*if (rep_req.selectedCategoryId == null) {
+                    rep_req.selectedCategoryId = item.Id();
+                    reportsModel.Refresh();
+                    return;
+                }*/
+            }
+            if (rep_req.selectedSubMenu() == 1)
+                filterModel.Add('Description', item.Name(), lang.FindDescription, item.Name());
+            if (rep_req.selectedSubMenu() == 2)
+                filterModel.Add('TagName', item.Name(), lang.FindTag, item.Name());
+            //add type
+            if (rep_req.selectedMenu() == 0)
+                filterModel.Add('Direction', '0', lang.FindDirection, lang.Spending);
+            if (rep_req.selectedMenu() == 1)
+                filterModel.Add('Direction', '1', lang.FindDirection, lang.Income);
+            //add time period
+            var dStart = '' + (rep_req.selectedTimeFrameStart() - 1);
+            var dEnd = '' + (rep_req.selectedTimeFrameEnd() - 1);
+            var rdStart = rep_req.selectedTimeFrameStart();
+            var rdEnd = rep_req.selectedTimeFrameEnd();
+            if (rep_req.selectedSubMenu() == 3) {
+                dStart = '' + (item.Id() - 1); dEnd = dStart;
+                rdStart = item.Id(); rdEnd = rdStart;
+            }
+            var dateS = new Date(dStart.substr(0, 4), dStart.substr(4, 2));
+            var dateE = new Date(dEnd.substr(0, 4), dEnd.substr(4, 2));
+            //get last day of month
+            dateE.setMonth(dateE.getMonth() + 1);
+            dateE.setDate(dateE.getDate() - 1);
+            filterModel.Add('BetweenDate', rdStart + '' + rdEnd, lang.FindBetweenDate, dateS.format() + ' - ' + dateE.format());
+            localStorage.setItem("transFilter", ko.toJSON(filterModel.items));
+            window.location = transUrl;
+        };
         reportsModel.getChartTitle = function () {
             var title = '';
-            if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 0)
-                title = lang.Spending + ' ' + lang.ByCategory;
-            if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 1)
-                title = lang.Spending + ' ' + lang.ByMerchant;
-            if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 2)
-                title = lang.Spending + ' ' + lang.ByTag;
-            if (rep_req.selectedMenu() == 0 && rep_req.selectedSubMenu() == 3)
-                title = lang.Spending + ' ' + lang.OverTime;
-            if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 0)
-                title = lang.Income + ' ' + lang.ByCategory;
-            if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 1)
-                title = lang.Income + ' ' + lang.ByMerchant;
-            if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 2)
-                title = lang.Income + ' ' + lang.ByTag;
-            if (rep_req.selectedMenu() == 1 && rep_req.selectedSubMenu() == 3)
-                title = lang.Income + ' ' + lang.OverTime;
+            if (rep_req.selectedMenu() == 0) {
+                if (rep_req.selectedSubMenu() == 0)
+                    title = lang.Spending + ' ' + lang.ByCategory;
+                if (rep_req.selectedSubMenu() == 1)
+                    title = lang.Spending + ' ' + lang.ByMerchant;
+                if (rep_req.selectedSubMenu() == 2)
+                    title = lang.Spending + ' ' + lang.ByTag;
+                if (rep_req.selectedSubMenu() == 3)
+                    title = lang.Spending + ' ' + lang.OverTime;
+            }
+            if (rep_req.selectedMenu() == 1) {
+                if (rep_req.selectedSubMenu() == 0)
+                    title = lang.Income + ' ' + lang.ByCategory;
+                if (rep_req.selectedSubMenu() == 1)
+                    title = lang.Income + ' ' + lang.ByMerchant;
+                if (rep_req.selectedSubMenu() == 2)
+                    title = lang.Income + ' ' + lang.ByTag;
+                if (rep_req.selectedSubMenu() == 3)
+                    title = lang.Income + ' ' + lang.OverTime;
+            }
             if (rep_req.selectedMenu() == 2 && rep_req.selectedSubMenu() == 3)
                 title = lang.NetIncome;
             return title;
@@ -116,7 +161,31 @@ reportsModel.Load = function () {
                     $('#chart_b').show();
                 }
             }
-        }
+        };
+        reportsModel.isDragged = false;
+        reportsModel.setupDragTime = function () {
+            //time frame drag
+            $('.time_frame_cell')
+            .mouseover(function (e) {
+                e.preventDefault();
+                if (reportsModel.isDragged) {
+                    var val = $(e.target).attr('data_val');
+                    if (!val) //on span
+                        val = $(e.target).parent().attr('data_val');
+                    if (val) {
+                        e.shiftKey = true;
+                        reportsModel.changeTimeFrame(e, val);
+                    }
+                }
+            })
+            .mousedown(function (e) {
+                e.preventDefault();
+                reportsModel.isDragged = true;
+            })
+            .mouseup(function (e) {
+                reportsModel.isDragged = false;
+            });
+        };
         //
         ko.applyBindings(reportsModel, $("#report_page")[0]);
         ko.applyBindings(reportsModel, $("#timeline")[0]);
@@ -130,7 +199,9 @@ reportsModel.Load = function () {
         });
         menuModel.selectedSubMenu.subscribe(function (val) { rep_req.selectedSubMenu(val.id); });
         ko.applyBindings(menuModel, $("#rep_menu")[0]);
+        reportsModel.setupDragTime();
         reportsModel.fillChart();
+        if (!unitTest) unblockWindow();
     });
 };
 
@@ -147,8 +218,17 @@ var menuModel = {
 var chart = {};
 var chart_b = {};
 $(document).ready(function () {
+    if (!unitTest) blockWindow();
     chart = new google.visualization.PieChart($('#chart_p')[0]);
     chart_b = new google.visualization.BarChart($('#chart_b')[0]);
     chart_c = new google.visualization.ColumnChart($('#chart_c')[0]);
+    google.visualization.events.addListener(chart, 'select', function () {
+        if (chart.getSelection()[0])
+            reportsModel.selectTable(reportsModel.items()[chart.getSelection()[0].row]);
+    });
+    google.visualization.events.addListener(chart_b, 'select', function () {
+        if (chart_b.getSelection()[0])
+            reportsModel.selectTable(reportsModel.items()[chart_b.getSelection()[0].row]);
+    });
     reportsModel.Load();
 });

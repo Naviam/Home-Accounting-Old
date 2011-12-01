@@ -168,11 +168,20 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Remember me?</value>
   </data>
+  <data name="Replace" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="Rules" xml:space="preserve">
+    <value>Rules</value>
+  </data>
   <data name="SMSAlertServiceBank" xml:space="preserve">
     <value>SMS alert service bank</value>
   </data>
   <data name="Tags" xml:space="preserve">
     <value>Tags</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
   </data>
   <data name="UserName" xml:space="preserve">
     <value>Email</value>

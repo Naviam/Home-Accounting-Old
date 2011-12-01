@@ -178,6 +178,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete rule?.
+        /// </summary>
+        public static string DeleteRule {
+            get {
+                return ResourceManager.GetString("DeleteRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do you really want to delete tag?.
         /// </summary>
         public static string DeleteTag {
@@ -223,6 +232,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to between.
+        /// </summary>
+        public static string FindBetweenDate {
+            get {
+                return ResourceManager.GetString("FindBetweenDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to categorized under.
         /// </summary>
         public static string FindCategory {
@@ -237,6 +255,15 @@ namespace Naviam.WebUI.Resources {
         public static string FindDescription {
             get {
                 return ResourceManager.GetString("FindDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string FindDirection {
+            get {
+                return ResourceManager.GetString("FindDirection", resourceCulture);
             }
         }
         

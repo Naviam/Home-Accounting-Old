@@ -28,6 +28,11 @@
     var updateTagUrl = '@Url.Action("UpdateTag", "Transactions")';
     var delTagUrl = '@Url.Action("DeleteTag", "Transactions")';
 
+    var getRulesDlg = '@Url.Action("GetRulesDialog", "Transactions")';
+    var getRulesUrl = '@Url.Action("GetRules", "Transactions")';
+    var updateRuleUrl = '@Url.Action("UpdateRule", "Transactions")';
+    var delRuleUrl = '@Url.Action("DeleteRule", "Transactions")';
+
     var getExchangeDlg = '@Url.Action("GetExchangeDialog", "Transactions")';
     var getSplitDlg = '@Url.Action("GetSplitDialog", "Transactions")';
     var splitTransUrl = '@Url.Action("SplitTrans", "Transactions")';
@@ -97,7 +102,8 @@
     </ul>
 </div>
 <div class='left_side_pnl'>
-    <a href="#" onclick='return catModel.EditCategories();' class='edit'>@SharedStrings.EditCategories</a>
+    <a href="#" onclick='return catModel.EditCategories();' class='edit'>@SharedStrings.ManageCategories</a>
+    <a href="#" onclick='return dialogs.showDialog("#rulesDialog", getRulesDlg, rulesModel);' class='edit'>@SharedStrings.ManageRules</a>
 </div>
 }
 
@@ -141,7 +147,7 @@
             <input class="width100 enterastab" data-bind="visible: transModel.selectedItem() == $data, value: Merchant" />
         </td>*@
         <td>
-            <span data-bind="visible: transModel.selectedItem() != $data, text: Category"></span>
+            <span data-bind="visible: transModel.selectedItem() != $data, text: Category, css: { b_upper: CategoryId() == 20 }"></span>
             <div data-bind="visible: transModel.selectedItem() == $data" style='position:relative;'>
                 <input class="width100 enterastab" data-bind="category: Category" name="Category"/>
                 <a href="#" onclick='return catModel.ShowCategories(this);' class='category_picker' tabindex='-1'></a>
@@ -189,6 +195,11 @@
     <div id='display_filter' class='filter_view'>
         <ul data-bind="template: {name:'filterTemplate', foreach:items, templateOptions: { remove: removeItem } }">
         </ul>
+        <div  class='rem_all'>
+        <a data-bind="click: function() { transModel.removeFilters(); }, visible: items() != null? items().length > 1 : false" href='#' style="display: none;">
+        @SharedStrings.RemoveAll
+        </a>
+        </div>
     </div>
     @*<button onclick="$.postErr('@Url.Action("RecieveMessage", "Sms", new { key = "givemeaccesstotoyou", gateway = "GETWAY1", from = "BelSwissBank", to = "", message = "" })')" type="button">Test</button>*@
     <div id="transGrid">
@@ -218,6 +229,13 @@
             <img src='@Url.Content("~/Content/images/refresh.png")' onclick='return transModel.ReloadPage();' style='float: right;cursor: pointer;margin-top: 3px;'/>
             <div data-bind='template: "transPagingTemplate"' class='paging'></div>
         </div>
+        <div>
+            <ul class='h_menu'>
+                <li><a href="#" data-bind="click: function() { transModel.SetPageSize(25); },css: {underline: transModel.paging.PageSize() == 25}">25</a></li>
+                <li><a href="#" data-bind="click: function() { transModel.SetPageSize(50); },css: {underline: transModel.paging.PageSize() == 50}">50</a></li>
+                <li><a href="#" data-bind="click: function() { transModel.SetPageSize(100); },css: {underline: transModel.paging.PageSize() == 100}">100</a></li>
+            </ul>
+        </div>
     </div>
     <div class="overlaywoshadow" id="transDlg">
         <div>
@@ -237,6 +255,20 @@
         <tr data-bind="visible: Merchant">
             <td>@DisplayNames.Merchant:</td>
             <td><b><span data-bind="text: Merchant" /></b></td>
+        </tr>
+       <tr data-bind="visible: transModel.ShowRenameDesc()">
+            <td>@DisplayNames.Rules:</td>
+            <td>
+                <input data-bind="checked: RenameDescription" name="RenameDescription" type="checkbox"/>
+                <span>Always rename <span data-bind="text: Merchant"></span> as <span data-bind="text: transModel.RenameToDesc()"></span>.</span>
+            </td>
+        </tr>
+        <tr data-bind="visible: transModel.ShowRenameCat()">
+            <td>@DisplayNames.Rules:</td>
+            <td>
+                <input  data-bind="checked: RenameCategory" name="RenameCategory" type="checkbox"/>
+                <span>Always categorize <span data-bind="text: Merchant"></span> as <span data-bind="text: transModel.RenameToCat()"></span>.</span>
+            </td>
         </tr>
         <tr>
             <td>@DisplayNames.IncludeInTax:</td>
@@ -319,4 +351,5 @@
 @*<div id='tag_edit_area' class="overlay"></div>*@
 <div id='exchangeDialog' class="overlay" style='width:700px'></div>
 <div id='splitDialog' class="overlay" style='width:700px'></div>
+<div id='rulesDialog' class="overlay" style='width:700px'></div>
 

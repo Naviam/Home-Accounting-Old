@@ -145,6 +145,7 @@
     <Compile Include="Helpers\Parsers\BelSwissParser.cs" />
     <Compile Include="Helpers\Parsers\ParserBase.cs" />
     <Compile Include="Helpers\Parsers\ParsersFactory.cs" />
+    <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -221,6 +222,7 @@
     <Content Include="Content\images\bg.png" />
     <Content Include="Content\images\delete.png" />
     <Content Include="Content\images\edit.png" />
+    <Content Include="Content\images\loading7.gif" />
     <Content Include="Content\images\refresh.png" />
     <Content Include="Content\images\stats_bars.png" />
     <Content Include="Content\images\stats_lines.png" />
@@ -251,10 +253,14 @@
     <None Include="Scripts\Pages\Reports.js" />
     <Content Include="Scripts\knockout-1.3.0beta.js" />
     <Content Include="Scripts\knockout-1.3.0beta.min.js" />
+    <None Include="Scripts\Pages\Filters.js" />
+    <None Include="Scripts\Pages\Rules.js" />
+    <Content Include="Scripts\Pages\Filters.min.js" />
     <Content Include="Scripts\Pages\Reports.min.js" />
     <None Include="Scripts\tests\initData.js" />
     <None Include="Scripts\tests\mockup.js" />
     <None Include="Scripts\tests\transactions.html" />
+    <Content Include="Scripts\Pages\Rules.min.js" />
     <Content Include="Views\Shared\AccessDenied.aspx" />
     <Content Include="Views\Transactions\_exchangeDialog.cshtml" />
     <Content Include="Views\Transactions\_splitDialog.cshtml" />
@@ -267,6 +273,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Account\Confirmation.cshtml" />
+    <Content Include="Views\Transactions\_rulesDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\combres.xml">

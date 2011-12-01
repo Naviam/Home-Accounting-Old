@@ -124,11 +124,14 @@
       <resource reference="autocomplete" />
       <resource reference="upload_html5" />
       <resource reference="validate_tools" />
+      <resource path="~/Scripts/Pages/Filters.min.js" />
       <resource path="~/Scripts/Pages/Transactions.min.js" />
       <resource path="~/Scripts/Pages/Accounts.min.js" />
+      <resource path="~/Scripts/Pages/Rules.min.js" />
     </resourceSet>
     <resourceSet name="reports" type="js">
       <resource reference="knockout map" />
+      <resource path="~/Scripts/Pages/Filters.min.js" />
       <resource path="~/Scripts/Pages/Reports.min.js" />
     </resourceSet>
     <resourceSet name="targets" type="js">

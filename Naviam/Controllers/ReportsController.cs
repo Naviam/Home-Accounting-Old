@@ -19,6 +19,7 @@ namespace Naviam.WebUI.Controllers
             public int? selectedTimeFrame { get; set; }
             public int? selectedTimeFrameStart { get; set; }
             public int? selectedTimeFrameEnd { get; set; }
+            public int? selectedCategoryId { get; set; }
             public DateTime? startDate { get; set; }
             public DateTime? endDate { get; set; }
         }
@@ -188,7 +189,7 @@ namespace Naviam.WebUI.Controllers
                     headColumn1 = Resources.JavaScript.Category;
                     report = from t in trans
                              join c in cats on t.CategoryId equals c.Id
-                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate
+                             where t.Direction == (TransactionDirections)request.selectedMenu && t.CurrencyId == request.selectedCurrency && t.Date >= request.startDate && t.Date < request.endDate //&& (request.selectedCategoryId == null || request.selectedCategoryId == c.ParentId)
                              group t.Amount by c into g
                              orderby g.Sum() descending
                              select new { Id = g.Key.Id, Amount = g.Sum(), Name = g.Key.Name, Amount2 = 0 }; //

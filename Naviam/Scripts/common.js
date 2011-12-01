@@ -22,6 +22,7 @@ jQuery.postErr = function (url, data, callback, type) {
         url: url,
         data: data,
         complete: function () {
+            //unblockWindow();
             //            $("#saving").hide();
             //            $("#loading").hide();
         },
@@ -30,6 +31,7 @@ jQuery.postErr = function (url, data, callback, type) {
 
         dataType: type,
         error: function (xmlHttpRequest, textStatus, errorThrown) {
+            unblockWindow();
             parseSiteError(xmlHttpRequest);
         }
     });

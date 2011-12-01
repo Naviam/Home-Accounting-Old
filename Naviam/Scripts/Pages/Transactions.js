@@ -6,48 +6,6 @@ var transModel = {
     paging: { Page: 1, SortField: 'Date', SortDirection: 1, Filter: '' }
 };
 var transEdit = {};
-var filterModel = {};
-filterModel.items = ko.observableArray();
-filterModel.toString = function () {
-    return ko.toJSON(this.items);
-};
-filterModel.Add = function (key, value, showName, showValue, type) {
-    var fItem = ko.utils.arrayFirst(this.items(), function (item) {
-        return item.Name == key;
-    });
-    if (!fItem)
-        this.items.push({ Name: key, Value: ko.observable(value), Type: type, ShowName: showName, ShowValue: ko.observable(showValue) });
-    else {
-        fItem.Value(value);
-        fItem.Type = type;
-        fItem.ShowName = showName;
-        fItem.ShowValue(showValue);
-    }
-};
-filterModel.Clear = function () {
-    this.items([]);
-}
-filterModel.removeItem = function (item) {
-    if (item) {
-        ko.utils.arrayRemoveItem(filterModel.items, item);
-        if (item.Name == 'TagId') {
-            catModel.selectedTag(null);
-            catModel.editedTag(null);
-        }
-        transModel.ReloadPage();
-    }
-}
-filterModel.removeAll = function () {
-    filterModel.Clear();
-    transModel.ReloadPage();
-}
-filterModel.deleteByKey = function (key) {
-    var fItem = ko.utils.arrayFirst(this.items(), function (item) {
-        return item.Name == key;
-    });
-    if (fItem)
-        ko.utils.arrayRemoveItem(this.items, fItem);
-}
 ko.bindingHandlers.category = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         //handle the field changing
@@ -104,13 +62,20 @@ ko.bindingHandlers.category = {
 //};
 //!!!
 function loadTransactions() {
+    //localStorage.setItem("transFilter", null);
+    filterModel.items(ko.utils.parseJson(localStorage.getItem("transFilter")));
+    transModel.paging.Filter = filterModel.toString();
+    var pSize = localStorage.getItem("transPageSize");
+    transModel.paging.PageSize = pSize ? pSize : 50;
     $.postErr(getTransUrl, transModel.paging, function (res) {
         var childItem = function (data) {
-            ko.mapping.fromJS(data, {}, this);
+            ko.mapping.fromJS(data, { 'include': ["RenameDescription", "RenameCategory"] }, this);
             var catItem = catModel.itemById(data.CategoryId);
             var catName = catItem != null ? catItem.Name() : '';
             this.Category = ko.observable(catName);
             this.Currency = ko.observable(accountsModel.currencyById(this.CurrencyId()));
+            this.RenameDescription = ko.observable(false);
+            this.RenameCategory = ko.observable(false);
         };
         var mapping = {
             'items': {
@@ -124,6 +89,8 @@ function loadTransactions() {
         };
         transModel = ko.mapping.fromJS(res, mapping);
         ko.mapping.fromJS(ko.mapping.toJS(res.transTemplate), {}, transEdit);
+        transEdit.RenameDescription = ko.observable(false);
+        transEdit.RenameCategory = ko.observable(false);
         transModel.paging.Page.subscribe(function (newValue) {
             transModel.ReloadPage();
         });
@@ -132,6 +99,7 @@ function loadTransactions() {
         transModel.ReloadPage = function () {
             if (this.DescrSub != null)
                 this.DescrSub.dispose();
+            localStorage.setItem("transFilter", ko.toJSON(filterModel.items));
             transModel.paging.Filter = filterModel.toString();
             $.postErr(getTransUrl, transModel.paging, function (res) {
                 ko.mapping.updateFromJS(transModel, res);
@@ -152,6 +120,31 @@ function loadTransactions() {
         //                NewCssCal(input, item.Date, 'MMddyyyy', 'arrow');
         //            }
         //}
+        transModel.SetPageSize = function (pageSize) {
+            transModel.paging.PageSize(pageSize);
+            localStorage.setItem("transPageSize", pageSize);
+            this.ReloadPage();
+        };
+        transModel.ShowRenameDesc = function () {
+            var item = this.selectedItem();
+            return item != null && transEdit.Description() != item.Description() && item.Merchant() != null;
+        };
+        transModel.ShowRenameCat = function () {
+            var item = this.selectedItem();
+            return item != null && transEdit.CategoryId() != item.CategoryId() && item.Merchant() != null;
+        };
+        transModel.RenameToDesc = function () {
+            var item = this.selectedItem();
+            return item != null ? item.Description() : "";
+        };
+        transModel.RenameToCat = function () {
+            var item = this.selectedItem();
+            return item != null ? item.Category() : "";
+        };
+        transModel.removeFilters = function () {
+            filterModel.Clear();
+            this.ReloadPage();
+        };
         transModel.ShowDialog = function () {
             var row = this.selectedRow();
             var frm = $("#transDlg");
@@ -175,6 +168,8 @@ function loadTransactions() {
             fItem.Currency = ko.observable();
             fItem.CurrencyId = ko.observable(accountsModel.selectedItem().CurrencyId);
             fItem.AccountId = ko.observable(accountsModel.selectedItem().Id);
+            fItem.RenameDescription = ko.observable(false);
+            fItem.RenameCategory = ko.observable(false);
             return fItem;
         };
         transModel.Add = function () {
@@ -249,12 +244,21 @@ function loadTransactions() {
         };
         transModel.SaveItem = function (sItem, reloadPage) {
             if (sItem) {
-                $.postErr(updateTransUrl, ko.mapping.toJS(sItem), function (res) {
+                var itemToSave = ko.mapping.toJS(sItem);
+                var needRefreshRules = false;
+                if (sItem.RenameDescription() || sItem.RenameCategory())
+                    needRefreshRules = true;
+                sItem.RenameDescription(false);
+                sItem.RenameCategory(false);
+                $.postErr(updateTransUrl, itemToSave, function (res) {
                     //transModel.selectedItem().Id(res.Id);
                     var amount = res.amount;
                     amount = res.trans.Direction == 0 ? -amount : amount;
                     accountsModel.addAmount(res.trans.AccountId, amount);
-                    if (reloadPage) transModel.ReloadPage();
+                    if (reloadPage)
+                        transModel.ReloadPage();
+                    if (needRefreshRules)
+                        rulesModel.Refresh();
                 });
             }
         };
@@ -648,7 +652,9 @@ $(document).ready(function () {
             }
             var input = $(btn).parent().find('[name="Category"]');
             this.inputCat = input;
-            menu.css({ top: input.offset().top + 20, left: input.offset().left });
+            var yPos = input.offset().top - menu.height();
+            if (yPos < 0) yPos = 0;
+            menu.css({ top: yPos, left: input.offset().left });
             menu.width(input.width());
             $("#cat_menu ul").width(input.width());
             menu.slideDown();

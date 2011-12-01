@@ -20,18 +20,21 @@ namespace Naviam.WebUI.Controllers
         private readonly TransactionsRepository _transRepository;
         private readonly CategoriesRepository _categoriesRepository;
         private readonly TagsRepository _tagsRepository;
-        
-        public TransactionsController(): this(null, null, null)
+        private readonly RulesRepository _rulesRepository;
+
+        public TransactionsController()
+            : this(null, null, null)
         {
         }
 
-        public TransactionsController(TransactionsRepository transRepository, CategoriesRepository categoriesRepository, TagsRepository tagsRepository)
+        public TransactionsController(TransactionsRepository transRepository, CategoriesRepository categoriesRepository, TagsRepository tagsRepository, RulesRepository rulesRepository = null)
         {
             _transRepository = transRepository ?? new TransactionsRepository();
             _categoriesRepository = categoriesRepository ?? new CategoriesRepository();
             _tagsRepository = tagsRepository ?? new TagsRepository();
+            _rulesRepository = rulesRepository ?? new RulesRepository();
         }
-        
+
         public class FilterHolder
         {
             public string Name { get; set; }
@@ -49,7 +52,7 @@ namespace Naviam.WebUI.Controllers
 
         public class Paging
         {
-            public int PageSize = 10;
+            public int PageSize { get; set; }
             public int Page { get; set; }
             public int PagesCount { get; set; }
             public int RowsOnPage { get; set; }
@@ -117,7 +120,7 @@ namespace Naviam.WebUI.Controllers
                             //!
                             if (item.Name == "ByString")
                                 trans = trans.Where(s => (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
-                                //trans = trans.Where(s => (s.Merchant != null && s.Merchant.ToLower().Contains(item.Value.ToLower())) || (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
+                                    //trans = trans.Where(s => (s.Merchant != null && s.Merchant.ToLower().Contains(item.Value.ToLower())) || (s.Description != null && s.Description.ToLower().Contains(item.Value.ToLower()))).
                                     Union(from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
                             else
                                 trans = (from t in trans join c in catsIds on t.CategoryId equals c.Id select t).ToList();
@@ -130,17 +133,34 @@ namespace Naviam.WebUI.Controllers
                                 var tags = _tagsRepository.GetAll(user.Id);
                                 var selTags = tags.Where(m => m.Name.ToLower().Contains(item.Value.ToLower()));
                                 trans = (from t in trans
-                                        from tg in selTags
-                                        where t.TagIds.Contains(tg.Id.ToString())
+                                         from tg in selTags
+                                         where t.TagIds.Contains(tg.Id.ToString())
                                          select t).ToList();
                             }
                             else
-                            {
-                                if (item.Type == "int")
-                                    paging.Filter += String.Format("{0}=={1} and ", item.Name, item.Value);
+                                if (item.Name == "Direction")
+                                {
+                                    trans = (from t in trans
+                                             where t.Direction == (TransactionDirections)Convert.ToInt32(item.Value)
+                                             select t).ToList();
+                                }
                                 else
-                                    paging.Filter += String.Format("{0}==\"{1}\" and ", item.Name, item.Value);
-                            }
+                                    if (item.Name == "BetweenDate")
+                                    {
+                                        var startD = new DateTime(Convert.ToInt32(item.Value.Substring(0, 4)), Convert.ToInt32(item.Value.Substring(4, 2)), 1);
+                                        var endD = new DateTime(Convert.ToInt32(item.Value.Substring(6, 4)), Convert.ToInt32(item.Value.Substring(10, 2)), 1); ;
+                                        endD = endD.AddMonths(1);
+                                        trans = (from t in trans
+                                                 where t.Date >= startD && t.Date < endD
+                                                 select t).ToList();
+                                    }
+                                    else
+                                    {
+                                        if (item.Type == "int")
+                                            paging.Filter += String.Format("{0}=={1} and ", item.Name, item.Value);
+                                        else
+                                            paging.Filter += String.Format("{0}==\"{1}\" and ", item.Name, item.Value);
+                                    }
                         }
                     }
                     if (!String.IsNullOrEmpty(paging.Filter))
@@ -167,9 +187,10 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateTransaction(Transaction trans, PageContext pageContext)
+        public ActionResult UpdateTransaction(Transaction trans, PageContext pageContext, bool? renameDescription, bool? renameCategory)
         {
-            var companyId = CurrentUser.CurrentCompany;
+            var user = CurrentUser;
+            var companyId = user.CurrentCompany;
             var tags = Request.Form["TagIds[]"] as string;
             trans.TagIds = new List<string>();
             if (tags != null)
@@ -186,6 +207,20 @@ namespace Naviam.WebUI.Controllers
             {
                 var updateTrans = TransactionsDataAdapter.GetTransaction(trans.Id, companyId);
                 amount = (trans.Direction == updateTrans.Direction) ? -(updateTrans.Amount - trans.Amount) : trans.Amount * 2;
+                //add to rules
+                if (!String.IsNullOrEmpty(updateTrans.Merchant))
+                {
+                    if (renameDescription.HasTrue())
+                    {
+                        var rule = new FieldRule() { FieldTargetValue = updateTrans.Merchant, FieldValue = trans.Description, UserId = user.Id};
+                        _rulesRepository.Insert(rule, user.Id);
+                    }
+                    if (renameCategory.HasTrue())
+                    {
+                        var rule = new FieldRule() { FieldTargetValue = updateTrans.Merchant, Field = "id_category", FieldValue = trans.CategoryId.ToString(), UserId = user.Id };
+                        _rulesRepository.Insert(rule, user.Id);
+                    }
+                }
                 _transRepository.Update(trans, companyId);
             }
             else
@@ -236,6 +271,52 @@ namespace Naviam.WebUI.Controllers
         public ActionResult GetSplitDialog()
         {
             return PartialView("_splitDialog");
+        }
+
+        #endregion
+
+        #region Rules
+
+        [HttpPost]
+        public ActionResult GetRulesDialog()
+        {
+            return PartialView("_rulesDialog");
+        }
+        
+        [HttpPost]
+        public ActionResult GetRules()
+        {
+            var user = CurrentUser;
+            var rules = _rulesRepository.GetUserRules(user.Id);
+            rules = (from r in rules
+                     where r.UserId != null
+                     select r).ToList();
+            return Json(new { items = rules, ruleTemplate = new FieldRule() });
+        }
+
+        [HttpPost]
+        public ActionResult UpdateRule(FieldRule entity)
+        {
+            var user = CurrentUser;
+            entity.UserId = user.Id;
+            int res = 0;
+            if (entity.Id != null)
+            {
+                res = _rulesRepository.Update(entity, entity.UserId);
+                if (res != 0)
+                    entity = _rulesRepository.GetRule(entity.Id, entity.UserId);
+            }
+            else
+                res = _rulesRepository.Insert(entity, entity.UserId);
+            return Json(new { entity, res });
+        }
+
+        [HttpPost]
+        public ActionResult DeleteRule(int? id)
+        {
+            var user = CurrentUser;
+            _rulesRepository.Delete(id, user.Id);
+            return Json(id);
         }
 
         #endregion
@@ -333,7 +414,7 @@ namespace Naviam.WebUI.Controllers
             {
                 if (item.Name.ToLower().Contains(q))
                     vals.Add(Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name);
-                    //res += Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name + "|" + item.Id.ToString() + "\n";
+                //res += Naviam.WebUI.Resources.JavaScript.Category + ": " + item.Name + "|" + item.Id.ToString() + "\n";
             }
             //tags
             foreach (var item in tags)

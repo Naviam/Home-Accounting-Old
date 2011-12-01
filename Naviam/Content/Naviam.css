@@ -180,6 +180,10 @@ section.main aside.right {
   color: White; }
 
 /*Grid----------*/
+.b_upper {
+  font-weight: bold;
+  text-transform: uppercase; }
+
 .grid {
   border-collapse: collapse;
   background: #ececd8;
@@ -557,12 +561,15 @@ button {
     margin: 4px 4px; }
     .filter_view a .remove {
       cursor: pointer; }
+  .filter_view .rem_all {
+    margin-top: 5px; }
 
 .win_blocker {
   zIndex: 999998;
   background-color: #fff;
   opacity: 0.3;
-  position: absolute; }
+  position: absolute;
+  background: url("images/loading7.gif") center 5% no-repeat; }
 
 .error, .alert, .notice, .success, .info {
   padding: 1px;

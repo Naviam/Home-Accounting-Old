@@ -151,15 +151,6 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Categories.
-        /// </summary>
-        public static string EditCategories {
-            get {
-                return ResourceManager.GetString("EditCategories", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to enter name of tag.
         /// </summary>
         public static string EnterNewTag {
@@ -201,6 +192,24 @@ namespace Naviam.WebUI.Resources {
         public static string LoginHeader {
             get {
                 return ResourceManager.GetString("LoginHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage Categories.
+        /// </summary>
+        public static string ManageCategories {
+            get {
+                return ResourceManager.GetString("ManageCategories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage Rules.
+        /// </summary>
+        public static string ManageRules {
+            get {
+                return ResourceManager.GetString("ManageRules", resourceCulture);
             }
         }
         
@@ -250,6 +259,15 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove all.
+        /// </summary>
+        public static string RemoveAll {
+            get {
+                return ResourceManager.GetString("RemoveAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reports.
         /// </summary>
         public static string Reports {
@@ -264,6 +282,15 @@ namespace Naviam.WebUI.Resources {
         public static string ReportsTitle {
             get {
                 return ResourceManager.GetString("ReportsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
             }
         }
         

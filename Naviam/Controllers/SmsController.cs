@@ -19,6 +19,7 @@ namespace Naviam.WebUI.Controllers
         private readonly CurrenciesRepository _currenciesRepository;
         private readonly CategoriesRepository _categoriesRepository;
         private readonly MembershipRepository _membershipRepository;
+        private readonly RulesRepository _rulesRepository;
 
         public SmsController()
             : this(null, null, null, null, null)
@@ -33,7 +34,7 @@ namespace Naviam.WebUI.Controllers
             _currenciesRepository = currenciesRepository ?? new CurrenciesRepository();
             _categoriesRepository = categoriesRepository ?? new CategoriesRepository();
             _membershipRepository = _membershipRepository ?? new MembershipRepository();
-
+            _rulesRepository = _rulesRepository ?? new RulesRepository();
         }
 
         [HttpPost]
@@ -62,6 +63,8 @@ namespace Naviam.WebUI.Controllers
             try
             {
                 SmsBase sms;
+                
+                //try find bank
                 switch (bank.Id)
                 {
                     case 15: sms = new BelSwissSms(message);
@@ -70,34 +73,40 @@ namespace Naviam.WebUI.Controllers
                         sms = new BelSwissSms(message);
                         break;
                 }
-
-
-                //TODO: check sms.Result if need????
+                
+                //try find account
                 var account = _accountsRepository.GetAccountBySms(sms.CardNumber, modem.Id, bank.Id);
                 if (account == null)
                 {
                     log.Warn(String.Format("can't find account"));
                     return Json("ok");
                 }
-                //get category id
-                var categoryId = _categoriesRepository.FindCategoryMerchant(account.Id, sms.Merchant.Trim());
+                
+                //if result is not Uspeshno send sms and not add transaction to db
+                if (string.IsNullOrEmpty(sms.Result) || !sms.Result.Equals("Uspeshno", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    log.Warn(String.Format("sms resault is {0}", sms.Result));
+                    NotificationManager.Instance.SendSmsMail(account.SmsUser, message);
+                    return Json("ok");
+                }
 
+                //get category id
+                var categoryId = _categoriesRepository.FindCategoryMerchant(account.UserId, sms.Merchant.Trim());
                 var tran =
                     new Transaction
                     {
                         Amount = sms.Amount,
-                        //CategoryId = _categoriesRepository.FindCategoryForMerchant(account.Id, sms.Merchant.Trim()),
                         CategoryId = categoryId,
-                        //autosearch category by merchant
-                        // 20 - Uncategorized
+                        //autosearch category by merchant, default 20 - Uncategorized
                         CurrencyId = _currenciesRepository.GetCurrencyByShortName(sms.ShortCurrency).Id,
                         Date = sms.Date,
-                        Description = sms.Merchant,
+                        //autosearch description by merchant, default description = mechant
+                        Description = _rulesRepository.FindDescriptionMerchant(account.UserId, sms.Merchant.Trim()),
                         Direction = sms.Direction,
                         IncludeInTax = false,
                         Notes = "",
                         TransactionType = TransactionTypes.SMS,
-                        Merchant = sms.Merchant,
+                        Merchant = sms.Merchant.Trim(),
                         AccountId = account.Id
                     };
                 _transRepository.Insert(tran, account.CompanyId);
@@ -110,7 +119,6 @@ namespace Naviam.WebUI.Controllers
                 log.Error(String.Format("sms error"), ex);
                 Response.StatusCode = 500;
                 return Json(new { Text = ex.Message, stackTrace = ex.StackTrace });
-                //throw e;
             }
             return Json("ok");
         }
