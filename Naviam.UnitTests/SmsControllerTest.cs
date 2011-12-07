@@ -72,7 +72,7 @@ BLR/MINSK/ATMMMB HO19 CUM MINSK";
             var actual = target.RecieveMessage(key, gateway, from, to, message);
             
             // assert
-            Assert.AreEqual("ok", actual.Data);
+            Assert.AreEqual("ok", actual);
         }
     }
 }

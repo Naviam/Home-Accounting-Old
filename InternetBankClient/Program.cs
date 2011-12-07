@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
-using RestSharp;
 using ScrapySharp.Extensions;
 using log4net;
 using log4net.Config;
@@ -33,6 +35,8 @@ namespace InternetBankClient
         private static readonly ILog Log = LogManager.GetLogger(typeof(SampleClient));
 
         private static CookieCollection _cookies;
+
+        private static PaymentCard _currentCard;
 
         // callback used to validate the certificate in an SSL conversation
         private static bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors policyErrors)
@@ -88,41 +92,9 @@ namespace InternetBankClient
                     _cookies.Add(new Cookie("S1", "0175", "/", "www.sbsibank.by"));
                 }
             }
-
-            #region RestShart example
-            ////Trust all certificates
-            //ServicePointManager.ServerCertificateValidationCallback =
-            //    ((sender, certificate, chain, sslPolicyErrors) => true);
-
-            //// trust sender
-            //ServicePointManager.ServerCertificateValidationCallback
-            //                = ((sender, cert, chain, errors) => cert.Subject.Contains("sbsibank"));
-
-            //// validate cert by calling a function
-            //ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
-
-            //var client = new RestClient("https://sbsibank.by") { Authenticator = new SimpleAuthenticator("T1", "FQ529", "T2", "XUI4K") };
-
-            //var request = new RestRequest("login.asp?mode=1", Method.POST);
-            //request.AddHeader("Host", "www.sbsibank.by");
-            //request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0");
-            //request.AddHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-            //request.AddHeader("Accept-Language", "en-us,en;q=0.5");
-            //request.AddHeader("Accept-Encoding", "gzip, deflate");
-            //request.AddHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-            ////request.AddHeader("Connection", "keep-alive");
-            //request.AddHeader("Referer", "https://www.sbsibank.by/login.asp");
-            //request.AddHeader("Cookie", "UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDQACBBRTD=CGJPMDMCDPAOCANNGNJMKHNE; ASPSESSIONIDQABDAQSD=DCOHLMGDDEGAMHABLILICAGN; ASPSESSIONIDSAAADRSC=MADADOLANDGKDAJJPCJIAOFN; ASPSESSIONIDSACDARTC=AHMLOGGBGEIEGAKGNMHLBEPH");
-
-            //request.AddBody("S1=0175&T1=FQ529&C1=ON&T2=XUI4K&B1=%C4%E0%EB%E5%E5");
-
-            //var response = client.Execute(request);
-
-            //return new[] {response.Cookies[0].Name, response.Cookies[0].Value}; 
-            #endregion
         }
 
-        public static HttpStatusCode Connect()
+        public static bool Connect()
         {
             // initialize login POST request
             var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/login.asp?mode=1");
@@ -143,25 +115,11 @@ namespace InternetBankClient
             using (var response = (HttpWebResponse)request.GetResponse())
             {
                 Log.InfoFormat("Status code on login data post is {0}", response.StatusCode);
-                return response.StatusCode;
+                return response.StatusCode == HttpStatusCode.OK;
             }
         }
 
-        public static WebResponse GetHome()
-        {
-            // initialize home.asp get request
-            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/home.asp");
-            AddCommonHeadersToHttpRequest(request);
-            request.Referer = "https://www.sbsibank.by/home.asp";
-
-            // get response
-            Log.Info("Openning https://www.sbsibank.by/right.asp ");
-            var response = request.GetResponse();
-            Log.Info("Right response: " + response);
-            return response;
-        }
-
-        public static StreamReader GetRight()
+        public static IEnumerable<PaymentCard> GetCardList()
         {
             // initialize right.asp get request
             var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/right.asp");
@@ -171,18 +129,60 @@ namespace InternetBankClient
             // get response
             Log.Info("Openning https://www.sbsibank.by/right.asp");
             // get response
-            //using ()
-            //{
-                var response = (HttpWebResponse) request.GetResponse();
+            using (var response = (HttpWebResponse) request.GetResponse())
+            {
                 var responseStream = response.GetResponseStream();
                 if (responseStream != null)
                 {
-                    //var responseText = new StreamReader(responseStream).ReadToEnd();
-                    //Log.InfoFormat("right.asp response body is: {0}", responseText);
-                    return new StreamReader(responseStream);
+                    return ParseHtmlHelper.ParseCardList(new StreamReader(responseStream));
                 }
                 return null;
-            //}
+            }
+        }
+
+        public static bool ChangeCurrentCard(string newCardId)
+        {
+            // initialize right.asp get request
+            var request = (HttpWebRequest)WebRequest.Create(
+                String.Concat("https://www.sbsibank.by/mbottom.asp?crd_id=", newCardId));
+            AddCommonHeadersToHttpRequest(request);
+            request.Referer = "https://www.sbsibank.by/right.asp";
+
+            // get response
+            Log.InfoFormat("Change current card id to {0} at https://www.sbsibank.by/mbottom.asp?crd_id={0}", newCardId);
+            // get response
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+        }
+
+        public static bool GetCurrentCardBalance(out string currency, out decimal balance)
+        {
+            // initialize right.asp get request
+            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/balance.asp");
+            AddCommonHeadersToHttpRequest(request);
+            request.Referer = "https://www.sbsibank.by/home.asp";
+
+            // get response
+            Log.Info("Open https://www.sbsibank.by/balance.asp");
+            // get response
+            balance = 0m;
+            currency = "USD";
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                var responseStream = response.GetResponseStream();
+                if (responseStream != null)
+                {
+                    string strBalance;
+                    ParseHtmlHelper.ParseBalance(new StreamReader(responseStream), out strBalance, out currency);
+                    strBalance = String.Join(null, Regex.Split(strBalance, "[^\\d]"));
+                    balance = Decimal.Parse(strBalance);
+                    Log.InfoFormat("Balance is {0}", balance);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -190,33 +190,29 @@ namespace InternetBankClient
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
-        public static void ParseCardList(StreamReader content)
-        {
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.Load(content);
-            var html = htmlDocument.DocumentNode;
-
-            var cards = html.CssSelect("input[type=radio][name=R1]");
-            foreach (var card in cards.Where(card => card.HasAttributes))
-            {
-                Log.InfoFormat("Card name: {0}", card.NextSibling.OuterHtml);
-                var cardId = card.Attributes["Value"];
-                if (cardId != null)
-                {
-                    Log.InfoFormat("Card id: {0}", cardId.Value);
-                }
-            }
-        }
-
         static void Main()
         {
             XmlConfigurator.Configure();
+            var sw = new Stopwatch();
+            sw.Start();
             SampleClient.GetLogin();
-            if (SampleClient.Connect() == HttpStatusCode.OK)
+            if (SampleClient.Connect())
             {
-                var stream = SampleClient.GetRight();
-                ParseCardList(stream);
+                var cards = SampleClient.GetCardList();
+                foreach (var paymentCard in cards)
+                {
+                    if (SampleClient.ChangeCurrentCard(paymentCard.Id))
+                    {
+                        decimal balance;
+                        string currency;
+                        SampleClient.GetCurrentCardBalance(out currency, out balance);
+                        paymentCard.Currency = currency;
+                        paymentCard.Balance = balance;
+                    }
+                }
             }
+            sw.Stop();
+            Log.InfoFormat("Time passed milliseconds: {0}", sw.ElapsedMilliseconds);
             Console.ReadLine();
         }
     }

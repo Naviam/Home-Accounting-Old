@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+    <title>Интернет Банк</title>
+    <link rel="stylesheet" type="text/css" href="inet.css">
+    <base target="main">
+    <script type="text/javascript" language="JavaScript1.2"><!--
+
+        document.onclick = function () { if (top.is_code) return false; return true; }; function mSave(p_code) { } function blinkT() { if (!document.all) return; else { for (i = 0; i < document.all.tags('blink').length; i++) { s = document.all.tags('blink')[i]; s.style.visibility = (s.style.visibility == 'visible') ? 'hidden' : 'visible'; } } }// --></script>
+    <script type="text/javascript" language="JavaScript" src="menu.js"></script>
+    <script type="text/javascript">        var linkset = new Array(); linkset[0] = '<div class="menuitems"><a class="int" href="payments_erip.asp?op=%C1%E5%EB%F2%E5%EB%E5%EA%EE%EC" title="платеж за услуги Интернет  РУП &quot;Белтелеком&quot;" id="HS46" >ByFly<\/a><\/div>'; linkset[0] += '<div class="menuitems"><a class="int" href="payments_0.asp?p_code=2132" title="платеж за услуги Интернет  ООО &quot;Деловая сеть&quot;" id="HS16" >Деловая сеть<\/a><\/div>'; linkset[0] += '<div class="menuitems"><a class="int" href="payments_0.asp?p_code=2131" title="платеж за услуги Интернет ИП &quot;Альтернативная цифровая сеть&quot;" id="HS30" >AtlantTelecom<\/a><\/div>';
+        linkset[0] += '<div class="menuitems"><a class="int" href="payments_0.asp?p_code=2090" title="платеж за кабельное телевидение и интернет СООО &quot;Космос ТВ&quot;" id="HS45" >Cosmos TV<\/a><div>'; linkset[0] += '<div class="menuitems"><a class="int" href="payments_0.asp?p_code=2160" title="платеж за услуги Интернет ООО &quot;Белинфонет&quot;" id="HS19" >ADSL.BY<\/a><\/div>'; linkset[0] += '<div class="menuitems"><a class="int" href="payments_0.asp?p_code=2170" title="платеж за услуги Интернет ISP &quot;SOLO&quot;" id="HS25" >SOLO<\/a><\/div>'; linkset[0] += '<div class="menuitems"><a class="int" href="payments_0.asp?p_code=2133" title="платеж за услуги Интернет СООО &quot;ТЕЛЕКОМ МЕДИА СИСТЕМС&quot;" id="HS35" >ТCМ<\/a><\/div>'; linkset[0] += '<div class="menuitems"><a class="int" href="payments_0.asp?p_code=2134" title="платеж за услуги Интернет ISP &quot;ANITEX&quot;" id="HS37" >ANITEX<\/a><\/div>'; linkset[0] += '<div class="menuitems"><a class="int" href="payments_0.asp?p_code=2137" title="платеж за услуги Интернет ОДО &quot;АйчынаПлюс&quot;" id="HS41" >АйчынаПлюс<\/a><\/div>'; linkset[1] = '<div class="menuitems"><a class="int" href="payments_1.asp?p_code=2010" title="пополнение депозита до востребования" id="HS10" >Пополнить<\/a><\/div>';
+
+        linkset[1] += '<div class="menuitems"><a class="int" href="payments_1.asp?p_code=2030" title="отзыв депозита до востребования" id="HS11" >Отозвать<\/a><\/div>';
+
+        linkset[1] += '<div class="menuitems"><a class="int" href="balanceDep.asp" title="остаток на депозите до востребования" id="HS12" >Остаток<\/a><\/div>'; linkset[1] += '<div class="menuitems"><a class="int" href="statement.asp?O=D" title="последние двадцать операций по счету" id="HS12" >Выписка 20<\/a><\/div>'; function Mower(e) { e.style.backgroundColor = "#FFFFDD"; e.style.color = "#3333FF"; e.style.cursor = "pointer"; } function Mout(e) { e.style.backgroundColor = "#EAEAEA"; e.style.color = "#000000"; }</script>
+</head>
+<body bgcolor="#EAEAEA" onload="setInterval('blinkT()', 400)" oncontextmenu="return false">
+    <p>
+        <table cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='right'>
+                    <img src='pic/left_inf.gif' border="0" alt=''>
+                </td>
+                <td class="inf">
+                    СОСТОЯНИЕ СЧЕТА
+                </td>
+                <td>
+                    <img src='pic/right_inf.gif' border="0" alt=''>
+                </td>
+            </tr>
+        </table>
+    </p>
+    <a class="int" title="доступный остаток средств на карте" href="balance.asp">
+        <img class="mimg" src="pic/g.png" alt="">Остаток</a><br>
+    <a class="int" href="statement.asp?O=A" id="HS3" title="последние двадцать операций по карте">
+        <img class="mimg" src="pic/g.png" alt="">Выписка 20</a><br>
+    <a class="int" href="statementA.asp" id="HS20" title="список операций по карте за период">
+        <img class="mimg" src="pic/g.png" alt="">Выписка за период</a><br>
+    <a class="int" href="cheques_1.asp" id="HS29" title="Чеки I-Bank">
+        <img class="mimg" src="pic/g.png" alt="">Чеки I-Bank</a><br>
+    <p>
+        <table cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='right'>
+                    <img src='pic/left_inf.gif' border="0" alt=''>
+                </td>
+                <td class="inf">
+                    ПЛАТЕЖИ
+                </td>
+                <td>
+                    <img src='pic/right_inf.gif' border="0" alt=''>
+                </td>
+            </tr>
+        </table>
+    </p>
+    <a class="int" href="payments_0.asp?p_code=2050" title="платеж за услуги мобильной связи Белорусско-российское совместное ООО &quot;Мобильные ТелеСистемы&quot;"
+        id="HS9">
+        <img class="mimg" src="pic/g.png" alt="">MTC</a><br>
+    <a class="int" href="payments_0.asp?p_code=2060" title="платеж за услуги мобильной связи ИП &quot;Велком&quot;"
+        id="HS7">
+        <img class="mimg" src="pic/g.png" alt="">VELCOM</a><br>
+    <a class="int" href="payments_0.asp?p_code=2061" title="платеж за услуги мобильной связи ЗАО &quot;БеСТ&quot;"
+        id="HS26">
+        <img class="mimg" src="pic/g.png" alt="">life:)</a><br>
+    <a class="int" href="payments_0.asp?p_code=2080" title="платеж за услуги мобильной связи ООО СП &quot;БелСел&quot;"
+        id="HS14">
+        <img class="mimg" src="pic/g.png" alt="">DIALLOG</a><br>
+    <a class="int" href="payments_erip.asp?op=%C1%E5%EB%F2%E5%EB%E5%EA%EE%EC" title="платеж телефонная сеть РУП &quot;Белтелеком&quot;"
+        id="HS6">
+        <img class="mimg" src="pic/g.png" alt="">Белтелеком</a><br>
+    <a class="int" href="payments_0.asp?p_code=2040" title="платеж за квартиру РВЦ УЖХ Мингорисполкома"
+        id="HS5">
+        <img class="mimg" src="pic/g.png" alt="">УЖХ Минск</a><br>
+    <a class="int" href="payments_0.asp?p_code=2191" title="платеж за электроэнергию в г.Минске и минском р-не"
+        id="HS32">
+        <img class="mimg" src="pic/g.png" alt="">МинскЭнерго</a><br>
+    <a class="int" href="payments_0.asp?p_code=2090" title="платеж за кабельное телевидение и интернет СООО &quot;Космос ТВ&quot;"
+        id="HS8">
+        <img class="mimg" src="pic/g.png" alt="">Cosmos TV</a><br>
+    <a class="int" href="payments_erip.asp" title="Платежи через систему &quot;Расчет&quot; - систему единого расчетного и информационного пространства (ЕРИП)"
+        id="HS43">
+        <img class="mimg" src="pic/g_green.gif" alt=""><b><font color="00A000">Прочие платежи</font></b></a><br>
+    <a class="int" href="payments_0.asp?p_code=2171" title="пополнение электронного кошелька WEBMONEY (WMB)"
+        id="HS39">
+        <img class="mimg" src="pic/g.png" alt="">WEBMONEY WMB</a><br>
+    <a class="int" href="payments_0.asp?p_code=2172" title="пополнение электронного кошелька EasyPay"
+        id="HS44">
+        <img class="mimg" src="pic/g.png" alt="">EasyPay</a><br>
+    <a class="int" id="HS34" title="Платежи за услуги Интернет" onmousedown="showmenu(event,linkset[0], 'popmenu1')"
+        onmouseover="Mower(HS34);" onmouseout="Mout(HS34);">
+        <img class="mimg" src="pic/g.png" alt="">Интернет<img src="pic/arrow.gif" hspace="20"
+            vspace="0" border="0" alt=""></a><br>
+    <div id="popmenu1" class="menuskin" onmouseover="clearhidemenu();highlightmenu(event,'on', 'popmenu1')"
+        onmouseout="highlightmenu(event,'off');dynamichide(event)">
+    </div>
+    <a class="int" href="payments_my.asp" title="История операций" id="HS43">
+        <img class="mimg" src="pic/g_green.gif" alt=""><b><font color="00A000">История платежей</font></b></a><br>
+    <div class="intd" title="Платеж за Интернет Банк" id="HS27">
+        <img class="mimg" src="pic/g.png" alt="">I-BANK</div>
+    <p>
+        <table cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='right'>
+                    <img src='pic/left_inf.gif' border="0" alt=''>
+                </td>
+                <td class="inf">
+                    ПОГАШЕНИЕ КРЕДИТОВ
+                </td>
+                <td>
+                    <img src='pic/right_inf.gif' border="0" alt=''>
+                </td>
+            </tr>
+        </table>
+    </p>
+    <a class="int" href="payments_1.asp?p_code=2020" id="HS13" title="Погашение кредита выданного с использованием кредитной карточки">
+        <img class="mimg" src="pic/g.png" alt="">Кредитная карта</a><br>
+    <a class="int" href="payments_0cr.asp?p_code=2401" id="HS40" title="Погашение кредита выданного в ОАО &quot;БЕЛВНЕШЭКОНОМБАНК&quot;">
+        <img class="mimg" src="pic/g.png" alt="">ОАО Белвнешэкономбанк</a><br>
+</body>
+</html>
