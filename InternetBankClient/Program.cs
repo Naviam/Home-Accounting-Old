@@ -2,160 +2,221 @@
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using HtmlAgilityPack;
+using RestSharp;
 using ScrapySharp.Extensions;
+using log4net;
+using log4net.Config;
 
 namespace InternetBankClient
 {
-    public class InternetBank : IDisposable
+    public class CookieAwareWebClient : WebClient
     {
-        private readonly HttpClient _client;
+        private readonly CookieContainer _mContainer = new CookieContainer();
 
-        public InternetBank(string baseAddress)
+        protected override WebRequest GetWebRequest(Uri address)
         {
-            if (_client == null)
-                _client = new HttpClient();
-            _client.BaseAddress = new Uri(baseAddress);
-            _client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/x-ms-application"));
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xaml+xml"));
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-ms-xbap"));
-            _client.DefaultRequestHeaders.Add("Content-Type", "application/x-www-form-urlencoded");
+            var request = base.GetWebRequest(address);
+            if (request is HttpWebRequest)
+            {
+                (request as HttpWebRequest).CookieContainer = _mContainer;
+            }
+            return request;
+        }
+    }
+
+    public class SampleClient
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SampleClient));
+
+        private static CookieCollection _cookies;
+
+        // callback used to validate the certificate in an SSL conversation
+        private static bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors policyErrors)
+        {
+            bool result = false;
+            if (cert.Subject.ToUpper().Contains("SBSIBANK"))
+            {
+                result = true;
+            }
+
+            return result;
         }
 
-        public static dynamic GetRequestUri(string bankId)
+        private static void AddCommonHeadersToHttpRequest(HttpWebRequest request, string method = "GET")
         {
-                    return "login.asp?mode=1";
-        }
-    
-        public void Login(string bankId, string username, string password)
-        {
-            // 0175 FQ529 XUI4K &C1=ON
-            var content = new StringContent(
-                String.Format("S1={0}&T1={1}&T2={2}&B1=%C4%E0%EB%E5%E5", bankId, username, password));
-            var response = _client.Post(GetRequestUri(bankId).LoginUri, content);
-            _client.DefaultRequestHeaders.Add("Cookie", response.Headers.GetValues("Set-Cookie"));
+            // add cookies to request
+            var cookieContainer = new CookieContainer();
+            if (_cookies != null) cookieContainer.Add(_cookies);
+            request.CookieContainer = cookieContainer;
+            
+            request.Method = method;
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.PreAuthenticate = true;
+            request.Host = "www.sbsibank.by";
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0";
+            request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+            request.Headers.Add("Accept-Language", "en-us,en;q=0.5");
+            request.Headers.Add("Accept-Encoding", "gzip, deflate");
+            request.Headers.Add("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
         }
 
-        public void Dispose()
+        public static void GetLogin()
         {
-            _client.Dispose();
+            // initialize login POST request
+            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/login.asp");
+            AddCommonHeadersToHttpRequest(request);
+            var cookieContainer = new CookieContainer();
+            request.CookieContainer = cookieContainer;
+            request.Referer = "https://www.sbsibank.by/";
+
+            // get response
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    foreach (Cookie cookie in response.Cookies)
+                    {
+                        Log.InfoFormat("Cookie name: {0} and value {1}", cookie.Name, cookie.Value);                        
+                    }
+                    _cookies = response.Cookies;
+                    _cookies.Add(new Cookie("UN", "FQ529", "/", "www.sbsibank.by"));
+                    _cookies.Add(new Cookie("C1", "checked", "/", "www.sbsibank.by"));
+                    _cookies.Add(new Cookie("S1", "0175", "/", "www.sbsibank.by"));
+                }
+            }
+
+            #region RestShart example
+            ////Trust all certificates
+            //ServicePointManager.ServerCertificateValidationCallback =
+            //    ((sender, certificate, chain, sslPolicyErrors) => true);
+
+            //// trust sender
+            //ServicePointManager.ServerCertificateValidationCallback
+            //                = ((sender, cert, chain, errors) => cert.Subject.Contains("sbsibank"));
+
+            //// validate cert by calling a function
+            //ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
+
+            //var client = new RestClient("https://sbsibank.by") { Authenticator = new SimpleAuthenticator("T1", "FQ529", "T2", "XUI4K") };
+
+            //var request = new RestRequest("login.asp?mode=1", Method.POST);
+            //request.AddHeader("Host", "www.sbsibank.by");
+            //request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0");
+            //request.AddHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            //request.AddHeader("Accept-Language", "en-us,en;q=0.5");
+            //request.AddHeader("Accept-Encoding", "gzip, deflate");
+            //request.AddHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+            ////request.AddHeader("Connection", "keep-alive");
+            //request.AddHeader("Referer", "https://www.sbsibank.by/login.asp");
+            //request.AddHeader("Cookie", "UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDQACBBRTD=CGJPMDMCDPAOCANNGNJMKHNE; ASPSESSIONIDQABDAQSD=DCOHLMGDDEGAMHABLILICAGN; ASPSESSIONIDSAAADRSC=MADADOLANDGKDAJJPCJIAOFN; ASPSESSIONIDSACDARTC=AHMLOGGBGEIEGAKGNMHLBEPH");
+
+            //request.AddBody("S1=0175&T1=FQ529&C1=ON&T2=XUI4K&B1=%C4%E0%EB%E5%E5");
+
+            //var response = client.Execute(request);
+
+            //return new[] {response.Cookies[0].Name, response.Cookies[0].Value}; 
+            #endregion
+        }
+
+        public static HttpStatusCode Connect()
+        {
+            // initialize login POST request
+            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/login.asp?mode=1");
+            AddCommonHeadersToHttpRequest(request, "POST");
+            request.Referer = "https://www.sbsibank.by/login.asp";
+
+            // submit login form data
+            const string postData = "S1=0175&T1=FQ529&C1=ON&T2=XUI4K&B1=%C4%E0%EB%E5%E5";
+            Log.Info("Posting login form to " + "https://www.sbsibank.by/login.asp?mode=1" + " with content: " + postData);
+            var encoding = new ASCIIEncoding();
+            var data = encoding.GetBytes(postData);
+            request.ContentLength = postData.Length;
+            var dataStream = request.GetRequestStream();
+            dataStream.Write(data, 0, data.Length);
+            dataStream.Close();
+
+            // get response
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                Log.InfoFormat("Status code on login data post is {0}", response.StatusCode);
+                return response.StatusCode;
+            }
+        }
+
+        public static WebResponse GetHome()
+        {
+            // initialize home.asp get request
+            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/home.asp");
+            AddCommonHeadersToHttpRequest(request);
+            request.Referer = "https://www.sbsibank.by/home.asp";
+
+            // get response
+            Log.Info("Openning https://www.sbsibank.by/right.asp ");
+            var response = request.GetResponse();
+            Log.Info("Right response: " + response);
+            return response;
+        }
+
+        public static StreamReader GetRight()
+        {
+            // initialize right.asp get request
+            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/right.asp");
+            AddCommonHeadersToHttpRequest(request);
+            request.Referer = "https://www.sbsibank.by/home.asp";
+            
+            // get response
+            Log.Info("Openning https://www.sbsibank.by/right.asp");
+            // get response
+            //using ()
+            //{
+                var response = (HttpWebResponse) request.GetResponse();
+                var responseStream = response.GetResponseStream();
+                if (responseStream != null)
+                {
+                    //var responseText = new StreamReader(responseStream).ReadToEnd();
+                    //Log.InfoFormat("right.asp response body is: {0}", responseText);
+                    return new StreamReader(responseStream);
+                }
+                return null;
+            //}
         }
     }
 
     class Program
     {
-        static void Main(string[] args)
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+
+        public static void ParseCardList(StreamReader content)
         {
-            var loginRequest = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/login.asp");
-            loginRequest.Method = "POST";
-            var cookieContainer = new CookieContainer();
-            loginRequest.CookieContainer = cookieContainer;
-            loginRequest.ContentType = "application/x-www-form-urlencoded";
-            var encoding = new ASCIIEncoding();
-            const string postData = "S1=0175&T1=FQ529&C1=ON&T2=XUI4K&B1=%C4%E0%EB%E5%E5";
-            var data = encoding.GetBytes(postData);
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.Load(content);
+            var html = htmlDocument.DocumentNode;
 
-            loginRequest.ContentLength = postData.Length;
-            Console.WriteLine("Openning " + "https://www.sbsibank.by/login.asp?mode=1" + " with content: " + postData);
-
-            Stream dataStream = loginRequest.GetRequestStream();
-            dataStream.Write(data, 0, data.Length);
-            dataStream.Close();
-            string result = string.Empty;
-            
-            var response = loginRequest.GetResponse();
-
-            var responseStream = response.GetResponseStream();
-            if (responseStream != null)
+            var cards = html.CssSelect("input[type=radio][name=R1]");
+            foreach (var card in cards.Where(card => card.HasAttributes))
             {
-                var reader = new StreamReader(responseStream, Encoding.UTF8);
-                result = reader.ReadToEnd();
+                Log.InfoFormat("Card name: {0}", card.NextSibling.OuterHtml);
+                var cardId = card.Attributes["Value"];
+                if (cardId != null)
+                {
+                    Log.InfoFormat("Card id: {0}", cardId.Value);
+                }
             }
-            //Console.WriteLine("Result : " + result);
+        }
 
-            var setcookie = response.Headers["Set-Cookie"];
-            Console.WriteLine("Set-Cookie: " + setcookie);
-
-            var cookieSet = setcookie.Substring(0, setcookie.IndexOf(';')).Split('=');
-            var cookieHeader = cookieSet[0];
-            var cookieValue = cookieSet[1];
-            // new request
-
-            var accountsRequest = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/right.asp");
-            accountsRequest.Method = "POST";
-            var cookie = new CookieContainer();
-            cookie.Add(new Cookie(cookieHeader, cookieValue, "/"));
-            accountsRequest.CookieContainer = cookie;
-            accountsRequest.ContentType = "application/x-www-form-urlencoded";
-
-            //const string postData = "S1=0175&T1=FQ529&C1=ON&T2=XUI4K&B1=%C4%E0%EB%E5%E5";
-            //var data = encoding.GetBytes(postData);
-
-            loginRequest.ContentLength = 0; // postData.Length;
-            Console.WriteLine("Openning " + "https://www.sbsibank.by/login.asp?mode=1" + " with content: " + postData);
-
-            var rightDataStream = loginRequest.GetRequestStream();
-            rightDataStream.Write(data, 0, data.Length);
-            rightDataStream.Close();
-            var result2 = string.Empty;
-
-            var res = loginRequest.GetResponse();
-
-            var resStream = response.GetResponseStream();
-            if (resStream != null)
+        static void Main()
+        {
+            XmlConfigurator.Configure();
+            SampleClient.GetLogin();
+            if (SampleClient.Connect() == HttpStatusCode.OK)
             {
-                var reader = new StreamReader(resStream, Encoding.UTF8);
-                result2 = reader.ReadToEnd();
+                var stream = SampleClient.GetRight();
+                ParseCardList(stream);
             }
-
-            //var client = new HttpClient {BaseAddress = new Uri("https://sbsibank.by")};
-            //var request = new HttpRequestMessage(HttpMethod.Get, "right.asp");
-            //request.Headers.Add("Cookie", setcookie);
-
-            //var rightResponseMessage = client.Send(request);
-            
-            ////var cardHistory = client.Get("card_history.asp");
-            ////var cardHistoryResponseMessage = cardHistory.EnsureSuccessStatusCode();
-            ////var cardHistoryContent = cardHistoryResponseMessage.Content;
-
-            //var htmlDocument = new HtmlDocument();
-            //htmlDocument.Load(rightResponseMessage.Content.ContentReadStream);
-            ////htmlDocument.Load(@"CardList.htm");
-            //var html = htmlDocument.DocumentNode;
-
-            //var cards = html.CssSelect("input[type=radio][name=R1]");
-            //foreach (var card in cards.Where(card => card.HasAttributes))
-            //{
-            //    Console.WriteLine("Card name: " + card.NextSibling.OuterHtml);
-            //    var cardId = card.Attributes["Value"];
-            //    if (cardId != null)
-            //    {
-            //        Console.WriteLine("Card id: " + cardId.Value);
-            //    }
-            //}
-            //using (var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse())
-            //{
-            //    Console.WriteLine("Received status code: " + httpWebResponse.StatusCode);
-            //    if (httpWebResponse.StatusCode == HttpStatusCode.OK)
-            //    {
-            //        cookies = httpWebResponse.Cookies;
-            //        Console.WriteLine("Cookies: " + cookies[0]);
-            //    }
-            //}
-                
-            //using (var client = new HttpClient())
-            //{
-            //    var reportRequestContent = new StringContent("FromDate=01%2F10%2F2011&ToDate=17%2F10%2F2011");
-            //    Console.WriteLine("Openning " + "https://www.sbsibank.by/addreptask.asp" + " with content: " +
-            //                         reportRequestContent);
-            //    var responseReportRequest = client.Post("https://www.sbsibank.by/addreptask.asp",
-            //                                            reportRequestContent);
-            //    var location = responseReportRequest.Headers.Location;
-            //}
             Console.ReadLine();
         }
     }

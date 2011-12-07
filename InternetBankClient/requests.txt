@@ -1,0 +1,71 @@
+LOGOUT
+
+request
+
+GET https://www.sbsibank.by/login.asp?mode=5 HTTP/1.1
+Host: www.sbsibank.by
+Connection: keep-alive
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.121 Safari/535.2
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Referer: https://www.sbsibank.by/redirect.asp?pg=login.asp?mode=5&ld=N&t=0
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: en-US,en;q=0.8,ru;q=0.6
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3
+Cookie: ASPSESSIONIDSACDARTC=GJHLOGGBMFKPPPEADPICCDOF; ASPSESSIONIDQCAADQTD=JDKHJILCOHOPEDIIPDJINIMF; UN=FQ529; C1=checked; S1=0175
+
+response
+
+HTTP/1.1 200 OK
+Cache-Control: private
+Content-Length: 4863
+Content-Type: text/html
+X-Powered-By: ASP.NET
+Date: Wed, 07 Dec 2011 00:10:11 GMT
+
+
+LOGIN
+
+POST https://www.sbsibank.by/login.asp?mode=1 HTTP/1.1
+Host: www.sbsibank.by
+Connection: keep-alive
+Content-Length: 50
+Cache-Control: max-age=0
+Origin: https://www.sbsibank.by
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.121 Safari/535.2
+Content-Type: application/x-www-form-urlencoded
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Referer: https://www.sbsibank.by/login.asp?mode=5
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: en-US,en;q=0.8,ru;q=0.6
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3
+Cookie: ASPSESSIONIDSACDARTC=GJHLOGGBMFKPPPEADPICCDOF; ASPSESSIONIDQCAADQTD=JDKHJILCOHOPEDIIPDJINIMF; UN=FQ529; C1=checked; S1=0175
+
+S1=0175&T1=FQ529&C1=ON&T2=XUI4K&B1=%C4%E0%EB%E5%E5
+
+GET HOME
+
+GET https://www.sbsibank.by/home.asp HTTP/1.1
+Host: www.sbsibank.by
+Connection: keep-alive
+Cache-Control: max-age=0
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.121 Safari/535.2
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Referer: https://www.sbsibank.by/login.asp?mode=5
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: en-US,en;q=0.8,ru;q=0.6
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3
+Cookie: ASPSESSIONIDSACDARTC=GJHLOGGBMFKPPPEADPICCDOF; ASPSESSIONIDQCAADQTD=JDKHJILCOHOPEDIIPDJINIMF; UN=FQ529; C1=checked; S1=0175
+
+GET CARDS
+
+GET https://www.sbsibank.by/right.asp HTTP/1.1
+Host: www.sbsibank.by
+Connection: keep-alive
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.121 Safari/535.2
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Referer: https://www.sbsibank.by/home.asp
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: en-US,en;q=0.8,ru;q=0.6
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3
+Cookie: ASPSESSIONIDSACDARTC=GJHLOGGBMFKPPPEADPICCDOF; ASPSESSIONIDQCAADQTD=JDKHJILCOHOPEDIIPDJINIMF; UN=FQ529; C1=checked; S1=0175
+
