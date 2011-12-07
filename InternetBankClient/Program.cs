@@ -134,32 +134,37 @@ namespace InternetBankClient
                 var responseStream = response.GetResponseStream();
                 if (responseStream != null)
                 {
-                    return ParseHtmlHelper.ParseCardList(new StreamReader(responseStream));
+                    return ParseHtmlHelper.ParseCardList(new StreamReader(responseStream, Encoding.GetEncoding(1251)));
                 }
                 return null;
             }
         }
 
-        public static bool ChangeCurrentCard(string newCardId)
+        public static bool ChangeCurrentCard(PaymentCard card)
         {
-            // initialize right.asp get request
+            // initialize mbottom.asp get request
             var request = (HttpWebRequest)WebRequest.Create(
-                String.Concat("https://www.sbsibank.by/mbottom.asp?crd_id=", newCardId));
+                String.Concat("https://www.sbsibank.by/mbottom.asp?crd_id=", card.Id));
             AddCommonHeadersToHttpRequest(request);
             request.Referer = "https://www.sbsibank.by/right.asp";
 
             // get response
-            Log.InfoFormat("Change current card id to {0} at https://www.sbsibank.by/mbottom.asp?crd_id={0}", newCardId);
+            Log.InfoFormat("Change current card id to {0} at https://www.sbsibank.by/mbottom.asp?crd_id={0}", card.Id);
             // get response
             using (var response = (HttpWebResponse)request.GetResponse())
             {
-                return response.StatusCode == HttpStatusCode.OK;
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    _currentCard = card;
+                    return true;
+                }
             }
+            return false;
         }
 
         public static bool GetCurrentCardBalance(out string currency, out decimal balance)
         {
-            // initialize right.asp get request
+            // initialize balance.asp get request
             var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/balance.asp");
             AddCommonHeadersToHttpRequest(request);
             request.Referer = "https://www.sbsibank.by/home.asp";
@@ -175,10 +180,43 @@ namespace InternetBankClient
                 if (responseStream != null)
                 {
                     string strBalance;
-                    ParseHtmlHelper.ParseBalance(new StreamReader(responseStream), out strBalance, out currency);
+                    ParseHtmlHelper.ParseBalance(new StreamReader(responseStream, Encoding.GetEncoding(1251)), out strBalance, out currency);
                     strBalance = String.Join(null, Regex.Split(strBalance, "[^\\d]"));
                     balance = Decimal.Parse(strBalance);
                     Log.InfoFormat("Balance is {0}", balance);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool GetCurrentCardHistory()
+        {
+            // initialize card_history.asp get request
+            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/card_history.asp");
+            AddCommonHeadersToHttpRequest(request);
+            request.Referer = "https://www.sbsibank.by/right.asp";
+
+            // get response
+            Log.Info("Open https://www.sbsibank.by/card_history.asp");
+
+            // get response
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                var responseStream = response.GetResponseStream();
+                if (responseStream != null)
+                {
+                    string status;
+                    DateTime registerDate;
+                    DateTime cancelDate;
+                    ParseHtmlHelper.ParseCardHistory(new StreamReader(responseStream, Encoding.GetEncoding(1251)), out status, out registerDate, out cancelDate);
+
+                    _currentCard.Status = status;
+                    _currentCard.RegisterDate = registerDate;
+                    _currentCard.CancelDate = cancelDate;
+                    Log.InfoFormat("Status is {0}", status);
+                    Log.InfoFormat("Register Date is {0}", registerDate);
+                    Log.InfoFormat("Cancel Date is {0}", cancelDate);
                     return true;
                 }
             }
@@ -201,13 +239,17 @@ namespace InternetBankClient
                 var cards = SampleClient.GetCardList();
                 foreach (var paymentCard in cards)
                 {
-                    if (SampleClient.ChangeCurrentCard(paymentCard.Id))
+                    if (SampleClient.ChangeCurrentCard(paymentCard))
                     {
+                        // get currency and balance
                         decimal balance;
                         string currency;
                         SampleClient.GetCurrentCardBalance(out currency, out balance);
                         paymentCard.Currency = currency;
                         paymentCard.Balance = balance;
+
+                        // get registered date, cancelation date and status
+                        SampleClient.GetCurrentCardHistory();
                     }
                 }
             }

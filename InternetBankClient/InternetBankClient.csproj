@@ -161,6 +161,7 @@
     <Content Include="CardList.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="card_history.htm" />
     <Content Include="left.htm" />
     <Content Include="Report.htm" />
   </ItemGroup>

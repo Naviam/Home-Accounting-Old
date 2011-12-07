@@ -15,8 +15,8 @@ namespace InternetBankClient
         public string Name { get; set; }
         public string Currency { get; set; }
         public decimal Balance { get; set; }
-        public DateTime RegisteredDate { get; set; }
-        public DateTime CancelationDate { get; set; }
+        public DateTime RegisterDate { get; set; }
+        public DateTime CancelDate { get; set; }
         public string Status { get; set; }
     }
 
@@ -67,6 +67,44 @@ namespace InternetBankClient
             currency = balanceArray[1];
 
             Log.InfoFormat("Balance: {0} and currency: {1}", balance, currency);
+        }
+
+        public static void ParseCardHistory(StreamReader content, out string status, out DateTime registerDate, out DateTime cancelDate)
+        {
+            var htmlDocument = new HtmlDocument();
+            
+            htmlDocument.Load(content);
+            var html = htmlDocument.DocumentNode;
+            status = null;
+            registerDate = DateTime.MinValue;
+            cancelDate = DateTime.MinValue;
+
+            var historyRow = html.CssSelect("table[cellspacing=5]").CssSelect("tr").ElementAt(1);
+
+            if (historyRow != null)
+            {
+                // get status
+                var statusElement = historyRow.CssSelect("td").ElementAt(1).CssSelect("b > font").FirstOrDefault(); //:eq(1) > b > font
+                if (statusElement != null)
+                {
+                    status = statusElement.InnerText.Trim();
+                }
+
+                // get register date
+                var registerDateElement = historyRow.CssSelect("td").ElementAt(2);
+                if (registerDateElement != null)
+                {
+                    DateTime.TryParse(registerDateElement.InnerText.Trim(), out registerDate);
+
+                }
+
+                // get cancel date
+                var cancelDateElement = historyRow.CssSelect("td").ElementAt(3);
+                if (cancelDateElement != null)
+                {
+                    DateTime.TryParse(cancelDateElement.InnerText.Trim(), out cancelDate);
+                }
+            }
         }
     }
 }
