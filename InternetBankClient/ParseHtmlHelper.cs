@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using ScrapySharp.Extensions;
@@ -16,7 +15,15 @@ namespace InternetBankClient
         public DateTime PeriodEndDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Id { get; set; }
+        public bool IsCreated { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("Range {0} - {1} is {2}",
+                PeriodStartDate.Date.ToShortDateString(), PeriodEndDate.Date.ToShortDateString(), IsCreated ? "created" : "not created");
+        }
     }
+
     public class PaymentCard
     {
         public string Id { get; set; }

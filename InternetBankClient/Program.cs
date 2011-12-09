@@ -259,7 +259,8 @@ namespace InternetBankClient
 
                             if (range == null) continue;
 
-                            Log.InfoFormat("Prepared range. start: {0} end: {1}", range.PeriodStartDate.Date, range.PeriodEndDate.Date);
+                            range.IsCreated = true;
+                            Log.Info(range.ToString());
 
                             if (range.PeriodStartDate > startDate)
                             {
@@ -272,32 +273,31 @@ namespace InternetBankClient
                                         var createReport = new ReportRow
                                                                {
                                                                    PeriodStartDate = start,
-                                                                   PeriodEndDate = end
+                                                                   PeriodEndDate = end,
+                                                                   IsCreated = false
                                                                };
                                         reportsToCreate.Add(createReport);
-                                        Log.InfoFormat("Range to create. start: {0} end: {1}", 
-                                            createReport.PeriodStartDate.Date, createReport.PeriodEndDate.Date);
+                                        Log.Info(createReport.ToString());
 
-                                        start = end;
+                                        start = end.AddDays(1);
                                     }
                                     else
                                     {
                                         var createReport = new ReportRow
                                         {
                                             PeriodStartDate = start,
-                                            PeriodEndDate = range.PeriodStartDate
+                                            PeriodEndDate = range.PeriodStartDate.AddDays(-1),
+                                            IsCreated = false
                                         };
                                         reportsToCreate.Add(createReport);
-                                        Log.InfoFormat("Range to create. start: {0} end: {1}", 
-                                            createReport.PeriodStartDate.Date, createReport.PeriodEndDate.Date);
-                                        start = range.PeriodStartDate;
+                                        Log.Info(createReport.ToString());
+                                        start = range.PeriodStartDate.AddDays(1);
                                     }
                                     
                                 } while (start < range.PeriodStartDate);
                             }
-
                             preparedRanges.Add(range);
-                            startDate = range.PeriodEndDate;
+                            startDate = range.PeriodEndDate.AddDays(1);
                         } while (range != null);
                     }
 
@@ -310,24 +310,24 @@ namespace InternetBankClient
                             var createReport = new ReportRow
                             {
                                 PeriodStartDate = start2,
-                                PeriodEndDate = end
+                                PeriodEndDate = end,
+                                IsCreated = false
                             };
                             reportsToCreate.Add(createReport);
-                            Log.InfoFormat("Range to create. start: {0} end: {1}",
-                                createReport.PeriodStartDate.Date, createReport.PeriodEndDate.Date);
+                            Log.Info(createReport.ToString());
 
-                            start2 = end;
+                            start2 = end.AddDays(1);
                         }
                         else
                         {
                             var createReport = new ReportRow
                             {
                                 PeriodStartDate = start2,
-                                PeriodEndDate = endDate
+                                PeriodEndDate = endDate,
+                                IsCreated = false
                             };
                             reportsToCreate.Add(createReport);
-                            Log.InfoFormat("Range to create. start: {0} end: {1}",
-                                createReport.PeriodStartDate.Date, createReport.PeriodEndDate.Date);
+                            Log.Info(createReport.ToString());
                             start2 = endDate;
                         }
 
