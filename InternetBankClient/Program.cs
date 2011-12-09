@@ -38,6 +38,8 @@ namespace InternetBankClient
 
         private static PaymentCard _currentCard;
 
+        private static int _maxDaysPeriod = 170;
+
         // callback used to validate the certificate in an SSL conversation
         private static bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors policyErrors)
         {
@@ -199,8 +201,6 @@ namespace InternetBankClient
 
             // get response
             Log.Info("Open https://www.sbsibank.by/card_history.asp");
-
-            // get response
             using (var response = (HttpWebResponse)request.GetResponse())
             {
                 var responseStream = response.GetResponseStream();
@@ -221,6 +221,125 @@ namespace InternetBankClient
                 }
             }
             return false;
+        }
+
+        public static void GetListOfUsedStatements(DateTime startDate)
+        {
+            if (startDate == DateTime.MinValue)
+                startDate = _currentCard.RegisterDate;
+
+            // initialize statementA.asp get request
+            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/statementA.asp");
+            AddCommonHeadersToHttpRequest(request);
+            request.Referer = "https://www.sbsibank.by/left.asp";
+
+            // get response
+            Log.Info("Open https://www.sbsibank.by/statementA.asp");
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                var responseStream = response.GetResponseStream();
+                if (responseStream != null)
+                {
+                    var reports = ParseHtmlHelper.ParseStatementsList(new StreamReader(responseStream, Encoding.GetEncoding(1251)));
+                    var endDate = DateTime.UtcNow.AddDays(-1);
+
+                    var preparedRanges = new List<ReportRow>();
+                    var reportsToCreate = new List<ReportRow>();
+                    if (reports != null)
+                    {
+                        ReportRow range = null;
+                        do
+                        {
+                            if (startDate > endDate) continue;
+
+                            range = reports.Where(r => r.PeriodStartDate <= startDate && r.PeriodEndDate > startDate)
+                                        .OrderByDescending(r => r.PeriodEndDate).FirstOrDefault() ??
+                                    reports.Where(r => r.PeriodStartDate > startDate).OrderBy(r => r.PeriodStartDate)
+                                        .FirstOrDefault();
+
+                            if (range == null) continue;
+
+                            Log.InfoFormat("Prepared range. start: {0} end: {1}", range.PeriodStartDate.Date, range.PeriodEndDate.Date);
+
+                            if (range.PeriodStartDate > startDate)
+                            {
+                                var start = startDate;
+                                do
+                                {
+                                    if (DaysBetween(range.PeriodStartDate, start) > _maxDaysPeriod)
+                                    {
+                                        var end = start.AddDays(_maxDaysPeriod);
+                                        var createReport = new ReportRow
+                                                               {
+                                                                   PeriodStartDate = start,
+                                                                   PeriodEndDate = end
+                                                               };
+                                        reportsToCreate.Add(createReport);
+                                        Log.InfoFormat("Range to create. start: {0} end: {1}", 
+                                            createReport.PeriodStartDate.Date, createReport.PeriodEndDate.Date);
+
+                                        start = end;
+                                    }
+                                    else
+                                    {
+                                        var createReport = new ReportRow
+                                        {
+                                            PeriodStartDate = start,
+                                            PeriodEndDate = range.PeriodStartDate
+                                        };
+                                        reportsToCreate.Add(createReport);
+                                        Log.InfoFormat("Range to create. start: {0} end: {1}", 
+                                            createReport.PeriodStartDate.Date, createReport.PeriodEndDate.Date);
+                                        start = range.PeriodStartDate;
+                                    }
+                                    
+                                } while (start < range.PeriodStartDate);
+                            }
+
+                            preparedRanges.Add(range);
+                            startDate = range.PeriodEndDate;
+                        } while (range != null);
+                    }
+
+                    var start2 = startDate;
+                    do
+                    {
+                        if (DaysBetween(endDate, start2) > _maxDaysPeriod)
+                        {
+                            var end = start2.AddDays(_maxDaysPeriod);
+                            var createReport = new ReportRow
+                            {
+                                PeriodStartDate = start2,
+                                PeriodEndDate = end
+                            };
+                            reportsToCreate.Add(createReport);
+                            Log.InfoFormat("Range to create. start: {0} end: {1}",
+                                createReport.PeriodStartDate.Date, createReport.PeriodEndDate.Date);
+
+                            start2 = end;
+                        }
+                        else
+                        {
+                            var createReport = new ReportRow
+                            {
+                                PeriodStartDate = start2,
+                                PeriodEndDate = endDate
+                            };
+                            reportsToCreate.Add(createReport);
+                            Log.InfoFormat("Range to create. start: {0} end: {1}",
+                                createReport.PeriodStartDate.Date, createReport.PeriodEndDate.Date);
+                            start2 = endDate;
+                        }
+
+                    } while (start2 < endDate);
+                }
+            }
+        }
+
+        public static int DaysBetween(DateTime d1, DateTime d2)
+        {
+            var span = d2.Subtract(d1);
+            return Math.Abs((int)span.TotalDays);
         }
     }
 
@@ -250,6 +369,9 @@ namespace InternetBankClient
 
                         // get registered date, cancelation date and status
                         SampleClient.GetCurrentCardHistory();
+
+                        // get date ranges for obtaining transactions
+                        SampleClient.GetListOfUsedStatements(DateTime.MinValue);
                     }
                 }
             }

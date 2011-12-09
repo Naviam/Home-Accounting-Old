@@ -1,6 +1,6 @@
-LOGOUT
+###LOGOUT
 
-request
+#request
 
 GET https://www.sbsibank.by/login.asp?mode=5 HTTP/1.1
 Host: www.sbsibank.by
@@ -13,7 +13,7 @@ Accept-Language: en-US,en;q=0.8,ru;q=0.6
 Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3
 Cookie: ASPSESSIONIDSACDARTC=GJHLOGGBMFKPPPEADPICCDOF; ASPSESSIONIDQCAADQTD=JDKHJILCOHOPEDIIPDJINIMF; UN=FQ529; C1=checked; S1=0175
 
-response
+#response
 
 HTTP/1.1 200 OK
 Cache-Control: private
@@ -23,7 +23,7 @@ X-Powered-By: ASP.NET
 Date: Wed, 07 Dec 2011 00:10:11 GMT
 
 
-LOGIN
+###LOGIN
 
 POST https://www.sbsibank.by/login.asp?mode=1 HTTP/1.1
 Host: www.sbsibank.by
@@ -42,7 +42,7 @@ Cookie: ASPSESSIONIDSACDARTC=GJHLOGGBMFKPPPEADPICCDOF; ASPSESSIONIDQCAADQTD=JDKH
 
 S1=0175&T1=FQ529&C1=ON&T2=XUI4K&B1=%C4%E0%EB%E5%E5
 
-GET HOME
+###GET HOME
 
 GET https://www.sbsibank.by/home.asp HTTP/1.1
 Host: www.sbsibank.by
@@ -56,7 +56,7 @@ Accept-Language: en-US,en;q=0.8,ru;q=0.6
 Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3
 Cookie: ASPSESSIONIDSACDARTC=GJHLOGGBMFKPPPEADPICCDOF; ASPSESSIONIDQCAADQTD=JDKHJILCOHOPEDIIPDJINIMF; UN=FQ529; C1=checked; S1=0175
 
-GET CARDS
+###GET CARDS
 
 GET https://www.sbsibank.by/right.asp HTTP/1.1
 Host: www.sbsibank.by
@@ -69,7 +69,7 @@ Accept-Language: en-US,en;q=0.8,ru;q=0.6
 Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3
 Cookie: ASPSESSIONIDSACDARTC=GJHLOGGBMFKPPPEADPICCDOF; ASPSESSIONIDQCAADQTD=JDKHJILCOHOPEDIIPDJINIMF; UN=FQ529; C1=checked; S1=0175
 
-GET BALANCE OF CURRENT CARD
+###GET BALANCE OF CURRENT CARD
 
 GET https://www.sbsibank.by/balance.asp HTTP/1.1
 Host: www.sbsibank.by
@@ -82,7 +82,7 @@ Connection: keep-alive
 Referer: https://www.sbsibank.by/left.asp
 Cookie: UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDQACBBRTD=CGJPMDMCDPAOCANNGNJMKHNE; ASPSESSIONIDQABDAQSD=DCOHLMGDDEGAMHABLILICAGN; ASPSESSIONIDSAAADRSC=MADADOLANDGKDAJJPCJIAOFN; ASPSESSIONIDSACDARTC=AHMLOGGBGEIEGAKGNMHLBEPH; ASPSESSIONIDSAADBQTC=HHJMPPACGAJPAKNOLAGBKCAD; ASPSESSIONIDQCAADQTD=OGEHJILCBLFFGIOEJFJGDLPN; ASPSESSIONIDQAAADQTC=IMCMFBGDBAIMDLGMDGPMJLCJ
 
-CHANGE CURRENT CARD
+###CHANGE CURRENT CARD
 
 GET https://www.sbsibank.by/mbottom.asp?crd_id=1446491 HTTP/1.1
 Host: www.sbsibank.by
@@ -95,12 +95,12 @@ Connection: keep-alive
 Referer: https://www.sbsibank.by/right.asp
 Cookie: UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDQACBBRTD=CGJPMDMCDPAOCANNGNJMKHNE; ASPSESSIONIDQABDAQSD=DCOHLMGDDEGAMHABLILICAGN; ASPSESSIONIDSAAADRSC=MADADOLANDGKDAJJPCJIAOFN; ASPSESSIONIDSACDARTC=AHMLOGGBGEIEGAKGNMHLBEPH; ASPSESSIONIDSAADBQTC=HHJMPPACGAJPAKNOLAGBKCAD; ASPSESSIONIDQCAADQTD=OGEHJILCBLFFGIOEJFJGDLPN; ASPSESSIONIDQAAADQTC=IMCMFBGDBAIMDLGMDGPMJLCJ
 
-GET CARD HISTORY
+###GET CARD HISTORY
 
 GET https://www.sbsibank.by/card_history.asp HTTP/1.1
 Host: www.sbsibank.by
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept: text/html,application/xh5tml+xml,application/xml;q=0.9,*/*;q=0.8
 Accept-Language: en-us,en;q=0.5
 Accept-Encoding: gzip, deflate
 Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
@@ -108,3 +108,50 @@ Connection: keep-alive
 Referer: https://www.sbsibank.by/right.asp
 Cookie: UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDQACBBRTD=CGJPMDMCDPAOCANNGNJMKHNE; ASPSESSIONIDQABDAQSD=DCOHLMGDDEGAMHABLILICAGN; ASPSESSIONIDSAAADRSC=MADADOLANDGKDAJJPCJIAOFN; ASPSESSIONIDSACDARTC=AHMLOGGBGEIEGAKGNMHLBEPH; ASPSESSIONIDSAADBQTC=HHJMPPACGAJPAKNOLAGBKCAD; ASPSESSIONIDQCAADQTD=OGEHJILCBLFFGIOEJFJGDLPN; ASPSESSIONIDQAAADQTC=IMCMFBGDBAIMDLGMDGPMJLCJ
 
+###GET LIST OF GENERATED REPORTS
+
+#request
+
+GET https://www.sbsibank.by/statementA.asp HTTP/1.1
+Host: www.sbsibank.by
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip, deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Connection: keep-alive
+Referer: https://www.sbsibank.by/left.asp
+Cookie: UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDQACBBRTD=CGJPMDMCDPAOCANNGNJMKHNE; ASPSESSIONIDQABDAQSD=DCOHLMGDDEGAMHABLILICAGN; ASPSESSIONIDSAAADRSC=MADADOLANDGKDAJJPCJIAOFN; ASPSESSIONIDSACDARTC=AHMLOGGBGEIEGAKGNMHLBEPH; ASPSESSIONIDSAADBQTC=HHJMPPACGAJPAKNOLAGBKCAD; ASPSESSIONIDQCAADQTD=OGEHJILCBLFFGIOEJFJGDLPN; ASPSESSIONIDQAAADQTC=IMCMFBGDBAIMDLGMDGPMJLCJ
+
+###SET PERIOD FOR REPORTS
+
+#request
+
+POST https://www.sbsibank.by/addreptask.asp HTTP/1.1
+Host: www.sbsibank.by
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip, deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Connection: keep-alive
+Referer: https://www.sbsibank.by/addreptask.asp
+Cookie: UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDQACBBRTD=CGJPMDMCDPAOCANNGNJMKHNE; ASPSESSIONIDQABDAQSD=DCOHLMGDDEGAMHABLILICAGN; ASPSESSIONIDSAAADRSC=MADADOLANDGKDAJJPCJIAOFN; ASPSESSIONIDSACDARTC=AHMLOGGBGEIEGAKGNMHLBEPH; ASPSESSIONIDSAADBQTC=HHJMPPACGAJPAKNOLAGBKCAD; ASPSESSIONIDQCAADQTD=OGEHJILCBLFFGIOEJFJGDLPN; ASPSESSIONIDQAAADQTC=IMCMFBGDBAIMDLGMDGPMJLCJ
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 45
+
+FromDate=11%2F02%2F2010&ToDate=01%2F05%2F2010
+
+
+#response
+
+HTTP/1.1 302 Object moved
+Cache-Control: private
+Content-Length: 139
+Content-Type: text/html
+Location: show.asp?id=120946
+X-Powered-By: ASP.NET
+Date: Wed, 07 Dec 2011 13:53:42 GMT
+
+<head><title>Object moved</title></head>
+<body><h1>Object Moved</h1>This object may be found <a HREF="show.asp?id=120946">here</a>.</body>

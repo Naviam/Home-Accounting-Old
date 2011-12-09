@@ -124,6 +124,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InternetBankSettings.cs" />
     <Compile Include="ParseHtmlHelper.cs" />
     <Compile Include="Program.cs">
       <SubType>Component</SubType>
@@ -132,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Graph1.dgml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +166,8 @@
     <Content Include="card_history.htm" />
     <Content Include="left.htm" />
     <Content Include="Report.htm" />
+    <Content Include="requests.txt" />
+    <Content Include="Statements.htm" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
