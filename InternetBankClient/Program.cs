@@ -8,8 +8,6 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
-using HtmlAgilityPack;
-using ScrapySharp.Extensions;
 using log4net;
 using log4net.Config;
 
@@ -223,7 +221,7 @@ namespace InternetBankClient
             return false;
         }
 
-        public static void GetListOfUsedStatements(DateTime startDate)
+        public static IEnumerable<ReportRow> GetListOfUsedStatements(DateTime startDate)
         {
             if (startDate == DateTime.MinValue)
                 startDate = _currentCard.RegisterDate;
@@ -332,14 +330,45 @@ namespace InternetBankClient
                         }
 
                     } while (start2 < endDate);
+
+                    return preparedRanges;
                 }
             }
+            return null;
         }
 
         public static int DaysBetween(DateTime d1, DateTime d2)
         {
             var span = d2.Subtract(d1);
             return Math.Abs((int)span.TotalDays);
+        }
+
+        public static void CreateReport(ReportRow range)
+        {
+            
+        }
+
+        public static bool GetReportData(string id)
+        {
+            var url = String.Format("https://www.sbsibank.by/show.asp?id={0}", id);
+            // initialize card_history.asp get request
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            AddCommonHeadersToHttpRequest(request);
+            request.Referer = "https://www.sbsibank.by/statementA.asp";
+
+            // get response
+            Log.InfoFormat("Open {0}", url);
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                var responseStream = response.GetResponseStream();
+                if (responseStream != null)
+                {
+                    ParseHtmlHelper.ParseReport(new StreamReader(responseStream, Encoding.GetEncoding(1251)));
+
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -371,7 +400,12 @@ namespace InternetBankClient
                         SampleClient.GetCurrentCardHistory();
 
                         // get date ranges for obtaining transactions
-                        SampleClient.GetListOfUsedStatements(DateTime.MinValue);
+                        var ranges = SampleClient.GetListOfUsedStatements(DateTime.MinValue);
+
+                        foreach (var range in ranges)
+                        {
+                            SampleClient.GetReportData(range.Id);
+                        }
                     }
                 }
             }

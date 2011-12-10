@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
+using Naviam.Data;
 using ScrapySharp.Extensions;
 using log4net;
 
@@ -19,8 +20,8 @@ namespace InternetBankClient
 
         public override string ToString()
         {
-            return String.Format("Range {0} - {1} is {2}",
-                PeriodStartDate.Date.ToShortDateString(), PeriodEndDate.Date.ToShortDateString(), IsCreated ? "created" : "not created");
+            return String.Format("Range id {3} with period {0} - {1} is {2}",
+                PeriodStartDate.Date.ToShortDateString(), PeriodEndDate.Date.ToShortDateString(), IsCreated ? "created" : "not created", Id);
         }
     }
 
@@ -138,5 +139,50 @@ namespace InternetBankClient
                                 Id = String.Join(null, Regex.Split(columns.ElementAt(3).CssSelect("a").FirstOrDefault().Attributes["href"].Value, "[^\\d]"))
                             });
         }
+
+        public static Report ParseReport(StreamReader content)
+        {
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.Load(content);
+            var html = htmlDocument.DocumentNode;
+
+            var currency = html.CssSelect("tr:nth-child(11) tt");
+            var cardNumber = html.CssSelect("tr:nth-child(9) b tt");
+            var startDate = html.CssSelect("tr:nth-child(14) b tt");
+            var endDate = html.CssSelect("font:nth-child(4) tt");
+            var report = new Report();
+            var trans = new List<Transaction>();
+            var records = html.CssSelect("tr").Where(r => r.InnerHtml.Contains("<td width=\"55\" colspan=\"3\" rowspan=\"2\">"));
+
+            foreach(var record in records)
+            {
+                var values = record.CssSelect("tt");
+                trans.Add(new Transaction
+                                      {
+                                          TransactionType = TransactionTypes.Statement,
+                                          Direction = TransactionDirections.Expense,
+                                          CurrencyId = 1, // values.ElementAt(3).InnerText.Trim()
+                                          Description = values.ElementAt(1).InnerText.Trim().Replace("&nbsp;", " "),
+                                          Date = DateTime.Parse(values.ElementAt(0).InnerText.Trim()),
+                                          Amount = Decimal.Parse(values.ElementAt(2).InnerText.Trim().Replace("&nbsp;", " "))
+                                      });
+                Log.InfoFormat("Record - Date {0} : Amount: {1} Description : {2}",
+                    values.ElementAt(0).InnerText.Trim(), values.ElementAt(2).InnerText.Trim(), values.ElementAt(1).InnerText.Trim());
+            }
+            report.Transactions = trans;
+            return report;
+        }
+    }
+
+    internal class Report
+    {
+        public string CardNumber { get; set; }
+        public DateTime GeneratedDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string Currency { get; set; }
+        public decimal BlockedAmount { get; set; }
+        public decimal StartBalance { get; set; }
+        public IEnumerable<Transaction> Transactions { get; set; }
     }
 }

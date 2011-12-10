@@ -169,6 +169,12 @@
     <Content Include="requests.txt" />
     <Content Include="Statements.htm" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Naviam.DAL\Naviam.DAL.csproj">
+      <Project>{76C27277-26E3-442E-B136-A4526A57A0AB}</Project>
+      <Name>Naviam.DAL</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
