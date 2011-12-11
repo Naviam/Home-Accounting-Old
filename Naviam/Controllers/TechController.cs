@@ -50,7 +50,7 @@ namespace Naviam.WebUI.Controllers
         }
 
         //[AsyncTimeout(10000)]
-        public void ListDatesAsync(int daysCount, int countryId)
+        public void ListDatesAsync(int? daysCount, int? countryId)
         {
             AsyncManager.OutstandingOperations.Increment();
             Task.Factory.StartNew(() =>

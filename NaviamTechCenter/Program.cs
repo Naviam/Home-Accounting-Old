@@ -31,11 +31,11 @@ namespace NaviamTechCenter
             Timer ratesUpdateTimer = new Timer(timerCallback1, new AutoResetEvent(false), dueTime, period);
 
             //set categories info refresh timer
-            CategoriesMerchantsUpdater categoriesMerchantsUpdater = new CategoriesMerchantsUpdater();
-            TimerCallback timerCallback2 = categoriesMerchantsUpdater.Update;
-            dueTime = 1000 * 60 * int.Parse(ConfigurationManager.AppSettings["cat_start_after"]);
-            period = 1000 * 60 * int.Parse(ConfigurationManager.AppSettings["cat_update_interval"]);
-            Timer categoriesMerchantsUpdateTimer = new Timer(timerCallback2, new AutoResetEvent(false), dueTime, period);
+            //CategoriesMerchantsUpdater categoriesMerchantsUpdater = new CategoriesMerchantsUpdater();
+            //TimerCallback timerCallback2 = categoriesMerchantsUpdater.Update;
+            //dueTime = 1000 * 60 * int.Parse(ConfigurationManager.AppSettings["cat_start_after"]);
+            //period = 1000 * 60 * int.Parse(ConfigurationManager.AppSettings["cat_update_interval"]);
+            //Timer categoriesMerchantsUpdateTimer = new Timer(timerCallback2, new AutoResetEvent(false), dueTime, period);
 
             Console.Read();
         }

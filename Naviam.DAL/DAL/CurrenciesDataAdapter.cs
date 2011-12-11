@@ -63,7 +63,7 @@ namespace Naviam.DAL
             return res;
         }
 
-        public static List<string> GetRateAbsentDates(int daysCount, int countryId)
+        public static List<string> GetRateAbsentDates(int? daysCount, int? countryId)
         {
             List<string> res = new List<string>();
             using (var holder = SqlConnectionHelper.GetConnection())
