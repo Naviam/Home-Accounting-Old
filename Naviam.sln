@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBRBService", "NBRBService\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviamTechCenter", "NaviamTechCenter\NaviamTechCenter.csproj", "{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetBankClient", "InternetBankClient\InternetBankClient.csproj", "{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Naviam2.vsmdi
@@ -240,6 +242,21 @@ Global
 		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Release|Mixed Platforms.Build.0 = Release|x86
 		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Release|x86.ActiveCfg = Release|x86
 		{69C6F0E1-6242-49DC-BCCC-2FDF4AFE2827}.Release|x86.Build.0 = Release|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Debug|x86.ActiveCfg = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Debug|x86.Build.0 = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Deploy-Dev|Any CPU.ActiveCfg = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Deploy-Dev|Mixed Platforms.ActiveCfg = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Deploy-Dev|Mixed Platforms.Build.0 = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Deploy-Dev|x86.ActiveCfg = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Deploy-Dev|x86.Build.0 = Debug|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Release|Any CPU.ActiveCfg = Release|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Release|Mixed Platforms.Build.0 = Release|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Release|x86.ActiveCfg = Release|x86
+		{885D5D1A-28C0-43AE-97E7-0B04EAEC298F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

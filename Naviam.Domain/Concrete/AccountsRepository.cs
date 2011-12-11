@@ -99,8 +99,11 @@ namespace Naviam.Domain.Concrete
             if (res == 0)
             {
                 Account account = cache.GetFromList(CacheKey, new Account() { Id = accountId }, companyId);
-                account.Balance = account.Balance + value;
-                cache.UpdateList(CacheKey, account, companyId);
+                if (account != null)
+                {
+                    account.Balance = account.Balance + value;
+                    cache.UpdateList(CacheKey, account, companyId);
+                }
             }
             return res;
         }
@@ -112,8 +115,8 @@ namespace Naviam.Domain.Concrete
             Account res = null;
             //load from DB
             res = SmsDataAdapter.GetAccountBySms(cardNumber, id_modem, id_bank);
-            var res2 = cache.GetFromList(CacheKey, new Account() { Id = res.Id }, res.CompanyId);
-            if (res != null)
+            //res = cache.GetFromList(CacheKey, new Account() { Id = res.Id }, res.CompanyId);
+            if (res == null)
             {
                 //save to cache
                 //if (res2 == null) // not found in cache->add

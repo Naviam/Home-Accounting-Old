@@ -1,0 +1,97 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+    <title>�������� ����</title>
+    <link rel="stylesheet" type="text/css" href="inet.css">
+    <base target="main">
+    <script type="text/javascript" language="JavaScript"><!--
+
+        document.onclick = function () { if (top.is_code) return false; return true; }; function chc() { if (top.is_code) { for (var i = 0; i < mcards.R1.length; i++) { if (top.crd_id == mcards.R1[i].value) { mcards.R1[i].checked = true; mcards.R1[i].focus = true; } } return false; } return true; } function loadFrames(url1) { chc(); if (mcards.R1 && !top.is_code) { if (mcards.R1.value > 0) { top.crd_id = mcards.R1.value; } for (var i = 0; i < mcards.R1.length; i++) { if (mcards.R1[i].checked) { top.crd_id = mcards.R1[i].value; } } parent.main_b.location.href = url1 + top.crd_id; } return false; } function m_onload() { var default_idx = 0; var counter = 1; if (default_idx >= 0 && counter > 1) { mcards.R1[default_idx].checked = true; } if (default_idx >= 0 && counter == 1) { mcards.R1.checked = true; } loadFrames('mbottom.asp?crd_id='); }// --></script>
+</head>
+<body bgcolor="#EAEAEA" onload="m_onload()" oncontextmenu="return false">
+    <p>
+        <table cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='right'>
+                    <img src='pic/left_inf.gif' border="0" alt=''>
+                </td>
+                <td class="inf">
+                    ����� �����
+                </td>
+                <td>
+                    <img src='pic/right_inf.gif' border="0" alt=''>
+                </td>
+            </tr>
+        </table>
+    </p>
+    <form class="mainfnt" name="mcards" method="POST" action="">
+    <div style='line-height: 40%;'>
+        <b>
+            <input type='radio' onclick="loadFrames('mbottom.asp?crd_id=')" value='1446491' name='R1'
+                title='��'><span title='��'><i>4.3855 Visa ZP BYR</i></span><br>
+        </b>
+        <br>
+    </div>
+    <a class='int' id='HS11' title='������� �����' href='card_history.asp'>
+        <img class="mimg" src='pic/g.png' alt=''>������� �����</a><br>
+    </form>
+    <p>
+        <table cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='right'>
+                    <img src='pic/left_inf.gif' border="0" alt=''>
+                </td>
+                <td class="inf">
+                    ������, �������
+                </td>
+                <td>
+                    <img src='pic/right_inf.gif' border="0" alt=''>
+                </td>
+            </tr>
+        </table>
+    </p>
+    <a class="int" id="HS12" title="���������� ���" href="autopay_start.asp">
+        <img class="mimg" src="pic/ico_new.gif" alt="">���������� ���</a><br>
+    <p>
+        <table cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='right'>
+                    <img src='pic/left_inf.gif' border="0" alt=''>
+                </td>
+                <td class="inf">
+                    ���������
+                </td>
+                <td>
+                    <img src='pic/right_inf.gif' border="0" alt=''>
+                </td>
+            </tr>
+        </table>
+    </p>
+    <a class='int' id='HS14' title='���������� ������� ��������' href='card_management.asp'>
+        <img class='mimg' src='pic/ico_new.gif' border="0" alt=''>������ ����</a><br>
+    <a class="int" id="HS8" title="����� �������� ������" href="chcity_1.asp">
+        <img class="mimg" src="pic/g.png" alt="">������� ������</a><br>
+    <p>
+        <table cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='right'>
+                    <img src='pic/left_inf.gif' border="0" alt=''>
+                </td>
+                <td class="inf">
+                    ������������
+                </td>
+                <td>
+                    <img src='pic/right_inf.gif' border="0" alt=''>
+                </td>
+            </tr>
+        </table>
+    </p>
+    <a class="int" id="HS9" title="���������� ������� ����� " href="block_card_1.asp">
+        <img class="mimg" src="pic/g.png" alt="">���������� �����</a><br>
+    <a class="int" id="HS10" title="������� ������������ ���" href="change_pc.asp">
+        <img class="mimg" src="pic/g.png" alt="">������� ��</a><br>
+    <br>
+    <script type="text/javascript" src='info.js'></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+Login
+
+Host: www.sbsibank.by
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip, deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Connection: keep-alive
+Referer: https://www.sbsibank.by/login.asp
+Cookie: UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDQACBBRTD=CGJPMDMCDPAOCANNGNJMKHNE
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 50
+
+S1=0175&T1=FQ529&C1=ON&T2=XUI4K&B1=%C4%E0%EB%E5%E5
+
+Redirection to Home.asp
+
+GET https://www.sbsibank.by/home.asp HTTP/1.1
+Host: www.sbsibank.by
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip, deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Connection: keep-alive
+Referer: https://www.sbsibank.by/login.asp
+Cookie: UN=FQ529; C1=checked; S1=0175; ASPSESSIONIDQACBBRTD=CGJPMDMCDPAOCANNGNJMKHNE
+Content-Type: application/x-www-form-urlencoded
+
+response: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1251"><script src="mRedirect.js" type="text/javascript"></script><script type="text/javascript" language="JavaScript"><!--
+function loadFrames() {parent.main_r.location.replace("right.asp"); mRedirect('news/mnews.asp', '');}// --></script><base target="main"></head><body bgcolor="#FFFFFA" onload="loadFrames()"><div id="mTIMER" style="visibility: hidden">0</div><p class=mainfnt></p></body></html>
