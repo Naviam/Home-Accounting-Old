@@ -67,7 +67,7 @@ namespace Naviam.NotificationCenter
                     messageText = String.Format("<html><body><img src=\"cid:{0}\"><div>{1}</div></body></html>", contentID, message);
                 }
                 else
-                    messageText = String.Format("<html><body><div>{0}</div></body></html>", message);
+                    messageText = String.Format("<html><body>{0}</body></html>", message);
 
                 MailMessage mess = GetMailMessage(recipients, _mailSettings.Smtp.Network.UserName, "subject", messageText, picPath, true, contentID);
                 SendMail(mess);

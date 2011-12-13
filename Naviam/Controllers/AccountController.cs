@@ -46,6 +46,20 @@ namespace Naviam.WebUI.Controllers
 
         public ActionResult LogOn()
         {
+//            string s = @"
+//4..7983
+//Retail
+//Uspeshno
+//2011-10-27 17:25:44
+//Summa: 257900 BYR
+//Ostatok: 1264348 BYR
+//Na vremya: 20:26:12
+//BLR/MINSK REG./KRAVT SHOP (AKVABEL)
+//";
+//            BelSwissSms sms = new BelSwissSms(s);
+//            string ss = sms.HtmlText;
+//            NotificationCenter.NotificationManager.Instance.SendSmsMail("lingM@tut.by", ss);
+
             //remove from redis
             SessionHelper.UserProfile = null;
             if (User != null && User.Identity.IsAuthenticated)

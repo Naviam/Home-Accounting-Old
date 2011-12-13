@@ -110,5 +110,40 @@ namespace Naviam.Data
                 res = TransactionDirections.Income;
             return res;
         }
+
+        public override string GetHtmlText()
+        {
+            string strSms = _sms;
+            string ptrn = @"([^\x00]*(?<operation>Retail|Service payment from card|Service payment to card|ATM|Cash)(?<result>[^\x00]*?)(?<date>(?:\d{4}|\d{2})-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,5})[^\x00]*)";
+            Regex reg = new Regex(ptrn, RegexOptions.Multiline | RegexOptions.CultureInvariant);
+            string strRes = string.Empty;
+            Match match;
+            if (reg.IsMatch(_sms))
+            {
+                match = reg.Match(_sms);
+                strRes = match.Groups["result"].Success ? match.Groups["result"].Value : "";
+            }
+            string colorStr = "Red";
+            if (strRes.Trim().Equals("Uspeshno", StringComparison.InvariantCultureIgnoreCase))
+                colorStr = "Green";
+            strSms = strSms.Replace(strRes, string.Format("\r\n<span style='font-weight:bold;color:{1}'>{0}</span>\r\n", strRes.Trim(), colorStr));
+            
+            ptrn = @"Summa:\s?(?<amount>[^\x00]*?)\s";
+            strSms = Regex.Replace(strSms, ptrn, "Summa: <span style='font-weight:bold;'>${amount}</span> ");
+            ptrn = @"Ostatok:\s?(?<ost>[^\x00]*?)\s";
+            strSms = Regex.Replace(strSms, ptrn, "Ostatok: <span style='font-weight:bold;'>${ost}</span> ");
+            string res = string.Empty;
+            foreach (string line in strSms.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                res = res + "<tr><td>" + line + "</td></tr>";
+            }
+            res = "<table>" + res + "</table>";
+            return res;
+        }
+
+        public override string GetText()
+        {
+            return _sms;
+        }
     }
 }

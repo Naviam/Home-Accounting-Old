@@ -112,7 +112,7 @@ namespace Naviam.WebUI.Controllers
                 _transRepository.Insert(tran, account.CompanyId);
                 var val = tran.Amount.HasValue ? tran.Amount.Value : 0;
                 _accountsRepository.ChangeBalance(account.Id, account.CompanyId, val * (tran.Direction == TransactionDirections.Expense ? -1 : 1));
-                NotificationManager.Instance.SendSmsMail(account.SmsUser, message);
+                NotificationManager.Instance.SendSmsMail(account.SmsUser, sms.HtmlText);
             }
             catch (Exception ex)
             {
