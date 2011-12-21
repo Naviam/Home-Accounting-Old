@@ -5,11 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
-using Naviam.Data;
 using ScrapySharp.Extensions;
 using log4net;
 
-namespace InternetBankClient
+namespace Naviam.InternetBank
 {
     public class ReportRow
     {
@@ -26,16 +25,16 @@ namespace InternetBankClient
         }
     }
 
-    public class PaymentCard
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Currency { get; set; }
-        public decimal Balance { get; set; }
-        public DateTime RegisterDate { get; set; }
-        public DateTime CancelDate { get; set; }
-        public string Status { get; set; }
-    }
+    //public class PaymentCard
+    //{
+    //    public string Id { get; set; }
+    //    public string Name { get; set; }
+    //    public string Currency { get; set; }
+    //    public decimal Balance { get; set; }
+    //    public DateTime RegisterDate { get; set; }
+    //    public DateTime CancelDate { get; set; }
+    //    public string Status { get; set; }
+    //}
 
     internal class ParseHtmlHelper
     {
@@ -69,6 +68,15 @@ namespace InternetBankClient
                 cards.Add(card);
             }
             return cards;
+        }
+
+        public static string ParseLoginResponse(StreamReader content)
+        {
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.Load(content);
+            var html = htmlDocument.DocumentNode;
+
+            return html.CssSelect("td[class=tit] > b").First().InnerText;
         }
 
         public static void ParseBalance(StreamReader content, out string balance, out string currency)
@@ -152,19 +160,17 @@ namespace InternetBankClient
             var startDate = html.CssSelect("tr:nth-child(14) b tt");
             var endDate = html.CssSelect("font:nth-child(4) tt");
             var report = new Report();
-            var trans = new List<Transaction>();
+            var trans = new List<AccountTransaction>();
             var records = html.CssSelect("tr").Where(r => r.InnerHtml.Contains("<td width=\"55\" colspan=\"3\" rowspan=\"2\">"));
 
             foreach (var values in records.Select(record => record.CssSelect("tt")))
             {
-                trans.Add(new Transaction
+                trans.Add(new AccountTransaction
                               {
-                                  TransactionType = TransactionTypes.Statement,
-                                  Direction = TransactionDirections.Expense,
-                                  CurrencyId = 1, // values.ElementAt(3).InnerText.Trim()
-                                  Description = values.ElementAt(1).InnerText.Trim().Replace("&nbsp;", " "),
-                                  Date = DateTime.Parse(values.ElementAt(0).InnerText.Trim(), CultureInfo.CreateSpecificCulture("ru-RU")),
-                                  Amount = Decimal.Parse(values.ElementAt(2).InnerText.Trim().Replace("&nbsp;", ""))
+                                  Currency = values.ElementAt(3).InnerText.Trim(),
+                                  OperationDescription = values.ElementAt(1).InnerText.Trim().Replace("&nbsp;", " "),
+                                  OperationDate = DateTime.Parse(values.ElementAt(0).InnerText.Trim(), CultureInfo.CreateSpecificCulture("ru-RU")),
+                                  TransactionAmount = Decimal.Parse(values.ElementAt(2).InnerText.Trim().Replace("&nbsp;", ""))
                               });
                 Log.InfoFormat("Record - Date {0} : Amount: {1} Description : {2}",
                                values.ElementAt(0).InnerText.Trim(), values.ElementAt(2).InnerText.Trim(), values.ElementAt(1).InnerText.Trim());
@@ -183,6 +189,6 @@ namespace InternetBankClient
         public string Currency { get; set; }
         public decimal BlockedAmount { get; set; }
         public decimal StartBalance { get; set; }
-        public IEnumerable<Transaction> Transactions { get; set; }
+        public IEnumerable<AccountTransaction> Transactions { get; set; }
     }
 }

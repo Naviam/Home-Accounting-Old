@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<internetBanks>
+    <!--belswissbank-->
+    <bank naviamId="15" iBankId="0175" iBankSettings="SbsibankSettings.xml"></bank>
+    <!--alphabank-->
+    <bank naviamId="2" iBankId="0270" iBankSettings="SbsibankSettings.xml"></bank>
+    <!--belvnesheconom-->
+    <bank naviamId="9" iBankId="0226" iBankSettings="SbsibankSettings.xml"></bank>
+    <!--technobank-->
+    <bank naviamId="29" iBankId="0182" iBankSettings="SbsibankSettings.xml"></bank>
+    <!--moskva-minsk-->
+    <bank naviamId="21" iBankId="0272" iBankSettings="SbsibankSettings.xml"></bank>
+    <!--rrb-bank-->
+    <bank naviamId="16" iBankId="0110" iBankSettings="SbsibankSettings.xml"></bank>
+    <!--priorbank-->
+    <bank naviamId="20" iBankId="" iBankSettings="PriorbankSettings.xml"></bank>
+</internetBanks>

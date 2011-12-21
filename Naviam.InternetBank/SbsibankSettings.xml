@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<internetBankSettings name="sbsibank.by">
+    <baseUrl>https://sbsibank.by</baseUrl>
+    <commonHeaders>
+        <contentType>application/x-www-form-urlencoded</contentType>
+        <preAuthenticate>true</preAuthenticate>
+        <host>www.sbsibank.by</host>
+        <userAgent>Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0</userAgent>
+        <accept>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</accept>
+        <acceptLanguage>en-us,en;q=0.5</acceptLanguage>
+        <acceptEncoding>gzip, deflate</acceptEncoding>
+        <acceptCharset>ISO-8859-1,utf-8;q=0.7,*;q=0.7</acceptCharset>
+    </commonHeaders>
+    <maxDaysPeriod>170</maxDaysPeriod>
+    <login>
+        <request method="GET">
+            <url>login.asp</url>
+            <referer></referer>
+            <setAuthCookies>true</setAuthCookies>
+            <cookies>
+                <cookie name="UN" value="{username}" path="/" domain="www.sbsibank.by"></cookie>
+                <cookie name="C1" value="checked" path="/" domain="www.sbsibank.by"></cookie>
+                <cookie name="S1" value="{iBankId}" path="/" domain="www.sbsibank.by"></cookie>
+            </cookies>
+        </request>
+        <request method="POST">
+            <url>login.asp?mode=1</url>
+            <referer>login.asp</referer>
+            <postData>S1={iBankId}&amp;T1={username}&amp;C1=ON&amp;T2={password}&amp;B1=%C4%E0%EB%E5%E5</postData>
+        </request>
+    </login>
+    <cardList>
+        <request method="GET">
+            <url>right.asp</url>
+            <referer>home.asp</referer>
+            <parser>
+                <selector>input[type=radio][name=R1]</selector>
+                <cardIdSelector attr="Value"></cardIdSelector>
+                <cardNameSelector element="nextSibling">i</cardNameSelector>
+            </parser>
+            <foreach>
+                <request>
+                    <url>balance.asp</url>
+                    <referer>home.asp</referer>
+                    <parser>
+                        <selector>p[class=mainfnt] > b > font[color=red]</selector>
+                        <cardCurrencySelector split=" ">
+                            <balance>0</balance>
+                            <currency>1</currency>
+                        </cardCurrencySelector>
+                    </parser>
+                </request>
+                <request>
+                    <url>card_history.asp</url>
+                    <referer>right.asp</referer>
+                    <parser>
+                        <selector elementAt="1">table[cellspacing=5] > tr</selector>
+                        <cardCurrencySelector split=" ">
+                            <balance>0</balance>
+                            <currency>1</currency>
+                        </cardCurrencySelector>
+                    </parser>
+                </request>
+            </foreach>
+        </request>
+    </cardList>
+</internetBankSettings>

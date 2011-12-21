@@ -133,7 +133,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Graph1.dgml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
