@@ -196,9 +196,12 @@ namespace Naviam
             }
             else
             {
-                var obj = HttpContext.Current.Cache[key];
-                if (obj != null)
-                    res = (List<T>)obj;
+                if (HttpContext.Current != null && HttpContext.Current.Cache != null)
+                {
+                    var obj = HttpContext.Current.Cache[key];
+                    if (obj != null)
+                        res = (List<T>)obj;
+                }
             }
             return res;
         }
@@ -230,10 +233,13 @@ namespace Naviam
             }
             else
             {
-                if (val == null)
-                    HttpContext.Current.Cache.Remove(key);
-                else
-                    HttpContext.Current.Cache[key] = val;
+                if (HttpContext.Current != null && HttpContext.Current.Cache != null)
+                {
+                    if (val == null)
+                        HttpContext.Current.Cache.Remove(key);
+                    else
+                        HttpContext.Current.Cache[key] = val;
+                }
             }
         }
 
@@ -264,16 +270,19 @@ namespace Naviam
             }
             else
             {
-                var obj = HttpContext.Current.Cache[key];
-                if (obj == null)
+                if (HttpContext.Current != null && HttpContext.Current.Cache != null)
                 {
-                    //obj = GetList<T>(key, id);
-                    /*obj = new List<T>();
-                    HttpContext.Current.Cache[key] = obj;*/
-                    //don't create new list
-                    return;
+                    var obj = HttpContext.Current.Cache[key];
+                    if (obj == null)
+                    {
+                        //obj = GetList<T>(key, id);
+                        /*obj = new List<T>();
+                        HttpContext.Current.Cache[key] = obj;*/
+                        //don't create new list
+                        return;
+                    }
+                    ((List<T>)obj).Add(val);
                 }
-                ((List<T>)obj).Add(val);
             }
         }
 
@@ -286,7 +295,7 @@ namespace Naviam
                 using (var redisClient = ClientManager.GetClient())
                 {
                     var typedRedis = redisClient.GetTypedClient<T>();
-                    
+
                     using (redisClient.AcquireLock(key + "lock"))
                     {
                         var list = typedRedis.Lists[key];
@@ -304,17 +313,20 @@ namespace Naviam
             }
             else
             {
-                var obj = HttpContext.Current.Cache[key];
-                if (obj != null)
+                if (HttpContext.Current != null && HttpContext.Current.Cache != null)
                 {
-                    var lst = (List<T>)obj;
-                    for (var i = 0; i < lst.Count; i++)
+                    var obj = HttpContext.Current.Cache[key];
+                    if (obj != null)
                     {
-                        var existingItem = lst[i];
-                        if (existingItem.Equals(val))
+                        var lst = (List<T>)obj;
+                        for (var i = 0; i < lst.Count; i++)
                         {
-                            lst[i] = val;
-                            break;
+                            var existingItem = lst[i];
+                            if (existingItem.Equals(val))
+                            {
+                                lst[i] = val;
+                                break;
+                            }
                         }
                     }
                 }
@@ -340,11 +352,14 @@ namespace Naviam
             }
             else
             {
-                var obj = HttpContext.Current.Cache[key];
-                if (obj != null)
+                if (HttpContext.Current != null && HttpContext.Current.Cache != null)
                 {
-                    var lst = (List<T>)obj;
-                    lst.Remove(val);
+                    var obj = HttpContext.Current.Cache[key];
+                    if (obj != null)
+                    {
+                        var lst = (List<T>)obj;
+                        lst.Remove(val);
+                    }
                 }
             }
         }
@@ -370,17 +385,20 @@ namespace Naviam
             }
             else
             {
-                var obj = HttpContext.Current.Cache[key];
-                if (obj != null)
+                if (HttpContext.Current != null && HttpContext.Current.Cache != null)
                 {
-                    var lst = (List<T>)obj;
-                    for (var i = 0; i < lst.Count; i++)
+                    var obj = HttpContext.Current.Cache[key];
+                    if (obj != null)
                     {
-                        var existingItem = lst[i];
-                        if (existingItem.Equals(val))
+                        var lst = (List<T>)obj;
+                        for (var i = 0; i < lst.Count; i++)
                         {
-                            lst.RemoveAt(i);
-                            break;
+                            var existingItem = lst[i];
+                            if (existingItem.Equals(val))
+                            {
+                                lst.RemoveAt(i);
+                                break;
+                            }
                         }
                     }
                 }
@@ -406,14 +424,17 @@ namespace Naviam
             }
             else
             {
-                var obj = HttpContext.Current.Cache[key];
-                if (obj != null)
+                if (HttpContext.Current != null && HttpContext.Current.Cache != null)
                 {
-                    var lst = (List<T>)obj;
-                    foreach (var t in from t in lst let existingItem = t where existingItem.Equals(val) select t)
+                    var obj = HttpContext.Current.Cache[key];
+                    if (obj != null)
                     {
-                        res = t;
-                        break;
+                        var lst = (List<T>)obj;
+                        foreach (var t in from t in lst let existingItem = t where existingItem.Equals(val) select t)
+                        {
+                            res = t;
+                            break;
+                        }
                     }
                 }
             }

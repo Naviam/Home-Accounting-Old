@@ -21,6 +21,8 @@ namespace Naviam.Data
             ShortCurrency = GetShortCurrency();
             Merchant = GetMerchant();
             Direction = GetDirection();
+            HtmlText = GetHtmlText();
+            Text = GetText();
         }
 
         public string CardNumber { get; set; }
@@ -31,6 +33,8 @@ namespace Naviam.Data
         public string ShortCurrency { get; set; }
         public string Merchant { get; set; }
         public TransactionDirections Direction { get; set; }
+        public string HtmlText { get; set; }
+        public string Text { get; set; }
 
         public virtual string GetCardNumber()
         {
@@ -71,5 +75,16 @@ namespace Naviam.Data
         {
             return TransactionDirections.Expense;
         }
+
+        public virtual string GetHtmlText()
+        {
+            return string.Empty;
+        }
+
+        public virtual string GetText()
+        {
+            return _sms;
+        }
+
     }
 }

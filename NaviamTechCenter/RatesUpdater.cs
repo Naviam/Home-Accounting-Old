@@ -194,7 +194,6 @@ namespace NaviamTechCenter
 
         public static void GetRates(string absentDays)
         {
-            //TODO: why get "ok" here?
             ExRatesSoapClient client = null;
             DataSet cursies = null;
             List<string> dates = new List<string>();
@@ -237,7 +236,7 @@ namespace NaviamTechCenter
         {
             try
             {
-                string url = ConfigurationManager.AppSettings["nbrb_get_absent_dates_url"];
+                string url = ConfigurationManager.AppSettings["nbrb_update_url"];
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format(@"{0}",url));
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 String content = js.Serialize(rates);
