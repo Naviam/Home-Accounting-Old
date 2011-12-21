@@ -76,7 +76,15 @@ namespace Naviam.InternetBank
             htmlDocument.Load(content);
             var html = htmlDocument.DocumentNode;
 
-            return html.CssSelect("td[class=tit] > b").First().InnerText;
+            // try to access the login page title to verify that this is still a login page
+            // and authentication failed
+            var accessDeniedTextElement = 
+                html.CssSelect("td[class=tit] > b").FirstOrDefault();
+
+            if (accessDeniedTextElement != null) 
+                return accessDeniedTextElement.InnerText;
+            return String.Empty;
+            // try to access 
         }
 
         public static void ParseBalance(StreamReader content, out string balance, out string currency)

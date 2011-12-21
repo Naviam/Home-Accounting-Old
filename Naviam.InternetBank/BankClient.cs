@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -103,10 +105,10 @@ namespace Naviam.InternetBank
         /// Open the Login page to get Set-Cookies response header 
         /// </summary>
         /// <returns>Response code.
-        ///     0: Logged in without issues; 
+        ///     0: Success; 
         ///     1: Response status code is not OK;
         ///     2: Settings in XML has not been found for Login GET request;
-        ///     3: Logged in fine. However, cookie collection in the XML settings was not found.
+        ///     3: Cookie collection in the XML settings was not found.
         /// </returns>
         private int GetLoginPage(string username, string iBankId, out Cookie setCookie)
         {
@@ -156,7 +158,9 @@ namespace Naviam.InternetBank
         /// <returns>
         ///     Response code:
         ///     0: Success;
-        ///     1: Login Failed.
+        ///     1: Response status code is not OK;
+        ///     2: XML settings have not been found for POST request;
+        ///     4: Login Failed.
         /// </returns>
         public int Authenticate(string username, string password, string iBankId)
         {
@@ -183,18 +187,12 @@ namespace Naviam.InternetBank
                 // get response
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    var responseStream = response.GetResponseStream();
-                    if (responseStream != null)
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        var responseMessage = ParseHtmlHelper.ParseLoginResponse(
-                            new StreamReader(responseStream, Encoding.GetEncoding(1251)));
-                        if (responseMessage != null &&
-                            String.Compare(responseMessage, "ВХОД В СИСТЕМУ", true) == 0)
-                        {
-                            return 1;
-                        }
+                        var isProtectedPage = response.ResponseUri.AbsoluteUri.Contains("home.asp");
+                        return isProtectedPage ? 0 : 4;
                     }
-                    return response.StatusCode == HttpStatusCode.OK ? 0 : 1;
+                    return 1;
                 }
             }
             return 2;
@@ -203,8 +201,22 @@ namespace Naviam.InternetBank
         private HttpWebRequest GetRequest(string url, string referer, string method = "GET")
         {
             var request = (HttpWebRequest)WebRequest.Create(GetAbsoluteUri(url));
+            // allows for validation of SSL conversations
+            ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
             AddCommonHeadersToHttpRequest(request, referer, method);
             return request;
+        }
+
+        // callback used to validate the certificate in an SSL conversation
+        private static bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors policyErrors)
+        {
+            bool result = false;
+            if (cert.Subject.ToUpper().Contains("SBSIBANK"))
+            {
+                result = true;
+            }
+
+            return result;
         }
 
         private void AddCommonHeadersToHttpRequest(HttpWebRequest request, string referer, string method)
@@ -215,6 +227,8 @@ namespace Naviam.InternetBank
             request.CookieContainer = cookieContainer;
 
             request.Method = method;
+            request.AllowAutoRedirect = true;
+            request.KeepAlive = true;
             request.ContentType = Settings.RequestHeaders.ContentType;
             request.PreAuthenticate = Settings.RequestHeaders.PreAuthenticate;
             request.Host = Settings.RequestHeaders.Host;
@@ -224,7 +238,9 @@ namespace Naviam.InternetBank
             request.Headers.Add("Accept-Encoding", Settings.RequestHeaders.AcceptEncoding);
             request.Headers.Add("Accept-Charset", Settings.RequestHeaders.AcceptCharset);
 
-            request.Referer = referer;
+            Uri uriResult;
+            if (Uri.TryCreate(_baseUri, referer, out uriResult))
+            request.Referer = uriResult.AbsoluteUri;
         }
 
         private string GetAbsoluteUri(string relativeUri)
