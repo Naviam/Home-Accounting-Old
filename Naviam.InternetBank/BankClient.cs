@@ -55,7 +55,7 @@ namespace Naviam.InternetBank
         {
             Cookie setCookie;
             var responseCode = GetLoginPage(userName, InetBank.BankId, out setCookie);
-            if (responseCode == 0 || responseCode == 3)
+            if (responseCode == 0)
             {
                 responseCode = Authenticate(userName, password, InetBank.BankId);
             }
@@ -68,10 +68,30 @@ namespace Naviam.InternetBank
         }
 
         /// <summary>
-        /// Obtain the list of registered user's payment cards in internet bank system.
+        /// Obtain the list of user's payment cards from internet bank web site.
         /// </summary>
         public IEnumerable<PaymentCard> GetPaymentCards()
         {
+            // get bank settings for get login request
+            var cardsGetRequest = Settings.LoginRequests
+                .Where(lr => String.Compare(lr.Method, "GET", true) == 0)
+                .FirstOrDefault();
+            // initialize right.asp get request
+            var request = GetRequest(loginPostRequest.Url, loginPostRequest.Referer, "POST");
+            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/right.asp");
+            AddCommonHeadersToHttpRequest(request);
+            request.Referer = "https://www.sbsibank.by/home.asp";
+
+            // get response
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                var responseStream = response.GetResponseStream();
+                if (responseStream != null)
+                {
+                    return ParseHtmlHelper.ParseCardList(new StreamReader(responseStream, Encoding.GetEncoding(1251)));
+                }
+                return null;
+            }
             return new List<PaymentCard>();
         }
 

@@ -30,38 +30,20 @@
         </request>
     </login>
     <cardList>
-        <request method="GET">
+        <request name="cardlist" method="GET">
             <url>right.asp</url>
             <referer>home.asp</referer>
-            <parser>
-                <selector>input[type=radio][name=R1]</selector>
-                <cardIdSelector attr="Value"></cardIdSelector>
-                <cardNameSelector element="nextSibling">i</cardNameSelector>
-            </parser>
-            <foreach>
-                <request>
-                    <url>balance.asp</url>
-                    <referer>home.asp</referer>
-                    <parser>
-                        <selector>p[class=mainfnt] > b > font[color=red]</selector>
-                        <cardCurrencySelector split=" ">
-                            <balance>0</balance>
-                            <currency>1</currency>
-                        </cardCurrencySelector>
-                    </parser>
-                </request>
-                <request>
-                    <url>card_history.asp</url>
-                    <referer>right.asp</referer>
-                    <parser>
-                        <selector elementAt="1">table[cellspacing=5] > tr</selector>
-                        <cardCurrencySelector split=" ">
-                            <balance>0</balance>
-                            <currency>1</currency>
-                        </cardCurrencySelector>
-                    </parser>
-                </request>
-            </foreach>
+            <selector>input[type=radio][name=R1]</selector>
+        </request>
+        <request name="balance" method="GET">
+            <url>balance.asp</url>
+            <referer>home.asp</referer>
+            <selector>p[class=mainfnt] > b > font[color=red]</selector>
+        </request>
+        <request name="history" method="GET">
+            <url>card_history.asp</url>
+            <referer>right.asp</referer>
+            <selector>table[cellspacing=5] > tr</selector>
         </request>
     </cardList>
 </internetBankSettings>
