@@ -77,3 +77,13 @@ ko.bindingHandlers.amount = {
         $(element).text(val);
     }
 };
+ko.bindingHandlers.required = {
+    'update': function (element, valueAccessor) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        if (value)
+            element.setAttribute("required", "required");
+        else
+            element.removeAttribute("required");
+    }
+}
+

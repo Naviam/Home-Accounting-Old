@@ -70,11 +70,56 @@ namespace Naviam.WebUI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select bank.
+        /// </summary>
+        public static string AccountBank {
+            get {
+                return ResourceManager.GetString("AccountBank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account currency.
+        /// </summary>
+        public static string AccountCurrency {
+            get {
+                return ResourceManager.GetString("AccountCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial balance.
+        /// </summary>
+        public static string AccountInitialBalance {
+            get {
+                return ResourceManager.GetString("AccountInitialBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account name.
+        /// </summary>
+        public static string AccountName {
+            get {
+                return ResourceManager.GetString("AccountName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Type.
         /// </summary>
         public static string AccountType {
             get {
                 return ResourceManager.GetString("AccountType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User name.
+        /// </summary>
+        public static string AccountUser {
+            get {
+                return ResourceManager.GetString("AccountUser", resourceCulture);
             }
         }
         

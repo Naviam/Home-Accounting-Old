@@ -13,6 +13,7 @@ namespace Naviam.Data
         public Account() 
         {
             InitialBalance = 0;
+            TypeId = 1; //cash 
         }
         public  Account(SqlDataReader reader)
         {
@@ -33,6 +34,8 @@ namespace Naviam.Data
         
         public string Name { get; set; }
         public string CardNumber { get; set; }
+        public string UserName { get; set; }
+        public string UserPassword { get; set; }
         public DateTime? DateCreation { get; set; }
         public decimal? InitialBalance { get; set; }
         public decimal? Balance { get; set; }
