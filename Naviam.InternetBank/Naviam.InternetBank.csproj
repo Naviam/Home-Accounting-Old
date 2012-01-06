@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HtmlSamples\FailedLogin.htm" />
+    <Content Include="HtmlSamples\HTMLPage1.htm" />
     <Content Include="InternetBanks.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

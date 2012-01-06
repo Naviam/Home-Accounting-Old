@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace Naviam.InternetBank
@@ -14,7 +16,6 @@ namespace Naviam.InternetBank
     {
         private CookieCollection _cookies;
         private readonly Uri _baseUri;
-        private readonly int _bankId;
         private const string BanksXmlFileName = "InternetBanks.xml";
 
         /// <summary>
@@ -33,12 +34,11 @@ namespace Naviam.InternetBank
         /// <param name="bankId">Internal Bank Id that is used to get internet bank settings</param>
         public BankClient(int bankId)
         {
-            _bankId = bankId;
             // deserialize xml bank settings to object 
             // and read internet bank settings for specified bank id 
             var banks = LoadBanks(BanksXmlFileName);
             InetBank = (from b in banks
-                       where b.NaviamId == bankId.ToString()
+                       where b.NaviamId == bankId.ToString(CultureInfo.InvariantCulture)
                        select b).FirstOrDefault();
 
             if (InetBank != null) Settings = LoadSettings(InetBank.BankSettings);
@@ -53,8 +53,7 @@ namespace Naviam.InternetBank
         /// <returns>Login response object</returns>
         public LoginResponse Login(string userName, string password)
         {
-            Cookie setCookie;
-            var responseCode = GetLoginPage(userName, InetBank.BankId, out setCookie);
+            var responseCode = GetLoginPage(userName, InetBank.BankId);
             if (responseCode == 0)
             {
                 responseCode = Authenticate(userName, password, InetBank.BankId);
@@ -62,8 +61,7 @@ namespace Naviam.InternetBank
             return new LoginResponse
                        {
                            ErrorCode = responseCode,
-                           IsAuthenticated = responseCode == 0,
-                           SetCookie = setCookie
+                           IsAuthenticated = responseCode == 0
                        };
         }
 
@@ -72,27 +70,19 @@ namespace Naviam.InternetBank
         /// </summary>
         public IEnumerable<PaymentCard> GetPaymentCards()
         {
-            // get bank settings for get login request
-            var cardsGetRequest = Settings.LoginRequests
-                .Where(lr => String.Compare(lr.Method, "GET", true) == 0)
-                .FirstOrDefault();
-            // initialize right.asp get request
-            var request = GetRequest(loginPostRequest.Url, loginPostRequest.Referer, "POST");
-            var request = (HttpWebRequest)WebRequest.Create("https://www.sbsibank.by/right.asp");
-            AddCommonHeadersToHttpRequest(request);
-            request.Referer = "https://www.sbsibank.by/home.asp";
+            var cardList = GetCardList();
+            var resultCardList = new List<PaymentCard>();
 
-            // get response
-            using (var response = (HttpWebResponse)request.GetResponse())
+            foreach (var paymentCard in cardList)
             {
-                var responseStream = response.GetResponseStream();
-                if (responseStream != null)
+                var card = paymentCard;
+                if (paymentCard != null)
                 {
-                    return ParseHtmlHelper.ParseCardList(new StreamReader(responseStream, Encoding.GetEncoding(1251)));
+                    UpdateCardInfo(ref card);
+                    resultCardList.Add(card);
                 }
-                return null;
             }
-            return new List<PaymentCard>();
+            return resultCardList;
         }
 
         /// <summary>
@@ -121,6 +111,7 @@ namespace Naviam.InternetBank
 
         #region PRIVATE METHODS
 
+        #region Login Methods
         /// <summary>
         /// Open the Login page to get Set-Cookies response header 
         /// </summary>
@@ -130,13 +121,12 @@ namespace Naviam.InternetBank
         ///     2: Settings in XML has not been found for Login GET request;
         ///     3: Cookie collection in the XML settings was not found.
         /// </returns>
-        private int GetLoginPage(string username, string iBankId, out Cookie setCookie)
+        private int GetLoginPage(string username, string iBankId)
         {
-            setCookie = null;
+            Cookie setCookie = null;
             // get bank settings for get login request
             var loginGetRequest = Settings.LoginRequests
-                .Where(lr => String.Compare(lr.Method, "GET", true) == 0)
-                .FirstOrDefault();
+                .FirstOrDefault(lr => String.Compare(lr.Method, "GET", StringComparison.OrdinalIgnoreCase) == 0);
 
             if (loginGetRequest != null)
             {
@@ -150,7 +140,6 @@ namespace Naviam.InternetBank
                         if (loginGetRequest.SetAuthCookies)
                         {
                             _cookies = response.Cookies;
-                            setCookie = response.Cookies["Set-Cookie"];
                         }
                         if (loginGetRequest.CookieCollection == null || !loginGetRequest.CookieCollection.Any())
                             return 3;
@@ -186,17 +175,16 @@ namespace Naviam.InternetBank
         {
             // get bank settings for get login request
             var loginPostRequest = Settings.LoginRequests
-                .Where(lr => String.Compare(lr.Method, "POST", true) == 0)
-                .FirstOrDefault();
+                .FirstOrDefault(lr => String.Compare(lr.Method, "POST", StringComparison.OrdinalIgnoreCase) == 0);
 
             if (loginPostRequest != null)
             {
-                var request = GetRequest(loginPostRequest.Url, loginPostRequest.Referer, "POST");
+                var request = GetRequest(loginPostRequest.Url, loginPostRequest.Referer, false, "POST");
 
                 // submit login form data
                 var postData = loginPostRequest.PostData.FormatWith(
                     new { username, password, iBankId });
-            
+
                 var encoding = new ASCIIEncoding();
                 var data = encoding.GetBytes(postData);
                 request.ContentLength = postData.Length;
@@ -207,8 +195,12 @@ namespace Naviam.InternetBank
                 // get response
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.Found)
                     {
+                        if (loginPostRequest.SetAuthCookies)
+                        {
+                            _cookies.Add(response.Cookies);
+                        }
                         var isProtectedPage = response.ResponseUri.AbsoluteUri.Contains("home.asp");
                         return isProtectedPage ? 0 : 4;
                     }
@@ -216,30 +208,128 @@ namespace Naviam.InternetBank
                 }
             }
             return 2;
+        } 
+        #endregion
+
+        /// <summary>
+        /// Get collection of user's payment cards
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<PaymentCard> GetCardList()
+        {
+            var cardsGetRequest = Settings.CardListRequests
+                .FirstOrDefault(lr => String.Compare(lr.Name, "cardlist", StringComparison.OrdinalIgnoreCase) == 0);
+
+            if (cardsGetRequest != null)
+            {
+                var request = GetRequest(cardsGetRequest.Url, cardsGetRequest.Referer);
+
+                // get response
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    var responseStream = response.GetResponseStream();
+                    return responseStream != null ?
+                        ParseHtmlHelper.ParseCardList(cardsGetRequest.Selector,
+                        new StreamReader(responseStream, Encoding.GetEncoding(1251))) : new List<PaymentCard>();
+                }
+            }
+
+            return new List<PaymentCard>();
         }
 
-        private HttpWebRequest GetRequest(string url, string referer, string method = "GET")
+        private void UpdateCardInfo(ref PaymentCard card)
+        {
+            ChangeCurrentCard(card.Id);
+            UpdateCardHistoryInfo(ref card);
+            UpdateCardBalance(ref card);
+        }
+
+        /// <summary>
+        /// Change current active card
+        /// </summary>
+        /// <param name="cardId"></param>
+        /// <returns></returns>
+        private bool ChangeCurrentCard(string cardId)
+        {
+            var changeCardGetRequest = Settings.CardListRequests
+                .FirstOrDefault(card => String.Compare(card.Name, "changeActiveCard", StringComparison.OrdinalIgnoreCase) == 0);
+
+            if (changeCardGetRequest != null)
+            {
+                var url = changeCardGetRequest.Url.FormatWith(new {cardId});
+                var request = GetRequest(url, changeCardGetRequest.Referer);
+
+                // get response
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void UpdateCardHistoryInfo(ref PaymentCard paymentCard)
+        {
+            var historyCardGetRequest = Settings.CardListRequests
+                .FirstOrDefault(card => String.Compare(card.Name, "history", StringComparison.OrdinalIgnoreCase) == 0);
+
+            if (historyCardGetRequest != null)
+            {
+                var request = GetRequest(historyCardGetRequest.Url, historyCardGetRequest.Referer);
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    var responseStream = response.GetResponseStream();
+                    if (responseStream != null)
+                    {
+                        ParseHtmlHelper.ParseCardHistory(historyCardGetRequest.Selector,
+                            new StreamReader(responseStream, Encoding.GetEncoding(1251)), ref paymentCard);
+                    }
+                }
+            }
+        }
+
+        private void UpdateCardBalance(ref PaymentCard paymentCard)
+        {
+            var balanceCardGetRequest = Settings.CardListRequests
+                .FirstOrDefault(card => String.Compare(card.Name, "balance", StringComparison.OrdinalIgnoreCase) == 0);
+
+            if (balanceCardGetRequest != null)
+            {
+                var request = GetRequest(balanceCardGetRequest.Url, balanceCardGetRequest.Referer);
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    var responseStream = response.GetResponseStream();
+                    if (responseStream != null)
+                    {
+                        ParseHtmlHelper.ParseBalance(
+                            balanceCardGetRequest.Selector, 
+                            new StreamReader(responseStream, Encoding.GetEncoding(1251)), ref paymentCard);
+                    }
+                }
+            }
+        }
+
+        #region Common Methods
+        private HttpWebRequest GetRequest(string url, string referer, bool followRedirect = true, string method = "GET")
         {
             var request = (HttpWebRequest)WebRequest.Create(GetAbsoluteUri(url));
             // allows for validation of SSL conversations
             ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
-            AddCommonHeadersToHttpRequest(request, referer, method);
+            AddCommonHeadersToHttpRequest(request, referer, method, followRedirect);
             return request;
         }
 
         // callback used to validate the certificate in an SSL conversation
         private static bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors policyErrors)
         {
-            bool result = false;
-            if (cert.Subject.ToUpper().Contains("SBSIBANK"))
-            {
-                result = true;
-            }
-
-            return result;
+            return cert.Subject.ToUpper().Contains("SBSIBANK");
         }
 
-        private void AddCommonHeadersToHttpRequest(HttpWebRequest request, string referer, string method)
+        private void AddCommonHeadersToHttpRequest(
+            HttpWebRequest request, string referer, string method, bool followRedirect = true)
         {
             // add cookies to request
             var cookieContainer = new CookieContainer();
@@ -247,7 +337,7 @@ namespace Naviam.InternetBank
             request.CookieContainer = cookieContainer;
 
             request.Method = method;
-            request.AllowAutoRedirect = true;
+            request.AllowAutoRedirect = followRedirect;
             request.KeepAlive = true;
             request.ContentType = Settings.RequestHeaders.ContentType;
             request.PreAuthenticate = Settings.RequestHeaders.PreAuthenticate;
@@ -260,7 +350,7 @@ namespace Naviam.InternetBank
 
             Uri uriResult;
             if (Uri.TryCreate(_baseUri, referer, out uriResult))
-            request.Referer = uriResult.AbsoluteUri;
+                request.Referer = uriResult.AbsoluteUri;
         }
 
         private string GetAbsoluteUri(string relativeUri)
@@ -269,7 +359,7 @@ namespace Naviam.InternetBank
             return Uri.TryCreate(_baseUri, relativeUri, out resultUri) ? resultUri.AbsoluteUri : String.Empty;
         }
 
-        private InetBankSettings LoadSettings(string sbsibanksettingsXml)
+        private static InetBankSettings LoadSettings(string sbsibanksettingsXml)
         {
             var serializer = new XmlSerializer(typeof(InetBankSettings));
             if (File.Exists(sbsibanksettingsXml))
@@ -282,7 +372,7 @@ namespace Naviam.InternetBank
             return null;
         }
 
-        private IEnumerable<InetBank> LoadBanks(string fileName)
+        private static IEnumerable<InetBank> LoadBanks(string fileName)
         {
             var serializer = new XmlSerializer(typeof(InternetBanks));
             if (File.Exists(fileName))
@@ -295,17 +385,16 @@ namespace Naviam.InternetBank
                 }
             }
             return null;
-        } 
+        }
+        #endregion
+
         #endregion
     }
 
     public class LoginResponse
     {
         public bool IsAuthenticated { get; set; }
-
         public int ErrorCode { get; set; }
-
-        public Cookie SetCookie { get; set; }
     }
 
     public class InetBankCookie
@@ -335,16 +424,23 @@ namespace Naviam.InternetBank
         [XmlArrayItem(ElementName = "request", Type = typeof(LoginRequest))]
         [XmlArray(ElementName = "login")]
         public LoginRequest[] LoginRequests { get; set; }
+        [XmlArrayItem(ElementName = "request", Type = typeof(InetBankRequest))]
+        [XmlArray(ElementName = "cardList")]
+        public InetBankRequest[] CardListRequests { get; set; }
     }
 
     public class InetBankRequest
     {
+        [XmlAttribute(AttributeName = "name")]
+        public string Name { get; set; }
         [XmlAttribute(AttributeName = "method")]
         public string Method { get; set; }
         [XmlElement(ElementName = "url", Type = typeof(string))]
         public string Url { get; set; }
         [XmlElement(ElementName = "referer", Type = typeof(string))]
         public string Referer { get; set; }
+        [XmlElement(ElementName = "selector", Type = typeof(string))]
+        public string Selector { get; set; }
     }
 
     public class LoginRequest : InetBankRequest

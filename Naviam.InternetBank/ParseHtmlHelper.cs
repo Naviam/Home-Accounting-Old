@@ -25,29 +25,18 @@ namespace Naviam.InternetBank
         }
     }
 
-    //public class PaymentCard
-    //{
-    //    public string Id { get; set; }
-    //    public string Name { get; set; }
-    //    public string Currency { get; set; }
-    //    public decimal Balance { get; set; }
-    //    public DateTime RegisterDate { get; set; }
-    //    public DateTime CancelDate { get; set; }
-    //    public string Status { get; set; }
-    //}
-
     internal class ParseHtmlHelper
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ParseHtmlHelper));
 
-        public static IEnumerable<PaymentCard> ParseCardList(StreamReader content)
+        public static IEnumerable<PaymentCard> ParseCardList(string selector, StreamReader content)
         {
             var cards = new List<PaymentCard>();
             var htmlDocument = new HtmlDocument();
             htmlDocument.Load(content);
             var html = htmlDocument.DocumentNode;
 
-            var cardsHtml = html.CssSelect("input[type=radio][name=R1]");
+            var cardsHtml = html.CssSelect(selector);
             foreach (var cardHtml in cardsHtml.Where(card => card.HasAttributes))
             {
                 var card = new PaymentCard
@@ -87,32 +76,28 @@ namespace Naviam.InternetBank
             // try to access 
         }
 
-        public static void ParseBalance(StreamReader content, out string balance, out string currency)
+        public static void ParseBalance(string selector, StreamReader content, ref PaymentCard card)
         {
             var htmlDocument = new HtmlDocument();
             htmlDocument.Load(content);
             var html = htmlDocument.DocumentNode;
 
-            var balanceHtml = html.CssSelect("p[class=mainfnt] > b > font[color=red]").First().InnerHtml;
+            var balanceHtml = html.CssSelect(selector).First().InnerHtml;
             var balanceArray = balanceHtml.Replace("&nbsp;&nbsp;", " ").Split(' ');
 
-            balance = balanceArray[0];
-            currency = balanceArray[1];
-
-            Log.InfoFormat("Balance: {0} and currency: {1}", balance, currency);
+            var balance = String.Join(null, Regex.Split(balanceArray[0], "[^\\d]"));
+            card.Balance = Decimal.Parse(balance);
+            card.Currency = balanceArray[1];
         }
 
-        public static void ParseCardHistory(StreamReader content, out string status, out DateTime registerDate, out DateTime cancelDate)
+        public static void ParseCardHistory(string selector, StreamReader content, ref PaymentCard card)
         {
             var htmlDocument = new HtmlDocument();
             
             htmlDocument.Load(content);
             var html = htmlDocument.DocumentNode;
-            status = null;
-            registerDate = DateTime.MinValue;
-            cancelDate = DateTime.MinValue;
 
-            var historyRow = html.CssSelect("table[cellspacing=5] > tr").ElementAt(1);
+            var historyRow = html.CssSelect(selector).ElementAt(1);
 
             if (historyRow != null)
             {
@@ -120,22 +105,25 @@ namespace Naviam.InternetBank
                 var statusElement = historyRow.CssSelect("td").ElementAt(1).CssSelect("b > font").FirstOrDefault(); //:eq(1) > b > font
                 if (statusElement != null)
                 {
-                    status = statusElement.InnerText.Trim();
+                    card.Status = statusElement.InnerText.Trim();
                 }
 
                 // get register date
                 var registerDateElement = historyRow.CssSelect("td").ElementAt(2);
                 if (registerDateElement != null)
                 {
+                    DateTime registerDate;
                     DateTime.TryParse(registerDateElement.InnerText.Trim(), out registerDate);
-
+                    card.RegisterDate = registerDate;
                 }
 
                 // get cancel date
                 var cancelDateElement = historyRow.CssSelect("td").ElementAt(3);
                 if (cancelDateElement != null)
                 {
+                    DateTime cancelDate;
                     DateTime.TryParse(cancelDateElement.InnerText.Trim(), out cancelDate);
+                    card.CancelDate = cancelDate;
                 }
             }
         }
@@ -181,7 +169,9 @@ namespace Naviam.InternetBank
                                   TransactionAmount = Decimal.Parse(values.ElementAt(2).InnerText.Trim().Replace("&nbsp;", ""))
                               });
                 Log.InfoFormat("Record - Date {0} : Amount: {1} Description : {2}",
-                               values.ElementAt(0).InnerText.Trim(), values.ElementAt(2).InnerText.Trim(), values.ElementAt(1).InnerText.Trim());
+                               values.ElementAt(0).InnerText.Trim(), 
+                               values.ElementAt(2).InnerText.Trim(), 
+                               values.ElementAt(1).InnerText.Trim());
             }
             report.Transactions = trans;
             return report;

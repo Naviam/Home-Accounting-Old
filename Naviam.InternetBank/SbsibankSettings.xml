@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <internetBankSettings name="sbsibank.by">
-    <baseUrl>https://sbsibank.by</baseUrl>
+    <baseUrl>https://www.sbsibank.by</baseUrl>
     <commonHeaders>
         <contentType>application/x-www-form-urlencoded</contentType>
         <preAuthenticate>true</preAuthenticate>
@@ -8,12 +8,12 @@
         <userAgent>Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0</userAgent>
         <accept>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</accept>
         <acceptLanguage>en-us,en;q=0.5</acceptLanguage>
-        <acceptEncoding>gzip, deflate</acceptEncoding>
+        <acceptEncoding>gzip,deflate,sdch</acceptEncoding>
         <acceptCharset>ISO-8859-1,utf-8;q=0.7,*;q=0.7</acceptCharset>
     </commonHeaders>
     <maxDaysPeriod>170</maxDaysPeriod>
     <login>
-        <request method="GET">
+        <request name="getloginpage" method="GET">
             <url>login.asp</url>
             <referer></referer>
             <setAuthCookies>true</setAuthCookies>
@@ -23,10 +23,16 @@
                 <cookie name="S1" value="{iBankId}" path="/" domain="www.sbsibank.by"></cookie>
             </cookies>
         </request>
-        <request method="POST">
+        <request name="authenticate" method="POST">
             <url>login.asp?mode=1</url>
             <referer>login.asp</referer>
             <postData>S1={iBankId}&amp;T1={username}&amp;C1=ON&amp;T2={password}&amp;B1=%C4%E0%EB%E5%E5</postData>
+            <setAuthCookies>true</setAuthCookies>
+            <cookies>
+                <cookie name="UN" value="{username}" path="/" domain="www.sbsibank.by"></cookie>
+                <cookie name="C1" value="checked" path="/" domain="www.sbsibank.by"></cookie>
+                <cookie name="S1" value="{iBankId}" path="/" domain="www.sbsibank.by"></cookie>
+            </cookies>
         </request>
     </login>
     <cardList>
@@ -35,9 +41,13 @@
             <referer>home.asp</referer>
             <selector>input[type=radio][name=R1]</selector>
         </request>
+        <request name="changeActiveCard" method="GET">
+            <url>mbottom.asp?crd_id={cardId}</url>
+            <referer>right.asp</referer>
+        </request>
         <request name="balance" method="GET">
             <url>balance.asp</url>
-            <referer>home.asp</referer>
+            <referer>left.asp</referer>
             <selector>p[class=mainfnt] > b > font[color=red]</selector>
         </request>
         <request name="history" method="GET">
