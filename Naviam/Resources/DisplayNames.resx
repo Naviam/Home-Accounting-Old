@@ -120,8 +120,23 @@
   <data name="Account" xml:space="preserve">
     <value>Account</value>
   </data>
+  <data name="AccountBank" xml:space="preserve">
+    <value>Select bank</value>
+  </data>
+  <data name="AccountCurrency" xml:space="preserve">
+    <value>Account currency</value>
+  </data>
+  <data name="AccountInitialBalance" xml:space="preserve">
+    <value>Initial balance</value>
+  </data>
+  <data name="AccountName" xml:space="preserve">
+    <value>Account name</value>
+  </data>
   <data name="AccountType" xml:space="preserve">
     <value>Account Type</value>
+  </data>
+  <data name="AccountUser" xml:space="preserve">
+    <value>User name</value>
   </data>
   <data name="Amount" xml:space="preserve">
     <value>Amount</value>

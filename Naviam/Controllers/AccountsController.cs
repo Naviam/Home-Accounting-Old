@@ -56,6 +56,14 @@ namespace Naviam.WebUI.Controllers
         }
 
         [HttpPost]
+        public ActionResult GetBankCards(Account account)
+        {
+            var user = CurrentUser;
+
+            return Json(account);
+        }
+
+        [HttpPost]
         public ActionResult DeleteAccount(int? id)
         {
             var companyId = CurrentUser.CurrentCompany;

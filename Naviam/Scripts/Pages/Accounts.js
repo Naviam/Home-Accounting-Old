@@ -90,7 +90,11 @@ function loadAccounts() {
         accountsModel.hideEdit = function (show) {
             var elem = $("#account_edit")[0];
             var trans_elem = $("#transGrid");
-            $(elem).find('form').validator({ lang: lang.culture }).data("validator").reset();
+            $(elem).find('form').validator({ lang: lang.culture });
+            $(elem).find('form').data("validator").reset();
+            $('#edit_acc_step2').hide();
+            $('#edit_acc_step1').show();
+            $('#edit_acc_types input').removeAttr('disabled');
             if (!show) {
                 $("#account_edit").overlay().close();
                 //trans_elem.slideDown('slow');
@@ -116,6 +120,10 @@ function loadAccounts() {
             var elem = $("#account_edit")[0];
             editAccount.Save = function () {
                 if (editAccount === this) {
+                    if (editAccount.TypeId() != 2)
+                        editAccount.FinInstitutionId(33); //Hardcoded !!!! (if not bank)
+                    //debug(editAccount.TypeId());
+                    $(elem).find('form').data("validator").reset();
                     if ($(elem).find('form').data("validator").checkValidity()) {
                         if (this.Id() == null) //add
                             this.Balance(this.InitialBalance);
@@ -130,6 +138,18 @@ function loadAccounts() {
                             }
                             item.FinInstitutionName(accountsModel.getFinById(item.FinInstitutionId()).Name());
                             accountsModel.hideEdit(false);
+                        });
+                    }
+                }
+            };
+            editAccount.BankNext = function () {
+                if (editAccount === this) {
+                    $(elem).find('form').data("validator").reset();
+                    if ($(elem).find('form').data("validator").checkValidity()) {
+                        $.postErr(bankNextAccountUrl, ko.mapping.toJS(this), function (res) {
+                            $('#edit_acc_step1').hide();
+                            $('#edit_acc_step2').show();
+                            $('#edit_acc_types input').attr('disabled', 'disabled');
                         });
                     }
                 }

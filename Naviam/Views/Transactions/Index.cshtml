@@ -41,6 +41,7 @@
 
     var getAccountsUrl = '@Url.Action("GetAccounts", "Accounts")';
     var updateAccountUrl = '@Url.Action("UpdateAccount", "Accounts")';
+    var bankNextAccountUrl = '@Url.Action("GetBankCards", "Accounts")';
     var addAccountAmountUrl = '@Url.Action("AddAccountAmount", "Accounts")';
     var deleteAccountUrl = '@Url.Action("DeleteAccount", "Accounts")';
     //var imageFilesPath = '@Url.Content("~/Content/images/dpicker/")';
@@ -70,7 +71,7 @@
         <div class='amount'><span data-bind="amount: Balance, visible: $data.Id() != null"></span>&nbsp;<span data-bind="text: Currency, visible: $data.Id() != null"></span></div>
         <div data-bind="text: FinInstitutionName, attr: {title: FinInstitutionName}" style='width:120px;' class='text_ellipsis small'></div> 
         <ul class="actions" data-bind="visible: $data.Id() != null">
-            <li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.edit($data);}" /></a></li>
+            @*<li class="edit"><a title="@SharedStrings.Edit" href="#"><img src="@Url.Content("~/Content/images/edit.png")" data-bind="click: function(event) { event.stopPropagation();$item.edit($data);}" /></a></li>*@
             <li class="delete"><a title="@SharedStrings.Delete" href="#"><img src="@Url.Content("~/Content/images/delete.png")" data-bind="click: function(event) { event.stopPropagation();$item.delete($data);}"/></a></li>
         </ul>
     </li>
@@ -313,37 +314,67 @@
 
 <div id='account_edit' class='overlay'>
 @*TODO: move to partial view*@
+<script type="text/html" id="accTypesTemplate">
+<td>
+    <label><input type="radio" name="TypeId" data-bind="value: Id, checked: $item.TypeId" /><span data-bind="text: TypeName"></span></label>
+</td>
+</script>
 @using (Html.BeginForm("UpdateAccount", "Accounts", FormMethod.Post, new {id = "editAccountFrm" }))
 {
 <table>
+    <tr data-bind="template: {name:'accTypesTemplate', foreach:accountsModel.typesItems, templateOptions: { TypeId: TypeId } }"></tr>
+</table>
+<div id="edit_acc_types">
+@*<label><input type="radio" name="TypeId" value="1" data-bind="checked: TypeId" />Кошелек</label>
+<label><input type="radio" name="TypeId" value="2" data-bind="checked: TypeId" />Банковский счет</label>*@
+</div>
+<div id="edit_acc_step1">
+<table class='table'>
 @*    <tr>
         <td>Account Type:<select data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId", required="required" ></select></td>
     </tr>*@
     <tr>
-        <td>Account Name:<input data-bind="value: Name" name="Name" required="required"/></td>
+        <td>@DisplayNames.AccountName:</td>
+        <td><input data-bind="value: Name" name="Name" required="required"/></td>
     </tr>
-    <tr>
-        <td>Fin Inst: <select required="required" data-bind="options: accountsModel.finInst, optionsText: 'Name', optionsValue: 'Id', optionsCaption: 'Select an item...', value: FinInstitutionId"></select></td>
+    <tr data-bind="visible: TypeId() != 2">
+        <td>@DisplayNames.AccountCurrency:</td>
+        <td><select data-bind="required: TypeId() != 2, options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId"></select></td>
     </tr>
-    <tr data-bind="visible: FinInstitutionId">
+    <tr data-bind="visible: TypeId() != 2">
+        <td>@DisplayNames.AccountInitialBalance:</td>
+        <td><input data-bind="required: TypeId() != 2, amount: InitialBalance, amountOptions: {allowZero: true}" name="InitialBalance" /></td>
+    </tr>
+    <tr data-bind="visible: TypeId() == 2">
+        <td>@DisplayNames.AccountBank:</td>
+        <td><select data-bind="required: TypeId() == 2, options: accountsModel.finInst, optionsText: 'Name', optionsValue: 'Id', optionsCaption: 'Select an item...', value: FinInstitutionId"></select></td>
+    </tr>
+    <tr data-bind="visible: TypeId() == 2">
+        <td>@DisplayNames.AccountUser:</td>
+        <td><input data-bind="required: TypeId() == 2, value: UserName" name="UserName" /></td>
+    </tr>
+    <tr data-bind="visible: TypeId() == 2">
+        <td>@DisplayNames.Password:</td>
+        <td><input data-bind="required: TypeId() == 2, value: UserPassword" name="UserPassword" /></td>
+    </tr>
+@*    <tr data-bind="visible: FinInstitutionId">
         <td>Account Type: <select required="required" data-bind="options: accountsModel.getTypes(FinInstitutionId), optionsText: 'TypeName', optionsValue: 'Id', optionsCaption: 'Select an item...', value: TypeId"></select></td>
     </tr>
-    <tr data-bind="visible: TypeId() == 2"> @*!!!Hardcoded (Bank card)*@
+    <tr data-bind="visible: TypeId() == 2"> 
         <td>4 last digits:<input data-bind="value: CardNumber" name="CardNumber"/></td>
-    </tr>
-    <tr>
-        <td>Currency: <select required="required" data-bind="options: accountsModel.currItems, optionsText: 'NameShort', optionsValue: 'Id', optionsCaption: 'Select an item...', value: CurrencyId"></select></td>
-    </tr>
-    <tr>
-        <td>Initial Balance:<input data-bind="amount: InitialBalance, amountOptions: {allowZero: true}" name="InitialBalance" required="required"/></td>
-    </tr>
-    <tr>
-        <td>Description:<textarea data-bind="value: Description" name="Description" rows='6' cols='30'></textarea></td>
-    </tr>
+    </tr>*@
+@*    <tr>
+        <td>@DisplayNames.Description:<textarea data-bind="value: Description" name="Description" rows='6' cols='30'></textarea></td>
+    </tr>*@@*!!!Hardcoded (Bank card)*@
 </table>
-<button type="button" data-bind="click: function(event) { Save(); }">Ok</button>
+<button type="button" data-bind="visible: TypeId() != 2, click: function() { Save(); }">@SharedStrings.Add</button>
+<button type="button" data-bind="visible: TypeId() == 2, click: function() { BankNext(); }">@SharedStrings.Next</button>
 <button type="button" class='close'>@SharedStrings.Cancel</button>
-<button type="button" data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function(event) {accountsModel.deleteItemById(Id)}" style='float:right'>@SharedStrings.Delete</button>
+<button type="button" data-bind="visible: ko.utils.unwrapObservable(Id) != null, click: function() {accountsModel.deleteItemById(Id)}" style='float:right'>@SharedStrings.Delete</button>
+</div>
+<div id="edit_acc_step2" class='hidden'>
+    <button type="button" data-bind="click: function() { Save(); }">@SharedStrings.Add</button>
+</div>
 }
 </div>
 

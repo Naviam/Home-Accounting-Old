@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="acct_1" xml:space="preserve">
-    <value>Наличные</value>
+    <value>Кошелек</value>
   </data>
   <data name="acct_2" xml:space="preserve">
-    <value>Банковская карточка</value>
+    <value>Банковский счет</value>
   </data>
   <data name="acct_3" xml:space="preserve">
-    <value>Электронный бумажник</value>
+    <value>Электронные деньги</value>
   </data>
   <data name="acct_5" xml:space="preserve">
     <value>Депозит</value>

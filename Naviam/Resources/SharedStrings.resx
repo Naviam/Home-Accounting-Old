@@ -177,6 +177,9 @@
   <data name="NaviamLogIn" xml:space="preserve">
     <value>Naviam - Log In</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
   <data name="Objectives" xml:space="preserve">
     <value>Objectives</value>
   </data>
