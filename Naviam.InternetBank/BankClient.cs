@@ -516,6 +516,7 @@ namespace Naviam.InternetBank
                         new StreamReader(responseStream, Encoding.GetEncoding(1251))) : null;
                 }
             }
+            return null;
         }
 
         public static int DaysBetween(DateTime d1, DateTime d2)
