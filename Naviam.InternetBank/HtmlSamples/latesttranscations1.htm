@@ -1,0 +1,50 @@
+HTTP/1.1 200 OK Cache-Control: private Content-Length: 1471 Content-Type: text/html
+Expires: Fri, 06 Jan 2012 22:00:41 GMT X-Powered-By: ASP.NET Date: Fri, 06 Jan 2012
+22:01:40 GMT
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+    <title>Интернет Банк</title>
+    <link rel="stylesheet" type="text/css" href="inet.css">
+    <script type='text/javascript' language='JavaScript' src='pay.js?2'></script>
+    <base target="main">
+    <style type="text/css">
+        #waiting
+        {
+            margin-top: expression(( document.documentElement.offsetHeight/2) -(parseInt(offsetHeight)/2) <0 ? "0" : (document.documentElement.offsetHeight/4) -(parseInt(offsetHeight)/2) +'px');
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body bgcolor="#FFFFFA" onload="GetStatement('A')">
+    <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <td align="right">
+                <img src="pic/left_tit.gif" border="0" alt="">
+            </td>
+            <td class="tit">
+                <b>ПОСЛЕДНИЕ ДВАДЦАТЬ ОПЕРАЦИЙ ПО СЧЕТУ</b>
+            </td>
+            <td>
+                <img src="pic/right_tit.gif" border="0" alt="">
+            </td>
+        </tr>
+    </table>
+    <div id="mstat">
+    </div>
+    <br>
+    <div id="waiting" align="center">
+        <br>
+        <br>
+        <br>
+        <img align="center" src="pic/loading11.gif" border="0" alt=""><p align="center" class="mainfnt">
+            Пожалуйста подождите...</p>
+    </div>
+    <div class="mainfnt" id='extraStr1'>
+    </div>
+    <br>
+    <p id="comm" class="comment" style="display: none">
+        * для просмотра дополнительной информации нажмите на иконку "детализация"</p>
+</body>
+</html>
