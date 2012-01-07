@@ -5,27 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
+using Naviam.InternetBank.Entities;
 using ScrapySharp.Extensions;
 using log4net;
 
-namespace Naviam.InternetBank
+namespace Naviam.InternetBank.Helpers
 {
-    public class ReportRow
-    {
-        public DateTime PeriodStartDate { get; set; }
-        public DateTime PeriodEndDate { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string Id { get; set; }
-        public bool IsCreated { get; set; }
-
-        public override string ToString()
-        {
-            return String.Format("Range id {3} with period {0} - {1} is {2}",
-                PeriodStartDate.Date.ToShortDateString(), PeriodEndDate.Date.ToShortDateString(), IsCreated ? "created" : "not created", Id);
-        }
-    }
-
-    internal class ParseHtmlHelper
+    public class ParseHtmlHelper
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ParseHtmlHelper));
 
@@ -163,7 +149,7 @@ namespace Naviam.InternetBank
                             });
         }
 
-        public static Report ParseReport(StreamReader content)
+        public static Report ParseReport(string selector, StreamReader content)
         {
             var htmlDocument = new HtmlDocument();
             htmlDocument.Load(content);
@@ -186,25 +172,13 @@ namespace Naviam.InternetBank
                                   OperationDate = DateTime.Parse(values.ElementAt(0).InnerText.Trim(), CultureInfo.CreateSpecificCulture("ru-RU")),
                                   TransactionAmount = Decimal.Parse(values.ElementAt(2).InnerText.Trim().Replace("&nbsp;", ""))
                               });
-                Log.InfoFormat("Record - Date {0} : Amount: {1} Description : {2}",
-                               values.ElementAt(0).InnerText.Trim(), 
-                               values.ElementAt(2).InnerText.Trim(), 
-                               values.ElementAt(1).InnerText.Trim());
+                //Log.InfoFormat("Record - Date {0} : Amount: {1} Description : {2}",
+                //               values.ElementAt(0).InnerText.Trim(), 
+                //               values.ElementAt(2).InnerText.Trim(), 
+                //               values.ElementAt(1).InnerText.Trim());
             }
             report.Transactions = trans;
             return report;
         }
-    }
-
-    internal class Report
-    {
-        public string CardNumber { get; set; }
-        public DateTime GeneratedDate { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public string Currency { get; set; }
-        public decimal BlockedAmount { get; set; }
-        public decimal StartBalance { get; set; }
-        public IEnumerable<AccountTransaction> Transactions { get; set; }
     }
 }

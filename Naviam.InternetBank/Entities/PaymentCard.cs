@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Naviam.InternetBank
+namespace Naviam.InternetBank.Entities
 {
     public class PaymentCard
     {

@@ -47,7 +47,7 @@ namespace Naviam.Specs.InternetBank
             // assert
             Assert.IsNotNull(transactions);
             Assert.IsTrue(transactions.Any());
-            Assert.Greater(DateTime.UtcNow.AddDays(-daysToParse), transactions.Min(r=>r.OperationDate));
+            Assert.Greater(transactions.Min(r => r.OperationDate).Date, DateTime.UtcNow.AddDays(-daysToParse).Date);
         }
 
         [TearDown]

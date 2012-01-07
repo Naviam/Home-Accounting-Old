@@ -8,6 +8,8 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml.Serialization;
+using Naviam.InternetBank.Entities;
+using Naviam.InternetBank.Helpers;
 
 namespace Naviam.InternetBank
 {
@@ -87,26 +89,37 @@ namespace Naviam.InternetBank
         /// <summary>
         /// Obtain the list of transactions for payment card starting from specified date.
         /// </summary>
-        /// <param name="cardId">Card Id to get transactions for</param>
+        /// <param name="card">Payment Card to get transactions for</param>
         /// <param name="startDate">Start date to obtain transactions from</param>
-        public IEnumerable<AccountTransaction> GetTransactions(string cardId, DateTime startDate)
+        public IEnumerable<AccountTransaction> GetTransactions(PaymentCard card, DateTime startDate)
         {
-            if (String.IsNullOrWhiteSpace(cardId))
-                throw new ArgumentNullException("cardId");
+            if (card == null)
+                throw new ArgumentNullException("card");
             // verify start data is in the past and not a today date
             if (startDate >= DateTime.UtcNow)
                 throw new ArgumentOutOfRangeException("startDate", startDate, "Start Date must be before today date.");
             
             // set card with parameter id active
-            var cardChanged = ChangeCurrentCard(cardId);
+            var cardChanged = ChangeCurrentCard(card.Id);
             // get 20 latest transactions
             if (cardChanged)
             {
-                return GetLatestCardTransactions();
+                var latestTransactions = GetLatestCardTransactions();
+                
                 // check if there is a date in these transactions older than start date
-                // if  true return the list of transactions
+                if (latestTransactions != null && latestTransactions.Any(t => t.OperationDate.Date < startDate))
+                {
+                    // if  true return the list of transactions
+                    return latestTransactions.Where(t => t.OperationDate.Date >= startDate);
+                }
                 // if  false get periods to create reports
+                List<ReportRow> reportsToCreate;
+                var generatedReports = GetListOfUsedStatements(startDate, card.RegisterDate, out reportsToCreate);
                 // create reports
+                foreach (var reportRow in reportsToCreate)
+                {
+                    var report = CreateReport(reportRow.PeriodStartDate, reportRow.PeriodEndDate);
+                }
                 // run reports and return the list of transactions
             }
             
@@ -365,6 +378,152 @@ namespace Naviam.InternetBank
             return new List<AccountTransaction>();
         }
 
+        private IEnumerable<ReportRow> GetListOfUsedStatements(
+            DateTime startDate, DateTime cardRegisterDate, out List<ReportRow> reportsToCreate)
+        {
+            if (startDate == DateTime.MinValue) startDate = cardRegisterDate;
+
+            var statementsGetRequest = Settings.TransactionRequests
+                .FirstOrDefault(tr => String.Compare(tr.Name, "statements", StringComparison.OrdinalIgnoreCase) == 0);
+
+            if (statementsGetRequest != null)
+            {
+                var request = GetRequest(statementsGetRequest.Url, statementsGetRequest.Referer);
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    var responseStream = response.GetResponseStream();
+                    if (responseStream != null)
+                    {
+                        var reports = ParseHtmlHelper.ParseStatementsList(new StreamReader(responseStream, Encoding.GetEncoding(1251)));
+                        var endDate = DateTime.UtcNow.AddDays(-1);
+
+                        var preparedRanges = new List<ReportRow>();
+                        reportsToCreate = new List<ReportRow>();
+                        if (reports != null)
+                        {
+                            ReportRow range = null;
+                            do
+                            {
+                                if (startDate > endDate) continue;
+
+                                range = reports.Where(r => r.PeriodStartDate <= startDate && r.PeriodEndDate > startDate)
+                                            .OrderByDescending(r => r.PeriodEndDate).FirstOrDefault() ??
+                                        reports.Where(r => r.PeriodStartDate > startDate).OrderBy(r => r.PeriodStartDate)
+                                            .FirstOrDefault();
+
+                                if (range == null) continue;
+
+                                range.IsCreated = true;
+
+                                if (range.PeriodStartDate > startDate)
+                                {
+                                    var start = startDate;
+                                    do
+                                    {
+                                        if (DaysBetween(range.PeriodStartDate, start) > Settings.MaxDaysPeriod)
+                                        {
+                                            var end = start.AddDays(Settings.MaxDaysPeriod);
+                                            var createReport = new ReportRow
+                                            {
+                                                PeriodStartDate = start,
+                                                PeriodEndDate = end,
+                                                IsCreated = false
+                                            };
+                                            reportsToCreate.Add(createReport);
+                                            start = end.AddDays(1);
+                                        }
+                                        else
+                                        {
+                                            var createReport = new ReportRow
+                                            {
+                                                PeriodStartDate = start,
+                                                PeriodEndDate = range.PeriodStartDate.AddDays(-1),
+                                                IsCreated = false
+                                            };
+                                            reportsToCreate.Add(createReport);
+                                            start = range.PeriodStartDate.AddDays(1);
+                                        }
+
+                                    } while (start < range.PeriodStartDate);
+                                }
+                                preparedRanges.Add(range);
+                                startDate = range.PeriodEndDate.AddDays(1);
+                            } while (range != null);
+                        }
+
+                        var start2 = startDate;
+                        do
+                        {
+                            if (DaysBetween(endDate, start2) > Settings.MaxDaysPeriod)
+                            {
+                                var end = start2.AddDays(Settings.MaxDaysPeriod);
+                                var createReport = new ReportRow
+                                {
+                                    PeriodStartDate = start2,
+                                    PeriodEndDate = end,
+                                    IsCreated = false
+                                };
+                                reportsToCreate.Add(createReport);
+                                start2 = end.AddDays(1);
+                            }
+                            else
+                            {
+                                var createReport = new ReportRow
+                                {
+                                    PeriodStartDate = start2,
+                                    PeriodEndDate = endDate,
+                                    IsCreated = false
+                                };
+                                reportsToCreate.Add(createReport);
+                                start2 = endDate;
+                            }
+
+                        } while (start2 < endDate);
+
+                        return preparedRanges;
+                    }
+                }
+            }
+            reportsToCreate = null;
+            return null;
+        }
+
+        private Report CreateReport(DateTime startDate, DateTime endDate)
+        {
+            var createReportPostRequest = Settings.TransactionRequests
+                .FirstOrDefault(tr => String.Compare(tr.Name, "createreport", StringComparison.OrdinalIgnoreCase) == 0);
+
+            if (createReportPostRequest != null)
+            {
+                var request = GetRequest(createReportPostRequest.Url, createReportPostRequest.Referer, true, "POST");
+
+                // submit login form data
+                var postData = createReportPostRequest.PostData;
+
+                var encoding = new ASCIIEncoding();
+                var data = encoding.GetBytes(postData);
+                request.ContentLength = postData.Length;
+                var dataStream = request.GetRequestStream();
+                dataStream.Write(data, 0, data.Length);
+                dataStream.Close();
+
+                // get response
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    var responseStream = response.GetResponseStream();
+                    return responseStream != null ?
+                        ParseHtmlHelper.ParseReport(createReportPostRequest.Selector,
+                        new StreamReader(responseStream, Encoding.GetEncoding(1251))) : null;
+                }
+            }
+        }
+
+        public static int DaysBetween(DateTime d1, DateTime d2)
+        {
+            var span = d2.Subtract(d1);
+            return Math.Abs((int)span.TotalDays);
+        }
+
         #region Common Methods
         private HttpWebRequest GetRequest(string url, string referer, bool followRedirect = true, string method = "GET")
         {
@@ -442,123 +601,5 @@ namespace Naviam.InternetBank
         #endregion
 
         #endregion
-    }
-
-    public class LoginResponse
-    {
-        public bool IsAuthenticated { get; set; }
-        public int ErrorCode { get; set; }
-    }
-
-    public class InetBankCookie
-    {
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
-        [XmlAttribute(AttributeName = "value")]
-        public string Value { get; set; }
-        [XmlAttribute(AttributeName = "path")]
-        public string Path { get; set; }
-        [XmlAttribute(AttributeName = "domain")]
-        public string Domain { get; set; }
-    }
-
-    [Serializable]
-    [XmlRoot(ElementName = "internetBankSettings")]
-    public class InetBankSettings
-    {
-        [XmlElement(ElementName = "baseUrl", Type = typeof(string))]
-        public string BaseUrl { get; set; }
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
-        [XmlElement(ElementName = "maxDaysPeriod", Type = typeof(int))]
-        public int MaxDaysPeriod { get; set; }
-        [XmlElement(ElementName = "commonHeaders", Type = typeof(RequestHeaders))]
-        public RequestHeaders RequestHeaders { get; set; }
-        [XmlArrayItem(ElementName = "request", Type = typeof(LoginRequest))]
-        [XmlArray(ElementName = "login")]
-        public LoginRequest[] LoginRequests { get; set; }
-        [XmlArrayItem(ElementName = "request", Type = typeof(InetBankRequest))]
-        [XmlArray(ElementName = "cardList")]
-        public InetBankRequest[] CardListRequests { get; set; }
-        [XmlArrayItem(ElementName = "request", Type = typeof(InetBankRequest))]
-        [XmlArray(ElementName = "transactions")]
-        public InetBankRequest[] TransactionRequests { get; set; }
-    }
-
-    public class InetBankRequest
-    {
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
-        [XmlAttribute(AttributeName = "method")]
-        public string Method { get; set; }
-        [XmlElement(ElementName = "url", Type = typeof(string))]
-        public string Url { get; set; }
-        [XmlElement(ElementName = "referer", Type = typeof(string))]
-        public string Referer { get; set; }
-        [XmlElement(ElementName = "selector", Type = typeof(string))]
-        public string Selector { get; set; }
-        /// <summary>
-        /// Body for POST request
-        /// </summary>
-        [XmlElement(ElementName = "postData")]
-        public string PostData { get; set; }
-    }
-
-    public class LoginRequest : InetBankRequest
-    {
-        [XmlElement(ElementName = "setAuthCookies", Type = typeof(bool))]
-        public bool SetAuthCookies { get; set; }
-        [XmlArrayItem(ElementName = "cookie", Type = typeof(InetBankCookie))]
-        [XmlArray(ElementName = "cookies")]
-        public InetBankCookie[] CookieCollection { get; set; }
-    }
-
-    [Serializable]
-    public class RequestHeaders
-    {
-        [XmlElement(ElementName = "contentType")]
-        public string ContentType { get; set; }
-        [XmlElement(ElementName = "preAuthenticate")]
-        public bool PreAuthenticate { get; set; }
-        [XmlElement(ElementName = "host")]
-        public string Host { get; set; }
-        [XmlElement(ElementName = "userAgent")]
-        public string UserAgent { get; set; }
-        [XmlElement(ElementName = "accept")]
-        public string Accept { get; set; }
-        [XmlElement(ElementName = "acceptLanguage")]
-        public string AcceptLanguage { get; set; }
-        [XmlElement(ElementName = "acceptEncoding")]
-        public string AcceptEncoding { get; set; }
-        [XmlElement(ElementName = "acceptCharset")]
-        public string AcceptCharset { get; set; }
-    }
-
-    [Serializable]
-    [XmlRoot(ElementName = "internetBanks")]
-    public class InternetBanks
-    {
-        [XmlElement(ElementName = "bank")]
-        public InetBank[] Banks { get; set; }
-    }
-
-    [Serializable]
-    public class InetBank
-    {
-        /// <summary>
-        /// Bank ID in Naviam database
-        /// </summary>
-        [XmlAttribute(AttributeName = "naviamId")]
-        public string NaviamId { get; set; }
-        /// <summary>
-        /// Internet Bank ID
-        /// </summary>
-        [XmlAttribute(AttributeName = "iBankId")]
-        public string BankId { get; set; }
-        /// <summary>
-        /// Internet Bank Settings
-        /// </summary>
-        [XmlAttribute(AttributeName = "iBankSettings")]
-        public string BankSettings { get; set; }
     }
 }
