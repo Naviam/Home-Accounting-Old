@@ -128,6 +128,24 @@ namespace Naviam.InternetBank
             }
         }
 
+        public static IEnumerable<AccountTransaction> ParseLatestTransactions(string selector, StreamReader content)
+        {
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.Load(content);
+            var html = htmlDocument.DocumentNode;
+
+            var reportRows = html.CssSelect(selector).Skip(1);
+            return reportRows.Select(row => row.CssSelect("td")).Select(
+                columns => new AccountTransaction
+                {
+                    OperationDate = DateTime.Parse(columns.ElementAt(0).InnerText.Trim(), CultureInfo.CreateSpecificCulture("ru-RU")),
+                    Status = columns.ElementAt(1).InnerText.Trim(),
+                    TransactionAmount = Decimal.Parse(columns.ElementAt(2).InnerText.Trim().Replace("&nbsp;", "")),
+                    Currency = columns.ElementAt(3).InnerText.Trim(),
+                    OperationDescription = columns.ElementAt(4).InnerText.Trim().Replace("&nbsp;", " ")
+                }); 
+        }
+
         public static IEnumerable<ReportRow> ParseStatementsList(StreamReader content)
         {
             var htmlDocument = new HtmlDocument();

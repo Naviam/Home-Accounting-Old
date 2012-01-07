@@ -60,8 +60,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="HtmlSamples\balance.htm" />
+    <Content Include="HtmlSamples\CardList.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlSamples\card_history.htm" />
     <Content Include="HtmlSamples\FailedLogin.htm" />
     <Content Include="HtmlSamples\HTMLPage1.htm" />
+    <Content Include="HtmlSamples\latesttransactions2.htm" />
+    <Content Include="HtmlSamples\latesttranscations1.htm" />
+    <Content Include="HtmlSamples\left.htm" />
+    <Content Include="HtmlSamples\Report.htm" />
+    <Content Include="HtmlSamples\requests.txt" />
+    <Content Include="HtmlSamples\Statements.htm" />
     <Content Include="InternetBanks.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

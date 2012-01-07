@@ -1,11 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Naviam.InternetBank;
 
 namespace Naviam.Specs.InternetBank
 {
-    [TestFixture]
-    public class SbsBankCardsInfoTestSuite
+    [TestFixture(Category = "InternetBank",
+        Description = "Trying to obtain payment cards")]
+    public class SbsBank2CardsInfoTestSuite
     {
         private BankClient _client;
 
@@ -15,11 +17,11 @@ namespace Naviam.Specs.InternetBank
             _client = new BankClient(15);
             const string userName = "FQ529";
             const string password = "XUI4K";
-            var authenticated = _client.Login(userName, password);
+            _client.Login(userName, password);
         }
 
-        [TestCase]
-        public void GetPaymentCards()
+        [TestCase(TestName = "1. Get Payment cards")]
+        public void Test1PaymentCards()
         {
             // arrange
 
@@ -29,6 +31,23 @@ namespace Naviam.Specs.InternetBank
             // assert
             Assert.IsNotNull(cards);
             Assert.IsTrue(cards.Any());
+        }
+
+        [TestCase(TestName = "2. Get First Card transactions")]
+        public void Test2CardTransactions()
+        {
+            // arrange
+            var card = _client.GetPaymentCards().FirstOrDefault();
+            const int daysToParse = 7;
+
+            // act
+            var transactions = 
+                _client.GetTransactions(card.Id, DateTime.UtcNow.AddDays(-daysToParse));
+
+            // assert
+            Assert.IsNotNull(transactions);
+            Assert.IsTrue(transactions.Any());
+            Assert.Greater(DateTime.UtcNow.AddDays(-daysToParse), transactions.Min(r=>r.OperationDate));
         }
 
         [TearDown]

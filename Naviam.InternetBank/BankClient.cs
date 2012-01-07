@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace Naviam.InternetBank
@@ -50,7 +49,7 @@ namespace Naviam.InternetBank
         /// </summary>
         /// <param name="userName">IBank Username</param>
         /// <param name="password">IBank Password</param>
-        /// <returns>Login response object</returns>
+        /// <returns>Login response</returns>
         public LoginResponse Login(string userName, string password)
         {
             var responseCode = GetLoginPage(userName, InetBank.BankId);
@@ -92,6 +91,25 @@ namespace Naviam.InternetBank
         /// <param name="startDate">Start date to obtain transactions from</param>
         public IEnumerable<AccountTransaction> GetTransactions(string cardId, DateTime startDate)
         {
+            if (String.IsNullOrWhiteSpace(cardId))
+                throw new ArgumentNullException("cardId");
+            // verify start data is in the past and not a today date
+            if (startDate >= DateTime.UtcNow)
+                throw new ArgumentOutOfRangeException("startDate", startDate, "Start Date must be before today date.");
+            
+            // set card with parameter id active
+            var cardChanged = ChangeCurrentCard(cardId);
+            // get 20 latest transactions
+            if (cardChanged)
+            {
+                return GetLatestCardTransactions();
+                // check if there is a date in these transactions older than start date
+                // if  true return the list of transactions
+                // if  false get periods to create reports
+                // create reports
+                // run reports and return the list of transactions
+            }
+            
             return new List<AccountTransaction>();
         }
 
@@ -118,12 +136,10 @@ namespace Naviam.InternetBank
         /// <returns>Response code.
         ///     0: Success; 
         ///     1: Response status code is not OK;
-        ///     2: Settings in XML has not been found for Login GET request;
-        ///     3: Cookie collection in the XML settings was not found.
+        ///     2: Settings in XML has not been found for Login GET request.
         /// </returns>
         private int GetLoginPage(string username, string iBankId)
         {
-            Cookie setCookie = null;
             // get bank settings for get login request
             var loginGetRequest = Settings.LoginRequests
                 .FirstOrDefault(lr => String.Compare(lr.Method, "GET", StringComparison.OrdinalIgnoreCase) == 0);
@@ -141,14 +157,14 @@ namespace Naviam.InternetBank
                         {
                             _cookies = response.Cookies;
                         }
-                        if (loginGetRequest.CookieCollection == null || !loginGetRequest.CookieCollection.Any())
-                            return 3;
+                        //if (loginGetRequest.CookieCollection == null || !loginGetRequest.CookieCollection.Any())
+                        //    return 3;
                         // parse custom cookies with named string formatter
-                        foreach (var cookie in loginGetRequest.CookieCollection)
-                        {
-                            cookie.Value = cookie.Value.FormatWith(new { username, iBankId });
-                            _cookies.Add(new Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain));
-                        }
+                        //foreach (var cookie in loginGetRequest.CookieCollection)
+                        //{
+                        //    cookie.Value = cookie.Value.FormatWith(new { username, iBankId });
+                        //    _cookies.Add(new Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain));
+                        //}
                         //_cookies = response.Cookies;
                         return 0;
                     }
@@ -167,11 +183,11 @@ namespace Naviam.InternetBank
         /// <returns>
         ///     Response code:
         ///     0: Success;
-        ///     1: Response status code is not OK;
+        ///     1: Response status code is not 302;
         ///     2: XML settings have not been found for POST request;
-        ///     4: Login Failed.
+        ///     3: Login Failed.
         /// </returns>
-        public int Authenticate(string username, string password, string iBankId)
+        private int Authenticate(string username, string password, string iBankId)
         {
             // get bank settings for get login request
             var loginPostRequest = Settings.LoginRequests
@@ -201,8 +217,8 @@ namespace Naviam.InternetBank
                         {
                             _cookies.Add(response.Cookies);
                         }
-                        var isProtectedPage = response.ResponseUri.AbsoluteUri.Contains("home.asp");
-                        return isProtectedPage ? 0 : 4;
+                        var isProtectedPage = response.Headers["Location"].Contains("home.asp");
+                        return isProtectedPage ? 0 : 3;
                     }
                     return 1;
                 }
@@ -211,6 +227,7 @@ namespace Naviam.InternetBank
         } 
         #endregion
 
+        #region Card list Methods
         /// <summary>
         /// Get collection of user's payment cards
         /// </summary>
@@ -237,18 +254,21 @@ namespace Naviam.InternetBank
             return new List<PaymentCard>();
         }
 
-        private void UpdateCardInfo(ref PaymentCard card)
+        private bool UpdateCardInfo(ref PaymentCard card)
         {
-            ChangeCurrentCard(card.Id);
-            UpdateCardHistoryInfo(ref card);
-            UpdateCardBalance(ref card);
+            var result = ChangeCurrentCard(card.Id);
+            if (result)
+            {
+                UpdateCardHistoryInfo(ref card);
+                UpdateCardBalance(ref card);
+            }
+            return result;
         }
 
         /// <summary>
         /// Change current active card
         /// </summary>
         /// <param name="cardId"></param>
-        /// <returns></returns>
         private bool ChangeCurrentCard(string cardId)
         {
             var changeCardGetRequest = Settings.CardListRequests
@@ -256,16 +276,13 @@ namespace Naviam.InternetBank
 
             if (changeCardGetRequest != null)
             {
-                var url = changeCardGetRequest.Url.FormatWith(new {cardId});
+                var url = changeCardGetRequest.Url.FormatWith(new { cardId });
                 var request = GetRequest(url, changeCardGetRequest.Referer);
 
                 // get response
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        return true;
-                    }
+                    return response.StatusCode == HttpStatusCode.OK;
                 }
             }
             return false;
@@ -305,11 +322,47 @@ namespace Naviam.InternetBank
                     if (responseStream != null)
                     {
                         ParseHtmlHelper.ParseBalance(
-                            balanceCardGetRequest.Selector, 
+                            balanceCardGetRequest.Selector,
                             new StreamReader(responseStream, Encoding.GetEncoding(1251)), ref paymentCard);
                     }
                 }
             }
+        }
+        #endregion
+
+        /// <summary>
+        /// Get latest 20 transactions
+        /// </summary>
+        /// <returns>latest 20 transactions</returns>
+        private IEnumerable<AccountTransaction> GetLatestCardTransactions()
+        {
+            var latestPostRequest = Settings.TransactionRequests
+                .FirstOrDefault(tr => String.Compare(tr.Name, "latest", StringComparison.OrdinalIgnoreCase) == 0);
+
+            if (latestPostRequest != null)
+            {
+                var request = GetRequest(latestPostRequest.Url, latestPostRequest.Referer, true, "POST");
+
+                // submit login form data
+                var postData = latestPostRequest.PostData;
+
+                var encoding = new ASCIIEncoding();
+                var data = encoding.GetBytes(postData);
+                request.ContentLength = postData.Length;
+                var dataStream = request.GetRequestStream();
+                dataStream.Write(data, 0, data.Length);
+                dataStream.Close();
+                
+                // get response
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    var responseStream = response.GetResponseStream();
+                    return responseStream != null ?
+                        ParseHtmlHelper.ParseLatestTransactions(latestPostRequest.Selector,
+                        new StreamReader(responseStream, Encoding.GetEncoding(1251))) : new List<AccountTransaction>();
+                }
+            }
+            return new List<AccountTransaction>();
         }
 
         #region Common Methods
@@ -427,6 +480,9 @@ namespace Naviam.InternetBank
         [XmlArrayItem(ElementName = "request", Type = typeof(InetBankRequest))]
         [XmlArray(ElementName = "cardList")]
         public InetBankRequest[] CardListRequests { get; set; }
+        [XmlArrayItem(ElementName = "request", Type = typeof(InetBankRequest))]
+        [XmlArray(ElementName = "transactions")]
+        public InetBankRequest[] TransactionRequests { get; set; }
     }
 
     public class InetBankRequest
@@ -441,6 +497,11 @@ namespace Naviam.InternetBank
         public string Referer { get; set; }
         [XmlElement(ElementName = "selector", Type = typeof(string))]
         public string Selector { get; set; }
+        /// <summary>
+        /// Body for POST request
+        /// </summary>
+        [XmlElement(ElementName = "postData")]
+        public string PostData { get; set; }
     }
 
     public class LoginRequest : InetBankRequest
@@ -450,11 +511,6 @@ namespace Naviam.InternetBank
         [XmlArrayItem(ElementName = "cookie", Type = typeof(InetBankCookie))]
         [XmlArray(ElementName = "cookies")]
         public InetBankCookie[] CookieCollection { get; set; }
-        /// <summary>
-        /// Body for POST request
-        /// </summary>
-        [XmlElement(ElementName = "postData")]
-        public string PostData { get; set; }
     }
 
     [Serializable]

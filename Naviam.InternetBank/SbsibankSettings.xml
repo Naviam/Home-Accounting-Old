@@ -17,22 +17,17 @@
             <url>login.asp</url>
             <referer></referer>
             <setAuthCookies>true</setAuthCookies>
-            <cookies>
+            <!--<cookies>
                 <cookie name="UN" value="{username}" path="/" domain="www.sbsibank.by"></cookie>
                 <cookie name="C1" value="checked" path="/" domain="www.sbsibank.by"></cookie>
                 <cookie name="S1" value="{iBankId}" path="/" domain="www.sbsibank.by"></cookie>
-            </cookies>
+            </cookies>-->
         </request>
         <request name="authenticate" method="POST">
             <url>login.asp?mode=1</url>
             <referer>login.asp</referer>
             <postData>S1={iBankId}&amp;T1={username}&amp;C1=ON&amp;T2={password}&amp;B1=%C4%E0%EB%E5%E5</postData>
             <setAuthCookies>true</setAuthCookies>
-            <cookies>
-                <cookie name="UN" value="{username}" path="/" domain="www.sbsibank.by"></cookie>
-                <cookie name="C1" value="checked" path="/" domain="www.sbsibank.by"></cookie>
-                <cookie name="S1" value="{iBankId}" path="/" domain="www.sbsibank.by"></cookie>
-            </cookies>
         </request>
     </login>
     <cardList>
@@ -56,4 +51,27 @@
             <selector>table[cellspacing=5] > tr</selector>
         </request>
     </cardList>
+    <transactions>
+        <request name="latest" method="POST">
+            <url>statement_ajax.asp</url>
+            <referer>statement.asp?O=A</referer>
+            <selector>table > tr</selector>
+            <postData>O=A</postData>
+        </request>
+        <request name="generatedreports" method="GET">
+            <url>statementA.asp</url>
+            <referer>left.asp</referer>
+            <selector></selector>
+        </request>
+        <request name="createreport" method="POST">
+            <url>addreptask.asp</url>
+            <referer>addreptask.asp</referer>
+            <selector></selector>
+        </request>
+        <request name="getreport" method="GET">
+            <url>show.asp?id={reportId}</url>
+            <referer></referer>
+            <selector></selector>
+        </request>
+    </transactions>
 </internetBankSettings>

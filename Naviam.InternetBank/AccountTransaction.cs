@@ -14,5 +14,6 @@ namespace Naviam.InternetBank
         public decimal TransactionAmount { get; set; }
         public decimal AccountAmount { get; set; }
         public decimal Balance { get; set; }
+        public string Status { get; set; }
     }
 }
