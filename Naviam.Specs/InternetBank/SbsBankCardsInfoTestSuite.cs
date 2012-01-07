@@ -42,7 +42,7 @@ namespace Naviam.Specs.InternetBank
 
             // act
             var transactions = 
-                _client.GetTransactions(card.Id, DateTime.UtcNow.AddDays(-daysToParse));
+                _client.GetTransactions(card, DateTime.UtcNow.AddDays(-daysToParse));
 
             // assert
             Assert.IsNotNull(transactions);
