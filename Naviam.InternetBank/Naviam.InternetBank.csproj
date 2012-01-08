@@ -61,7 +61,7 @@
     <Compile Include="Entities\LoginResponse.cs" />
     <Compile Include="Entities\LoginRequest.cs" />
     <Compile Include="netfx\System\StringFormatWith.cs" />
-    <Compile Include="Helpers\ParseHtmlHelper.cs" />
+    <Compile Include="Helpers\SbsibankHtmlParser.cs" />
     <Compile Include="Entities\PaymentCard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\Report.cs" />
@@ -69,19 +69,37 @@
     <Compile Include="Entities\RequestHeaders.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HtmlSamples\balance.htm" />
-    <Content Include="HtmlSamples\CardList.htm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="HtmlSamples\balance.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="HtmlSamples\card_history.htm" />
-    <Content Include="HtmlSamples\FailedLogin.htm" />
-    <Content Include="HtmlSamples\HTMLPage1.htm" />
-    <Content Include="HtmlSamples\latesttransactions2.htm" />
-    <Content Include="HtmlSamples\latesttranscations1.htm" />
-    <Content Include="HtmlSamples\left.htm" />
-    <Content Include="HtmlSamples\Report.htm" />
+    <Content Include="HtmlSamples\CardList.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlSamples\card_history.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlSamples\FailedLogin.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlSamples\HTMLPage1.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlSamples\latesttransactions2.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlSamples\latesttranscations1.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlSamples\left.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlSamples\Report.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="HtmlSamples\requests.txt" />
-    <Content Include="HtmlSamples\Statements.htm" />
+    <Content Include="HtmlSamples\Statements.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="InternetBanks.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
