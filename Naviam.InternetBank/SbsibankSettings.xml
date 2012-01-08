@@ -71,7 +71,7 @@
         </request>
         <request name="getreport" method="GET">
             <url>show.asp?id={reportId}</url>
-            <referer></referer>
+            <referer>statementA.asp</referer>
             <selector></selector>
         </request>
     </transactions>
