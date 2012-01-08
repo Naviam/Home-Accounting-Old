@@ -11,9 +11,9 @@ using log4net;
 
 namespace Naviam.InternetBank.Helpers
 {
-    public class ParseHtmlHelper
+    public class SbsibankHtmlParser
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ParseHtmlHelper));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SbsibankHtmlParser));
 
         public static IEnumerable<PaymentCard> ParseCardList(string selector, StreamReader content)
         {
@@ -45,23 +45,6 @@ namespace Naviam.InternetBank.Helpers
             return cards;
         }
 
-        public static string ParseLoginResponse(StreamReader content)
-        {
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.Load(content);
-            var html = htmlDocument.DocumentNode;
-
-            // try to access the login page title to verify that this is still a login page
-            // and authentication failed
-            var accessDeniedTextElement = 
-                html.CssSelect("td[class=tit] > b").FirstOrDefault();
-
-            if (accessDeniedTextElement != null) 
-                return accessDeniedTextElement.InnerText;
-            return String.Empty;
-            // try to access 
-        }
-
         public static void ParseBalance(string selector, StreamReader content, ref PaymentCard card)
         {
             var htmlDocument = new HtmlDocument();
@@ -69,7 +52,7 @@ namespace Naviam.InternetBank.Helpers
             var html = htmlDocument.DocumentNode;
 
             var balanceHtml = html.CssSelect(selector).First().InnerHtml;
-            var balanceArray = balanceHtml.Replace("&nbsp;&nbsp;", " ").Split(' ');
+            var balanceArray = balanceHtml.Replace("&nbsp;&nbsp;", "-").Split('-');
 
             var balance = String.Join(null, Regex.Split(balanceArray[0], "[^\\d]"));
             card.Balance = Decimal.Parse(balance);
@@ -132,7 +115,7 @@ namespace Naviam.InternetBank.Helpers
                 }); 
         }
 
-        public static IEnumerable<ReportRow> ParseStatementsList(StreamReader content)
+        public static IEnumerable<ReportPeriod> ParseStatementsList(StreamReader content)
         {
             var htmlDocument = new HtmlDocument();
             htmlDocument.Load(content);
@@ -140,10 +123,10 @@ namespace Naviam.InternetBank.Helpers
 
             var reportRows = html.CssSelect("p[class=mainfnt] > table[class=mainfnt] > tr").Skip(1);
             return reportRows.Select(row => row.CssSelect("td")).Select(
-                columns => new ReportRow
+                columns => new ReportPeriod
                             {
-                                PeriodStartDate = DateTime.Parse(columns.ElementAt(0).InnerText.Trim()), 
-                                PeriodEndDate = DateTime.Parse(columns.ElementAt(1).InnerText.Trim()), 
+                                StartDate = DateTime.Parse(columns.ElementAt(0).InnerText.Trim()), 
+                                EndDate = DateTime.Parse(columns.ElementAt(1).InnerText.Trim()), 
                                 CreatedDate = DateTime.Parse(columns.ElementAt(2).InnerText.Trim()), 
                                 Id = String.Join(null, Regex.Split(columns.ElementAt(3).CssSelect("a").FirstOrDefault().Attributes["href"].Value, "[^\\d]"))
                             });
