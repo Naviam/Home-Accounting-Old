@@ -86,7 +86,7 @@ namespace Naviam.WebUI.Controllers
                 if (string.IsNullOrEmpty(sms.Result) || !sms.Result.Equals("Uspeshno", StringComparison.InvariantCultureIgnoreCase))
                 {
                     log.Warn(String.Format("sms resault is {0}", sms.Result));
-                    NotificationManager.Instance.SendSmsMail(account.SmsUser, message);
+                    NotificationManager.Instance.SendSmsMail(account.SmsUser, sms.HtmlText);
                     return Json("ok");
                 }
 

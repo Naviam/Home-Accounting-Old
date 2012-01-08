@@ -20,6 +20,8 @@ namespace Naviam.NotificationCenter
         protected const string MAIL_SETTINGS_SECTION_GROUP_NAME = "system.net/mailSettings";
         protected MailSettingsSectionGroup _mailSettings;
 
+        private ILog log = LogManager.GetLogger("navSite");
+
         private NotificationManager()
         {
             Configuration configurationFile = WebConfigurationManager.OpenWebConfiguration(HttpContext.Current.Request.ApplicationPath);
@@ -75,7 +77,6 @@ namespace Naviam.NotificationCenter
             }
             catch (Exception e)
             {
-                var log = LogManager.GetLogger("navSite");
                 log.Debug(e.Message);
                 throw;
             }
@@ -95,7 +96,6 @@ namespace Naviam.NotificationCenter
             }
             catch (Exception e)
             {
-                var log = LogManager.GetLogger("navSite");
                 log.Debug(e.Message);
                 throw;
             }
@@ -132,6 +132,7 @@ namespace Naviam.NotificationCenter
 
         private void SendMail(MailMessage message)
         {
+            log.Info(string.Format("message.Body = {0} ", message.Body));
             _smtpClient.Send(message);
         }
     }
