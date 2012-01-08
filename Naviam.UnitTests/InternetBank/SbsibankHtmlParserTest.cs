@@ -162,11 +162,11 @@ namespace Naviam.UnitTests.InternetBank
             {
                 var exp = expected[i];
                 var act = actual[i];
-                Assert.AreEqual(exp.OperationDate, act.OperationDate);
-                Assert.AreEqual(exp.Status, act.Status);
-                Assert.AreEqual(exp.TransactionAmount, act.TransactionAmount);
-                Assert.AreEqual(exp.Currency, act.Currency);
-                Assert.AreEqual(exp.OperationDescription, act.OperationDescription);
+                Assert.AreEqual(exp.OperationDate, act.OperationDate, String.Format("Operation Date, index: {0}", i));
+                Assert.AreEqual(exp.Status, act.Status, String.Format("Status, index: {0}", i));
+                Assert.AreEqual(exp.OperationAmount, act.OperationAmount, String.Format("Operation Amount, index: {0}", i));
+                Assert.AreEqual(exp.Currency, act.Currency, String.Format("Currency, index: {0}", i));
+                Assert.AreEqual(exp.OperationDescription, act.OperationDescription, String.Format("Operation Description, index: {0}", i));
             }
         }
 
@@ -179,9 +179,7 @@ namespace Naviam.UnitTests.InternetBank
             // arrange
             var request = Settings.TransactionRequests
                 .FirstOrDefault(c => String.Compare(c.Name, "getreport", StringComparison.OrdinalIgnoreCase) == 0);
-
             var content = OpenHtmlFile("Report.htm");
-
             var expected = PrepareExpectedReport();
 
             // act
@@ -194,8 +192,8 @@ namespace Naviam.UnitTests.InternetBank
             Assert.AreEqual(expected.CardNumber, actual.CardNumber, "Card Number");
             Assert.AreEqual(expected.Currency, actual.Currency, "Card Number");
             Assert.AreEqual(expected.StartBalance, actual.StartBalance, "Start Balance");
-            //Assert.AreEqual(expected.StateOnDate, actual.StateOnDate, "State on date");
-            //Assert.AreEqual(expected.ReportPeriod, actual.ReportPeriod, "Report Period");
+            Assert.AreEqual(expected.StateOnDate.ToString(), actual.StateOnDate.ToString(), "State on date");
+            Assert.AreEqual(expected.ReportPeriod.ToString(), actual.ReportPeriod.ToString(), "Report Period");
             Assert.AreEqual(expectedTransactions.Count(), actualTransactions.Count(), "Count of transactions");
             var count = expectedTransactions.Count();
             for (var i = 0; i < count; i++)
@@ -222,14 +220,39 @@ namespace Naviam.UnitTests.InternetBank
 
             var content = OpenHtmlFile("Statements.htm");
 
-            IEnumerable<ReportPeriod> expected = null; // TODO: Initialize to an appropriate value
+            var expected = new List<ReportPeriod>
+                            {
+                                new ReportPeriod
+                                    {
+                                        StartDate = DateTime.Parse("2011-01-01"),
+                                        EndDate = DateTime.Parse("2011-05-01"),
+                                        CreatedDate = DateTime.Parse("2011-12-01 04:01:13"),
+                                        Id = "116167"
+                                    },
+                                new ReportPeriod
+                                    {
+                                        StartDate = DateTime.Parse("2010-02-11"),
+                                        EndDate = DateTime.Parse("2010-05-01"),
+                                        CreatedDate = DateTime.Parse("2011-12-07 16:53:42"),
+                                        Id = "120946"
+                                    }
+                            };
             
             // act
-            var actual = SbsibankHtmlParser.ParseStatementsList(content);
+            Debug.Assert(request != null, "request != null");
+            var actual = SbsibankHtmlParser.ParseStatementsList(request.Selector, content).ToList();
             
             // assert
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            var count = expected.Count();
+            for (var i = 0; i < count; i++)
+            {
+                var exp = expected[i];
+                var act = actual[i];
+                Assert.AreEqual(exp.StartDate, act.StartDate, String.Format("Start Date, index: {0}", i));
+                Assert.AreEqual(exp.EndDate, act.EndDate, String.Format("End Date, index: {0}", i));
+                Assert.AreEqual(exp.CreatedDate, act.CreatedDate, String.Format("Created Date, index: {0}", i));
+                Assert.AreEqual(exp.Id, act.Id, String.Format("Id, index: {0}", i));
+            }
         }
 
         private static Report PrepareExpectedReport()

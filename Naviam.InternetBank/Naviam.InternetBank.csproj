@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Entities\AccountTransaction.cs" />
     <Compile Include="BankClient.cs" />
+    <Compile Include="Entities\StateOnDate.cs" />
     <Compile Include="Helpers\BankHelper.cs" />
     <Compile Include="Entities\InetBank.cs" />
     <Compile Include="Entities\InetBankCookie.cs" />

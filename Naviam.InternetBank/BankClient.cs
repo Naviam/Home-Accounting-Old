@@ -422,7 +422,9 @@ namespace Naviam.InternetBank
                     var responseStream = response.GetResponseStream();
                     if (responseStream != null)
                     {
-                        var reports = SbsibankHtmlParser.ParseStatementsList(new StreamReader(responseStream, Encoding.GetEncoding(1251)));
+                        var reports = SbsibankHtmlParser.ParseStatementsList(
+                            statementsGetRequest.Selector,
+                            new StreamReader(responseStream, Encoding.GetEncoding(1251)));
                         var endDate = DateTime.UtcNow.AddDays(-1);
 
                         var preparedRanges = new List<ReportPeriod>();

@@ -61,7 +61,7 @@
         <request name="statements" method="GET">
             <url>statementA.asp</url>
             <referer>left.asp</referer>
-            <selector></selector>
+            <selector>p[class=mainfnt] > table[class=mainfnt] > tr</selector>
         </request>
         <request name="createreport" method="POST">
             <url>addreptask.asp</url>
