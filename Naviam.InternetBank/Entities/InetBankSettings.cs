@@ -15,14 +15,8 @@ namespace Naviam.InternetBank.Entities
         public int MaxDaysPeriod { get; set; }
         [XmlElement(ElementName = "commonHeaders", Type = typeof(RequestHeaders))]
         public RequestHeaders RequestHeaders { get; set; }
-        [XmlArrayItem(ElementName = "request", Type = typeof(LoginRequest))]
-        [XmlArray(ElementName = "login")]
-        public LoginRequest[] LoginRequests { get; set; }
         [XmlArrayItem(ElementName = "request", Type = typeof(InetBankRequest))]
-        [XmlArray(ElementName = "cardList")]
-        public InetBankRequest[] CardListRequests { get; set; }
-        [XmlArrayItem(ElementName = "request", Type = typeof(InetBankRequest))]
-        [XmlArray(ElementName = "transactions")]
-        public InetBankRequest[] TransactionRequests { get; set; }
+        [XmlArray(ElementName = "requests")]
+        public InetBankRequest[] Requests { get; set; }
     }
 }

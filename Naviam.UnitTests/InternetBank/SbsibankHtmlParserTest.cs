@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -48,6 +47,14 @@ namespace Naviam.UnitTests.InternetBank
             return new StreamReader(
                 File.Open(filePath, FileMode.Open), Encoding.GetEncoding(1251));
         }
+
+        private static InetBankRequest GetRequestSettings(string category, string name, string method)
+        {
+            return Settings.Requests.FirstOrDefault(lr =>
+                String.Compare(lr.Category, category, StringComparison.OrdinalIgnoreCase) == 0 &&
+                String.Compare(lr.Name, name, StringComparison.OrdinalIgnoreCase) == 0 &&
+                String.Compare(lr.Method, method, StringComparison.OrdinalIgnoreCase) == 0);
+        }
         #endregion
 
         /// <summary>
@@ -57,8 +64,7 @@ namespace Naviam.UnitTests.InternetBank
         public void ParseBalanceTest()
         {
             // arrange
-            var request = Settings.CardListRequests
-                .FirstOrDefault(c => String.Compare(c.Name, "balance", StringComparison.OrdinalIgnoreCase) == 0);
+            var request = GetRequestSettings("cards", "balance", "GET");
 
             var content = OpenHtmlFile("balance.htm");
 
@@ -81,8 +87,7 @@ namespace Naviam.UnitTests.InternetBank
         public void ParseCardHistoryTest()
         {
             // arrange
-            var request = Settings.CardListRequests
-                .FirstOrDefault(c => String.Compare(c.Name, "history", StringComparison.OrdinalIgnoreCase) == 0);
+            var request = GetRequestSettings("cards", "history", "GET");
 
             var content = OpenHtmlFile("card_history.htm");
 
@@ -110,8 +115,7 @@ namespace Naviam.UnitTests.InternetBank
         public void ParseCardListTest()
         {
             // arrange
-            var request = Settings.CardListRequests
-                .FirstOrDefault(c => String.Compare(c.Name, "cardlist", StringComparison.OrdinalIgnoreCase) == 0);
+            var request = GetRequestSettings("cards", "cardlist", "GET");
 
             var content = OpenHtmlFile("CardList.htm");
 
@@ -126,7 +130,7 @@ namespace Naviam.UnitTests.InternetBank
 
             // act
             Debug.Assert(request != null, "request != null");
-            var actual = SbsibankHtmlParser.ParseCardList(request.Selector, content);
+            var actual = SbsibankHtmlParser.ParseCardList(request.Selector, content).ToList();
             Debug.Assert(actual != null, "actual != null");
             var actualFirst = actual.FirstOrDefault();
 
@@ -144,8 +148,7 @@ namespace Naviam.UnitTests.InternetBank
         public void ParseLatestTransactionsTest()
         {
             // arrange
-            var request = Settings.TransactionRequests
-                .FirstOrDefault(c => String.Compare(c.Name, "latest", StringComparison.OrdinalIgnoreCase) == 0);
+            var request = GetRequestSettings("transactions", "latest", "POST");
 
             var content = OpenHtmlFile("latesttransactions2.htm");
 
@@ -177,8 +180,7 @@ namespace Naviam.UnitTests.InternetBank
         public void ParseReportTest()
         {
             // arrange
-            var request = Settings.TransactionRequests
-                .FirstOrDefault(c => String.Compare(c.Name, "getreport", StringComparison.OrdinalIgnoreCase) == 0);
+            var request = GetRequestSettings("transactions", "getreport", "GET");
             var content = OpenHtmlFile("Report.htm");
             var expected = PrepareExpectedReport();
 
@@ -215,7 +217,7 @@ namespace Naviam.UnitTests.InternetBank
         public void ParseStatementsListTest()
         {
             // arrange
-            var request = Settings.TransactionRequests
+            var request = Settings.Requests
                 .FirstOrDefault(c => String.Compare(c.Name, "statements", StringComparison.OrdinalIgnoreCase) == 0);
 
             var content = OpenHtmlFile("Statements.htm");

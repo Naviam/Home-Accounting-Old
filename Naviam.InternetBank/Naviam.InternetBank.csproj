@@ -53,14 +53,13 @@
     <Compile Include="Entities\AccountTransaction.cs" />
     <Compile Include="BankClient.cs" />
     <Compile Include="Entities\StateOnDate.cs" />
-    <Compile Include="Helpers\BankHelper.cs" />
+    <Compile Include="Helpers\BankUtility.cs" />
     <Compile Include="Entities\InetBank.cs" />
     <Compile Include="Entities\InetBankCookie.cs" />
     <Compile Include="Entities\InetBankRequest.cs" />
     <Compile Include="Entities\InetBankSettings.cs" />
     <Compile Include="Entities\InternetBanks.cs" />
     <Compile Include="Entities\LoginResponse.cs" />
-    <Compile Include="Entities\LoginRequest.cs" />
     <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="Helpers\SbsibankHtmlParser.cs" />
     <Compile Include="Entities\PaymentCard.cs" />
@@ -68,6 +67,7 @@
     <Compile Include="Entities\Report.cs" />
     <Compile Include="Entities\ReportRow.cs" />
     <Compile Include="Entities\RequestHeaders.cs" />
+    <Compile Include="SbsiBankRequests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="HtmlSamples\balance.htm">

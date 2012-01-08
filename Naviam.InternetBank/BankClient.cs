@@ -3,20 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Xml.Serialization;
 using Naviam.InternetBank.Entities;
-using Naviam.InternetBank.Helpers;
 
 namespace Naviam.InternetBank
 {
     public class BankClient : IDisposable
     {
-        private CookieCollection _cookies;
-        private readonly Uri _baseUri;
+        private readonly SbsiBankRequests _bankRequests;
         private const string BanksXmlFileName = "InternetBanks.xml";
 
         /// <summary>
@@ -71,7 +65,9 @@ namespace Naviam.InternetBank
                        select b).FirstOrDefault();
 
             if (InetBank != null) Settings = LoadSettings(InetBank.BankSettings);
-            _baseUri = new Uri(Settings.BaseUrl);
+
+            // init helper class to make requests
+            _bankRequests = new SbsiBankRequests(Settings);
         }
 
         /// <summary>
@@ -82,10 +78,10 @@ namespace Naviam.InternetBank
         /// <returns>Login response</returns>
         public LoginResponse Login(string userName, string password)
         {
-            var responseCode = GetLoginPage(userName, InetBank.BankId);
+            var responseCode = _bankRequests.GetLoginPage();
             if (responseCode == 0)
             {
-                responseCode = Authenticate(userName, password, InetBank.BankId);
+                responseCode = _bankRequests.Authenticate(userName, password, InetBank.BankId);
             }
             return new LoginResponse
                        {
@@ -99,17 +95,15 @@ namespace Naviam.InternetBank
         /// </summary>
         public IEnumerable<PaymentCard> GetPaymentCards()
         {
-            var cardList = GetCardList();
+            var cardList = _bankRequests.GetCardList();
             var resultCardList = new List<PaymentCard>();
 
             foreach (var paymentCard in cardList)
             {
                 var card = paymentCard;
-                if (paymentCard != null)
-                {
-                    UpdateCardInfo(ref card);
-                    resultCardList.Add(card);
-                }
+                if (paymentCard == null) continue;
+                _bankRequests.UpdateCardInfo(ref card);
+                resultCardList.Add(card);
             }
             return resultCardList;
         }
@@ -128,27 +122,26 @@ namespace Naviam.InternetBank
                 throw new ArgumentOutOfRangeException("startDate", startDate, "Start Date must be before today date.");
             
             // set card with parameter id active
-            var cardChanged = ChangeCurrentCard(card.Id);
+            var cardChanged = _bankRequests.ChangeCurrentCard(card.Id);
             // get 20 latest transactions
             if (cardChanged)
             {
-                var latestTransactions = GetLatestCardTransactions();
+                var latestTransactions = _bankRequests.GetLatestCardTransactions().ToList();
                 
                 // check if there is a date in these transactions older than start date
-                if (latestTransactions != null && latestTransactions.Any(t => t.OperationDate.Date < startDate))
+                if (latestTransactions.Any(t => t.OperationDate.Date < startDate))
                 {
                     // if  true return the list of transactions
                     return latestTransactions.Where(t => t.OperationDate.Date >= startDate);
                 }
-                // if  false get periods to create reports
-                List<ReportPeriod> reportsToCreate;
-                var generatedReports = GetListOfUsedStatements(startDate, card.RegisterDate, out reportsToCreate);
-                // create reports
-                foreach (var reportRow in reportsToCreate)
+                // if false get report periods
+                var reports = _bankRequests.GetListOfUsedStatements(startDate, card.RegisterDate);
+                
+                // run reports and create them when necessary
+                foreach (var reportRow in reports.Where(reportRow => !reportRow.IsCreated))
                 {
-                    var report = CreateReport(reportRow.StartDate, reportRow.EndDate);
+                    _bankRequests.CreateReport(reportRow.StartDate, reportRow.EndDate);
                 }
-                // run reports and return the list of transactions
             }
             
             return new List<AccountTransaction>();
@@ -167,442 +160,5 @@ namespace Naviam.InternetBank
         {
             Logout(true);
         }
-
-        #region PRIVATE METHODS
-
-        #region Login Methods
-        /// <summary>
-        /// Open the Login page to get Set-Cookies response header 
-        /// </summary>
-        /// <returns>Response code.
-        ///     0: Success; 
-        ///     1: Response status code is not OK;
-        ///     2: Settings in XML has not been found for Login GET request.
-        /// </returns>
-        private int GetLoginPage(string username, string iBankId)
-        {
-            // get bank settings for get login request
-            var loginGetRequest = Settings.LoginRequests
-                .FirstOrDefault(lr => String.Compare(lr.Method, "GET", StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (loginGetRequest != null)
-            {
-                var request = GetRequest(loginGetRequest.Url, loginGetRequest.Referer);
-
-                // get response
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        if (loginGetRequest.SetAuthCookies)
-                        {
-                            _cookies = response.Cookies;
-                        }
-                        //if (loginGetRequest.CookieCollection == null || !loginGetRequest.CookieCollection.Any())
-                        //    return 3;
-                        // parse custom cookies with named string formatter
-                        //foreach (var cookie in loginGetRequest.CookieCollection)
-                        //{
-                        //    cookie.Value = cookie.Value.FormatWith(new { username, iBankId });
-                        //    _cookies.Add(new Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain));
-                        //}
-                        //_cookies = response.Cookies;
-                        return 0;
-                    }
-                    return 1;
-                }
-            }
-            return 2;
-        }
-
-        /// <summary>
-        /// Authenticate user in internet bank with POST request
-        /// </summary>
-        /// <param name="username">Internet Bank username.</param>
-        /// <param name="password">Internet Bank password.</param>
-        /// <param name="iBankId">Internet Bank ID.</param>
-        /// <returns>
-        ///     Response code:
-        ///     0: Success;
-        ///     1: Response status code is not 302;
-        ///     2: XML settings have not been found for POST request;
-        ///     3: Login Failed.
-        /// </returns>
-        private int Authenticate(string username, string password, string iBankId)
-        {
-            // get bank settings for get login request
-            var loginPostRequest = Settings.LoginRequests
-                .FirstOrDefault(lr => String.Compare(lr.Method, "POST", StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (loginPostRequest != null)
-            {
-                var request = GetRequest(loginPostRequest.Url, loginPostRequest.Referer, false, "POST");
-
-                // submit login form data
-                var postData = loginPostRequest.PostData.FormatWith(
-                    new { username, password, iBankId });
-
-                var encoding = new ASCIIEncoding();
-                var data = encoding.GetBytes(postData);
-                request.ContentLength = postData.Length;
-                var dataStream = request.GetRequestStream();
-                dataStream.Write(data, 0, data.Length);
-                dataStream.Close();
-
-                // get response
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode == HttpStatusCode.Found)
-                    {
-                        if (loginPostRequest.SetAuthCookies)
-                        {
-                            _cookies.Add(response.Cookies);
-                        }
-                        var isProtectedPage = response.Headers["Location"].Contains("home.asp");
-                        return isProtectedPage ? 0 : 3;
-                    }
-                    return 1;
-                }
-            }
-            return 2;
-        } 
-        #endregion
-
-        #region Card list Methods
-        /// <summary>
-        /// Get collection of user's payment cards
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerable<PaymentCard> GetCardList()
-        {
-            var cardsGetRequest = Settings.CardListRequests
-                .FirstOrDefault(lr => String.Compare(lr.Name, "cardlist", StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (cardsGetRequest != null)
-            {
-                var request = GetRequest(cardsGetRequest.Url, cardsGetRequest.Referer);
-
-                // get response
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    var responseStream = response.GetResponseStream();
-                    return responseStream != null ?
-                        SbsibankHtmlParser.ParseCardList(cardsGetRequest.Selector,
-                        new StreamReader(responseStream, Encoding.GetEncoding(1251))) : new List<PaymentCard>();
-                }
-            }
-
-            return new List<PaymentCard>();
-        }
-
-        private bool UpdateCardInfo(ref PaymentCard card)
-        {
-            var result = ChangeCurrentCard(card.Id);
-            if (result)
-            {
-                UpdateCardHistoryInfo(ref card);
-                UpdateCardBalance(ref card);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Change current active card
-        /// </summary>
-        /// <param name="cardId"></param>
-        private bool ChangeCurrentCard(string cardId)
-        {
-            var changeCardGetRequest = Settings.CardListRequests
-                .FirstOrDefault(card => String.Compare(card.Name, "changeActiveCard", StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (changeCardGetRequest != null)
-            {
-                var url = changeCardGetRequest.Url.FormatWith(new { cardId });
-                var request = GetRequest(url, changeCardGetRequest.Referer);
-
-                // get response
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    return response.StatusCode == HttpStatusCode.OK;
-                }
-            }
-            return false;
-        }
-
-        private void UpdateCardHistoryInfo(ref PaymentCard paymentCard)
-        {
-            var historyCardGetRequest = Settings.CardListRequests
-                .FirstOrDefault(card => String.Compare(card.Name, "history", StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (historyCardGetRequest != null)
-            {
-                var request = GetRequest(historyCardGetRequest.Url, historyCardGetRequest.Referer);
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    var responseStream = response.GetResponseStream();
-                    if (responseStream != null)
-                    {
-                        SbsibankHtmlParser.ParseCardHistory(historyCardGetRequest.Selector,
-                            new StreamReader(responseStream, Encoding.GetEncoding(1251)), ref paymentCard);
-                    }
-                }
-            }
-        }
-
-        private void UpdateCardBalance(ref PaymentCard paymentCard)
-        {
-            var balanceCardGetRequest = Settings.CardListRequests
-                .FirstOrDefault(card => String.Compare(card.Name, "balance", StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (balanceCardGetRequest != null)
-            {
-                var request = GetRequest(balanceCardGetRequest.Url, balanceCardGetRequest.Referer);
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    var responseStream = response.GetResponseStream();
-                    if (responseStream != null)
-                    {
-                        SbsibankHtmlParser.ParseBalance(
-                            balanceCardGetRequest.Selector,
-                            new StreamReader(responseStream, Encoding.GetEncoding(1251)), ref paymentCard);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        /// <summary>
-        /// Get latest 20 transactions
-        /// </summary>
-        /// <returns>latest 20 transactions</returns>
-        private IEnumerable<AccountTransaction> GetLatestCardTransactions()
-        {
-            var latestPostRequest = Settings.TransactionRequests
-                .FirstOrDefault(tr => String.Compare(tr.Name, "latest", StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (latestPostRequest != null)
-            {
-                var request = GetRequest(latestPostRequest.Url, latestPostRequest.Referer, true, "POST");
-
-                // submit login form data
-                var postData = latestPostRequest.PostData;
-
-                var encoding = new ASCIIEncoding();
-                var data = encoding.GetBytes(postData);
-                request.ContentLength = postData.Length;
-                var dataStream = request.GetRequestStream();
-                dataStream.Write(data, 0, data.Length);
-                dataStream.Close();
-                
-                // get response
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    var responseStream = response.GetResponseStream();
-                    return responseStream != null ?
-                        SbsibankHtmlParser.ParseLatestTransactions(latestPostRequest.Selector,
-                        new StreamReader(responseStream, Encoding.GetEncoding(1251))) : new List<AccountTransaction>();
-                }
-            }
-            return new List<AccountTransaction>();
-        }
-
-        private IEnumerable<ReportPeriod> GetListOfUsedStatements(
-            DateTime startDate, DateTime cardRegisterDate, out List<ReportPeriod> reportsToCreate)
-        {
-            if (startDate == DateTime.MinValue) startDate = cardRegisterDate;
-
-            var statementsGetRequest = Settings.TransactionRequests
-                .FirstOrDefault(tr => String.Compare(tr.Name, "statements", StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (statementsGetRequest != null)
-            {
-                var request = GetRequest(statementsGetRequest.Url, statementsGetRequest.Referer);
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    var responseStream = response.GetResponseStream();
-                    if (responseStream != null)
-                    {
-                        var reports = SbsibankHtmlParser.ParseStatementsList(
-                            statementsGetRequest.Selector,
-                            new StreamReader(responseStream, Encoding.GetEncoding(1251)));
-                        var endDate = DateTime.UtcNow.AddDays(-1);
-
-                        var preparedRanges = new List<ReportPeriod>();
-                        reportsToCreate = new List<ReportPeriod>();
-                        if (reports != null)
-                        {
-                            ReportPeriod range = null;
-                            do
-                            {
-                                if (startDate > endDate) continue;
-
-                                range = reports.Where(r => r.StartDate <= startDate && r.EndDate > startDate)
-                                            .OrderByDescending(r => r.EndDate).FirstOrDefault() ??
-                                        reports.Where(r => r.StartDate > startDate).OrderBy(r => r.StartDate)
-                                            .FirstOrDefault();
-
-                                if (range == null) continue;
-
-                                range.IsCreated = true;
-
-                                if (range.StartDate > startDate)
-                                {
-                                    var start = startDate;
-                                    do
-                                    {
-                                        if (DaysBetween(range.StartDate, start) > Settings.MaxDaysPeriod)
-                                        {
-                                            var end = start.AddDays(Settings.MaxDaysPeriod);
-                                            var createReport = new ReportPeriod
-                                            {
-                                                StartDate = start,
-                                                EndDate = end,
-                                                IsCreated = false
-                                            };
-                                            reportsToCreate.Add(createReport);
-                                            start = end.AddDays(1);
-                                        }
-                                        else
-                                        {
-                                            var createReport = new ReportPeriod
-                                            {
-                                                StartDate = start,
-                                                EndDate = range.StartDate.AddDays(-1),
-                                                IsCreated = false
-                                            };
-                                            reportsToCreate.Add(createReport);
-                                            start = range.StartDate.AddDays(1);
-                                        }
-
-                                    } while (start < range.StartDate);
-                                }
-                                preparedRanges.Add(range);
-                                startDate = range.EndDate.AddDays(1);
-                            } while (range != null);
-                        }
-
-                        var start2 = startDate;
-                        do
-                        {
-                            if (DaysBetween(endDate, start2) > Settings.MaxDaysPeriod)
-                            {
-                                var end = start2.AddDays(Settings.MaxDaysPeriod);
-                                var createReport = new ReportPeriod
-                                {
-                                    StartDate = start2,
-                                    EndDate = end,
-                                    IsCreated = false
-                                };
-                                reportsToCreate.Add(createReport);
-                                start2 = end.AddDays(1);
-                            }
-                            else
-                            {
-                                var createReport = new ReportPeriod
-                                {
-                                    StartDate = start2,
-                                    EndDate = endDate,
-                                    IsCreated = false
-                                };
-                                reportsToCreate.Add(createReport);
-                                start2 = endDate;
-                            }
-
-                        } while (start2 < endDate);
-
-                        return preparedRanges;
-                    }
-                }
-            }
-            reportsToCreate = null;
-            return null;
-        }
-
-        private Report CreateReport(DateTime startDate, DateTime endDate)
-        {
-            var createReportPostRequest = Settings.TransactionRequests
-                .FirstOrDefault(tr => String.Compare(tr.Name, "createreport", StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (createReportPostRequest != null)
-            {
-                var request = GetRequest(createReportPostRequest.Url, createReportPostRequest.Referer, true, "POST");
-
-                // submit login form data
-                var postData = createReportPostRequest.PostData;
-
-                var encoding = new ASCIIEncoding();
-                var data = encoding.GetBytes(postData);
-                request.ContentLength = postData.Length;
-                var dataStream = request.GetRequestStream();
-                dataStream.Write(data, 0, data.Length);
-                dataStream.Close();
-
-                // get response
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    var responseStream = response.GetResponseStream();
-                    return responseStream != null ?
-                        SbsibankHtmlParser.ParseReport(createReportPostRequest.Selector,
-                        new StreamReader(responseStream, Encoding.GetEncoding(1251))) : null;
-                }
-            }
-            return null;
-        }
-
-        public static int DaysBetween(DateTime d1, DateTime d2)
-        {
-            var span = d2.Subtract(d1);
-            return Math.Abs((int)span.TotalDays);
-        }
-
-        #region Common Methods
-        private HttpWebRequest GetRequest(string url, string referer, bool followRedirect = true, string method = "GET")
-        {
-            var request = (HttpWebRequest)WebRequest.Create(GetAbsoluteUri(url));
-            // allows for validation of SSL conversations
-            ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
-            AddCommonHeadersToHttpRequest(request, referer, method, followRedirect);
-            return request;
-        }
-
-        // callback used to validate the certificate in an SSL conversation
-        private static bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors policyErrors)
-        {
-            return cert.Subject.ToUpper().Contains("SBSIBANK");
-        }
-
-        private void AddCommonHeadersToHttpRequest(
-            HttpWebRequest request, string referer, string method, bool followRedirect = true)
-        {
-            // add cookies to request
-            var cookieContainer = new CookieContainer();
-            if (_cookies != null) cookieContainer.Add(_cookies);
-            request.CookieContainer = cookieContainer;
-
-            request.Method = method;
-            request.AllowAutoRedirect = followRedirect;
-            request.KeepAlive = true;
-            request.ContentType = Settings.RequestHeaders.ContentType;
-            request.PreAuthenticate = Settings.RequestHeaders.PreAuthenticate;
-            request.Host = Settings.RequestHeaders.Host;
-            request.UserAgent = Settings.RequestHeaders.UserAgent;
-            request.Accept = Settings.RequestHeaders.Accept;
-            request.Headers.Add("Accept-Language", Settings.RequestHeaders.AcceptLanguage);
-            request.Headers.Add("Accept-Encoding", Settings.RequestHeaders.AcceptEncoding);
-            request.Headers.Add("Accept-Charset", Settings.RequestHeaders.AcceptCharset);
-
-            Uri uriResult;
-            if (Uri.TryCreate(_baseUri, referer, out uriResult))
-                request.Referer = uriResult.AbsoluteUri;
-        }
-
-        private string GetAbsoluteUri(string relativeUri)
-        {
-            Uri resultUri;
-            return Uri.TryCreate(_baseUri, relativeUri, out resultUri) ? resultUri.AbsoluteUri : String.Empty;
-        }
-        #endregion
-
-        #endregion
     }
 }

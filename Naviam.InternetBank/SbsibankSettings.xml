@@ -12,8 +12,8 @@
         <acceptCharset>ISO-8859-1,utf-8;q=0.7,*;q=0.7</acceptCharset>
     </commonHeaders>
     <maxDaysPeriod>170</maxDaysPeriod>
-    <login>
-        <request name="getloginpage" method="GET">
+    <requests>
+        <request category="login" name="getloginpage" method="GET">
             <url>login.asp</url>
             <referer></referer>
             <setAuthCookies>true</setAuthCookies>
@@ -23,56 +23,52 @@
                 <cookie name="S1" value="{iBankId}" path="/" domain="www.sbsibank.by"></cookie>
             </cookies>-->
         </request>
-        <request name="authenticate" method="POST">
+        <request category="login" name="authenticate" method="POST">
             <url>login.asp?mode=1</url>
             <referer>login.asp</referer>
             <postData>S1={iBankId}&amp;T1={username}&amp;C1=ON&amp;T2={password}&amp;B1=%C4%E0%EB%E5%E5</postData>
             <setAuthCookies>true</setAuthCookies>
         </request>
-    </login>
-    <cardList>
-        <request name="cardlist" method="GET">
+        <request category="cards" name="cardlist" method="GET">
             <url>right.asp</url>
             <referer>home.asp</referer>
             <selector>input[type=radio][name=R1]</selector>
         </request>
-        <request name="changeActiveCard" method="GET">
+        <request category="cards" name="changeActiveCard" method="GET">
             <url>mbottom.asp?crd_id={cardId}</url>
             <referer>right.asp</referer>
         </request>
-        <request name="balance" method="GET">
+        <request category="cards" name="balance" method="GET">
             <url>balance.asp</url>
             <referer>left.asp</referer>
             <selector>p[class=mainfnt] > b > font[color=red]</selector>
         </request>
-        <request name="history" method="GET">
+        <request category="cards" name="history" method="GET">
             <url>card_history.asp</url>
             <referer>right.asp</referer>
             <selector>table[cellspacing=5] > tr</selector>
         </request>
-    </cardList>
-    <transactions>
-        <request name="latest" method="POST">
+        <request category="transactions" name="latest" method="POST">
             <url>statement_ajax.asp</url>
             <referer>statement.asp?O=A</referer>
             <selector>table > tr</selector>
             <postData>O=A</postData>
         </request>
-        <request name="statements" method="GET">
+        <request category="transactions" name="statements" method="GET">
             <url>statementA.asp</url>
             <referer>left.asp</referer>
             <selector>p[class=mainfnt] > table[class=mainfnt] > tr</selector>
         </request>
-        <request name="createreport" method="POST">
+        <request category="transactions" name="createreport" method="POST">
             <url>addreptask.asp</url>
             <referer>addreptask.asp</referer>
             <selector></selector>
             <postData></postData>
         </request>
-        <request name="getreport" method="GET">
+        <request category="transactions" name="getreport" method="GET">
             <url>show.asp?id={reportId}</url>
             <referer>statementA.asp</referer>
             <selector></selector>
         </request>
-    </transactions>
+    </requests>
 </internetBankSettings>
