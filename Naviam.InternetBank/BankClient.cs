@@ -29,6 +29,34 @@ namespace Naviam.InternetBank
         /// </summary>
         public InetBankSettings Settings { get; private set; }
 
+        protected static InetBankSettings LoadSettings(string sbsibanksettingsXml)
+        {
+            var serializer = new XmlSerializer(typeof(InetBankSettings));
+            if (File.Exists(sbsibanksettingsXml))
+            {
+                using (var streamReader = File.OpenText(sbsibanksettingsXml))
+                {
+                    return serializer.Deserialize(streamReader) as InetBankSettings;
+                }
+            }
+            return null;
+        }
+
+        protected static IEnumerable<InetBank> LoadBanks(string fileName)
+        {
+            var serializer = new XmlSerializer(typeof(InternetBanks));
+            if (File.Exists(fileName))
+            {
+                using (var streamReader = File.OpenText(fileName))
+                {
+                    var internetBanks = serializer.Deserialize(streamReader) as InternetBanks;
+                    if (internetBanks != null)
+                        return internetBanks.Banks;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Initialize the internet bank client with specific settings of a given bank.
         /// </summary>
@@ -113,12 +141,12 @@ namespace Naviam.InternetBank
                     return latestTransactions.Where(t => t.OperationDate.Date >= startDate);
                 }
                 // if  false get periods to create reports
-                List<ReportRow> reportsToCreate;
+                List<ReportPeriod> reportsToCreate;
                 var generatedReports = GetListOfUsedStatements(startDate, card.RegisterDate, out reportsToCreate);
                 // create reports
                 foreach (var reportRow in reportsToCreate)
                 {
-                    var report = CreateReport(reportRow.PeriodStartDate, reportRow.PeriodEndDate);
+                    var report = CreateReport(reportRow.StartDate, reportRow.EndDate);
                 }
                 // run reports and return the list of transactions
             }
@@ -259,7 +287,7 @@ namespace Naviam.InternetBank
                 {
                     var responseStream = response.GetResponseStream();
                     return responseStream != null ?
-                        ParseHtmlHelper.ParseCardList(cardsGetRequest.Selector,
+                        SbsibankHtmlParser.ParseCardList(cardsGetRequest.Selector,
                         new StreamReader(responseStream, Encoding.GetEncoding(1251))) : new List<PaymentCard>();
                 }
             }
@@ -314,7 +342,7 @@ namespace Naviam.InternetBank
                     var responseStream = response.GetResponseStream();
                     if (responseStream != null)
                     {
-                        ParseHtmlHelper.ParseCardHistory(historyCardGetRequest.Selector,
+                        SbsibankHtmlParser.ParseCardHistory(historyCardGetRequest.Selector,
                             new StreamReader(responseStream, Encoding.GetEncoding(1251)), ref paymentCard);
                     }
                 }
@@ -334,7 +362,7 @@ namespace Naviam.InternetBank
                     var responseStream = response.GetResponseStream();
                     if (responseStream != null)
                     {
-                        ParseHtmlHelper.ParseBalance(
+                        SbsibankHtmlParser.ParseBalance(
                             balanceCardGetRequest.Selector,
                             new StreamReader(responseStream, Encoding.GetEncoding(1251)), ref paymentCard);
                     }
@@ -371,15 +399,15 @@ namespace Naviam.InternetBank
                 {
                     var responseStream = response.GetResponseStream();
                     return responseStream != null ?
-                        ParseHtmlHelper.ParseLatestTransactions(latestPostRequest.Selector,
+                        SbsibankHtmlParser.ParseLatestTransactions(latestPostRequest.Selector,
                         new StreamReader(responseStream, Encoding.GetEncoding(1251))) : new List<AccountTransaction>();
                 }
             }
             return new List<AccountTransaction>();
         }
 
-        private IEnumerable<ReportRow> GetListOfUsedStatements(
-            DateTime startDate, DateTime cardRegisterDate, out List<ReportRow> reportsToCreate)
+        private IEnumerable<ReportPeriod> GetListOfUsedStatements(
+            DateTime startDate, DateTime cardRegisterDate, out List<ReportPeriod> reportsToCreate)
         {
             if (startDate == DateTime.MinValue) startDate = cardRegisterDate;
 
@@ -394,39 +422,39 @@ namespace Naviam.InternetBank
                     var responseStream = response.GetResponseStream();
                     if (responseStream != null)
                     {
-                        var reports = ParseHtmlHelper.ParseStatementsList(new StreamReader(responseStream, Encoding.GetEncoding(1251)));
+                        var reports = SbsibankHtmlParser.ParseStatementsList(new StreamReader(responseStream, Encoding.GetEncoding(1251)));
                         var endDate = DateTime.UtcNow.AddDays(-1);
 
-                        var preparedRanges = new List<ReportRow>();
-                        reportsToCreate = new List<ReportRow>();
+                        var preparedRanges = new List<ReportPeriod>();
+                        reportsToCreate = new List<ReportPeriod>();
                         if (reports != null)
                         {
-                            ReportRow range = null;
+                            ReportPeriod range = null;
                             do
                             {
                                 if (startDate > endDate) continue;
 
-                                range = reports.Where(r => r.PeriodStartDate <= startDate && r.PeriodEndDate > startDate)
-                                            .OrderByDescending(r => r.PeriodEndDate).FirstOrDefault() ??
-                                        reports.Where(r => r.PeriodStartDate > startDate).OrderBy(r => r.PeriodStartDate)
+                                range = reports.Where(r => r.StartDate <= startDate && r.EndDate > startDate)
+                                            .OrderByDescending(r => r.EndDate).FirstOrDefault() ??
+                                        reports.Where(r => r.StartDate > startDate).OrderBy(r => r.StartDate)
                                             .FirstOrDefault();
 
                                 if (range == null) continue;
 
                                 range.IsCreated = true;
 
-                                if (range.PeriodStartDate > startDate)
+                                if (range.StartDate > startDate)
                                 {
                                     var start = startDate;
                                     do
                                     {
-                                        if (DaysBetween(range.PeriodStartDate, start) > Settings.MaxDaysPeriod)
+                                        if (DaysBetween(range.StartDate, start) > Settings.MaxDaysPeriod)
                                         {
                                             var end = start.AddDays(Settings.MaxDaysPeriod);
-                                            var createReport = new ReportRow
+                                            var createReport = new ReportPeriod
                                             {
-                                                PeriodStartDate = start,
-                                                PeriodEndDate = end,
+                                                StartDate = start,
+                                                EndDate = end,
                                                 IsCreated = false
                                             };
                                             reportsToCreate.Add(createReport);
@@ -434,20 +462,20 @@ namespace Naviam.InternetBank
                                         }
                                         else
                                         {
-                                            var createReport = new ReportRow
+                                            var createReport = new ReportPeriod
                                             {
-                                                PeriodStartDate = start,
-                                                PeriodEndDate = range.PeriodStartDate.AddDays(-1),
+                                                StartDate = start,
+                                                EndDate = range.StartDate.AddDays(-1),
                                                 IsCreated = false
                                             };
                                             reportsToCreate.Add(createReport);
-                                            start = range.PeriodStartDate.AddDays(1);
+                                            start = range.StartDate.AddDays(1);
                                         }
 
-                                    } while (start < range.PeriodStartDate);
+                                    } while (start < range.StartDate);
                                 }
                                 preparedRanges.Add(range);
-                                startDate = range.PeriodEndDate.AddDays(1);
+                                startDate = range.EndDate.AddDays(1);
                             } while (range != null);
                         }
 
@@ -457,10 +485,10 @@ namespace Naviam.InternetBank
                             if (DaysBetween(endDate, start2) > Settings.MaxDaysPeriod)
                             {
                                 var end = start2.AddDays(Settings.MaxDaysPeriod);
-                                var createReport = new ReportRow
+                                var createReport = new ReportPeriod
                                 {
-                                    PeriodStartDate = start2,
-                                    PeriodEndDate = end,
+                                    StartDate = start2,
+                                    EndDate = end,
                                     IsCreated = false
                                 };
                                 reportsToCreate.Add(createReport);
@@ -468,10 +496,10 @@ namespace Naviam.InternetBank
                             }
                             else
                             {
-                                var createReport = new ReportRow
+                                var createReport = new ReportPeriod
                                 {
-                                    PeriodStartDate = start2,
-                                    PeriodEndDate = endDate,
+                                    StartDate = start2,
+                                    EndDate = endDate,
                                     IsCreated = false
                                 };
                                 reportsToCreate.Add(createReport);
@@ -512,7 +540,7 @@ namespace Naviam.InternetBank
                 {
                     var responseStream = response.GetResponseStream();
                     return responseStream != null ?
-                        ParseHtmlHelper.ParseReport(createReportPostRequest.Selector,
+                        SbsibankHtmlParser.ParseReport(createReportPostRequest.Selector,
                         new StreamReader(responseStream, Encoding.GetEncoding(1251))) : null;
                 }
             }
@@ -570,34 +598,6 @@ namespace Naviam.InternetBank
         {
             Uri resultUri;
             return Uri.TryCreate(_baseUri, relativeUri, out resultUri) ? resultUri.AbsoluteUri : String.Empty;
-        }
-
-        private static InetBankSettings LoadSettings(string sbsibanksettingsXml)
-        {
-            var serializer = new XmlSerializer(typeof(InetBankSettings));
-            if (File.Exists(sbsibanksettingsXml))
-            {
-                using (var streamReader = File.OpenText(sbsibanksettingsXml))
-                {
-                    return serializer.Deserialize(streamReader) as InetBankSettings;
-                }
-            }
-            return null;
-        }
-
-        private static IEnumerable<InetBank> LoadBanks(string fileName)
-        {
-            var serializer = new XmlSerializer(typeof(InternetBanks));
-            if (File.Exists(fileName))
-            {
-                using (var streamReader = File.OpenText(fileName))
-                {
-                    var internetBanks = serializer.Deserialize(streamReader) as InternetBanks;
-                    if (internetBanks != null)
-                        return internetBanks.Banks;
-                }
-            }
-            return null;
         }
         #endregion
 
