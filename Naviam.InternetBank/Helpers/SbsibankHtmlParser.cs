@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 using HtmlAgilityPack;
 using Naviam.InternetBank.Entities;
 using ScrapySharp.Extensions;
@@ -138,27 +139,75 @@ namespace Naviam.InternetBank.Helpers
             htmlDocument.Load(content);
             var html = htmlDocument.DocumentNode;
 
-            var currency = html.CssSelect("tr:nth-child(11) tt");
-            var cardNumber = html.CssSelect("tr:nth-child(9) b tt");
             var startDate = html.CssSelect("tr:nth-child(14) b tt");
             var endDate = html.CssSelect("font:nth-child(4) tt");
             var report = new Report();
             var trans = new List<AccountTransaction>();
-            var records = html.CssSelect("tr").Where(r => r.InnerHtml.Contains("<td width=\"55\" colspan=\"3\" rowspan=\"2\">"));
+            // <td width=\"55\" colspan=\"3\" rowspan=\"2\">
+            var records = html.CssSelect("tr").Where(r => r.InnerHtml.Contains("<td height=\"9\" colspan=\"2\"></td>") || r.InnerHtml.Contains("<td height=\"9\" colspan=\"28\">"));
+            var transactionRecords = records.Select(record => record.CssSelect("tt"));
 
-            foreach (var values in records.Select(record => record.CssSelect("tt")))
+            DateTime transactionDate = DateTime.MinValue; // fixed bug with html report from sbsibank (the transaction date is on another row)
+
+            foreach (var values in transactionRecords)
             {
-                trans.Add(new AccountTransaction
-                              {
-                                  Currency = values.ElementAt(3).InnerText.Trim(),
-                                  OperationDescription = values.ElementAt(1).InnerText.Trim().Replace("&nbsp;", " "),
-                                  OperationDate = DateTime.Parse(values.ElementAt(0).InnerText.Trim(), CultureInfo.CreateSpecificCulture("ru-RU")),
-                                  TransactionAmount = Decimal.Parse(values.ElementAt(2).InnerText.Trim().Replace("&nbsp;", ""))
-                              });
-                //Log.InfoFormat("Record - Date {0} : Amount: {1} Description : {2}",
-                //               values.ElementAt(0).InnerText.Trim(), 
-                //               values.ElementAt(2).InnerText.Trim(), 
-                //               values.ElementAt(1).InnerText.Trim());
+                if (values == null) continue;
+                var local = values.ToList();
+                if (!local.Any()) continue;
+                var count = local.Count();
+                switch (count)
+                {
+                    case 1:
+                        transactionDate = DateTime.Parse(local.ElementAt(0).InnerText.Trim(),
+                                                         CultureInfo.CreateSpecificCulture("ru-RU"));
+                        break;
+                    case 2:
+                        if (local[0].InnerHtml == "Валюта&nbsp;Контракта:&nbsp;")
+                            report.Currency = local[1].InnerText.Replace("&nbsp;", " ").Trim();
+                        if (local[0].InnerHtml == "BYR" || local[0].InnerHtml == "USD" || local[0].InnerHtml == "EUR")
+                            report.StartBalance = Decimal.Parse(local[1].InnerText.Replace("&nbsp;", " ").Replace(" ", "").Trim());
+                        break;
+                    case 3:
+                        if (local[0].InnerHtml == "Операции&nbsp;по&nbsp;Card&nbsp;#&nbsp;")
+                        {
+                            report.CardNumber = local[1].InnerHtml.Replace("&nbsp;", " ").Trim();
+                        }
+                        break;
+                    case 6:
+                        if (local.ElementAt(0).InnerText.Trim() == "Дата") continue;
+                        var transaction1 = new AccountTransaction
+                                              {
+                                                  OperationDate = DateTime.Parse(local.ElementAt(0).InnerText.Trim(), CultureInfo.CreateSpecificCulture("ru-RU")),
+                                                  OperationDescription = HttpUtility.HtmlDecode(local.ElementAt(1).InnerText.Replace("&nbsp;", " ").Trim()),
+                                                  OperationAmount = Decimal.Parse(local.ElementAt(2).InnerText.Replace("&nbsp;", "").Trim()),
+                                                  Currency = local.ElementAt(3).InnerText.Trim(),
+                                                  TransactionDate = transactionDate,
+                                                  Commission = Decimal.Parse(local.ElementAt(4).InnerText.Replace("&nbsp;", "").Trim()),
+                                                  TransactionAmount = Decimal.Parse(local.ElementAt(5).InnerText.Replace("&nbsp;", "").Trim()),
+                                                  Status = "F"
+                                              };
+                        Log.Info(transaction1);
+                        trans.Add(transaction1);
+                        break;
+                    case 7:
+                        if (local.ElementAt(0).InnerText.Trim() == "Дата") continue;
+                        var transaction2 = new AccountTransaction
+                                              {
+                                                  OperationDate = DateTime.Parse(local.ElementAt(0).InnerText.Trim(), CultureInfo.CreateSpecificCulture("ru-RU")),
+                                                  OperationDescription = HttpUtility.HtmlDecode(local.ElementAt(1).InnerText.Replace("&nbsp;", " ").Trim()),
+                                                  OperationAmount = Decimal.Parse(local.ElementAt(2).InnerText.Replace("&nbsp;", "").Trim()),
+                                                  Currency = local.ElementAt(3).InnerText.Trim(),
+                                                  TransactionDate = DateTime.Parse(local.ElementAt(4).InnerText.Trim(), CultureInfo.CreateSpecificCulture("ru-RU")),
+                                                  Commission = Decimal.Parse(local.ElementAt(5).InnerText.Replace("&nbsp;", "").Trim()),
+                                                  TransactionAmount = Decimal.Parse(local.ElementAt(6).InnerText.Replace("&nbsp;", "").Trim()),
+                                                  Status = "F"
+                                              };
+                        Log.Info(transaction2);
+                        trans.Add(transaction2);
+                        break;
+                }
+
+                
             }
             report.Transactions = trans;
             return report;
