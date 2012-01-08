@@ -187,9 +187,27 @@ namespace Naviam.UnitTests.InternetBank
             // act
             Debug.Assert(request != null, "request != null");
             var actual = SbsibankHtmlParser.ParseReport(request.Selector, content);
-            
+            var expectedTransactions = expected.Transactions.ToList();
+            var actualTransactions = actual.Transactions.ToList();
+
             // assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.CardNumber, actual.CardNumber, "Card Number");
+            Assert.AreEqual(expected.Currency, actual.Currency, "Card Number");
+            Assert.AreEqual(expected.StartBalance, actual.StartBalance, "Start Balance");
+            //Assert.AreEqual(expected.StateOnDate, actual.StateOnDate, "State on date");
+            //Assert.AreEqual(expected.ReportPeriod, actual.ReportPeriod, "Report Period");
+            Assert.AreEqual(expectedTransactions.Count(), actualTransactions.Count(), "Count of transactions");
+            var count = expectedTransactions.Count();
+            for (var i = 0; i < count; i++)
+            {
+                var exp = expectedTransactions[i];
+                var act = actualTransactions[i];
+                Assert.AreEqual(exp.OperationDate, act.OperationDate, String.Format("Operation Date, index: {0}", i));
+                Assert.AreEqual(exp.Status, act.Status, String.Format("Status, index: {0}", i));
+                Assert.AreEqual(exp.TransactionAmount, act.TransactionAmount, String.Format("Transaction Amount, index: {0}", i));
+                Assert.AreEqual(exp.Currency, act.Currency, String.Format("Currency, index: {0}", i));
+                Assert.AreEqual(exp.OperationDescription, act.OperationDescription, String.Format("Operation Description, index: {0}", i));
+            }
         }
 
         /// <summary>
@@ -334,7 +352,7 @@ namespace Naviam.UnitTests.InternetBank
                             Commission = 0,
                             TransactionAmount = -116440
                         },
-                    new AccountTransaction
+                    new AccountTransaction //10
                         {
                             OperationDate = DateTime.Parse("12/01/11"),
                             Status = "F",
@@ -422,7 +440,7 @@ namespace Naviam.UnitTests.InternetBank
                             Commission = 0,
                             TransactionAmount = -440000
                         },
-                    new AccountTransaction
+                    new AccountTransaction //18
                         {
                             OperationDate = DateTime.Parse("04/02/11"),
                             Status = "F",
@@ -444,7 +462,7 @@ namespace Naviam.UnitTests.InternetBank
                             Commission = 0,
                             TransactionAmount = -500000
                         },
-                    new AccountTransaction
+                    new AccountTransaction //20
                         {
                             OperationDate = DateTime.Parse("18/02/11"),
                             Status = "F",
@@ -475,7 +493,7 @@ namespace Naviam.UnitTests.InternetBank
                             OperationDescription = "Retail BLR MINSK SHOP \"KOMAROVSKIY\"",
                             TransactionDate = DateTime.Parse("23/02/11"),
                             Commission = 0,
-                            TransactionAmount = -32370
+                            TransactionAmount = -32270
                         },
                     new AccountTransaction
                         {
