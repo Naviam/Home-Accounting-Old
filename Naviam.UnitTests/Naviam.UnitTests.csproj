@@ -127,6 +127,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InternetBank\BankUtilityTest.cs" />
     <Compile Include="Controllers\AccountControllerTest.cs" />
     <Compile Include="Controllers\SmsControllerTest.cs" />
     <Compile Include="Controllers\TransactionsControllerTest.cs" />

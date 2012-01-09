@@ -114,7 +114,7 @@ namespace Naviam.InternetBank.Helpers
         }
 
         // callback used to validate the certificate in an SSL conversation
-        private static bool ValidateRemoteCertificate(
+        public static bool ValidateRemoteCertificate(
             object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors policyErrors)
         {
             return cert.Subject.ToUpper().Contains("SBSIBANK");
