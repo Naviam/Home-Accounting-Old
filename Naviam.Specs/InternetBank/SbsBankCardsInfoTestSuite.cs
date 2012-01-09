@@ -27,7 +27,6 @@ namespace Naviam.Specs.InternetBank
 
             // act
             var cards = _client.GetPaymentCards();
-
             // assert
             Assert.IsNotNull(cards);
             Assert.IsTrue(cards.Any());
