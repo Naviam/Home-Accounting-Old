@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 using Naviam.InternetBank.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -106,6 +107,37 @@ namespace Naviam.UnitTests.InternetBank
             Assert.AreEqual(expected, actual);
         }
 
+        private static ReportPeriod GetReportPeriod(string id, string startDate, string endDate, bool exist = true)
+        {
+            return new ReportPeriod
+            {
+                StartDate = DateTime.Parse(startDate, CultureInfo.InvariantCulture),
+                EndDate = DateTime.Parse(endDate, CultureInfo.InvariantCulture),
+                Id = id,
+                Exists = exist
+            };
+        }
+
+        [TestMethod]
+        public void GetReportsToCreateTest()
+        {
+            // arrange
+            var startDate = DateTime.Parse("04/10/2011", CultureInfo.InvariantCulture);
+            var endDate = DateTime.Parse("01/01/2012", CultureInfo.InvariantCulture);
+            const int maxDaysPeriod = 170;
+            var expected = new List<ReportPeriod>
+                            {
+                                GetReportPeriod(null, "04/10/2011", "09/27/2011", false),
+                                GetReportPeriod(null, "09/28/2011", "01/01/2012", false)
+                            };
+
+            // act
+            var actual = BankUtility.GetReportsToCreate(startDate, endDate, maxDaysPeriod).ToList();
+
+            // assert
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
         /// <summary>
         ///A test for GetReportPeriods
         ///</summary>
@@ -113,63 +145,24 @@ namespace Naviam.UnitTests.InternetBank
         public void GetReportPeriodsTest()
         {
             // arrange
-            var startDate = DateTime.Parse("10/10/2010", CultureInfo.InvariantCulture);
-            var endDate = DateTime.Parse("04/04/2011", CultureInfo.InvariantCulture);
-            const int maxDaysPeriod = 100;
+            var startDate = DateTime.Parse("04/10/2011", CultureInfo.InvariantCulture);
+            var endDate = DateTime.Parse("01/01/2012", CultureInfo.InvariantCulture);
+            const int maxDaysPeriod = 170;
             var pregeneratedReports = new List<ReportPeriod>
                                         {
-                                            new ReportPeriod
-                                                {
-                                                      StartDate = DateTime.Parse("10/20/2010", CultureInfo.InvariantCulture),
-                                                      EndDate = DateTime.Parse("10/30/2010", CultureInfo.InvariantCulture),
-                                                      Id = "1"
-                                                },
-                                            new ReportPeriod
-                                                {
-                                                      StartDate = DateTime.Parse("09/01/2010", CultureInfo.InvariantCulture),
-                                                      EndDate = DateTime.Parse("10/30/2010", CultureInfo.InvariantCulture),
-                                                      Id = "2"
-                                                },
-                                            new ReportPeriod
-                                                {
-                                                      StartDate = DateTime.Parse("10/11/2010", CultureInfo.InvariantCulture),
-                                                      EndDate = DateTime.Parse("03/03/2011", CultureInfo.InvariantCulture),
-                                                      Id = "3"
-                                                },
-                                            new ReportPeriod
-                                                {
-                                                      StartDate = DateTime.Parse("10/17/2010", CultureInfo.InvariantCulture),
-                                                      EndDate = DateTime.Parse("02/03/2011", CultureInfo.InvariantCulture),
-                                                      Id = "4"
-                                                },
-                                            new ReportPeriod
-                                                {
-                                                      StartDate = DateTime.Parse("10/11/2011", CultureInfo.InvariantCulture),
-                                                      EndDate = DateTime.Parse("01/03/2012", CultureInfo.InvariantCulture),
-                                                      Id = "5"
-                                                }
+                                            GetReportPeriod("1", "02/20/2011", "03/01/2011"),
+                                            GetReportPeriod("2", "05/01/2011", "06/01/2011"),
+                                            GetReportPeriod("2", "05/10/2011", "06/02/2011"),
+                                            GetReportPeriod("2", "09/01/2011", "10/30/2011"),
+                                            GetReportPeriod("3", "10/11/2011", "11/03/2011"),
+                                            GetReportPeriod("4", "10/17/2011", "02/03/2011"),
+                                            GetReportPeriod("5", "10/11/2011", "01/03/2012")
                                         };
-            IEnumerable<ReportPeriod> expected = new List<ReportPeriod>
-                                        {
-                                            new ReportPeriod
-                                                {
-                                                      StartDate = DateTime.Parse("10/20/2010", CultureInfo.InvariantCulture),
-                                                      EndDate = DateTime.Parse("10/30/2010", CultureInfo.InvariantCulture),
-                                                      Id = "1"
-                                                },
-                                            new ReportPeriod
-                                                {
-                                                      StartDate = DateTime.Parse("10/11/2010", CultureInfo.InvariantCulture),
-                                                      EndDate = DateTime.Parse("03/03/2011", CultureInfo.InvariantCulture),
-                                                      Id = "2"
-                                                },
-                                            new ReportPeriod
-                                                {
-                                                      StartDate = DateTime.Parse("03/04/2010", CultureInfo.InvariantCulture),
-                                                      EndDate = DateTime.Parse("04/04/2011", CultureInfo.InvariantCulture),
-                                                      Id = "3"
-                                                }
-                                        };
+            var expected = new List<ReportPeriod>
+                            {
+                                GetReportPeriod("", "04/10/2011", "05/01/2011"),
+                                GetReportPeriod("", "04/10/2011", "05/01/2011"),
+                            };
             
             // act
             var actual = BankUtility.GetReportPeriods(startDate, endDate, maxDaysPeriod, pregeneratedReports);

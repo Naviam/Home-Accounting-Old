@@ -10,9 +10,50 @@ namespace Naviam.InternetBank.Helpers
 {
     public sealed class BankUtility
     {
-        public static IEnumerable<ReportPeriod> GetReportPeriods(
-            DateTime startDate, DateTime endDate, int maxDaysPeriod, List<ReportPeriod> pregeneratedReports)
+        public static IEnumerable<ReportPeriod> GetReportsToCreate(DateTime startDate, DateTime endDate, int maxDaysInPeriod)
         {
+            // check if end date is less than today
+            endDate = DateTime.UtcNow <= endDate ? DateTime.UtcNow.AddDays(-1) : endDate;
+            var reports = new List<ReportPeriod>();
+            var nextStartDate = startDate;
+
+            do
+            {
+                var periodStartDate = nextStartDate;
+                nextStartDate = nextStartDate.AddDays(maxDaysInPeriod);
+                if (nextStartDate > endDate) nextStartDate = endDate;
+                nextStartDate = nextStartDate.AddDays(1);
+                reports.Add(new ReportPeriod {StartDate = periodStartDate, EndDate = nextStartDate.AddDays(-1), Exists = false});
+            } while (nextStartDate < endDate);
+            
+            return reports;
+        }
+
+        public static IEnumerable<ReportPeriod> GetReportPeriods(
+            DateTime startDate, DateTime endDate, int maxDaysInPeriod, List<ReportPeriod> pregeneratedReports)
+        {
+            // get all exist reports that cross start date
+            //var intersectReports = pregeneratedReports.Where(r => r.StartDate <= startDate && r.EndDate > startDate).ToList();
+            //if (intersectReports.Any())
+            //{
+            //    // get report with the most distant end date
+            //    var report = intersectReports.Max(r => r.EndDate);
+            //}
+            //else
+            //{
+            //    // get the report with the most close start date
+            //    var reportStartDate = intersectReports.Min(r => r.StartDate);
+            //    if (reportStartDate == DateTime.MinValue)
+            //    {
+            //        // there is no exist reports
+            //        // create all reports
+            //        var reportsToCreate = GetReportsToCreate(startDate, reportStartDate, maxDaysInPeriod);
+            //    }
+
+            //    // create report from start date to the nearest report
+            //    var createdReport = 
+            //}
+
             var reports = new List<ReportPeriod>();
             //var reportsToCreate = new List<ReportPeriod>();
             ReportPeriod report = null;
@@ -28,21 +69,21 @@ namespace Naviam.InternetBank.Helpers
 
                 if (report == null) continue;
 
-                report.IsCreated = true;
+                report.Exists = true;
 
                 if (report.StartDate > startDate)
                 {
                     var start = startDate;
                     do
                     {
-                        if (DaysBetween(report.StartDate, start) > maxDaysPeriod)
+                        if (DaysBetween(report.StartDate, start) > maxDaysInPeriod)
                         {
-                            var end = start.AddDays(maxDaysPeriod);
+                            var end = start.AddDays(maxDaysInPeriod);
                             var createReport = new ReportPeriod
                             {
                                 StartDate = start,
                                 EndDate = end,
-                                IsCreated = false
+                                Exists = false
                             };
                             reports.Add(createReport);
                             start = end.AddDays(1);
@@ -53,7 +94,7 @@ namespace Naviam.InternetBank.Helpers
                             {
                                 StartDate = start,
                                 EndDate = report.StartDate.AddDays(-1),
-                                IsCreated = false
+                                Exists = false
                             };
                             reports.Add(createReport);
                             start = report.StartDate.AddDays(1);
@@ -68,14 +109,14 @@ namespace Naviam.InternetBank.Helpers
             var start2 = startDate;
             do
             {
-                if (DaysBetween(endDate, start2) > maxDaysPeriod)
+                if (DaysBetween(endDate, start2) > maxDaysInPeriod)
                 {
-                    var end = start2.AddDays(maxDaysPeriod);
+                    var end = start2.AddDays(maxDaysInPeriod);
                     var createReport = new ReportPeriod
                     {
                         StartDate = start2,
                         EndDate = end,
-                        IsCreated = false
+                        Exists = false
                     };
                     reports.Add(createReport);
                     start2 = end.AddDays(1);
@@ -86,7 +127,7 @@ namespace Naviam.InternetBank.Helpers
                     {
                         StartDate = start2,
                         EndDate = endDate,
-                        IsCreated = false
+                        Exists = false
                     };
                     reports.Add(createReport);
                     start2 = endDate;

@@ -138,7 +138,7 @@ namespace Naviam.InternetBank
                 var reports = _bankRequests.GetListOfUsedStatements(startDate, card.RegisterDate);
                 
                 // run reports and create them when necessary
-                foreach (var reportRow in reports.Where(reportRow => !reportRow.IsCreated))
+                foreach (var reportRow in reports.Where(reportRow => !reportRow.Exists))
                 {
                     _bankRequests.CreateReport(reportRow.StartDate, reportRow.EndDate);
                 }
