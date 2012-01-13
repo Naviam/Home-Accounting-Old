@@ -150,25 +150,32 @@ namespace Naviam.UnitTests.InternetBank
             const int maxDaysPeriod = 170;
             var pregeneratedReports = new List<ReportPeriod>
                                         {
-                                            GetReportPeriod("1", "02/20/2011", "03/01/2011"),
-                                            GetReportPeriod("2", "05/01/2011", "06/01/2011"),
-                                            GetReportPeriod("2", "05/10/2011", "06/02/2011"),
-                                            GetReportPeriod("2", "09/01/2011", "10/30/2011"),
+                                            //GetReportPeriod("1", "02/20/2011", "03/01/2011"),
+                                            //GetReportPeriod("2", "05/01/2011", "06/01/2011"),
+                                            //GetReportPeriod("2", "05/10/2011", "06/02/2011"),
+                                            //GetReportPeriod("2", "09/01/2011", "10/30/2011"),
                                             GetReportPeriod("3", "10/11/2011", "11/03/2011"),
-                                            GetReportPeriod("4", "10/17/2011", "02/03/2011"),
-                                            GetReportPeriod("5", "10/11/2011", "01/03/2012")
+                                            GetReportPeriod("4", "10/17/2011", "12/03/2011"),
+                                            GetReportPeriod("5", "12/11/2011", "01/03/2012")
                                         };
             var expected = new List<ReportPeriod>
                             {
-                                GetReportPeriod("", "04/10/2011", "05/01/2011"),
-                                GetReportPeriod("", "04/10/2011", "05/01/2011"),
+                                GetReportPeriod("", "04/10/2011", "09/27/2011"),
+                                //GetReportPeriod("", "05/01/2011", "06/01/2011"),
+                                //GetReportPeriod("", "05/10/2011", "06/02/2011"),
+                                //GetReportPeriod("", "06/03/2011", "08/31/2011"),
+                                GetReportPeriod("", "09/28/2011", "10/10/2011"),
+                                GetReportPeriod("3", "10/11/2011", "11/03/2011"),
+                                GetReportPeriod("4", "10/17/2011", "12/03/2011"),
+                                GetReportPeriod("", "12/04/2011", "12/10/2011"),
+                                GetReportPeriod("5", "12/11/2011", "01/03/2012")
                             };
             
             // act
-            var actual = BankUtility.GetReportPeriods(startDate, endDate, maxDaysPeriod, pregeneratedReports);
+            var actual = BankUtility.GetReportPeriods(startDate, endDate, maxDaysPeriod, pregeneratedReports).ToList();
             
             // assert
-            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEquivalent(expected, actual);
         }
 
         /// <summary>

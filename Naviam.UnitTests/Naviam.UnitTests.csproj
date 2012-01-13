@@ -127,6 +127,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InternetBank\BankClientTest.cs" />
     <Compile Include="InternetBank\BankUtilityTest.cs" />
     <Compile Include="Controllers\AccountControllerTest.cs" />
     <Compile Include="Controllers\SmsControllerTest.cs" />
@@ -144,6 +145,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Shadow Include="Test References\Naviam.InternetBank.accessor" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Naviam.DAL\Naviam.DAL.csproj">

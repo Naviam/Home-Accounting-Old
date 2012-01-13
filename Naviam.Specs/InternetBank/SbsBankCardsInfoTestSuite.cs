@@ -5,8 +5,7 @@ using Naviam.InternetBank;
 
 namespace Naviam.Specs.InternetBank
 {
-    [TestFixture(Category = "InternetBank",
-        Description = "Trying to obtain payment cards")]
+    [TestFixture]
     public class SbsBank2CardsInfoTestSuite
     {
         private BankClient _client;
@@ -20,7 +19,7 @@ namespace Naviam.Specs.InternetBank
             _client.Login(userName, password);
         }
 
-        [TestCase(TestName = "1. Get Payment cards")]
+        [TestCase]
         public void Test1PaymentCards()
         {
             // arrange
@@ -32,7 +31,7 @@ namespace Naviam.Specs.InternetBank
             Assert.IsTrue(cards.Any());
         }
 
-        [TestCase(TestName = "2. Get First Card transactions")]
+        [TestCase]
         public void Test2CardTransactions()
         {
             // arrange

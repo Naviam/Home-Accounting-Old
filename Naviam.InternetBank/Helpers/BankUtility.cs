@@ -8,7 +8,7 @@ using Naviam.InternetBank.Entities;
 
 namespace Naviam.InternetBank.Helpers
 {
-    public sealed class BankUtility
+    public static class BankUtility
     {
         public static IEnumerable<ReportPeriod> GetReportsToCreate(DateTime startDate, DateTime endDate, int maxDaysInPeriod)
         {
@@ -29,113 +29,150 @@ namespace Naviam.InternetBank.Helpers
             return reports;
         }
 
+        /// <summary>
+        /// Tries to find report that intersect with or have the closest start date to the date.
+        /// </summary>
+        /// <param name="date">The date </param>
+        /// <param name="reports">Reports that </param>
+        /// <returns></returns>
+        public static ReportPeriod FindBestIntersectReportWithDate(this IEnumerable<ReportPeriod> reports, DateTime date)
+        {
+            return (from r in reports
+                   where r.StartDate <= date && r.EndDate > date
+                   orderby r.EndDate descending
+                   select r).FirstOrDefault();
+        }
+
+        public static ReportPeriod FindReportWithClosestStartDate(this IEnumerable<ReportPeriod> reports, DateTime date)
+        {
+            return (from r in reports
+                    where r.StartDate >= date
+                    orderby r.StartDate ascending 
+                    select r).FirstOrDefault();
+        }
+
         public static IEnumerable<ReportPeriod> GetReportPeriods(
             DateTime startDate, DateTime endDate, int maxDaysInPeriod, List<ReportPeriod> pregeneratedReports)
         {
-            // get all exist reports that cross start date
-            //var intersectReports = pregeneratedReports.Where(r => r.StartDate <= startDate && r.EndDate > startDate).ToList();
-            //if (intersectReports.Any())
-            //{
-            //    // get report with the most distant end date
-            //    var report = intersectReports.Max(r => r.EndDate);
-            //}
-            //else
-            //{
-            //    // get the report with the most close start date
-            //    var reportStartDate = intersectReports.Min(r => r.StartDate);
-            //    if (reportStartDate == DateTime.MinValue)
-            //    {
-            //        // there is no exist reports
-            //        // create all reports
-            //        var reportsToCreate = GetReportsToCreate(startDate, reportStartDate, maxDaysInPeriod);
-            //    }
+            if (pregeneratedReports == null || !pregeneratedReports.Any())
+                // TODO: check that exist reports are within set period
+                return GetReportsToCreate(startDate, endDate, maxDaysInPeriod);
 
-            //    // create report from start date to the nearest report
-            //    var createdReport = 
-            //}
-
-            var reports = new List<ReportPeriod>();
-            //var reportsToCreate = new List<ReportPeriod>();
-            ReportPeriod report = null;
-
+            // the rest works only if there are some reports generated on the internet bank website
+            var result = new List<ReportPeriod>();
+            var lastReportEndDate = startDate;
+            // get best report for the date
             do
             {
-                if (startDate > endDate) continue;
-
-                report = pregeneratedReports.Where(r => r.StartDate <= startDate && r.EndDate > startDate)
-                            .OrderByDescending(r => r.EndDate).FirstOrDefault() ??
-                        pregeneratedReports.Where(r => r.StartDate > startDate).OrderBy(r => r.StartDate)
-                            .FirstOrDefault();
-
-                if (report == null) continue;
-
-                report.Exists = true;
-
-                if (report.StartDate > startDate)
+                var nextReport = pregeneratedReports.FindBestIntersectReportWithDate(lastReportEndDate);
+                if (nextReport != null)
                 {
-                    var start = startDate;
-                    do
-                    {
-                        if (DaysBetween(report.StartDate, start) > maxDaysInPeriod)
-                        {
-                            var end = start.AddDays(maxDaysInPeriod);
-                            var createReport = new ReportPeriod
-                            {
-                                StartDate = start,
-                                EndDate = end,
-                                Exists = false
-                            };
-                            reports.Add(createReport);
-                            start = end.AddDays(1);
-                        }
-                        else
-                        {
-                            var createReport = new ReportPeriod
-                            {
-                                StartDate = start,
-                                EndDate = report.StartDate.AddDays(-1),
-                                Exists = false
-                            };
-                            reports.Add(createReport);
-                            start = report.StartDate.AddDays(1);
-                        }
-
-                    } while (start < report.StartDate);
-                }
-                reports.Add(report);
-                startDate = report.EndDate.AddDays(1);
-            } while (report != null);
-
-            var start2 = startDate;
-            do
-            {
-                if (DaysBetween(endDate, start2) > maxDaysInPeriod)
-                {
-                    var end = start2.AddDays(maxDaysInPeriod);
-                    var createReport = new ReportPeriod
-                    {
-                        StartDate = start2,
-                        EndDate = end,
-                        Exists = false
-                    };
-                    reports.Add(createReport);
-                    start2 = end.AddDays(1);
+                    lastReportEndDate = nextReport.EndDate;
+                    result.Add(nextReport);
                 }
                 else
                 {
-                    var createReport = new ReportPeriod
+                    // get the report with the most close start date
+                    nextReport = pregeneratedReports.FindReportWithClosestStartDate(lastReportEndDate);
+
+                    if (nextReport != null)
                     {
-                        StartDate = start2,
-                        EndDate = endDate,
-                        Exists = false
-                    };
-                    reports.Add(createReport);
-                    start2 = endDate;
+                        // there is no exist reports
+                        // create all reports
+                        var reportsToCreate = GetReportsToCreate(
+                            (startDate == lastReportEndDate) ? lastReportEndDate : lastReportEndDate.AddDays(1), 
+                            nextReport.StartDate.AddDays(-1), maxDaysInPeriod);
+                        result.AddRange(reportsToCreate);
+                        lastReportEndDate = nextReport.EndDate;
+                        result.Add(nextReport);
+                    }
                 }
+            } while (lastReportEndDate < endDate);
 
-            } while (start2 < endDate);
+            return result;
 
-            return reports;
+            //var reports = new List<ReportPeriod>();
+            ////var reportsToCreate = new List<ReportPeriod>();
+            //ReportPeriod report = null;
+
+            //do
+            //{
+            //    if (startDate > endDate) continue;
+
+            //    report = pregeneratedReports.Where(r => r.StartDate <= startDate && r.EndDate > startDate)
+            //                .OrderByDescending(r => r.EndDate).FirstOrDefault() ??
+            //            pregeneratedReports.Where(r => r.StartDate > startDate).OrderBy(r => r.StartDate)
+            //                .FirstOrDefault();
+
+            //    if (report == null) continue;
+
+            //    report.Exists = true;
+
+            //    if (report.StartDate > startDate)
+            //    {
+            //        var start = startDate;
+            //        do
+            //        {
+            //            if (DaysBetween(report.StartDate, start) > maxDaysInPeriod)
+            //            {
+            //                var end = start.AddDays(maxDaysInPeriod);
+            //                var createReport = new ReportPeriod
+            //                {
+            //                    StartDate = start,
+            //                    EndDate = end,
+            //                    Exists = false
+            //                };
+            //                reports.Add(createReport);
+            //                start = end.AddDays(1);
+            //            }
+            //            else
+            //            {
+            //                var createReport = new ReportPeriod
+            //                {
+            //                    StartDate = start,
+            //                    EndDate = report.StartDate.AddDays(-1),
+            //                    Exists = false
+            //                };
+            //                reports.Add(createReport);
+            //                start = report.StartDate.AddDays(1);
+            //            }
+
+            //        } while (start < report.StartDate);
+            //    }
+            //    reports.Add(report);
+            //    startDate = report.EndDate.AddDays(1);
+            //} while (report != null);
+
+            //var start2 = startDate;
+            //do
+            //{
+            //    if (DaysBetween(endDate, start2) > maxDaysInPeriod)
+            //    {
+            //        var end = start2.AddDays(maxDaysInPeriod);
+            //        var createReport = new ReportPeriod
+            //        {
+            //            StartDate = start2,
+            //            EndDate = end,
+            //            Exists = false
+            //        };
+            //        reports.Add(createReport);
+            //        start2 = end.AddDays(1);
+            //    }
+            //    else
+            //    {
+            //        var createReport = new ReportPeriod
+            //        {
+            //            StartDate = start2,
+            //            EndDate = endDate,
+            //            Exists = false
+            //        };
+            //        reports.Add(createReport);
+            //        start2 = endDate;
+            //    }
+
+            //} while (start2 < endDate);
+
+            //return reports;
         }
 
         public static int DaysBetween(DateTime d1, DateTime d2)
