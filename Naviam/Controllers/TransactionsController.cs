@@ -61,6 +61,12 @@ namespace Naviam.WebUI.Controllers
             public string SortField { get; set; }
             public int SortDirection { get; set; }
 
+            public Paging()
+            {
+                Page = 1;
+                PageSize = 100;
+            }
+
             public IEnumerable<T> ApplyPaging<T>(IEnumerable<T> input)
             {
                 if (input != null)
