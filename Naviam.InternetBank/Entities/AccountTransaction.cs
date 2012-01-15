@@ -21,10 +21,10 @@ namespace Naviam.InternetBank.Entities
                 OperationDate.Date, OperationDescription, OperationAmount, Currency, Status, TransactionDate.Date, Commission, TransactionAmount);
         }
 
-        public string Card { get; set; }
-        public string Region { get; set; }
-        public string Place { get; set; }
-        public decimal AccountAmount { get; set; }
-        public decimal Balance { get; set; }
+        //public string Card { get; set; }
+        //public string Region { get; set; }
+        //public string Place { get; set; }
+        //public decimal AccountAmount { get; set; }
+        //public decimal Balance { get; set; }
     }
 }
