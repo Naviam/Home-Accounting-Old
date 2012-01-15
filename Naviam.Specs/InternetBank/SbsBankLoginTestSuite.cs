@@ -25,7 +25,7 @@ namespace Naviam.Specs.InternetBank
             var response = _client.Login(userName, password);
 
             // assert
-            Assert.Equals(response.ErrorCode, 3);
+            Assert.AreEqual(response.ErrorCode, 3);
             Assert.False(response.IsAuthenticated);
         }
 
