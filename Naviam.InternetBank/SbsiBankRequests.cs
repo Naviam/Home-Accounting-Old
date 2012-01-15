@@ -125,7 +125,7 @@ namespace Naviam.InternetBank
                         var isProtectedPage = response.Headers["Location"].Contains("home.asp");
                         return isProtectedPage ? 0 : 3;
                     }
-                    return 1;
+                    return response.StatusCode == HttpStatusCode.OK ? 3 : 1;
                 }
             }
             return 2;
@@ -231,7 +231,7 @@ namespace Naviam.InternetBank
         /// <returns>latest 20 transactions</returns>
         public IEnumerable<AccountTransaction> GetLatestCardTransactions()
         {
-            var latestPostRequest = GetRequestSettings("cards", "latest", "POST");
+            var latestPostRequest = GetRequestSettings("transactions", "latest", "POST");
 
             if (latestPostRequest != null)
             {
@@ -264,7 +264,7 @@ namespace Naviam.InternetBank
             if (startDate == DateTime.MinValue) startDate = cardRegisterDate;
 
             // get settings
-            var statementsGetRequest = GetRequestSettings("cards", "statements", "GET");
+            var statementsGetRequest = GetRequestSettings("transactions", "statements", "GET");
 
             if (statementsGetRequest != null)
             {
@@ -290,7 +290,7 @@ namespace Naviam.InternetBank
 
         public Report CreateReport(DateTime startDate, DateTime endDate)
         {
-            var createReportPostRequest = GetRequestSettings("cards", "createReport", "POST");
+            var createReportPostRequest = GetRequestSettings("transactions", "createReport", "POST");
 
             if (createReportPostRequest != null)
             {
