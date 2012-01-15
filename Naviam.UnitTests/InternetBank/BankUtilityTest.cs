@@ -160,14 +160,14 @@ namespace Naviam.UnitTests.InternetBank
                                         };
             var expected = new List<ReportPeriod>
                             {
-                                GetReportPeriod("", "04/10/2011", "09/27/2011"),
+                                GetReportPeriod(null, "04/10/2011", "09/27/2011", false),
                                 //GetReportPeriod("", "05/01/2011", "06/01/2011"),
                                 //GetReportPeriod("", "05/10/2011", "06/02/2011"),
                                 //GetReportPeriod("", "06/03/2011", "08/31/2011"),
-                                GetReportPeriod("", "09/28/2011", "10/10/2011"),
+                                GetReportPeriod(null, "09/28/2011", "10/10/2011", false),
                                 GetReportPeriod("3", "10/11/2011", "11/03/2011"),
                                 GetReportPeriod("4", "10/17/2011", "12/03/2011"),
-                                GetReportPeriod("", "12/04/2011", "12/10/2011"),
+                                GetReportPeriod(null, "12/04/2011", "12/10/2011", false),
                                 GetReportPeriod("5", "12/11/2011", "01/03/2012")
                             };
             
