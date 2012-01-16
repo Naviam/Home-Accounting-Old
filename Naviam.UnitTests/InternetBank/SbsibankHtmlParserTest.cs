@@ -174,15 +174,32 @@ namespace Naviam.UnitTests.InternetBank
         }
 
         /// <summary>
-        ///A test for ParseReport
+        ///A test for ParseReport that parse only transactions in F status
         ///</summary>
         [TestMethod]
         public void ParseReportTest()
         {
+            ParseReport("Report.htm", PrepareExpectedReport());
+        }
+
+        [TestMethod]
+        public void ParseReport2Test()
+        {
+            ParseReport("Report2.htm", PrepareExpectedReport2());
+        }
+
+        [TestMethod]
+        public void ParseReport3Test()
+        {
+            ParseReport("Report3.htm", PrepareExpectedReport3());
+        }
+
+        public void ParseReport(string reportFileName, Report expected)
+        {
+            if (reportFileName == null) throw new ArgumentNullException("reportFileName");
             // arrange
             var request = GetRequestSettings("transactions", "getreport", "GET");
-            var content = OpenHtmlFile("Report.htm");
-            var expected = PrepareExpectedReport();
+            var content = OpenHtmlFile(reportFileName);
 
             // act
             Debug.Assert(request != null, "request != null");
@@ -255,6 +272,267 @@ namespace Naviam.UnitTests.InternetBank
                 Assert.AreEqual(exp.CreatedDate, act.CreatedDate, String.Format("Created Date, index: {0}", i));
                 Assert.AreEqual(exp.Id, act.Id, String.Format("Id, index: {0}", i));
             }
+        }
+
+        private static Report PrepareExpectedReport3()
+        {
+            var report = new Report
+            {
+                ReportPeriod = new ReportPeriod
+                {
+                    StartDate = DateTime.Parse("01/01/2012"),
+                    EndDate = DateTime.Parse("14/01/2012")
+                },
+                CardNumber = "4XXX-XXXX-XXXX-3855",
+                StartBalance = 31957,
+                Currency = "BYR",
+                StateOnDate = new StateOnDate
+                {
+                    Date = DateTime.Parse("15/01/2012"),
+                    Available = 88977,
+                    BlockedAmount = 1169130,
+                    CreditLimit = 0
+                },
+                Transactions = new List<AccountTransaction>
+                {
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("31/12/11"),
+                            Status = "F",
+                            OperationAmount = -8300,
+                            Currency = "BYR",
+                            OperationDescription = "Service payment from card RBS Balance loader",
+                            TransactionDate = DateTime.Parse("02/01/12"),
+                            Commission = 0,
+                            TransactionAmount = -8300
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("05/01/12"),
+                            Status = "F",
+                            OperationAmount = 3994450,
+                            Currency = "BYR",
+                            OperationDescription = "Service payment to card   RBS Balance loader",
+                            TransactionDate = DateTime.Parse("06/01/12"),
+                            Commission = 0,
+                            TransactionAmount = 3994450
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("06/01/12"),
+                            Status = "F",
+                            OperationAmount = -200000,
+                            Currency = "BYR",
+                            OperationDescription = "ATM BLR MINSK ATMMMB HO04 RIGA",
+                            TransactionDate = DateTime.Parse("09/01/12"),
+                            Commission = 0,
+                            TransactionAmount = -200000
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("06/01/12"),
+                            Status = "F",
+                            OperationAmount = -100000,
+                            Currency = "BYR",
+                            OperationDescription = "ATM BLR MINSK ATMMMB HO04 RIGA",
+                            TransactionDate = DateTime.Parse("09/01/12"),
+                            Commission = 0,
+                            TransactionAmount = -100000
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("08/01/12"),
+                            Status = "F",
+                            OperationAmount = -1000000,
+                            Currency = "BYR",
+                            OperationDescription = "ATM BLR MINSK ATMMMB HO12 TPP KOLASA",
+                            TransactionDate = DateTime.Parse("09/01/12"),
+                            Commission = 0,
+                            TransactionAmount = -1000000
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("08/01/12"),
+                            Status = "F",
+                            OperationAmount = -500000,
+                            Currency = "BYR",
+                            OperationDescription = "ATM BLR MINSK ATMMMB HO12 TPP KOLASA",
+                            TransactionDate = DateTime.Parse("09/01/12"),
+                            Commission = 0,
+                            TransactionAmount = -500000
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("06/01/12"),
+                            Status = "F",
+                            OperationAmount = -340000,
+                            Currency = "BYR",
+                            OperationDescription = "Retail BLR MINSK PT SHOP \"MIAMI\"",
+                            TransactionDate = DateTime.Parse("11/01/12"),
+                            Commission = 0,
+                            TransactionAmount = -340000
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("12/01/12"),
+                            Status = "F",
+                            OperationAmount = -400000,
+                            Currency = "BYR",
+                            OperationDescription = "ATM BLR MINSK ATMMMB HO04 RIGA",
+                            TransactionDate = DateTime.Parse("13/01/12"),
+                            Commission = 0,
+                            TransactionAmount = -400000
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("12/01/12"),
+                            Status = "F",
+                            OperationAmount = -220000,
+                            Currency = "BYR",
+                            OperationDescription = "ATM BLR MINSK ATMMMB HO04 RIGA",
+                            TransactionDate = DateTime.Parse("13/01/12"),
+                            Commission = 0,
+                            TransactionAmount = -220000
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("11/01/12"),
+                            Status = "A",
+                            OperationAmount = 107400,
+                            Currency = "BYR",
+                            OperationDescription = "Retail BLR MINSK SHOP \"STROYREMONT\"",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 107400
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("11/01/12"),
+                            Status = "A",
+                            OperationAmount = 51290,
+                            Currency = "BYR",
+                            OperationDescription = "Retail BLR MINSK MIDIMARKET \"KOLBASYR\"",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 51290
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("11/01/12"),
+                            Status = "A",
+                            OperationAmount = 204240,
+                            Currency = "BYR",
+                            OperationDescription = "Retail BLR MINSK UNIVERSAM \"SOSEDI\"",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 204240
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("11/01/12"),
+                            Status = "A",
+                            OperationAmount = 206200,
+                            Currency = "BYR",
+                            OperationDescription = "Retail BLR MINSK APTEKA N 2 \"YUNIFARM\"",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 206200
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("13/01/12"),
+                            Status = "A",
+                            OperationAmount = 600000,
+                            Currency = "BYR",
+                            OperationDescription = "ATM BLR MINSK ATMMMB HO20 BOGDANOVICHA",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 600000
+                        }
+                }
+            };
+            return report;
+        }
+
+        private static Report PrepareExpectedReport2()
+        {
+            var report = new Report
+            {
+                ReportPeriod = new ReportPeriod
+                {
+                    StartDate = DateTime.Parse("14/01/2012"),
+                    EndDate = DateTime.Parse("15/01/2012")
+                },
+                CardNumber = "4XXX-XXXX-XXXX-3855",
+                StartBalance = 0,
+                Currency = "BYR",
+                StateOnDate = new StateOnDate
+                {
+                    Date = DateTime.Parse("15/01/2012"),
+                    Available = 88977,
+                    BlockedAmount = 1169130,
+                    CreditLimit = 0
+                },
+                Transactions = new List<AccountTransaction>
+                {
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("11/01/12"),
+                            Status = "A",
+                            OperationAmount = 107400,
+                            Currency = "BYR",
+                            OperationDescription = "Retail BLR MINSK SHOP \"STROYREMONT\"",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 107400
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("11/01/12"),
+                            Status = "A",
+                            OperationAmount = 51290,
+                            Currency = "BYR",
+                            OperationDescription = "Retail BLR MINSK MIDIMARKET \"KOLBASYR\"",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 51290
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("11/01/12"),
+                            Status = "A",
+                            OperationAmount = 204240,
+                            Currency = "BYR",
+                            OperationDescription = "Retail BLR MINSK UNIVERSAM \"SOSEDI\"",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 204240
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("11/01/12"),
+                            Status = "A",
+                            OperationAmount = 206200,
+                            Currency = "BYR",
+                            OperationDescription = "Retail BLR MINSK APTEKA N 2 \"YUNIFARM\"",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 206200
+                        },
+                    new AccountTransaction
+                        {
+                            OperationDate = DateTime.Parse("13/01/12"),
+                            Status = "A",
+                            OperationAmount = 600000,
+                            Currency = "BYR",
+                            OperationDescription = "ATM BLR MINSK ATMMMB HO20 BOGDANOVICHA",
+                            //TransactionDate = DateTime.Parse("03/01/11"),
+                            Commission = 0,
+                            TransactionAmount = 600000
+                        }
+                }
+            };
+            return report;
         }
 
         private static Report PrepareExpectedReport()

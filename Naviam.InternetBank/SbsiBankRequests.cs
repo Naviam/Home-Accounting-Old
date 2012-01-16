@@ -22,6 +22,7 @@ namespace Naviam.InternetBank
             _baseUri = new Uri(Settings.BaseUrl);
         }
 
+        #region PRIVATE Methods
         private InetBankRequest GetRequestSettings(string category, string name, string method)
         {
             return Settings.Requests.FirstOrDefault(lr =>
@@ -34,6 +35,7 @@ namespace Naviam.InternetBank
         {
             return BankUtility.GetRequest(request, _cookies, _baseUri, Settings.RequestHeaders, followRedirect, method);
         }
+        #endregion
 
         #region Login Methods
         /// <summary>
@@ -259,10 +261,8 @@ namespace Naviam.InternetBank
             return new List<AccountTransaction>();
         }
 
-        public IEnumerable<ReportPeriod> GetListOfUsedStatements(DateTime startDate, DateTime cardRegisterDate)
+        public IEnumerable<ReportPeriod> GetListOfUsedStatements(DateTime startDate)
         {
-            if (startDate == DateTime.MinValue) startDate = cardRegisterDate;
-
             // get settings
             var statementsGetRequest = GetRequestSettings("transactions", "statements", "GET");
 
@@ -316,6 +316,25 @@ namespace Naviam.InternetBank
                 }
             }
             return null;
+        }
+
+        public Report GetReport(string reportId)
+        {
+            var reportGetRequest = GetRequestSettings("transactions", "getreport", "GET");
+            if (reportGetRequest != null)
+            {
+                reportGetRequest.Url = reportGetRequest.Url.FormatWith(new { reportId });
+                var request = GetRequest(reportGetRequest);
+                // get response
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    var responseStream = response.GetResponseStream();
+                    return responseStream != null ?
+                        SbsibankHtmlParser.ParseReport(reportGetRequest.Selector,
+                        new StreamReader(responseStream, Encoding.GetEncoding(1251))) : null;
+                }
+            }
+            return new Report();
         }
         #endregion
     }

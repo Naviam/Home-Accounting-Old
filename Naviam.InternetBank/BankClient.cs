@@ -120,28 +120,35 @@ namespace Naviam.InternetBank
             // verify start data is in the past and not a today date
             if (startDate >= DateTime.UtcNow)
                 throw new ArgumentOutOfRangeException("startDate", startDate, "Start Date must be before today date.");
+            if (startDate == DateTime.MinValue) startDate = card.RegisterDate;
             
             // set card with parameter id active
             var cardChanged = _bankRequests.ChangeCurrentCard(card.Id);
             // get 20 latest transactions
             if (cardChanged)
             {
-                var latestTransactions = _bankRequests.GetLatestCardTransactions().ToList();
+                //var latestTransactions = _bankRequests.GetLatestCardTransactions().ToList();
                 
-                // check if there is a date in these transactions older than start date
-                if (latestTransactions.Any(t => t.OperationDate.Date < startDate))
-                {
-                    // if  true return the list of transactions
-                    return latestTransactions.Where(t => t.OperationDate.Date >= startDate);
-                }
+                //// check if there is a date in these transactions older than start date
+                //if (latestTransactions.Any(t => t.OperationDate.Date < startDate))
+                //{
+                //    // if  true return the list of transactions
+                //    return latestTransactions.Where(t => t.OperationDate.Date >= startDate);
+                //}
                 // if false get report periods
-                var reports = _bankRequests.GetListOfUsedStatements(startDate, card.RegisterDate);
-                
+
+                var reports = _bankRequests.GetListOfUsedStatements(startDate);
+                var transactions = new List<AccountTransaction>();
                 // run reports and create them when necessary
-                foreach (var reportRow in reports.Where(reportRow => !reportRow.Exists))
+                foreach (var reportRow in reports)
                 {
-                    _bankRequests.CreateReport(reportRow.StartDate, reportRow.EndDate);
+                    if (!reportRow.Exists)
+                    {
+                        //_bankRequests.CreateReport(reportRow.StartDate, reportRow.EndDate);                        
+                    }
+                    transactions.AddRange(_bankRequests.GetReport(reportRow.Id).Transactions);
                 }
+                return transactions;
             }
             
             return new List<AccountTransaction>();

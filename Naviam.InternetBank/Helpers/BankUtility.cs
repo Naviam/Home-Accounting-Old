@@ -87,7 +87,7 @@ namespace Naviam.InternetBank.Helpers
                         result.Add(nextReport);
                     }
                 }
-            } while (lastReportEndDate < endDate);
+            } while (lastReportEndDate.Date < endDate.Date);
 
             return result;
         }
